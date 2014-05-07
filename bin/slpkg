@@ -1,0 +1,60 @@
+#!/usr/bin/python env python
+# -*- coding: utf-8 -*-
+
+
+import os
+import sys
+import argparse
+import subprocess
+
+__version__ = "0.0.1"
+__packages__ = "/var/log/packages/"
+
+
+""" main function """
+def main():
+	description = "Slackware tool to upgrade, remove, find and view packages contents"
+	parser = argparse.ArgumentParser(description=description)
+        parser.add_argument("-v", "--verbose", help="print version and exit", action="store_true")
+        parser.add_argument("-u", "--upgrade", help="exec command upgradepkg --install-new", type=str)
+	parser.add_argument("-r", "--remove", help="exec command slackpkg remove", type=str)
+        parser.add_argument("-l", "--list", help="list of installed packages", action="store_true")
+	parser.add_argument("-f", "--find", help="find if package installed", type=str)
+	parser.add_argument("-d", "--display", help="display the contents of the package", type=str)
+	args = parser.parse_args()
+
+	""" print version and exit """
+        if args.verbose:
+                print (__version__)
+		sys.exit()
+
+	""" execute slackware command 'upgradepkg --install-new' """
+        if args.upgrade:
+                os.system("upgradepkg --install-new {}".format(args.upgrade))
+
+	""" execute slackware command 'slackpkg remove' """
+	if args.remove:
+		os.system("slackpkg remove {}".format(args.remove))
+
+	""" view list of installed packages """
+	if args.list:
+		os.system("ls " + __packages__ + "* | more")
+
+	""" find if packages installed on your system """
+	if args.find:
+		find_pkg = subprocess.check_output(["find " + __packages__ + " -name '{}*' 2> /dev/null".format(args.find)],shell=True)
+		if find_pkg == "":		
+			os.system("echo -e '\e[31mThe package is not installed on your system\e[39m'")
+		else:
+			os.system("echo -e '\e[32mThe package is installed on your system\e[39m'")
+	
+	""" print the package contents """
+	if args.display:
+		display_pkg = subprocess.check_output(["find " + __packages__ + " -name '{}*' 2> /dev/null".format(args.display)],shell=True)
+		if display_pkg == "":
+			os.system("echo -e '\e[31mThe package is not found\e[39m'")
+		else:
+			os.system("cat {}".format(display_pkg))
+
+
+main() 
