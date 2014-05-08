@@ -7,6 +7,29 @@ to a command.
 Note: the program is being developed.
 
 
+Installation
+------------
+
+Using slackware command:
+
+.. code-block:: bash
+	
+	Download from http://slackbuilds.org
+	or
+	using sbopkg tool http://www.sbopkg.org
+
+Using pip:
+
+.. code-block:: bash
+
+	$ pip install slpkg
+	
+	and for uninstall
+
+	$ pip uninstall slpkg
+
+
+
 Command Line Tool Usage
 -----------------------
 
