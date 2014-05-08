@@ -12,7 +12,7 @@ setup(
     author="dslackw",
     author_email="d.zlatanidis@gmail.com",
     url="https://github.com/dslackw/slpkg",
-    download_url="https://github.com/dslackw/0.0.1.tar.gz",
+    download_url="https://github.com/dslackw/slpkg/archive/v0.0.1.tar.gz",
     scripts=['bin/slpkg'],
     package_data={"": ["LICENSE", "README.rst", "CHANGELOG"]},
     classifiers=[
