@@ -35,24 +35,24 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-usage: slpkg [-h] [-v] [-u UPGRADE] [-a REINSTALL] [-r REMOVE] [-l] [-f FIND]
-             [-d DISPLAY]
+	usage: slpkg [-h] [-v] [-u UPGRADE] [-a REINSTALL] [-r REMOVE] [-l] [-f FIND]
+        	     [-d DISPLAY]
 
-Slpkg is a Slackware tool to upgrade, remove, find and view packages contents
+	Slpkg is a Slackware tool to upgrade, remove, find and view packages contents
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --verbose         print version and exit
-  -u UPGRADE, --upgrade UPGRADE
-                        install-upgrade package with new
-  -a REINSTALL, --reinstall REINSTALL
-                        reinstall the same package
-  -r REMOVE, --remove REMOVE
-                        remove package
-  -l, --list            list of installed packages
-  -f FIND, --find FIND  find if package installed
-  -d DISPLAY, --display DISPLAY
-                        display the contents of the package
+	optional arguments:
+	  -h, --help            show this help message and exit
+	  -v, --verbose         print version and exit
+	  -u UPGRADE, --upgrade UPGRADE
+        	                install-upgrade package with new
+	  -a REINSTALL, --reinstall REINSTALL
+        	                reinstall the same package
+	  -r REMOVE, --remove REMOVE
+        	                remove package
+	  -l, --list            list of installed packages
+	  -f FIND, --find FIND  find if package installed
+	  -d DISPLAY, --display DISPLAY
+        	                display the contents of the package
 
 Slpkg Examples
 --------------
