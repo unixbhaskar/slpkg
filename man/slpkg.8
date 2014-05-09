@@ -1,0 +1,116 @@
+.\"                                      -*- nroff -*-
+.\" Copyright (C) 2014 Dimitris Zlatanidis
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.TH Slpkg "8" "5 2014" "slpkg"
+.SH NAME
+slpkg - Slackware tool to upgrade, remove, find and view packages contents
+.SH SYNOPSIS
+ \fBslpkg\fP [\fIoptions\fP] \fB[-h]\fP \fB[-v]\fP \fB[-u UPGRADE]\fP \fB[-a REINSTALL]\fP \fB[-r REMOVE]\fP \fB[-l]\fP \fB[-f FIND]\fP \fB[-d DISPLAY]\fP <\fIcommand-arguments\fP>...
+.SH DESCRIPTION
+\fBslpkg\fP is a terminal tool , written in Python that allows the upgrade, remove, find
+and view Slackware packages contents.
+.PP
+It's a quick and easy way to manage your packages in slackware to a command.
+.SH EXAMPLES
+  \fB-h, --help            show this help message and exit\fP
+  \fB-v, --verbose         print version and exit\fP
+  \fB-u UPGRADE, --upgrade UPGRADE\fP
+  \fP			   install-upgrade package with new\fP
+  \fB-a REINSTALL, --reinstall REINSTALL\fP
+  \fB			   reinstall the same package\fP
+  \fB-r REMOVE, --remove REMOVE\fP
+  \fB			   remove package\fP
+  \fB-l, --list            list of installed packages\fP
+  \fB-f FIND, --find FIND  find if package installed\fP
+  \fB-d DISPLAY, --display DISPLAY\fP
+  \fB			   display the contents of the package\fP
+.SH GLOBAL OPTIONS
+.TP
+\fB\-v\fP, \fB\-\-verbose\fP
+Print the version of program and exit.
+.SH COMMANDS
+.PP
+The following commands are available.
+.SS -u --upgrade
+\fBslpkg\fP \fB-u\fP <\fIpackage.tgz or .txz\fP>
+.PP
+Normally upgrade only upgrades packages that are already
+installed on the system, and will skip any packages that do not
+already have a version installed. (like slackware command upgradepkg
+--install-new)
+.SS -a --reinstall
+\fBslpkg\fP \fB-a\fP <\fIpackage.tgz or .tgz or else\fP>
+.PP
+Upgradepkg usually skips packages ifthe exact same package
+(matching name, version, arch, and build number) is already
+installed on the system. (like slackware command upgradepkg
+--reinstall)
+.SS -r --remove
+\fBslpkg\fP \fB-r\fP <\fIname of package\fP>
+.PP
+Removes a previously installed Slackware package, while writing
+a progress report to the standard output. A package may be 
+specified either by the full package name (as you'd see listed in
+/var/log/packages/), or by the base package name. (like slackware
+command removepkg)
+.SS -l --list
+\fBslpkg\fP \fB-l\fP
+.PP
+List all installed packages.
+.SS -f --find
+\fBslpkg\fP \fB-f\fP <\fIname of package\fP>
+.PP
+Find if package allready installed or not.
+.SS -d --display
+\fBslpkg\fP \fB-d\fP <\fIname of package\fP>
+.PP
+Display the contents of the package with all descriptions.
+.SH HELP OPTION
+Specifying the help option displays help for slpkg itself, or a
+command.
+.br
+For example:
+  \fBslpkg \-\-help\fP - display help for slpkg
+.SH EXAMPLES
+$ slpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz
+
+Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
+
+$ slpkg -r termcolor
+
+!!! WARNING !!!
+
+Are you sure to remove this package [y/n] y
+
+Package: termcolor-1.1.0-x86_64-1_SBo
+        Removing...
+
+$ slpkg -f termcolor
+
+The package is not installed on your system
+
+$ slpkg -d termcolor
+
+The package is not found
+
+$ slpkg -v
+
+Version: x.x.x
+
+.SH AUTHOR
+Dimitris Zlatanidis <d.zlatanidis@gmail.com>
+.SH COPYRIGHT
+Copyright \(co 2014 Dimitris Zlatanidis
+
+.SH SEE ALSO
+installpkg(8), upgradepkg(8), removepkg(8), pkgtool(8), slackpkg(8) 
