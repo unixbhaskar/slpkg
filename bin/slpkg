@@ -7,18 +7,21 @@ import sys
 import argparse
 import subprocess
 
-__version__ = "0.0.2"
-__packages__ = "/var/log/packages/"
+__version__ = "0.0.3"
+__author__ = "dslackw"
+__license__ = "GPLv3"
 
+''' path file record '''
+__packages__ = "/var/log/packages/"
 
 
 # main function
 def main():
-	description = "Slackware tool to upgrade, remove, find and view packages contents"
+	description = "Slpkg is a Slackware tool to upgrade, remove, find and view packages contents"
 	parser = argparse.ArgumentParser(description=description)
         parser.add_argument("-v", "--verbose", help="print version and exit", action="store_true")
-        parser.add_argument("-u", "--upgrade", help="upgrade package with new", type=str)
-	parser.add_argument("-a", "--reinstall", help="upgrade the same package", type=str)
+        parser.add_argument("-u", "--upgrade", help="install-upgrade package with new", type=str)
+	parser.add_argument("-a", "--reinstall", help="reinstall the same package", type=str)
 	parser.add_argument("-r", "--remove", help="remove package", type=str)
         parser.add_argument("-l", "--list", help="list of installed packages", action="store_true")
 	parser.add_argument("-f", "--find", help="find if package installed", type=str)
@@ -28,7 +31,6 @@ def main():
 	# print version and exit
         if args.verbose:
                 print ("Version: " + __version__)
-		sys.exit()
 
 	# upgrade package with new
         if args.upgrade:
@@ -40,7 +42,14 @@ def main():
 
 	# uninstall package
 	if args.remove:
-		os.system("slackpkg remove {}".format(args.remove))
+		find_pkg = subprocess.check_output(["find " + __packages__ + " -name '{}*' 2> /dev/null".format(args.remove)],shell=True)
+		if find_pkg == "":
+                        os.system("echo -e '\e[31mThe package is not found\e[39m'")
+		else:
+			os.system("echo -e '\e[93m!!! WARNING !!!\e[39m'")
+			remove_pkg = raw_input("Are you sure to remove this package [y/n] ")
+			if remove_pkg == "y" or remove_pkg == "Y":
+				os.system("removepkg {}".format(args.remove))
 
 	# view list of installed packages
 	if args.list:

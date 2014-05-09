@@ -6,13 +6,13 @@ from distutils.core import setup
 setup(
     name='slpkg',
     py_modules=['slpkg'],
-    version='0.0.1',
+    version='0.0.3',
     description="Python tool to manage Slackware packages",
     keywords=["slpkg", "upgrade", "install", "remove", "view", "slackpkg", "tool"],
     author="dslackw",
     author_email="d.zlatanidis@gmail.com",
     url="https://github.com/dslackw/slpkg",
-    download_url="https://github.com/dslackw/slpkg/archive/v0.0.1.tar.gz",
+    download_url="https://github.com/dslackw/slpkg/archive/v0.0.3.tar.gz",
     scripts=['bin/slpkg'],
     package_data={"": ["LICENSE", "README.rst", "CHANGELOG"]},
     classifiers=[

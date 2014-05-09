@@ -24,7 +24,7 @@ Using pip:
 
 	$ pip install slpkg
 	
-	and for uninstall
+	uninstall:
 
 	$ pip uninstall slpkg
 
@@ -34,20 +34,24 @@ Command Line Tool Usage
 -----------------------
 
 .. code-block:: bash
-	usage: slpkg [-h] [-v] [-u UPGRADE] [-r REMOVE] [-l] [-f FIND] [-d DISPLAY]
 
-	Slackware tool to upgrade, remove, find and view packages contents
+usage: slpkg [-h] [-v] [-u UPGRADE] [-a REINSTALL] [-r REMOVE] [-l] [-f FIND]
+             [-d DISPLAY]
 
-	optional arguments:
-	  -h, --help            show this help message and exit
-	  -v, --verbose         print version and exit
-	  -u UPGRADE, --upgrade UPGRADE
-                        exec command upgradepkg --install-new
-	  -r REMOVE, --remove REMOVE
-                        exec command slackpkg remove
-	  -l, --list            list of installed packages
-	  -f FIND, --find FIND  find if package installed
-	  -d DISPLAY, --display DISPLAY
+Slpkg is a Slackware tool to upgrade, remove, find and view packages contents
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         print version and exit
+  -u UPGRADE, --upgrade UPGRADE
+                        install-upgrade package with new
+  -a REINSTALL, --reinstall REINSTALL
+                        reinstall the same package
+  -r REMOVE, --remove REMOVE
+                        remove package
+  -l, --list            list of installed packages
+  -f FIND, --find FIND  find if package installed
+  -d DISPLAY, --display DISPLAY
                         display the contents of the package
 
 Slpkg Examples
@@ -135,6 +139,9 @@ Remove package:
 .. code-block:: bash
 
 	$ slpkg -r termcolor
+	!!! WARNING !!!
+	Are you sure to remove this package [y/n] y
+
 	Package: termcolor-1.1.0-x86_64-1_SBo
 		Removing... 
 
@@ -164,4 +171,4 @@ Remove package:
 	The package is not found
 
 	$ slpkg -v
-	0.0.1
+	Version: x.x.x
