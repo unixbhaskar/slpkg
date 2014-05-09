@@ -6,15 +6,15 @@ import os, sys, shutil
 from distutils.core import setup
 
 setup(
-    name='slpkg',
+    name='Slpkg',
     py_modules=['slpkg'],
-    version='1.0.1',
+    version='1.0.2',
     description="Python tool to manage Slackware packages",
     keywords=["slpkg", "upgrade", "install", "remove", "view", "slackpkg", "tool"],
     author="dslackw",
     author_email="d.zlatanidis@gmail.com",
     url="https://github.com/dslackw/slpkg",
-    download_url="https://github.com/dslackw/slpkg/archive/v1.0.1.tar.gz",
+    download_url="https://github.com/dslackw/slpkg/archive/v1.0.2.tar.gz",
     scripts=['bin/slpkg'],
     package_data={"": ["LICENSE", "README.rst", "CHANGELOG"]},
     classifiers=[
@@ -22,7 +22,7 @@ setup(
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
-        "Development Status :: 0 - Alpha",
+        "Development Status :: 3 - Alpha",
         "Topic :: Intersetup.pynet :: Utilities"],
     long_description=open("README.rst").read()
 )
