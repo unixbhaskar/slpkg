@@ -1,7 +1,7 @@
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :target: https://github.com/dslackw/slpkg
-================================================
-.. image:: http://badge.fury.io/py/slpkg.png
+
+   :image:: http://badge.fury.io/py/slpkg.png
     :target: https://pypi.python.org/pypi/slpkg
 
 Slpkg is a terminal tool , written in Python that allows the
