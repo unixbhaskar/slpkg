@@ -1,3 +1,9 @@
+=====
+slpkg
+=====
+
+|Version| |Downloads| |License|
+
 Slpkg is a terminal tool , written in Python that allows the
 upgrade, remove, find and view Slackware packages contents.
 
@@ -172,3 +178,15 @@ Remove package:
 
 	$ slpkg -v
 	Version: x.x.x
+
+.. |Version| image:: https://pypip.in/v/slpkg/badge.png
+   :target: https://pypi.python.org/pypi/slpkg/
+   :alt: Latest Version
+
+.. |Downloads| image:: https://pypip.in/d/slpkg/badge.png
+   :target: https://pypi.python.org/pypi/slpkg/
+   :alt: Downloads
+
+.. |License| image:: https://pypip.in/license/slpkg/badge.png
+   :target: https://pypi.python.org/pypi/slpkg/
+   :alt: License
