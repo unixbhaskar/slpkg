@@ -3,8 +3,9 @@ Slpkg
 =====
 
 
-.. image:: https://github.com/dslackw/slpkg/blob/master/logo/slpkg.png
+.. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :target: https://github.com/dslackw/slpkg
+
 .. image:: https://badge.fury.io/py/slpkg.svg
     :target: http://badge.fury.io/py/slpkg
 .. image:: https://pypip.in/d/slpkg/badge.png
