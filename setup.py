@@ -28,7 +28,7 @@ setup(
 )
 
 if 'install' in sys.argv:
-    man_path = "/tmp/SBo/package-slpkg/usr/man/man8/"
+    man_path = "/usr/man/man8"
     os.system("mkdir -p {}".format(man_path))
     if os.path.exists(man_path):
         print("Installing man pages")
