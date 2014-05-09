@@ -46,23 +46,23 @@ The following commands are available.
 .PP
 Normally upgrade only upgrades packages that are already
 installed on the system, and will skip any packages that do not
-already have a version installed. (like slackware command upgradepkg
---install-new)
+already have a version installed. 'Requires root privileges'
+(like slackware command upgradepkg --install-new)
 .SS -a --reinstall
 \fBslpkg\fP \fB-a\fP <\fIpackage.tgz or .tgz or else\fP>
 .PP
 Upgradepkg usually skips packages ifthe exact same package
 (matching name, version, arch, and build number) is already
-installed on the system. (like slackware command upgradepkg
---reinstall)
+installed on the system.'Requires root privileges' (like 
+slackware command upgradepkg --reinstall)
 .SS -r --remove
 \fBslpkg\fP \fB-r\fP <\fIname of package\fP>
 .PP
 Removes a previously installed Slackware package, while writing
 a progress report to the standard output. A package may be 
 specified either by the full package name (as you'd see listed in
-/var/log/packages/), or by the base package name. (like slackware
-command removepkg)
+/var/log/packages/), or by the base package name. 'Requires root
+privileges' (like slackware command removepkg)
 .SS -l --list
 \fBslpkg\fP \fB-l\fP
 .PP
@@ -82,30 +82,30 @@ command.
 For example:
   \fBslpkg \-\-help\fP - display help for slpkg
 .SH EXAMPLES
-$ slpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz
+$ \fBslpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz\fP
 
-Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
+  Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
 
-$ slpkg -r termcolor
+$ \fBslpkg -r termcolor\fP
 
-!!! WARNING !!!
+  !!! WARNING !!!
 
-Are you sure to remove this package [y/n] y
+  Are you sure to remove this package [y/n] y
 
-Package: termcolor-1.1.0-x86_64-1_SBo
-        Removing...
+  Package: termcolor-1.1.0-x86_64-1_SBo
+          Removing...
 
-$ slpkg -f termcolor
+$ \fBslpkg -f termcolor\fP
 
-The package is not installed on your system
+  The package is not installed on your system
 
-$ slpkg -d termcolor
+$ \fBslpkg -d termcolor\fP
 
-The package is not found
+  The package is not found
 
-$ slpkg -v
+$ \fBslpkg -v\fP
 
-Version: x.x.x
+  Version: x.x.x
 
 .SH AUTHOR
 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
