@@ -2,12 +2,13 @@
 Slpkg
 =====
 
-.. image:: http://badge.fury.io/py/slpkg.png
-    :target: https://pypi.python.org/pypi/slpkg
+
+.. image:: https://badge.fury.io/py/slpkg.svg
+    :target: http://badge.fury.io/py/slpkg
 .. image:: https://pypip.in/d/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 .. image:: https://pypip.in/license/slpkg/badge.png
-    :https://pypi.python.org/pypi/slpkg/
+    :target: https://pypi.python.org/pypi/slpkg/
 
 
 Slpkg is a terminal tool , written in Python that allows the
