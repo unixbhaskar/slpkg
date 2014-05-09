@@ -28,10 +28,10 @@ setup(
 )
 
 if 'install' in sys.argv:
-    man_path = "/usr/man/man8"
+    man_path = "/usr/man/man8/"
     os.system("mkdir -p {}".format(man_path))
     if os.path.exists(man_path):
         print("Installing man pages")
         man_page = "man/slpkg.8"
         shutil.copy2(man_page, man_path)
-        os.chmod(man_path + 'slpkg.8', int('444', 8))
+        os.chmod(man_path + 'slpkg.8.gz', int('444', 8))
