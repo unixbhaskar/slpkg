@@ -179,7 +179,7 @@ Remove package:
 	$ slpkg -v
 	Version: x.x.x
 
-.. |Version| image:: image:: http://badge.fury.io/py/slpkg.png
+.. |Version| image:: http://badge.fury.io/py/slpkg.png
    :target: https://pypi.python.org/pypi/slpkg/
    :alt: Latest Version
 
