@@ -7,12 +7,20 @@ import sys
 import argparse
 import subprocess
 
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __author__ = "dslackw"
 __license__ = "GPLv3"
 
 ''' path file record '''
 __packages__ = "/var/log/packages/"
+
+
+
+# this fuction return the path of the package
+def find_package(find_pkg):
+	find_pkg = subprocess.check_output(["find " + __packages__ + " -name '{}*' 2> /dev/null".format(find_pkg)],shell=True)
+	return find_pkg
+
 
 
 # main function
@@ -42,8 +50,7 @@ def main():
 
 	# uninstall package
 	if args.remove:
-		find_pkg = subprocess.check_output(["find " + __packages__ + " -name '{}*' 2> /dev/null".format(args.remove)],shell=True)
-		if find_pkg == "":
+		if find_package(args.remove) == "":
                         os.system("echo -e '\e[31mThe package is not found\e[39m'")
 		else:
 			os.system("echo -e '\e[93m!!! WARNING !!!\e[39m'")
@@ -57,19 +64,17 @@ def main():
 
 	# find if packages installed on your system
 	if args.find:
-		find_pkg = subprocess.check_output(["find " + __packages__ + " -name '{}*' 2> /dev/null".format(args.find)],shell=True)
-		if find_pkg == "":		
+		if find_package(args.find) == "":		
 			os.system("echo -e '\e[31mThe package is not installed on your system\e[39m'")
 		else:
 			os.system("echo -e '\e[32mThe package is installed on your system\e[39m'")
 	
 	# print the package contents
 	if args.display:
-		find_pkg = subprocess.check_output(["find " + __packages__ + " -name '{}*' 2> /dev/null".format(args.display)],shell=True)
-		if find_pkg == "":
+		if find_package(args.display) == "":
 			os.system("echo -e '\e[31mThe package is not found\e[39m'")
 		else:
-			os.system("cat {}".format(find_pkg))
+			os.system("cat {}".format(find_package(args.display)))
 
 
 main() 
