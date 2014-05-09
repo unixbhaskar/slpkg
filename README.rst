@@ -1,3 +1,11 @@
+.. image:: https://badge.fury.io/py/slpkg.png
+    :target: http://badge.fury.io/py/slpkg
+.. image:: https://pypip.in/d/slpkg/badge.png
+    :target: https://pypi.python.org/pypi/slpkg
+.. image:: https://pypip.in/license/slpkg/badge.png
+    :target: https://pypi.python.org/pypi/slpkg
+
+
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :scale: 100%
     :width: 45%
