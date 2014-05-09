@@ -1,9 +1,5 @@
-![Slpkg](https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png)
-====================
-[![PyPI version](https://badge.fury.io/py/slpkg.png)](http://badge.fury.io/py/slpkg)
-[![PyPi downloads](https://pypip.in/d/slpkg/badge.png)](https://crate.io/packages/slpkg/)
-[![License](https://pypip.in/license/slpkg/badge.png)](https://pypi.python.org/pypi/slpkg/)
-
+.. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
+    :target:: https://github.com/dslackw/slpkg
 
 Slpkg is a terminal tool , written in Python that allows the
 upgrade, remove, find and view Slackware packages contents.
