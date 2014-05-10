@@ -102,6 +102,7 @@ Find if your package installed:
 Auto build tool to build package:
 
 .. code-block:: bash
+
 	Etc. download from www.slackbuilds.org the package termcolor
 	http://slackbuilds.org/repository/14.1/python/termcolor/
 
