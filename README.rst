@@ -151,7 +151,7 @@ Upgrade install or upackage:
 
 .. code-block:: bash
 
-	$ slpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz
+	$ slpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
 
 	+==============================================================================
 	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
