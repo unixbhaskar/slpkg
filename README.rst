@@ -6,7 +6,6 @@
     :target: https://pypi.python.org/pypi/slpkg
 
 
-
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :scale: 100%
     :width: 45%
@@ -49,24 +48,22 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-	usage: slpkg [-h] [-v] [-u UPGRADE] [-a REINSTALL] [-r REMOVE] [-l] [-f FIND]
-        	     [-d DISPLAY]
+	usage: slpkg [-h] [-v] [-u] [-a] [-s name script source] [-r] [-l] [-f] [-d]
 
 	Slpkg is a Slackware tool to upgrade, remove, find and view packages contents
 
 	optional arguments:
-	  -h, --help            show this help message and exit
-	  -v, --verbose         print version and exit
-	  -u UPGRADE, --upgrade UPGRADE
-        	                install-upgrade package with new
-	  -a REINSTALL, --reinstall REINSTALL
-        	                reinstall the same package
-	  -r REMOVE, --remove REMOVE
-        	                remove package
-	  -l, --list            list of installed packages
-	  -f FIND, --find FIND  find if package installed
-	  -d DISPLAY, --display DISPLAY
-        	                display the contents of the package
+	  -h, --help           show this help message and exit
+	  -v, --verbose        print version and exit
+	  -u, --upgrade        install-upgrade package with new
+	  -a, --reinstall      reinstall the same package
+	  -s name script source, --slackbuild name script source
+                        auto build package
+	  -r, --remove         remove package
+	  -l, --list           list of installed packages
+	  -f, --find           find if package installed
+	  -d, --display        display the contents of the package
+
 
 Slpkg Examples
 --------------
@@ -100,6 +97,83 @@ Find if your package installed:
 
 	$ slpkg -f termcolor
 	The package is installed on your system
+
+
+Auto build tool to build package:
+
+.. code-block:: bash
+	Etc. download from www.slackbuilds.org the package termcolor
+	http://slackbuilds.org/repository/14.1/python/termcolor/
+
+	Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
+	must be in the same directory.
+
+	$ slpkg -s termcolor termcolor.tar.gz termcolor-1.1.0.tar.gz
+
+	termcolor/
+	termcolor/slack-desc
+	termcolor/termcolor.info
+	termcolor/README
+	termcolor/termcolor.SlackBuild
+	termcolor-1.1.0/
+	termcolor-1.1.0/CHANGES.rst
+	termcolor-1.1.0/COPYING.txt
+	termcolor-1.1.0/README.rst
+	termcolor-1.1.0/setup.py
+	termcolor-1.1.0/termcolor.py
+	termcolor-1.1.0/PKG-INFO
+	running install
+	running build
+	running build_py
+	creating build
+	creating build/lib
+	copying termcolor.py -> build/lib
+	running install_lib
+	creating /tmp/SBo/package-termcolor/usr
+	creating /tmp/SBo/package-termcolor/usr/lib64
+	creating /tmp/SBo/package-termcolor/usr/lib64/python2.7
+	creating /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
+	copying build/lib/termcolor.py -> /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
+	byte-compiling /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor.py to termcolor.pyc
+	running install_egg_info
+	Writing /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+
+	Slackware package maker, version 3.14159.
+
+	Searching for symbolic links:
+
+	No symbolic links were found, so we won't make an installation script.
+	You can make your own later in ./install/doinst.sh and rebuild the
+	package if you like.
+
+	This next step is optional - you can set the directories in your package
+	to some sane permissions. If any of the directories in your package have
+	special permissions, then DO NOT reset them here!
+
+	Would you like to reset all directory permissions to 755 (drwxr-xr-x) and
+	directory ownerships to root.root ([y]es, [n]o)? n
+
+	Creating Slackware package:  /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
+
+	./
+	usr/
+	usr/lib64/
+	usr/lib64/python2.7/
+	usr/lib64/python2.7/site-packages/
+	usr/lib64/python2.7/site-packages/termcolor.py
+	usr/lib64/python2.7/site-packages/termcolor.pyc
+	usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+	usr/doc/
+	usr/doc/termcolor-1.1.0/
+	usr/doc/termcolor-1.1.0/termcolor.SlackBuild
+	usr/doc/termcolor-1.1.0/README.rst
+	usr/doc/termcolor-1.1.0/CHANGES.rst
+	usr/doc/termcolor-1.1.0/PKG-INFO
+	usr/doc/termcolor-1.1.0/COPYING.txt
+	install/
+	install/slack-desc
+
+	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
 
 Display the contents of the package:

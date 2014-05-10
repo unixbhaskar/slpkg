@@ -1,4 +1,11 @@
 10-05-2014
+Version 1.0.5
+
+[Feature] - Added auto build package choice
+[Updated] - man page and README.rst file
+
+
+10-05-2014
 Version 1.0.3
 
 [Updated] - bin/slpkg added function find_package
