@@ -262,3 +262,10 @@ Remove package:
 	$ slpkg -v
 	Version: x.x.x
 
+Man page it is available for full support:
+
+.. code-block:: bash
+
+	$ man slpkg
+
+
