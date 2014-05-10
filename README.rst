@@ -69,36 +69,6 @@ Slpkg Examples
 --------------
 
 
-Upgrade package:
-
-.. code-block:: bash
-
-	$ slpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz
-
-	+==============================================================================
-	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
-	+==============================================================================
-
-	Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
-	Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
-	PACKAGE DESCRIPTION:
-	# termcolor (ANSII Color formatting for output in terminal)
-	#
-	# termcolor allows you to format your output in terminal.
-	#
-	# Project URL: https://pypi.python.org/pypi/termcolor
-	#
-	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
-
-
-Find if your package installed:
-
-.. code-block:: bash
-
-	$ slpkg -f termcolor
-	The package is installed on your system
-
-
 Auto build tool to build package:
 
 .. code-block:: bash
@@ -175,6 +145,36 @@ Auto build tool to build package:
 	install/slack-desc
 
 	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
+
+
+Upgrade install or upackage:
+
+.. code-block:: bash
+
+	$ slpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz
+
+	+==============================================================================
+	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
+	+==============================================================================
+
+	Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
+	Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
+	PACKAGE DESCRIPTION:
+	# termcolor (ANSII Color formatting for output in terminal)
+	#
+	# termcolor allows you to format your output in terminal.
+	#
+	# Project URL: https://pypi.python.org/pypi/termcolor
+	#
+	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
+
+
+Find if your package installed:
+
+.. code-block:: bash
+
+	$ slpkg -f termcolor
+	The package is installed on your system
 
 
 Display the contents of the package:
