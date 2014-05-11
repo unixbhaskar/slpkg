@@ -7,7 +7,7 @@ import sys
 import argparse
 import subprocess
 
-__version__ = "1.0.6"
+__version__ = "1.0.7"
 __author__ = "dslackw"
 __license__ = "GPLv3"
 
@@ -95,6 +95,9 @@ def main():
 			os.system("echo -e '\e[31mThe package is not found\e[39m'")
 		else:
 			os.system("cat {}".format(find_package(args.display)))
+	# fix null arguments
+	if not any([args.verbose, args.upgrade, args.reinstall, args.slackbuild, args.remove, args.list, args.find, args.display]):
+		os.system("slpkg -h")
 
 
 main() 
