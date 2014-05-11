@@ -13,12 +13,12 @@
 .\"
 .TH Slpkg "8" "5 2014" "slpkg"
 .SH NAME
-slpkg - Slackware tool to upgrade, remove, find and view packages contents
+slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
  \fBslpkg\fP [\fIoptions\fP] \fB[-h]\fP \fB[-v]\fP \fB[-u UPGRADE]\fP \fB[-a REINSTALL]\fP \fB[-r REMOVE]\fP \fB[-l]\fP \fB[-f FIND]\fP \fB[-d DISPLAY]\fP <\fIcommand-arguments\fP>...
 .SH DESCRIPTION
-\fBslpkg\fP is a terminal tool , written in Python that allows the upgrade, remove, find
-and view Slackware packages contents.
+\fBslpkg\fP is a terminal tool written in Python that allows the build, install, upgrade, 
+remove, find and view Slackware packages contents.
 .PP
 It's a quick and easy way to manage your packages in slackware to a command.
 .SH EXAMPLES
@@ -26,7 +26,7 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB-v, --verbose        print version and exit\fP
   \fB-u, --upgrade        install-upgrade package with new\fP
   \fB-a, --reinstall      reinstall the same package\fP
-  \fB-s name script source, --slackbuild name script source\fP
+  \fB-s  script source, --slackbuild script source\fP
   \fB			  auto build package\fP
   \fB-r, --remove         remove package\fP
   \fB-l, --list           list of installed packages\fP
@@ -54,15 +54,10 @@ Upgradepkg usually skips packages ifthe exact same package
 installed on the system.'Requires root privileges' (like 
 slackware command upgradepkg --reinstall)
 .SS -s name script source
-\fBslpkg\fP \fB-s\fP <\fIname\fP> <\fIscript\fP> <\fIsource\fP>
+\fBslpkg\fP \fB-s\fP <\fIscript\fP> <\fIsource\fP>
 .PP
-Etc. download from www.slackbuilds.org the package termcolor
-http://slackbuilds.org/repository/14.1/python/termcolor/
-
-Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
-must be in the same directory.
-
-$ slpkg -s termcolor termcolor.tar.gz termcolor-1.1.0.tar.gz
+With this argument, build slackware package quickly and easy.
+Support .tar.gz and .tar.bz2 slackbuilds archives.
 .SS -r --remove
 \fBslpkg\fP \fB-r\fP <\fIname of package\fP>
 .PP
@@ -90,6 +85,17 @@ command.
 For example:
   \fBslpkg \-\-help\fP - display help for slpkg
 .SH EXAMPLES
+Etc. download from www.slackbuilds.org the package termcolor
+http://slackbuilds.org/repository/14.1/python/termcolor/
+
+Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
+must be in the same directory.
+
+$ \fBslpkg -s termcolor.tar.gz termcolor-1.1.0.tar.gz\fP
+
+Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
+
+
 $ \fBslpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz\fP
 
   Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz

@@ -7,9 +7,9 @@
 
 
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
-    :scale: 100%
-    :width: 45%
-    :align: center
+    :scale: 60%
+    :width: 30%
+    :align: left
 
 Slpkg is a terminal tool , written in Python that allows the
 build, upgrade, remove, find and view Slackware packages contents.
@@ -50,15 +50,15 @@ Command Line Tool Usage
 
 	usage: slpkg [-h] [-v] [-u] [-a] [-s name script source] [-r] [-l] [-f] [-d]
 
-	Slpkg is a Slackware tool to upgrade, remove, find and view packages contents
+	Utility to help package management in Slackware
 
 	optional arguments:
 	  -h, --help           show this help message and exit
 	  -v, --verbose        print version and exit
 	  -u, --upgrade        install-upgrade package with new
 	  -a, --reinstall      reinstall the same package
-	  -s name script source, --slackbuild name script source
-                               auto build package
+	  -s  script source, --slackbuild script source
+                        auto build package
 	  -r, --remove         remove package
 	  -l, --list           list of installed packages
 	  -f, --find           find if package installed
@@ -67,36 +67,6 @@ Command Line Tool Usage
 
 Slpkg Examples
 --------------
-
-
-Upgrade package:
-
-.. code-block:: bash
-
-	$ slpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz
-
-	+==============================================================================
-	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
-	+==============================================================================
-
-	Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
-	Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
-	PACKAGE DESCRIPTION:
-	# termcolor (ANSII Color formatting for output in terminal)
-	#
-	# termcolor allows you to format your output in terminal.
-	#
-	# Project URL: https://pypi.python.org/pypi/termcolor
-	#
-	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
-
-
-Find if your package installed:
-
-.. code-block:: bash
-
-	$ slpkg -f termcolor
-	The package is installed on your system
 
 
 Auto build tool to build package:
@@ -109,7 +79,7 @@ Auto build tool to build package:
 	Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
 	must be in the same directory.
 
-	$ slpkg -s termcolor termcolor.tar.gz termcolor-1.1.0.tar.gz
+	$ slpkg -s termcolor.tar.gz termcolor-1.1.0.tar.gz
 
 	termcolor/
 	termcolor/slack-desc
@@ -175,6 +145,36 @@ Auto build tool to build package:
 	install/slack-desc
 
 	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
+
+
+Upgrade install or upackage:
+
+.. code-block:: bash
+
+	$ slpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
+
+	+==============================================================================
+	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
+	+==============================================================================
+
+	Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
+	Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
+	PACKAGE DESCRIPTION:
+	# termcolor (ANSII Color formatting for output in terminal)
+	#
+	# termcolor allows you to format your output in terminal.
+	#
+	# Project URL: https://pypi.python.org/pypi/termcolor
+	#
+	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
+
+
+Find if your package installed:
+
+.. code-block:: bash
+
+	$ slpkg -f termcolor
+	The package is installed on your system
 
 
 Display the contents of the package:
@@ -244,7 +244,8 @@ Remove package:
 	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
 	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor.py
 	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor.pyc
-	  --> Deleting /usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
+	  --> Deleting 
+/usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
 	  --> Deleting /usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
 	  --> Deleting /usr/lib64/python3.3/site-packages/termcolor.py
 	  --> Deleting empty directory /usr/lib64/python3.3/site-packages/__pycache__/
@@ -267,5 +268,3 @@ Man page it is available for full support:
 .. code-block:: bash
 
 	$ man slpkg
-
-
