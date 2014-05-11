@@ -12,7 +12,7 @@
     :align: center
 
 Slpkg is a terminal tool , written in Python that allows the
-upgrade, remove, find and view Slackware packages contents.
+build, upgrade, remove, find and view Slackware packages contents.
 
 It's a quick and easy way to manage your packages in slackware
 to a command.
