@@ -12,7 +12,7 @@
     :align: center
 
 Slpkg is a terminal tool , written in Python that allows the
-build, upgrade, remove, find and view Slackware packages contents.
+upgrade, remove, find and view Slackware packages contents.
 
 It's a quick and easy way to manage your packages in slackware
 to a command.
@@ -58,7 +58,7 @@ Command Line Tool Usage
 	  -u, --upgrade        install-upgrade package with new
 	  -a, --reinstall      reinstall the same package
 	  -s name script source, --slackbuild name script source
-                        auto build package
+                               auto build package
 	  -r, --remove         remove package
 	  -l, --list           list of installed packages
 	  -f, --find           find if package installed
@@ -67,6 +67,36 @@ Command Line Tool Usage
 
 Slpkg Examples
 --------------
+
+
+Upgrade package:
+
+.. code-block:: bash
+
+	$ slpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz
+
+	+==============================================================================
+	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
+	+==============================================================================
+
+	Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
+	Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
+	PACKAGE DESCRIPTION:
+	# termcolor (ANSII Color formatting for output in terminal)
+	#
+	# termcolor allows you to format your output in terminal.
+	#
+	# Project URL: https://pypi.python.org/pypi/termcolor
+	#
+	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
+
+
+Find if your package installed:
+
+.. code-block:: bash
+
+	$ slpkg -f termcolor
+	The package is installed on your system
 
 
 Auto build tool to build package:
@@ -145,36 +175,6 @@ Auto build tool to build package:
 	install/slack-desc
 
 	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
-
-
-Upgrade install or upackage:
-
-.. code-block:: bash
-
-	$ slpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
-
-	+==============================================================================
-	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
-	+==============================================================================
-
-	Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
-	Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
-	PACKAGE DESCRIPTION:
-	# termcolor (ANSII Color formatting for output in terminal)
-	#
-	# termcolor allows you to format your output in terminal.
-	#
-	# Project URL: https://pypi.python.org/pypi/termcolor
-	#
-	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
-
-
-Find if your package installed:
-
-.. code-block:: bash
-
-	$ slpkg -f termcolor
-	The package is installed on your system
 
 
 Display the contents of the package:
