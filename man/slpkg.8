@@ -22,16 +22,18 @@ remove, find and view Slackware packages contents.
 .PP
 It's a quick and easy way to manage your packages in slackware to a command.
 .SH EXAMPLES
-  \fB-h, --help           show this help message and exit\fP
-  \fB-v, --verbose        print version and exit\fP
-  \fB-u, --upgrade        install-upgrade package with new\fP
-  \fB-a, --reinstall      reinstall the same package\fP
-  \fB-s  script source, --slackbuild script source\fP
-  \fB			  auto build package\fP
-  \fB-r, --remove         remove package\fP
-  \fB-l, --list           list of installed packages\fP
-  \fB-f, --find           find if package installed\fP
-  \fB-d, --display        display the contents of the package\fP
+  \fB-h, --help            show this help message and exit\fP
+  \fB-v, --verbose         print version and exit\fP
+  \fB-s script source, --slackbuild script source\fP
+  \fB                      auto build package\fP
+  \fB-l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]\fP
+  \fB		    	   list of installed packages\fP
+  \fB-i , --install        install binary package\fP
+  \fB-u , --upgrade        install-upgrade package with new\fP
+  \fB-a , --reinstall      reinstall the same package\fP
+  \fB-r , --remove         remove package\fP
+  \fB-f , --find           find if package installed\fP
+  \fB-d , --display        display the contents of the package\fP
 .SH GLOBAL OPTIONS
 .TP
 \fB\-v\fP, \fB\-\-verbose\fP
@@ -39,7 +41,21 @@ Print the version of program and exit.
 .SH COMMANDS
 .PP
 The following commands are available.
-.SS -u --upgrade
+.SS -s script source, --slackbuild script source
+\fBslpkg\fP \fB-s\fP <\fIscript\fP> <\fIsource\fP>
+.PP
+With this argument, build slackware package quickly and easy.
+Support .tar.gz and .tar.bz2 slackbuilds archives.
+.SS -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
+\fBslpkg\fP \fB-l\fP <\fIall\fP> <\fIsbo\fP>
+.PP
+Two display options list, one for all packages and another
+only for packages SBo.
+.SS -i , --install install binary package
+\fBslpkg\fP \fB-i\fP <\fIpackage.tgz or .txz\fP>
+Installs single binary packages designed for use with the 
+Slackware Linux distribution into your system.
+.SS -u , --upgrade install-upgrade package with new
 \fBslpkg\fP \fB-u\fP <\fIpackage.tgz or .txz\fP>
 .PP
 Normally upgrade only upgrades packages that are already
@@ -49,16 +65,11 @@ already have a version installed. 'Requires root privileges'
 .SS -a --reinstall
 \fBslpkg\fP \fB-a\fP <\fIpackage.tgz or .tgz or else\fP>
 .PP
-Upgradepkg usually skips packages ifthe exact same package
+Upgradepkg usually skips packages if the exact same package
 (matching name, version, arch, and build number) is already
 installed on the system.'Requires root privileges' (like 
 slackware command upgradepkg --reinstall)
-.SS -s name script source
-\fBslpkg\fP \fB-s\fP <\fIscript\fP> <\fIsource\fP>
-.PP
-With this argument, build slackware package quickly and easy.
-Support .tar.gz and .tar.bz2 slackbuilds archives.
-.SS -r --remove
+.SS -r , --remove package
 \fBslpkg\fP \fB-r\fP <\fIname of package\fP>
 .PP
 Removes a previously installed Slackware package, while writing
@@ -66,10 +77,6 @@ a progress report to the standard output. A package may be
 specified either by the full package name (as you'd see listed in
 /var/log/packages/), or by the base package name. 'Requires root
 privileges' (like slackware command removepkg)
-.SS -l --list
-\fBslpkg\fP \fB-l\fP
-.PP
-List all installed packages.
 .SS -f --find
 \fBslpkg\fP \fB-f\fP <\fIname of package\fP>
 .PP

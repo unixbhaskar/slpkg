@@ -48,21 +48,24 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-	usage: slpkg [-h] [-v] [-u] [-a] [-s name script source] [-r] [-l] [-f] [-d]
+	usage: slpkg.py [-h] [-v] [-s script source] [-l all, sbo [all, sbo ...]] [-i]
+                [-u] [-a] [-r] [-f] [-d]
 
 	Utility to help package management in Slackware
-
+	
 	optional arguments:
-	  -h, --help           show this help message and exit
-	  -v, --verbose        print version and exit
-	  -u, --upgrade        install-upgrade package with new
-	  -a, --reinstall      reinstall the same package
-	  -s  script source, --slackbuild script source
-                        auto build package
-	  -r, --remove         remove package
-	  -l, --list           list of installed packages
-	  -f, --find           find if package installed
-	  -d, --display        display the contents of the package
+      	  -h, --help            show this help message and exit
+	  -v, --verbose         print version and exit
+	  -s script source, --slackbuild script source
+                                auto build package
+	  -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
+                                list of installed packages
+	  -i , --install        install binary package
+	  -u , --upgrade        install-upgrade package with new
+	  -a , --reinstall      reinstall the same package
+	  -r , --remove         remove package
+	  -f , --find           find if package installed
+	  -d , --display        display the contents of the package
 
 
 Slpkg Examples

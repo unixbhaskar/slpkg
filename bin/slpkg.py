@@ -29,14 +29,16 @@ def main():
 			    action="store_true")
 	parser.add_argument("-s", "--slackbuild", help="auto build package",
                             type=str, nargs=2, metavar=('script','source'))
+	parser.add_argument("-l", "--list", help="list of installed packages",
+                            nargs="+", choices="all sbo".split(), metavar=('all, sbo'))
+	parser.add_argument("-i", "--install", help="install binary package",
+                            type=str, metavar=(''))
         parser.add_argument("-u", "--upgrade", help="install-upgrade package with new",
 			    type=str, metavar=(''))
 	parser.add_argument("-a", "--reinstall", help="reinstall the same package",
 			    type=str, metavar=(''))
 	parser.add_argument("-r", "--remove", help="remove package",
 			    type=str, metavar=(''))
-        parser.add_argument("-l", "--list", help="list of installed packages",
-			    action="store_true")
 	parser.add_argument("-f", "--find", help="find if package installed",
 			    type=str, metavar=(''))
 	parser.add_argument("-d", "--display", help="display the contents of the package",
@@ -65,6 +67,18 @@ def main():
                 os.chdir(path + pkg_name)
                 os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
 
+	''' view list of installed packages '''
+        if args.list:
+                if "all" in args.list:
+                        os.system("ls " + __packages__ + "* | more")
+
+                if "sbo" in args.list:
+                        os.system("ls " + __packages__ + "* | grep 'SBo' | more")
+
+	''' install binary package '''
+        if args.install:
+                os.system("installpkg {}".format(args.install))
+
 	''' upgrade package with new '''
         if args.upgrade:
 		os.system("upgradepkg --install-new {}".format(args.upgrade))
@@ -83,10 +97,6 @@ def main():
 			if remove_pkg == "y" or remove_pkg == "Y":
 				os.system("removepkg {}".format(args.remove))
 
-	''' view list of installed packages '''
-	if args.list:
-		os.system("ls " + __packages__ + "* | more")
-
 	''' find if package installed on your system '''
 	if args.find:
 		if find_package(args.find) == "":		
@@ -101,8 +111,8 @@ def main():
 		else:
 			os.system("cat {}".format(find_package(args.display)))
 	''' fix null arguments '''
-	if not any([args.verbose, args.upgrade, args.reinstall, args.slackbuild,
-		 args.remove, args.list, args.find, args.display]):
+	if not any([args.verbose, args.slackbuild, args.install, args.upgrade, args.reinstall,
+		    args.remove, args.list, args.find, args.display]):
 		os.system("slpkg -h")
 
 
