@@ -7,11 +7,23 @@ import sys
 import argparse
 import subprocess
 
+__author__ = "dslackw"
+__version__ = "1.0.9"
+__license__ = "GNU General Public License v3 (GPLv3)"
 
 ''' path file record '''
 __packages__ = "/var/log/packages/"
 
-__version__ = "1.0.8"
+
+
+''' print out colors class '''
+class colors:
+	RED = "\e[31m"
+	GREEN = "\e[32m"
+	YELLOW = "\e[93m"
+	CYAN = "\e[36m"
+	ENDC = "\e[39m"
+
 
 
 ''' this fuction return the path of the package '''
@@ -90,9 +102,9 @@ def main():
 	''' uninstall package '''
 	if args.remove:
 		if find_package(args.remove) == "":
-                        os.system("echo -e '\e[31mThe package is not found\e[39m'")
+                        os.system("echo -e '{}The package is not found{}'".format(colors.RED, colors.ENDC))
 		else:
-			os.system("echo -e '\e[93m!!! WARNING !!!\e[39m'")
+			os.system("echo -e '{}!!! WARNING !!!{}'".format(colors.YELLOW, colors.ENDC))
 			remove_pkg = raw_input("Are you sure to remove this package [y/n] ")
 			if remove_pkg == "y" or remove_pkg == "Y":
 				os.system("removepkg {}".format(args.remove))
@@ -100,16 +112,20 @@ def main():
 	''' find if package installed on your system '''
 	if args.find:
 		if find_package(args.find) == "":		
-			os.system("echo -e '\e[31mThe package is not installed on your system\e[39m'")
+			os.system("echo -e '{}The package {} is not installed on your system{}'".format(colors.RED,
+				   colors.CYAN + '`' + args.find + '`' + colors.RED, colors.ENDC))
 		else:
-			os.system("echo -e '\e[32mThe package is installed on your system\e[39m'")
+			os.system("echo -e '{}The package {} is installed on your system{}'".format(colors.GREEN,
+				   colors.CYAN + '`' + args.find + '`' + colors.GREEN, colors.ENDC))
 	
 	''' print the package contents '''
 	if args.display:
 		if find_package(args.display) == "":
-			os.system("echo -e '\e[31mThe package is not found\e[39m'")
+			os.system("echo -e '{}The package {} is not found{}'".format(colors.RED,
+				   colors.CYAN + '`' + args.display + '`' + colors.RED,  colors.ENDC))
 		else:
 			os.system("cat {}".format(find_package(args.display)))
+
 	''' fix null arguments '''
 	if not any([args.verbose, args.slackbuild, args.install, args.upgrade, args.reinstall,
 		    args.remove, args.list, args.find, args.display]):

@@ -177,7 +177,7 @@ Find if your package installed:
 .. code-block:: bash
 
 	$ slpkg -f termcolor
-	The package is installed on your system
+	The package `termcolor` is installed on your system
 
 
 Display the contents of the package:
@@ -257,10 +257,10 @@ Remove package:
 
 	
 	$ slpkg -f termcolor
-	The package is not installed on your system
+	The package `termcolor` is not installed on your system
 
 	$ slpkg -d termcolor
-	The package is not found
+	The package 'termcolor` is not found
 
 	$ slpkg -v
 	Version: x.x.x

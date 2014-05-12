@@ -7,7 +7,7 @@ from distutils.core import setup
 
 setup(
     name = 'slpkg',
-    version = "1.0.8",
+    version = "1.0.9",
     description = "Python tool to manage Slackware packages",
     keywords = ["slackware", "slpkg", "upgrade", "install", "remove",
 		 "view", "slackpkg", "tool"],
@@ -31,6 +31,6 @@ if 'install' in sys.argv:
     os.system("mkdir -p {}".format(man_path))
     if os.path.exists(man_path):
         print("Installing man pages")
-        man_page = "man/slpkg.8.gz"
+        man_page = "man/slpkg.8"
         shutil.copy2(man_page, man_path)
         os.chmod(man_path, int('444', 8))
