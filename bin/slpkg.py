@@ -27,12 +27,12 @@ def main():
 	parser = argparse.ArgumentParser(description=description)
         parser.add_argument("-v", "--verbose", help="print version and exit",
 			    action="store_true")
+	parser.add_argument("-s", "--slackbuild", help="auto build package",
+                            type=str, nargs=2, metavar=('script','source'))
         parser.add_argument("-u", "--upgrade", help="install-upgrade package with new",
 			    type=str, metavar=(''))
 	parser.add_argument("-a", "--reinstall", help="reinstall the same package",
 			    type=str, metavar=(''))
-	parser.add_argument("-s", "--slackbuild", help="auto build package",
- 			    type=str, nargs=2, metavar=('script','source'))
 	parser.add_argument("-r", "--remove", help="remove package",
 			    type=str, metavar=(''))
         parser.add_argument("-l", "--list", help="list of installed packages",
@@ -47,6 +47,24 @@ def main():
         if args.verbose:
                 print ("Version: {}".format(__version__))
 
+	''' auto build package from slackbuild script '''
+        if args.slackbuild:
+                slack_script = args.slackbuild[0]
+                source_tar = args.slackbuild[1]
+
+                ''' remove file type from slackbuild script and store the name '''
+                pkg_name = slack_script.replace(".tar.gz", "")
+                if pkg_name != slack_script:
+                        pass
+                else:
+                        pkg_name = slack_script.replace(".tar.bz2", "")
+
+                path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
+                os.system("tar xvf {}{}".format(path, slack_script))
+                os.system("cp {} {}".format(source_tar, pkg_name))
+                os.chdir(path + pkg_name)
+                os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
+
 	''' upgrade package with new '''
         if args.upgrade:
 		os.system("upgradepkg --install-new {}".format(args.upgrade))
@@ -54,25 +72,6 @@ def main():
 	''' upgrade package with the same '''
 	if args.reinstall:
 		os.system("upgradepkg --reinstall {}".format(args.reinstall))
-
-	''' auto build package from slackbuild script '''
-	if args.slackbuild:
-		slack_script = args.slackbuild[0]
-		source_tar = args.slackbuild[1]
-		
-		''' remove file type from slackbuild script and store the name '''
-		pkg_name = slack_script.replace(".tar.gz", "")
-		if pkg_name != slack_script:
-			pass
-		else:
-			pkg_name = slack_script.replace(".tar.bz2", "")
-
-		path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
-		os.system("tar xvf {}{}".format(path, slack_script))
-		os.system("cp {} {}".format(source_tar, pkg_name))
-		os.chdir(path + pkg_name)
-		os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
-
 
 	''' uninstall package '''
 	if args.remove:
