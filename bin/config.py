@@ -1,5 +1,0 @@
-__version__ = "1.0.8"
-__author__ = "dslackw"
-__email__ = "d.zlatanidis@gmail.com"
-__homepage__ = "https://github.com/dslackw/slpkg"
-__license__ = "GPLv3"

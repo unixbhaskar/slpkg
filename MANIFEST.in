@@ -1,4 +1,0 @@
-include runner README.rst
-recursive-include man *
-recursive-include logo *
-

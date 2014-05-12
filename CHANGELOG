@@ -1,7 +1,9 @@
 12-05-2014
 Version 1.0.8
 
-[Updated] - upgrade main fuction add config.py
+[Updated] - Added signle install argument
+[Updated] - Fix arguments
+[Updated] - Added 2 options in list argument
 
 11-05-2014
 Version 1.0.7

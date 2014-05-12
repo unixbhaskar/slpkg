@@ -6,12 +6,12 @@ import os
 import sys
 import argparse
 import subprocess
-from config import __version__
 
 
 ''' path file record '''
 __packages__ = "/var/log/packages/"
 
+__version__ = "1.0.8"
 
 
 ''' this fuction return the path of the package '''

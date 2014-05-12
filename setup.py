@@ -4,22 +4,19 @@
 import os, sys, shutil
 
 from distutils.core import setup
-from bin.config import __version__, __author__, __homepage__, __email__
 
 setup(
-    name='slpkg',
-    py_modules=['slpkg'],
-    version = __version__,
+    name = 'slpkg',
+    version = "1.0.8",
     description = "Python tool to manage Slackware packages",
     keywords = ["slackware", "slpkg", "upgrade", "install", "remove",
 		 "view", "slackpkg", "tool"],
-    author = __author__,
-    author_email = __email__,
-    url = __homepage__,
-    download_url = __homepage__,
-    scripts=['runner'],
-    package_data={"": ["LICENSE", "README.rst", "CHANGELOG"]},
-    classifiers=[
+    author = "dslackw",
+    author_email = "d.zlatanidis@gmail.com",
+    url = "https://github.com/dslackw/slpkg",
+    scripts = ['bin/slpkg'],
+    package_data = {"": ["LICENSE", "README.rst", "CHANGELOG"]},
+    classifiers = [
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python",
