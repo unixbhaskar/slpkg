@@ -247,8 +247,7 @@ Remove package:
 	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
 	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor.py
 	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor.pyc
-	  --> Deleting 
-/usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
+	  --> Deleting /usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
 	  --> Deleting /usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
 	  --> Deleting /usr/lib64/python3.3/site-packages/termcolor.py
 	  --> Deleting empty directory /usr/lib64/python3.3/site-packages/__pycache__/
@@ -265,7 +264,7 @@ Remove package:
 
 	$ slpkg -v
 	Version: x.x.x
-
+README.rst
 Man page it is available for full support:
 
 .. code-block:: bash
