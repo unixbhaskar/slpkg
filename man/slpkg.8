@@ -16,7 +16,7 @@
 slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
  \fBslpkg\fP \fB[-h]\fP \fB[-v]\fP \fB[-s script source]\fP \fB[-l all, sbo [all, sbo ...]]\fP 
-\fB[-n]\fP \fB[-i]\fP \fB[-u]\fP \fB[-a]\fP \fB[-r]\fP \fB[-f]\fP \fB[-d]\fP
+\fB[-n]\fP \fB[-i]\fP \fB[-u]\fP \fB[-a]\fP \fB[-b]\fP \fB[-r]\fP \fB[-f]\fP \fB[-d]\fP
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal tool written in Python that allows the build, install, upgrade, 
 remove, find and view Slackware packages contents.
@@ -33,6 +33,7 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB-i , --install        install binary package\fP
   \fB-u , --upgrade        install-upgrade package with new\fP
   \fB-a , --reinstall      reinstall the same package\fP
+  \fB=b , --binary         find already binary packages\fP
   \fB-r , --remove         remove package\fP
   \fB-f , --find           find if package installed\fP
   \fB-d , --display        display the contents of the package\fP
@@ -59,24 +60,28 @@ only for packages SBo.
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
 .SS -i , --install install binary package
-\fBslpkg\fP \fB-i\fP <\fIpackage.tgz or .txz\fP>
+\fBslpkg\fP \fB-i\fP <\fIpackage.t?z\fP>
 .PP
 Installs single binary packages designed for use with the 
 Slackware Linux distribution into your system.
 .SS -u , --upgrade install-upgrade package with new
-\fBslpkg\fP \fB-u\fP <\fIpackage.tgz or .txz\fP>
+\fBslpkg\fP \fB-u\fP <\fIpackage.t?z\fP>
 .PP
 Normally upgrade only upgrades packages that are already
 installed on the system, and will skip any packages that do not
 already have a version installed. 'Requires root privileges'
 (like slackware command upgradepkg --install-new)
 .SS -a --reinstall
-\fBslpkg\fP \fB-a\fP <\fIpackage.tgz or .tgz or else\fP>
+\fBslpkg\fP \fB-a\fP <\fIpackage.t?z\fP>
 .PP
 Upgradepkg usually skips packages if the exact same package
 (matching name, version, arch, and build number) is already
 installed on the system.'Requires root privileges' (like 
 slackware command upgradepkg --reinstall)
+.SS -b --binary
+\fBslpkg\fP \fB-b\fP <\fIpackage.t?z\fP>
+.PP
+Find already binary Slackware packages in /tmp directory
 .SS -r , --remove package
 \fBslpkg\fP \fB-r\fP <\fIname of package\fP>
 .PP

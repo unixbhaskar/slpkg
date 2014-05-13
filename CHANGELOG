@@ -1,8 +1,17 @@
-12-05-2013
+13-05-2014
+Version 1.1.2
+
+[Feature] - Added to find already binary packages in /tmp directory
+
+13-05-2014
+Version: 1.1.1
+
+[Updated] - Fix list print out
+
+12-05-2014
 Version 1.1.0
 
 [Feature] - Added search from SBo and print link for download
-[Updated] - Fix list print out
 
 12-05-2014
 Version 1.0.9

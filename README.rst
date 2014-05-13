@@ -49,7 +49,7 @@ Command Line Tool Usage
 .. code-block:: bash
 
 	usage: slpkg.py [-h] [-v] [-s script source] [-l all, sbo [all, sbo ...]] [-i]
-                [-u] [-a] [-r] [-f] [-d]
+                [-u] [-a] [-b] [-r] [-f] [-d]
 
 	Utility to help package management in Slackware
 	
@@ -64,6 +64,7 @@ Command Line Tool Usage
 	  -i , --install        install binary package
 	  -u , --upgrade        install-upgrade package with new
 	  -a , --reinstall      reinstall the same package
+	  -b , --binary         find already binary packages
 	  -r , --remove         remove package
 	  -f , --find           find if package installed
 	  -d , --display        display the contents of the package
@@ -73,12 +74,12 @@ Slpkg Examples
 --------------
 
 
-Find from www.slackbuilds.org the slackbuild by name:
+Find slackbuild from network (www.slackbuilds.org):
 
 .. code-block:: bash
 
 	$ slpkg -n termcolor
-	Searching for `termcolor` Please wait ...
+	Searching for `termcolor` from www.slackbuilds.org Please wait ...
 
 	The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
 
@@ -265,6 +266,7 @@ Remove package:
 	WARNING: Unique directory /usr/lib64/python3.3/site-packages/ contains new files
 	WARNING: Unique directory /usr/lib64/python3.3/ contains new files
 	  --> Deleting empty directory /usr/doc/termcolor-1.1.0/
+	Done ...
 
 	
 	$ slpkg -f termcolor

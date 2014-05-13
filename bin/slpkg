@@ -10,11 +10,13 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 __license__ = "GNU General Public License v3 (GPLv3)"
 
 ''' path file record '''
 packages = "/var/log/packages/"
+tmp = "/tmp/"
+
 
 ''' SlackBuilds Repository '''
 sbo_url = "http://slackbuilds.org/repository/14.1/"
@@ -47,7 +49,7 @@ def find_package(find_pkg):
 ''' search and found slackbuilds links from http://slackbuilds.org/ '''
 def sbo_search_pkg(link):
 	i = 0
-	os.system("echo -e 'Searching for {} Please wait ...'".format("`" + link + "`"))
+	os.system("echo -e 'Searching for {} from www.slackbuilds.org Please wait ...'".format("`" + link + "`"))
 	link = ">" + link + "<"
 	for i in repository:
 		sbo_url_sub = sbo_url + i + "/"
@@ -81,6 +83,8 @@ def main():
 			    type=str, metavar=(''))
 	parser.add_argument("-a", "--reinstall", help="reinstall the same package",
 			    type=str, metavar=(''))
+	parser.add_argument("-b", "--binary", help="find already binary packages",
+                            type=str, metavar=(''))
 	parser.add_argument("-r", "--remove", help="remove package",
 			    type=str, metavar=(''))
 	parser.add_argument("-f", "--find", help="find if package installed",
@@ -131,7 +135,8 @@ def main():
 		else:
 			print
 			os.system("echo -e '{}The {} found in --> {}'".format(colors.GREEN,
-				   colors.CYAN + '`' + args.network + '`' + colors.GREEN, colors.ENDC + find_sbo_url))
+				   colors.CYAN + '`' + args.network + '`' + colors.GREEN,
+				   colors.ENDC + find_sbo_url))
 			print
 
 	''' install binary package '''
@@ -146,6 +151,17 @@ def main():
 	if args.reinstall:
 		os.system("upgradepkg --reinstall {}".format(args.reinstall))
 
+	''' search in /tmp directory for already binary packages '''
+	if args.binary:
+		try:
+			find_bin = subprocess.check_output(["ls " + tmp + "{}*.t?z".format(args.binary)], 
+				   shell=True)
+			print (find_bin)
+		except subprocess.CalledProcessError:
+			os.system("echo -e '{}No {} package found in /tmp{}'".format(colors.RED,
+				   colors.CYAN + '`' + args.binary + '`' + colors.RED, colors.ENDC))
+
+
 	''' uninstall package '''
 	if args.remove:
 		if find_package(args.remove) == "":
@@ -156,6 +172,7 @@ def main():
 			remove_pkg = raw_input("Are you sure to remove this package [y/n] ")
 			if remove_pkg == "y" or remove_pkg == "Y":
 				os.system("removepkg {}".format(args.remove))
+				os.system("echo -e '{}Done ...{}'".format(colors.GREEN, colors.ENDC))
 
 	''' find if package installed on your system '''
 	if args.find:
@@ -176,7 +193,7 @@ def main():
 
 	''' fix null arguments '''
 	if not any([args.verbose, args.slackbuild, args.network, args.install, args.upgrade, args.reinstall,
-		    args.remove, args.list, args.find, args.display]):
+		    args.binary, args.remove, args.list, args.find, args.display]):
 		os.system("slpkg -h")
 
 
