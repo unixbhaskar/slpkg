@@ -3,18 +3,27 @@
 
 
 import os
+import re
 import sys
+import urllib2
 import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.0.9"
+__version__ = "1.1.0"
 __license__ = "GNU General Public License v3 (GPLv3)"
 
 ''' path file record '''
-__packages__ = "/var/log/packages/"
+packages = "/var/log/packages/"
 
+''' SlackBuilds Repository '''
+sbo_url = "http://slackbuilds.org/repository/14.1/"
 
+repository = ("academic", "business", "games", "ham",
+	      "misc", "office", "ruby", "accessibility",
+	      "desktop", "gis", "haskell", "multimedia",
+	      "perl", "system", "audio", "development",
+	      "graphics", "lbraries", "network", "python")
 
 ''' print out colors class '''
 class colors:
@@ -22,15 +31,35 @@ class colors:
 	GREEN = "\e[32m"
 	YELLOW = "\e[93m"
 	CYAN = "\e[36m"
+	DEF_TEXT = "\e[0m"
 	ENDC = "\e[39m"
 
 
 
 ''' this fuction return the path of the package '''
 def find_package(find_pkg):
-	find_pkg = subprocess.check_output(["find " +  __packages__ + " -name '{}*' 2> /dev/null".format(find_pkg)],shell=True)
+	find_pkg = subprocess.check_output(["find " +  packages + " -name '{}*' 2> /dev/null".format(find_pkg)],shell=True)
 	return find_pkg
 
+
+
+''' search and found slackbuilds links from http://slackbuilds.org/ '''
+def sbo_search_pkg(link):
+	i = 0
+	os.system("echo -e 'Searching for {} Please wait ...'".format("`" + link + "`"))
+	link = ">" + link + "<"
+	for i in repository:
+		sbo_url_sub = sbo_url + i + "/"
+		f = urllib2.urlopen(sbo_url_sub)
+		read_page = f.read()
+		find_sbo = re.findall(link, read_page)
+		if link in find_sbo:
+			link = sbo_url_sub + link + "/"
+			rmv = "><"
+			for i in rmv:
+				link = link.replace(i, "")
+
+			return link
 
 
 ''' main function '''
@@ -43,6 +72,8 @@ def main():
                             type=str, nargs=2, metavar=('script','source'))
 	parser.add_argument("-l", "--list", help="list of installed packages",
                             nargs="+", choices="all sbo".split(), metavar=('all, sbo'))
+	parser.add_argument("-n", "--network", help="find from SBo repositority",
+			    type=str, metavar=(''))
 	parser.add_argument("-i", "--install", help="install binary package",
                             type=str, metavar=(''))
         parser.add_argument("-u", "--upgrade", help="install-upgrade package with new",
@@ -82,10 +113,23 @@ def main():
 	''' view list of installed packages '''
         if args.list:
                 if "all" in args.list:
-                        os.system("ls " + __packages__ + "* | more")
+                        os.system("ls " + packages + "* | more")
 
                 if "sbo" in args.list:
-                        os.system("ls " + __packages__ + "* | grep 'SBo' | more")
+                        os.system("ls " + packages + "* | grep 'SBo' | more")
+
+	if args.network:
+		find_sbo_url = sbo_search_pkg(args.network) 
+		if find_sbo_url == None:
+			print
+			os.system("echo -e '{}The {} not found{}'".format(colors.RED,
+				   colors.CYAN + '`' + args.network + '`' + colors.RED, colors.ENDC))
+			print
+		else:
+			print
+			os.system("echo -e '{}The {} found in --> {}'".format(colors.GREEN,
+				   colors.CYAN + '`' + args.network + '`' + colors.GREEN, colors.ENDC + find_sbo_url))
+			print
 
 	''' install binary package '''
         if args.install:
@@ -102,7 +146,8 @@ def main():
 	''' uninstall package '''
 	if args.remove:
 		if find_package(args.remove) == "":
-                        os.system("echo -e '{}The package is not found{}'".format(colors.RED, colors.ENDC))
+                        os.system("echo -e '{}The package {} is not found{}'".format(colors.RED,
+				  colors.CYAN + '`' + args.remove + '`' + colors.RED, colors.ENDC))
 		else:
 			os.system("echo -e '{}!!! WARNING !!!{}'".format(colors.YELLOW, colors.ENDC))
 			remove_pkg = raw_input("Are you sure to remove this package [y/n] ")
@@ -127,7 +172,7 @@ def main():
 			os.system("cat {}".format(find_package(args.display)))
 
 	''' fix null arguments '''
-	if not any([args.verbose, args.slackbuild, args.install, args.upgrade, args.reinstall,
+	if not any([args.verbose, args.slackbuild, args.network, args.install, args.upgrade, args.reinstall,
 		    args.remove, args.list, args.find, args.display]):
 		os.system("slpkg -h")
 

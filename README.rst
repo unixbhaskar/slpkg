@@ -60,6 +60,7 @@ Command Line Tool Usage
                                 auto build package
 	  -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
                                 list of installed packages
+	  -n , --network        find from SBo repositority	
 	  -i , --install        install binary package
 	  -u , --upgrade        install-upgrade package with new
 	  -a , --reinstall      reinstall the same package
@@ -70,6 +71,16 @@ Command Line Tool Usage
 
 Slpkg Examples
 --------------
+
+
+Find from www.slackbuilds.org the slackbuild by name:
+
+.. code-block:: bash
+
+	$ slpkg -n termcolor
+	Searching for `termcolor` Please wait ...
+
+	The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
 
 
 Auto build tool to build package:

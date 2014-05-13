@@ -15,7 +15,8 @@
 .SH NAME
 slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
- \fBslpkg\fP [\fIoptions\fP] \fB[-h]\fP \fB[-v]\fP \fB[-u UPGRADE]\fP \fB[-a REINSTALL]\fP \fB[-r REMOVE]\fP \fB[-l]\fP \fB[-f FIND]\fP \fB[-d DISPLAY]\fP <\fIcommand-arguments\fP>...
+ \fBslpkg\fP \fB[-h]\fP \fB[-v]\fP \fB[-s script source]\fP \fB[-l all, sbo [all, sbo ...]]\fP 
+\fB[-n]\fP \fB[-i]\fP \fB[-u]\fP \fB[-a]\fP \fB[-r]\fP \fB[-f]\fP \fB[-d]\fP
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal tool written in Python that allows the build, install, upgrade, 
 remove, find and view Slackware packages contents.
@@ -28,6 +29,7 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB                      auto build package\fP
   \fB-l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]\fP
   \fB		    	   list of installed packages\fP
+  \fB-n , --network        find from SBo repositority\fP
   \fB-i , --install        install binary package\fP
   \fB-u , --upgrade        install-upgrade package with new\fP
   \fB-a , --reinstall      reinstall the same package\fP
@@ -51,8 +53,14 @@ Support .tar.gz and .tar.bz2 slackbuilds archives.
 .PP
 Two display options list, one for all packages and another
 only for packages SBo.
+.SS -n , --network find from SBo repositority
+\fBslpkg\fP \fB-n\fP <\fIname\fP>
+.PP
+With this method you can find the SBo script that interests you through
+the network. (www.slackbuilds.org)
 .SS -i , --install install binary package
 \fBslpkg\fP \fB-i\fP <\fIpackage.tgz or .txz\fP>
+.PP
 Installs single binary packages designed for use with the 
 Slackware Linux distribution into your system.
 .SS -u , --upgrade install-upgrade package with new
@@ -92,16 +100,22 @@ command.
 For example:
   \fBslpkg \-\-help\fP - display help for slpkg
 .SH EXAMPLES
-Etc. download from www.slackbuilds.org the package termcolor
-http://slackbuilds.org/repository/14.1/python/termcolor/
 
-Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
-must be in the same directory.
+$ \fBslpkg -n termcolor\fP
+  Searching for termcolor Please wait ...
+
+  The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
+
+
+  Etc. download from www.slackbuilds.org the package termcolor
+  http://slackbuilds.org/repository/14.1/python/termcolor/
+
+  Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
+  must be in the same directory.
 
 $ \fBslpkg -s termcolor.tar.gz termcolor-1.1.0.tar.gz\fP
 
-Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
-
+  Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
 $ \fBslpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz\fP
 

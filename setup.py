@@ -7,7 +7,7 @@ from distutils.core import setup
 
 setup(
     name = 'slpkg',
-    version = "1.0.9",
+    version = "1.1.0",
     description = "Python tool to manage Slackware packages",
     keywords = ["slackware", "slpkg", "upgrade", "install", "remove",
 		 "view", "slackpkg", "tool"],
