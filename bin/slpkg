@@ -38,7 +38,8 @@ class colors:
 
 ''' this fuction return the path of the package '''
 def find_package(find_pkg):
-	find_pkg = subprocess.check_output(["find " +  packages + " -name '{}*' 2> /dev/null".format(find_pkg)],shell=True)
+	find_pkg = subprocess.check_output(["find " +  packages + " -name '{}*' 2> /dev/null".format(find_pkg)],
+		   shell=True)
 	return find_pkg
 
 
@@ -113,10 +114,12 @@ def main():
 	''' view list of installed packages '''
         if args.list:
                 if "all" in args.list:
-                        os.system("ls " + packages + "* | more")
+			os.chdir(packages)
+                        os.system("ls * | more")
 
                 if "sbo" in args.list:
-                        os.system("ls " + packages + "* | grep 'SBo' | more")
+			os.chdir(packages)
+                        os.system("ls * | grep 'SBo' | more")
 
 	if args.network:
 		find_sbo_url = sbo_search_pkg(args.network) 
