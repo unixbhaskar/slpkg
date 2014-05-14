@@ -78,7 +78,7 @@ Find slackbuild from network (www.slackbuilds.org):
 
 .. code-block:: bash
 
-	This finds the package along with the requirements !!!	
+	This find the package along with the requirements !!!	
 
 	$ slpkg -n brasero
 	Searching for `brasero` from www.slackbuilds.org Please wait ...
