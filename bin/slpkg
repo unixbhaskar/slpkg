@@ -10,7 +10,7 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.1.3"
+__version__ = "1.1.4"
 __license__ = "GNU General Public License v3 (GPLv3)"
 
 # path file record
@@ -52,10 +52,14 @@ def sbo_search_pkg(link):
 	os.system("echo -e 'Searching for {} from www.slackbuilds.org Please wait ...'".format("`" + link + "`"))
 	link = ">" + link + "<"
 	for i in repository:
+		
+		# open url and read		
 		sbo_url_sub = sbo_url + i + "/"
 		f = urllib2.urlopen(sbo_url_sub)
 		read_page = f.read()
 		find_sbo = re.findall(link, read_page)
+
+		# find sub-category and remove unused chars
 		if link in find_sbo:
 			link = sbo_url_sub + link + "/"
 			rmv = "><"
@@ -69,20 +73,15 @@ def sbo_requires_pkg(link, name):
 	sbo_url_req = link + name + ".info"
 	sbo_url_req = sbo_url_req.replace("repository", "slackbuilds")
 
+	# open url and read
 	f = urllib2.urlopen(sbo_url_req)
 	read_page = f.read()
 
-	file = open("/tmp/sbo_pkg_req.txt", "w")
-	file.write(read_page)
-	file.close()
-	
-	# remove no char used
-	for line in open("/tmp/sbo_pkg_req.txt"):
+	# find requires line from .info and remove unused chars
+	for line in read_page.splitlines():
 		if line.startswith('REQUIRES="'):
-                	line = line[10:-2]		
-			
-			# delete temponary file
-			os.system("rm /tmp/sbo_pkg_req.txt")
+			line = line[10:-1]	
+
 			return line
 
 

@@ -17,8 +17,6 @@ build, upgrade, remove, find and view Slackware packages contents.
 It's a quick and easy way to manage your packages in slackware
 to a command.
 
-Note: the program is being developed.
-
 
 Installation
 ------------

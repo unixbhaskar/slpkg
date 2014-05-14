@@ -1,4 +1,9 @@
 14-05-2014
+Version 1.1.4
+
+[Updated] - Updated function sbo_requires_pkg do not use .txt file
+
+14-05-2014
 Version 1.1.3
 
 [Feature] - Added to find requirements package from www.slackbuild.org
