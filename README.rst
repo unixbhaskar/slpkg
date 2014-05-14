@@ -78,11 +78,20 @@ Find slackbuild from network (www.slackbuilds.org):
 
 .. code-block:: bash
 
+	This finds the package along with the requirements !!!	
+
+	$ slpkg -n brasero
+	Searching for `brasero` from www.slackbuilds.org Please wait ...
+
+	The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
+	Package requirements : libunique gst1-plugins-bad
+
+
 	$ slpkg -n termcolor
 	Searching for `termcolor` from www.slackbuilds.org Please wait ...
 
 	The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
-
+	Package requirements :
 
 Auto build tool to build package:
 
