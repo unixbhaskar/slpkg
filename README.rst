@@ -50,8 +50,8 @@ Command Line Tool Usage
 
 
 	usage: slpkg [-h] [-v] [-s script source] [-l all, sbo [all, sbo ...]] [-n]
-        	     [-i  [...]] [-u  [...]] [-a  [...]] [-b  [...]] [-r  [...]]
-            	     [-f  [...]] [-d  [...]]
+        	     [-i  [...]] [-u  [...]] [-a  [...]]   [-r  [...]]  [-f  [...]]
+		     [-d  [...]]
 
 	Utility to help package management in Slackware
 
@@ -69,8 +69,6 @@ Command Line Tool Usage
 	                        install-upgrade package with new
 	  -a  [ ...], --reinstall  [ ...]
 	                        reinstall the same package
-	  -b  [ ...], --binary  [ ...]
-	                        find already binary packages
 	  -r  [ ...], --remove  [ ...]
 	                        remove package
 	  -f  [ ...], --find  [ ...]
@@ -107,21 +105,23 @@ And try again:
 
 	$ slpkg -n bitfighter
 	Searching for `bitfighter` from www.slackbuilds.org Please wait ...
-
-	The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
-	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
-	Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
-	Extra Downloads : [https://bitfighter.googlecode.com/files/classic_level_pack.zip]
-	Package requirements : OpenAL SDL2 speex libmodplug
+	+======================================================================================
+	|The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
+	|Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
+	|Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
+	|Extra Downloads : [https://bitfighter.googlecode.com/files/classic_level_pack.zip]
+	|Package requirements : OpenAL SDL2 speex libmodplug
+	+======================================================================================
 
 	$ slpkg -n termcolor
 	Searching for `termcolor` from www.slackbuilds.org Please wait ...
-
-	The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
-	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
-	Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
-	Extra Downloads : []
-	Package requirements :
+	+======================================================================================
+	|The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
+	|Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
+	|Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
+	|Extra Downloads : []
+	|Package requirements :
+	+======================================================================================
 
 Auto build tool to build package:
 
@@ -337,7 +337,8 @@ Remove package:
 
 	$ slpkg -v
 	Version: x.x.x
-
+	Licence: GNU General Public License v3 (GPLv3)
+	Email:   d.zlatanidis@gmail.com
 
 Man page it is available for full support:
 

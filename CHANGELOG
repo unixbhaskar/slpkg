@@ -1,4 +1,10 @@
 15-05-2014
+version 1.1.6
+
+[Updated] - Removed stupid option binary search 
+
+
+15-05-2014
 Version 1.1.5
 
 [Feature] - Added multi install, upgrade, remove and find packages

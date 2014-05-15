@@ -16,13 +16,14 @@
 slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
  \fBslpkg\fP \fB[-h]\fP \fB[-v]\fP \fB[-s script source]\fP \fB[-l all, sbo [all, sbo ...]]\fP 
-\fB[-n]\fP \fB[-i [...]]\fP \fB[-u [...]]\fP \fB[-a [...]]\fP \fB[-b [...]]\fP 
-\fB[-r[...]]\fP \fB[-f [...]]\fP \fB[-d [...]]\fP
+\fB[-n]\fP \fB[-i [...]]\fP \fB[-u [...]]\fP \fB[-a [...]]\fP \fB[-r[...]]\fP \fB[-f [...]]\fP \fB[-d [...]]\fP
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal tool written in Python that allows the build, install, upgrade, 
 remove, find and view Slackware packages contents.
 .PP
 It's a quick and easy way to manage your packages in slackware to a command.
+.PP
+Note : The most definitions needed root privileges.
 .SH EXAMPLES
   \fB-h, --help            show this help message and exit\fP
   \fB-v, --verbose         print version and exit\fP
@@ -37,8 +38,6 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB                      install-upgrade package with new\fP
   \fB-a  [ ...], --reinstall  [ ...]\fP
   \fB                      reinstall the same package\fP
-  \fB-b  [ ...], --binary  [ ...]\fP
-  \fB                      find already binary packages\fP
   \fB-r  [ ...], --remove  [ ...]\fP
   \fB                      remove package\fP
   \fB-f  [ ...], --find  [ ...]\fP
@@ -87,10 +86,6 @@ Upgradepkg usually skips packages if the exact same package
 (matching name, version, arch, and build number) is already
 installed on the system.'Requires root privileges' (like 
 slackware command upgradepkg --reinstall)
-.SS -b --binary
-\fBslpkg\fP \fB-b\fP <\fIpackages.t?z\fP>
-.PP
-Find already binary Slackware packages in /tmp directory
 .SS -r , --remove package
 \fBslpkg\fP \fB-r\fP <\fIname of packages\fP>
 .PP
@@ -117,13 +112,13 @@ For example:
 
 $ \fBslpkg -n termcolor\fP
   Searching for termcolor from www.slackbuilds.org Please wait ...
-
-  The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
-  Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
-  Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
-  Extra Downloads : []
-  Package requirements :
-
+  +=============================================================================================
+  |The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
+  |Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
+  |Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
+  |Extra Downloads : []
+  |Package requirements :
+  +=============================================================================================
 
   Etc. download from www.slackbuilds.org the package termcolor
   http://slackbuilds.org/repository/14.1/python/termcolor/

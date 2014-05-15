@@ -10,8 +10,9 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.1.5"
+__version__ = "1.1.6"
 __license__ = "GNU General Public License v3 (GPLv3)"
+__email__ = "d.zlatanidis@gmail.com"
 
 # path file record
 packages = "/var/log/packages/"
@@ -43,13 +44,6 @@ def find_package(find_pkg):
 	find_pkg = subprocess.check_output(["find " +  packages + " -name '{}*' 2> /dev/null".format(find_pkg)],
 		   shell=True)
 	return find_pkg
-
-# search for already slackware binary packages in /tmp direcory
-def find_binary(find_pkg):
-	find_pkg = subprocess.check_output(["find " + tmp + " -name '{}*' 2> /dev/null".format(find_pkg)],
-                   shell=True)
-        return find_pkg
-
 
 
 # search and found slackbuilds links from http://slackbuilds.org
@@ -163,26 +157,26 @@ def main():
                             nargs="+", choices="all sbo".split(), metavar=('all, sbo'))
 	parser.add_argument("-n", "--network", help="find from SBo repositority",
 			    type=str, metavar=(''))
-	parser.add_argument("-i", "--install", help="install binary package",
+	parser.add_argument("-i", "--install", help="install binary packages",
                             type=str, nargs="+", metavar=(''))
-        parser.add_argument("-u", "--upgrade", help="install-upgrade package with new",
+        parser.add_argument("-u", "--upgrade", help="install-upgrade packages with new",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-a", "--reinstall", help="reinstall the same package",
+	parser.add_argument("-a", "--reinstall", help="reinstall the same packages",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-b", "--binary", help="find already binary packages",
-                            type=str, nargs="+", metavar=(''))
-	parser.add_argument("-r", "--remove", help="remove package",
+	parser.add_argument("-r", "--remove", help="remove packages",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-f", "--find", help="find if package installed",
+	parser.add_argument("-f", "--find", help="find if packages installed",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-d", "--display", help="display the contents of the package",
+	parser.add_argument("-d", "--display", help="display the contents of the packages",
 			    type=str, nargs="+", metavar=(''))
 	args = parser.parse_args()
 
 	# print version and exit
         if args.verbose:
                 print ("Version: {}".format(__version__))
-
+		print ("Licence: {}".format(__license__))
+		print ("Email:   {}".format(__email__))
+		
 	# auto build package from slackbuild script
         if args.slackbuild:
                 slack_script = args.slackbuild[0]
@@ -226,20 +220,20 @@ def main():
 			find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, args.network)
 			find_source_dwn = sbo_source_dwn(find_sbo_url, args.network)
 			find_extra_dwn = sbo_extra_dwn(find_sbo_url, args.network)
-			print
-			os.system("echo -e '{}The {} found in --> {}'".format(colors.GREEN,
+			print ("+" + "=" * 80)
+			os.system("echo -e '|{}The {} found in --> {}'".format(colors.GREEN,
 				   colors.CYAN + '`' + args.network + '`' + colors.GREEN,
 				   colors.ENDC + find_sbo_url))
 			
-			os.system("echo -e '{}Download SlackBuild : {}{}'".format(colors.GREEN,
+			os.system("echo -e '|{}Download SlackBuild : {}{}'".format(colors.GREEN,
                                    colors.ENDC, find_sbo_dwn))
-			os.system("echo -e '{}Source Downloads : {}{}'".format(colors.GREEN,
+			os.system("echo -e '|{}Source Downloads : {}{}'".format(colors.GREEN,
                                    colors.ENDC, find_source_dwn))
-			os.system("echo -e '{}Extra Downloads : {}{}'".format(colors.GREEN,
+			os.system("echo -e '|{}Extra Downloads : {}{}'".format(colors.GREEN,
                                    colors.ENDC, find_extra_dwn))
-			os.system("echo -e '{}Package requirements : {}{}'".format(colors.YELLOW,
+			os.system("echo -e '|{}Package requirements : {}{}'".format(colors.YELLOW,
 				   colors.ENDC, find_sbo_req))
-			print
+			print("+" + "=" * 80)
 
 	# install binary package
         if args.install:
@@ -256,16 +250,6 @@ def main():
 	if args.reinstall:
 		for i in range(len(args.reinstall)):
 			os.system("upgradepkg --reinstall {}".format(args.reinstall[i]))
-
-	# search in /tmp directory for already binary packages
-	if args.binary:
-		for i in range(len(args.binary)):
-			if find_binary(args.binary[i]) == "":
-				os.system("echo -e '{}No {} package found in /tmp{}'".format(colors.RED,
-					   colors.CYAN + '`' + args.binary[i] + '`' + colors.RED, colors.ENDC))
-			else:
-				os.system("echo -e '{}The package {} found in /tmp{}'".format(colors.GREEN,
-                                           colors.CYAN + '`' + args.binary[i] + '`' + colors.GREEN, colors.ENDC))
 
 	# uninstall package
 	if args.remove:
@@ -304,7 +288,7 @@ def main():
 
 	# fix null arguments
 	if not any([args.verbose, args.slackbuild, args.network, args.install, args.upgrade, args.reinstall,
-		    args.binary, args.remove, args.list, args.find, args.display]):
+		    args.remove, args.list, args.find, args.display]):
 		os.system("slpkg -h")
 
 
