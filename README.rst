@@ -26,7 +26,9 @@ Using slackware command:
 .. code-block:: bash
 	
 	Download from http://slackbuilds.org
+
 	or
+
 	using sbopkg tool http://www.sbopkg.org
 
 Using pip:
@@ -46,26 +48,35 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-	usage: slpkg.py [-h] [-v] [-s script source] [-l all, sbo [all, sbo ...]] [-i]
-                [-u] [-a] [-b] [-r] [-f] [-d]
+
+	usage: slpkg [-h] [-v] [-s script source] [-l all, sbo [all, sbo ...]] [-n]
+        	     [-i  [...]] [-u  [...]] [-a  [...]] [-b  [...]] [-r  [...]]
+            	     [-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
-	
+
 	optional arguments:
-      	  -h, --help            show this help message and exit
+  	  -h, --help            show this help message and exit
 	  -v, --verbose         print version and exit
 	  -s script source, --slackbuild script source
-                                auto build package
+	                        auto build package
 	  -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
-                                list of installed packages
-	  -n , --network        find from SBo repositority	
-	  -i , --install        install binary package
-	  -u , --upgrade        install-upgrade package with new
-	  -a , --reinstall      reinstall the same package
-	  -b , --binary         find already binary packages
-	  -r , --remove         remove package
-	  -f , --find           find if package installed
-	  -d , --display        display the contents of the package
+	                        list of installed packages
+	  -n , --network        find from SBo repositority
+	  -i  [ ...], --install  [ ...]
+	                        install binary package
+	  -u  [ ...], --upgrade  [ ...]
+	                        install-upgrade package with new
+	  -a  [ ...], --reinstall  [ ...]
+	                        reinstall the same package
+	  -b  [ ...], --binary  [ ...]
+	                        find already binary packages
+	  -r  [ ...], --remove  [ ...]
+	                        remove package
+	  -f  [ ...], --find  [ ...]
+	                        find if package installed
+	  -d  [ ...], --display  [ ...]
+	                        display the contents of the package
 
 
 Slpkg Examples
@@ -76,24 +87,47 @@ Find slackbuild from network (www.slackbuilds.org):
 
 .. code-block:: bash
 
-	This find the package along with the requirements !!!	
+
+	This find the slackbuild , source, extra downloads and package requirements !!!	
 
 	$ slpkg -n brasero
 	Searching for `brasero` from www.slackbuilds.org Please wait ...
-
+	
 	The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
+	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/system/brasero.tar.gz
+	Source Downloads : https://download.gnome.org/sources/brasero/3.11/brasero-3.11.3.tar.xz
+	Extra Downloads : []
 	Package requirements : libunique gst1-plugins-bad
 
+
+And try again:
+
+
+.. code-block:: bash
+
+	$ slpkg -n bitfighter
+	Searching for `bitfighter` from www.slackbuilds.org Please wait ...
+
+	The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
+	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
+	Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
+	Extra Downloads : [https://bitfighter.googlecode.com/files/classic_level_pack.zip]
+	Package requirements : OpenAL SDL2 speex libmodplug
 
 	$ slpkg -n termcolor
 	Searching for `termcolor` from www.slackbuilds.org Please wait ...
 
 	The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
+	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
+	Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
+	Extra Downloads : []
 	Package requirements :
 
 Auto build tool to build package:
 
 .. code-block:: bash
+
+
 
 	Etc. download from www.slackbuilds.org the package termcolor
 	http://slackbuilds.org/repository/14.1/python/termcolor/
@@ -169,7 +203,7 @@ Auto build tool to build package:
 	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
 
-Upgrade install or upackage:
+Upgrade install package:
 
 .. code-block:: bash
 
@@ -191,19 +225,36 @@ Upgrade install or upackage:
 	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
 
 
-Find if your package installed:
+Of course you can install mass-packages:
 
 .. code-block:: bash
 
-	$ slpkg -f termcolor
-	The package `termcolor` is installed on your system
+	$ slpkg -u *.t?z
+	
+	or 
 
+	$ slpkg -i *.t?z
+
+
+Find if your packages installed:
+
+.. code-block:: bash
+
+	$ slpkg -f termcolor lua yetris you-get rar pip
+
+	The package `termcolor` is installed on your system
+	The package `lua` is not installed on your system
+	The package `yetris` is installed on your system
+	The package `you-get` is not installed on your system
+	The package `rar` is installed on your system
+	The package `pip` is installed on your system
 
 Display the contents of the package:
 
 .. code-block:: bash
 
-	$ slpkg -d termcolor
+	$ slpkg -d termcolor lua
+
 	PACKAGE NAME:     termcolor-1.1.0-x86_64-1_SBo
 	COMPRESSED PACKAGE SIZE:     8.0K
 	UNCOMPRESSED PACKAGE SIZE:     60K
@@ -243,7 +294,8 @@ Display the contents of the package:
 	usr/doc/termcolor-1.1.0/COPYING.txt
 	install/
 	install/slack-desc
-
+	
+	The package `lua` is not found
 
 Remove package:
 
@@ -275,16 +327,18 @@ Remove package:
 	  --> Deleting empty directory /usr/doc/termcolor-1.1.0/
 	Done ...
 
-	
-	$ slpkg -f termcolor
-	The package `termcolor` is not installed on your system
 
-	$ slpkg -d termcolor
-	The package 'termcolor` is not found
+	$ slpkg -f termcolor lua rar
+
+	The package `termcolor` is not installed on your system
+	The package `lua` is not installed on your system
+	The package `rar` is installed on your system
+
 
 	$ slpkg -v
 	Version: x.x.x
-README.rst
+
+
 Man page it is available for full support:
 
 .. code-block:: bash
