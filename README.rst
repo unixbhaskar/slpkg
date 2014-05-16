@@ -17,6 +17,7 @@ build, upgrade, remove, find and view Slackware packages contents.
 It's a quick and easy way to manage your packages in slackware
 to a command.
 
+Note: The software is in progress...
 
 Installation
 ------------
@@ -64,17 +65,17 @@ Command Line Tool Usage
 	                        list of installed packages
 	  -n , --network        find from SBo repositority
 	  -i  [ ...], --install  [ ...]
-	                        install binary package
+	                        install binary packages
 	  -u  [ ...], --upgrade  [ ...]
 	                        install-upgrade package with new
 	  -a  [ ...], --reinstall  [ ...]
-	                        reinstall the same package
+	                        reinstall the same packagess
 	  -r  [ ...], --remove  [ ...]
-	                        remove package
+	                        remove packages
 	  -f  [ ...], --find  [ ...]
-	                        find if package installed
+	                        find if packages installed
 	  -d  [ ...], --display  [ ...]
-	                        display the contents of the package
+	                        display the contents of the packages
 
 
 Slpkg Examples
@@ -90,8 +91,11 @@ Find slackbuild from network (www.slackbuilds.org):
 
 	$ slpkg -n brasero
 	Searching for `brasero` from www.slackbuilds.org Please wait ...
-	
-	The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
+
+	+=================================================================================
+	|The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
+	+=================================================================================
+
 	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/system/brasero.tar.gz
 	Source Downloads : https://download.gnome.org/sources/brasero/3.11/brasero-3.11.3.tar.xz
 	Extra Downloads : []
@@ -105,23 +109,29 @@ And try again:
 
 	$ slpkg -n bitfighter
 	Searching for `bitfighter` from www.slackbuilds.org Please wait ...
+
 	+======================================================================================
 	|The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
-	|Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
-	|Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
-	|Extra Downloads : [https://bitfighter.googlecode.com/files/classic_level_pack.zip]
-	|Package requirements : OpenAL SDL2 speex libmodplug
 	+======================================================================================
+
+	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
+	Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
+	Extra Downloads : [https://bitfighter.googlecode.com/files/classic_level_pack.zip]
+	Package requirements : OpenAL SDL2 speex libmodplug
+	
 
 	$ slpkg -n termcolor
 	Searching for `termcolor` from www.slackbuilds.org Please wait ...
+
 	+======================================================================================
 	|The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
-	|Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
-	|Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
-	|Extra Downloads : []
-	|Package requirements :
 	+======================================================================================
+
+	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
+	Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
+	Extra Downloads : []
+	Package requirements :
+	
 
 Auto build tool to build package:
 
@@ -303,7 +313,7 @@ Remove package:
 
 	$ slpkg -r termcolor
 	!!! WARNING !!!
-	Are you sure to remove this package [y/n] y
+	Are you sure to remove this package(s) [y/n] y
 
 	Package: termcolor-1.1.0-x86_64-1_SBo
 		Removing... 

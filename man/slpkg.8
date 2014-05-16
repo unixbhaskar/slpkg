@@ -33,17 +33,17 @@ Note : The most definitions needed root privileges.
   \fB                      list of installed packages\fP
   \fB-n , --network        find from SBo repositority\fP
   \fB-i  [ ...], --install  [ ...]\fP
-  \fB                      install binary package\fP
+  \fB                      install binary packages\fP
   \fB-u  [ ...], --upgrade  [ ...]\fP
-  \fB                      install-upgrade package with new\fP
+  \fB                      install-upgrade packages with new\fP
   \fB-a  [ ...], --reinstall  [ ...]\fP
-  \fB                      reinstall the same package\fP
+  \fB                      reinstall the same packages\fP
   \fB-r  [ ...], --remove  [ ...]\fP
-  \fB                      remove package\fP
+  \fB                      remove packages\fP
   \fB-f  [ ...], --find  [ ...]\fP
-  \fB                      find if package installed\fP
+  \fB                      find if packages installed\fP
   \fB-d  [ ...], --display  [ ...]\fP
-  \fB                      display the contents of the package\fP
+  \fB                      display the contents of the packages\fP
 
 .SH GLOBAL OPTIONS
 .TP
@@ -112,13 +112,15 @@ For example:
 
 $ \fBslpkg -n termcolor\fP
   Searching for termcolor from www.slackbuilds.org Please wait ...
-  +=============================================================================================
+
+  +=====================================================================================
   |The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
-  |Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
-  |Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
-  |Extra Downloads : []
-  |Package requirements :
-  +=============================================================================================
+  +=====================================================================================
+
+  Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
+  Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
+  Extra Downloads : []
+  Package requirements :
 
   Etc. download from www.slackbuilds.org the package termcolor
   http://slackbuilds.org/repository/14.1/python/termcolor/

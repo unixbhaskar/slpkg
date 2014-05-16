@@ -1,6 +1,11 @@
 #!/usr/bin/python env python
 # -*- coding: utf-8 -*-
 
+'''Slpkg is a terminal tool , written in Python that allows the build, upgrade, remove, find 
+and view Slackware packages.
+
+It's a quick and easy way to manage your packages in slackware to a command.'''
+
 
 import os
 import re
@@ -10,7 +15,7 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.1.6"
+__version__ = "1.1.7"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -38,68 +43,71 @@ class colors:
 	ENDC = "\e[39m"
 
 
+# remove unused chars
+def rmv_unused(name):
+	rmv = "><"
+        for i in rmv:
+		name = name.replace(i, "")
+
+	return name
+
 
 # this fuction return the path of the package
 def find_package(find_pkg):
-	find_pkg = subprocess.check_output(["find " +  packages + " -name '{}*' 2> /dev/null".format(find_pkg)],
-		   shell=True)
+	find_pkg = subprocess.check_output(["find " + packages + " -name '{}*' 2> /dev/null".format(find_pkg)], shell=True)
 	return find_pkg
 
 
-# search and found slackbuilds links from http://slackbuilds.org
-def sbo_search_pkg(link):
+# open url and read page
+def url_read(name):
+	f = urllib2.urlopen(name)
+        read_page = f.read()
+	
+	return read_page
+
+
+
+# search and found slackbuilds packages links from http://slackbuilds.org
+def sbo_search_pkg(name):
 	i = 0
-	os.system("echo -e 'Searching for {} from www.slackbuilds.org Please wait ...'".format("`" + link + "`"))
-	link = ">" + link + "<"
+	os.system("echo -e 'Searching for {} from www.slackbuilds.org Please wait ...'".format("`" + name + "`"))
+	name = ">" + name + "<"
 	for i in repository:
 		
-		# open url and read		
 		sbo_url_sub = sbo_url + i + "/"
-		f = urllib2.urlopen(sbo_url_sub)
-		read_page = f.read()
-		find_sbo = re.findall(link, read_page)
+		find_sbo = re.findall(name, url_read(sbo_url_sub))
 
-		# find sub-category and remove unused chars
-		if link in find_sbo:
-			link = sbo_url_sub + link + "/"
-			rmv = "><"
-			for i in rmv:
-				link = link.replace(i, "")
+		# find sub-category
+		if name in find_sbo:
+			name = sbo_url_sub + name + "/"
+			name = rmv_unused(name)
 
-			return link
+			return name
+
 
 
 # find slackbuild download
-def sbo_slackbuild_dwn(link, name):
-        sbo_url_dwn = link
-        f = urllib2.urlopen(sbo_url_dwn)
-        read_page = f.read()
-        find_sbo = re.findall(">" + name + ".tar.gz" + "<", read_page)
-
-        rmv = "><"
-        for i in rmv:
-                find_sbo[0] = find_sbo[0].replace(i, "")
+def sbo_slackbuild_dwn(sbo_url, name):
+        find_sbo = re.findall(">" + name + ".tar.gz" + "<", url_read(sbo_url))
+	find_sbo[0] = rmv_unused(find_sbo[0])
 
         if find_sbo[0] == name + ".tar.gz":
-                sbo_url_dwn = sbo_url_dwn.replace(name + "/", name + ".tar.gz")
+                sbo_url = sbo_url.replace(name + "/", name + ".tar.gz")
         else:
-                sbo_url_dwn = sbo_url_dwn.replace(name + "/", name + ".tar.bz2")
+                sbo_url = sbo_url.replace(name + "/", name + ".tar.bz2")
 
-        sbo_url_dwn = sbo_url_dwn.replace("repository", "slackbuilds")
+        sbo_url = sbo_url.replace("repository", "slackbuilds")
 
-        return sbo_url_dwn
+        return sbo_url
 
 
 # find source downloads
-def sbo_source_dwn(link, name):
-        sbo_url_dwn = link + name + ".info"
-        sbo_url_dwn = sbo_url_dwn.replace("repository", "slackbuilds")
-
-        f = urllib2.urlopen(sbo_url_dwn)
-        read_page = f.read()
+def sbo_source_dwn(sbo_url, name):
+        sbo_url = sbo_url + name + ".info"
+        sbo_url = sbo_url.replace("repository", "slackbuilds")
 
 	# read lines from .info files grep download line and return source link
-        for line in read_page.splitlines():
+        for line in url_read(sbo_url).splitlines():
                 if line.startswith('DOWNLOAD='):
                         line = line[10:-1]
 	
@@ -108,16 +116,14 @@ def sbo_source_dwn(link, name):
 
 
 # find extra source downloads
-def sbo_extra_dwn(link, name):
-	sbo_url_dwn = link + name + ".info"
-	sbo_url_dwn = sbo_url_dwn.replace("repository", "slackbuilds")
+def sbo_extra_dwn(sbo_url, name):
+	sbo_url = sbo_url + name + ".info"
+	sbo_url = sbo_url.replace("repository", "slackbuilds")
 
-	f = urllib2.urlopen(sbo_url_dwn)
-	read_page = f.read()
 	results = []
 
 	# read lines from .info files remove gaps and return lines to start `http`
-	for line in read_page.splitlines():
+	for line in url_read(sbo_url).splitlines():
                 if line.startswith(' '):
                         line = line[10:-1]
 		if line.startswith('http'):
@@ -128,16 +134,12 @@ def sbo_extra_dwn(link, name):
 
 
 # search for package requirements
-def sbo_requires_pkg(link, name):
-	sbo_url_req = link + name + ".info"
-	sbo_url_req = sbo_url_req.replace("repository", "slackbuilds")
-
-	# open url and read
-	f = urllib2.urlopen(sbo_url_req)
-	read_page = f.read()
+def sbo_requires_pkg(sbo_url, name):
+	sbo_url = sbo_url + name + ".info"
+	sbo_url = sbo_url.replace("repository", "slackbuilds")
 
 	# find requires line from .info and remove unused chars
-	for line in read_page.splitlines():
+	for line in url_read(sbo_url).splitlines():
 		if line.startswith('REQUIRES="'):
 			line = line[10:-1]	
 
@@ -207,7 +209,7 @@ def main():
 
 	# find from SBo repositority www.slackbuild.org
 	if args.network:
-		# call functio `sbo_search_pkg`
+		# call function `sbo_search_pkg`
 		find_sbo_url = sbo_search_pkg(args.network) 
 		if find_sbo_url == None:
 			print
@@ -220,20 +222,27 @@ def main():
 			find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, args.network)
 			find_source_dwn = sbo_source_dwn(find_sbo_url, args.network)
 			find_extra_dwn = sbo_extra_dwn(find_sbo_url, args.network)
-			print ("+" + "=" * 80)
+
+			# caclulate the length of the link
+			sbo_name_len = len(args.network)
+			sbo_url_len = (len(find_sbo_url) + sbo_name_len + 20)
+
+			print
+			print ("+" + "=" * sbo_url_len)
 			os.system("echo -e '|{}The {} found in --> {}'".format(colors.GREEN,
 				   colors.CYAN + '`' + args.network + '`' + colors.GREEN,
 				   colors.ENDC + find_sbo_url))
-			
-			os.system("echo -e '|{}Download SlackBuild : {}{}'".format(colors.GREEN,
+			print ("+" + "=" * sbo_url_len)
+			print
+			os.system("echo -e '{}Download SlackBuild : {}{}'".format(colors.GREEN,
                                    colors.ENDC, find_sbo_dwn))
-			os.system("echo -e '|{}Source Downloads : {}{}'".format(colors.GREEN,
+			os.system("echo -e '{}Source Downloads : {}{}'".format(colors.GREEN,
                                    colors.ENDC, find_source_dwn))
-			os.system("echo -e '|{}Extra Downloads : {}{}'".format(colors.GREEN,
+			os.system("echo -e '{}Extra Downloads : {}{}'".format(colors.GREEN,
                                    colors.ENDC, find_extra_dwn))
-			os.system("echo -e '|{}Package requirements : {}{}'".format(colors.YELLOW,
+			os.system("echo -e '{}Package requirements : {}{}'".format(colors.YELLOW,
 				   colors.ENDC, find_sbo_req))
-			print("+" + "=" * 80)
+			print
 
 	# install binary package
         if args.install:
@@ -253,17 +262,17 @@ def main():
 
 	# uninstall package
 	if args.remove:
-		# call function `find_package`
-		if find_package(args.remove) == "":
-                        os.system("echo -e '{}The package {} is not found{}'".format(colors.RED,
-				  colors.CYAN + '`' + args.remove + '`' + colors.RED, colors.ENDC))
-		else:
-			os.system("echo -e '{}!!! WARNING !!!{}'".format(colors.YELLOW, colors.ENDC))
-			remove_pkg = raw_input("Are you sure to remove this package [y/n] ")
-			if remove_pkg == "y" or remove_pkg == "Y":
-				for i in range(len(args.remove)):
-					os.system("removepkg {}".format(args.remove[i]))
-				os.system("echo -e '{}Done ...{}'".format(colors.GREEN, colors.ENDC))
+		os.system("echo -e '{}!!! WARNING !!!{}'".format(colors.YELLOW, colors.ENDC))
+                remove_pkg = raw_input("Are you sure to remove this package(s) [y/n] ")
+                if remove_pkg == "y" or remove_pkg == "Y":
+                	for i in range(len(args.remove)):
+			# call function `find_package`
+				if find_package(args.remove[i]) == "":
+					os.system("echo -e '{}The package {} is not found{}'".format(colors.RED,
+						   colors.CYAN + '`' + args.remove[i] + '`' + colors.RED, colors.ENDC))
+				else:
+						os.system("removepkg {}".format(args.remove[i]))
+				
 
 	# find if package installed on your system
 	if args.find:
