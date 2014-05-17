@@ -1,4 +1,10 @@
 17-05-2014
+Version 1.1.9
+
+[Updated] - Fix notify message if exist package in fuction remove
+
+
+17-05-2014
 Version 1.1.8
 
 [Feature] - Added to check root user

@@ -16,9 +16,12 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.1.8"
+__version__ = "1.1.9"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
+
+
+
 
 # path file record
 packages = "/var/log/packages/"
@@ -33,7 +36,8 @@ repository = ("academic", "business", "games", "ham",
 	      "desktop", "gis", "haskell", "multimedia",
 	      "perl", "system", "audio", "development",
 	      "graphics", "lbraries", "network", "python")
-import getpass
+
+
 # print out colors class
 class colors:
 	RED = "\e[31m"
@@ -62,7 +66,7 @@ def rmv_unused(name):
 	return name
 
 
-# this fuction return the path of the package
+# this fuction return if the package exist
 def find_package(find_pkg):
 	results = []
 
@@ -70,10 +74,6 @@ def find_package(find_pkg):
     		if file.startswith(find_pkg):
           		results.append(file)
 	return results
-
-#	find_pkg = subprocess.check_output(["find " + packages + " -name '{}*' 2> 
-#/dev/null".format(find_pkg)], shell=True)
-#	return find_pkg
 
 
 # open url and read page
@@ -117,6 +117,7 @@ def sbo_slackbuild_dwn(sbo_url, name):
         sbo_url = sbo_url.replace("repository", "slackbuilds")
 
         return sbo_url
+
 
 
 # find source downloads
@@ -231,7 +232,6 @@ def main():
 
 	# find from SBo repositority www.slackbuild.org
 	if args.network:
-		# call function `sbo_search_pkg`
 		find_sbo_url = sbo_search_pkg(args.network) 
 		if find_sbo_url == None:
 			print
@@ -266,6 +266,7 @@ def main():
 				   colors.ENDC, find_sbo_req))
 			print
 
+
 	# install binary package
         if args.install:
 		s_user(getpass.getuser())
@@ -287,17 +288,18 @@ def main():
 	# uninstall package
 	if args.remove:
 		s_user(getpass.getuser())
+		print
 		os.system("echo -e '{}!!! WARNING !!!{}'".format(colors.YELLOW, colors.ENDC))
                 remove_pkg = raw_input("Are you sure to remove this package(s) [y/n] ")
                 if remove_pkg == "y" or remove_pkg == "Y":
                 	for i in range(len(args.remove)):
-			# call function `find_package`
-				if find_package(args.remove[i]) == "":
+				if find_package(args.remove[i]) == []:
 					os.system("echo -e '{}The package {} is not found{}'".format(colors.RED,
 						   colors.CYAN + '`' + args.remove[i] + '`' + colors.RED, colors.ENDC))
 				else:
 						os.system("removepkg {}".format(args.remove[i]))
-				
+		print
+		
 
 	# find if package installed on your system
 	if args.find:

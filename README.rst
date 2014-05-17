@@ -252,12 +252,13 @@ Find if your packages installed:
 
 	$ slpkg -f termcolor lua yetris you-get rar pip
 
-	The package `termcolor` is installed on your system
-	The package `lua` is not installed on your system
-	The package `yetris` is installed on your system
-	The package `you-get` is not installed on your system
-	The package `rar` is installed on your system
-	The package `pip` is installed on your system
+	-----> termcolor-1.1.0-x86_64-1_SBo
+	The package `lua` is not found
+	-----> yetris-2.0.1-x86_64-1_SBo
+	The package `you-get` is not found
+	-----> rar-5.0.1-x86_64-1_SBo
+	-----> pip-1.5.4-x86_64-1_SBo
+
 
 Display the contents of the package:
 
