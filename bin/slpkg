@@ -10,12 +10,13 @@ It's a quick and easy way to manage your packages in slackware to a command.'''
 import os
 import re
 import sys
+import getpass
 import urllib2
 import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.1.7"
+__version__ = "1.1.8"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -32,7 +33,7 @@ repository = ("academic", "business", "games", "ham",
 	      "desktop", "gis", "haskell", "multimedia",
 	      "perl", "system", "audio", "development",
 	      "graphics", "lbraries", "network", "python")
-
+import getpass
 # print out colors class
 class colors:
 	RED = "\e[31m"
@@ -41,6 +42,15 @@ class colors:
 	CYAN = "\e[36m"
 	DEF_TEXT = "\e[0m"
 	ENDC = "\e[39m"
+
+# check if user is root
+def s_user(user):
+	if user == "root":
+		pass
+	else:
+		os.system("echo -e '{}Must have {}`root`{} privileges ...{}'".format(colors.RED, 
+			  colors.GREEN, colors.RED, colors.ENDC))
+		sys.exit()
 
 
 # remove unused chars
@@ -54,8 +64,16 @@ def rmv_unused(name):
 
 # this fuction return the path of the package
 def find_package(find_pkg):
-	find_pkg = subprocess.check_output(["find " + packages + " -name '{}*' 2> /dev/null".format(find_pkg)], shell=True)
-	return find_pkg
+	results = []
+
+	for file in os.listdir(packages):
+    		if file.startswith(find_pkg):
+          		results.append(file)
+	return results
+
+#	find_pkg = subprocess.check_output(["find " + packages + " -name '{}*' 2> 
+#/dev/null".format(find_pkg)], shell=True)
+#	return find_pkg
 
 
 # open url and read page
@@ -200,12 +218,16 @@ def main():
 	# view list of installed packages
         if args.list:
                 if "all" in args.list:
+			print
 			os.chdir(packages)
                         os.system("ls * | more")
-
+			print
+		
                 if "sbo" in args.list:
+			print
 			os.chdir(packages)
                         os.system("ls * | grep 'SBo' | more")
+			print
 
 	# find from SBo repositority www.slackbuild.org
 	if args.network:
@@ -246,22 +268,25 @@ def main():
 
 	# install binary package
         if args.install:
+		s_user(getpass.getuser())
 		for i in range(len(args.install)):
 	                os.system("installpkg {}".format(args.install[i]))
 
 	# upgrade package with new
         if args.upgrade:
-		# support multi upgrade packages
+		s_user(getpass.getuser())
 		for i in range(len(args.upgrade)):
 			os.system("upgradepkg --install-new {}".format(args.upgrade[i]))
 
 	# upgrade package with the same
 	if args.reinstall:
+		s_user(getpass.getuser())
 		for i in range(len(args.reinstall)):
 			os.system("upgradepkg --reinstall {}".format(args.reinstall[i]))
 
 	# uninstall package
 	if args.remove:
+		s_user(getpass.getuser())
 		os.system("echo -e '{}!!! WARNING !!!{}'".format(colors.YELLOW, colors.ENDC))
                 remove_pkg = raw_input("Are you sure to remove this package(s) [y/n] ")
                 if remove_pkg == "y" or remove_pkg == "Y":
@@ -276,24 +301,26 @@ def main():
 
 	# find if package installed on your system
 	if args.find:
-		# call function find_package
+		print
 		for i in range(len(args.find)):
-			if find_package(args.find[i]) == "":		
-				os.system("echo -e '{}The package {} is not installed on your system{}'".format(colors.RED,
-					   colors.CYAN + '`' + args.find[i] + '`' + colors.RED, colors.ENDC))
+			if find_package(args.find[i]) == []:
+				os.system("echo -e '{}The package {} is not found{}'".format(colors.RED,
+                                           colors.CYAN + '`' + args.find[i] + '`' + colors.RED,  colors.ENDC))
 			else:
-				os.system("echo -e '{}The package {} is installed on your system{}'".format(colors.GREEN,
-					   colors.CYAN + '`' + args.find[i] + '`' + colors.GREEN, colors.ENDC))
+				print ("-----> " + "\n".join(find_package(args.find[i])))
+		print
+
 	
 	# print the package contents
 	if args.display:
-		# support multi arguments
+		print
 		for i in range(len(args.display)):
-			if find_package(args.display[i]) == "":
+			if find_package(args.display[i]) == []:
 				os.system("echo -e '{}The package {} is not found{}'".format(colors.RED,
 					   colors.CYAN + '`' + args.display[i] + '`' + colors.RED,  colors.ENDC))
 			else:
-				os.system("cat {}".format(find_package(args.display[i])))
+				os.system("cat {}{}".format(packages, "\n".join(find_package(args.display[i]))))
+		print
 
 	# fix null arguments
 	if not any([args.verbose, args.slackbuild, args.network, args.install, args.upgrade, args.reinstall,

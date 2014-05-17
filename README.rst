@@ -69,7 +69,7 @@ Command Line Tool Usage
 	  -u  [ ...], --upgrade  [ ...]
 	                        install-upgrade package with new
 	  -a  [ ...], --reinstall  [ ...]
-	                        reinstall the same packagess
+	                        reinstall the same packages
 	  -r  [ ...], --remove  [ ...]
 	                        remove packages
 	  -f  [ ...], --find  [ ...]
@@ -340,9 +340,9 @@ Remove package:
 
 	$ slpkg -f termcolor lua rar
 
-	The package `termcolor` is not installed on your system
-	The package `lua` is not installed on your system
-	The package `rar` is installed on your system
+	The package `termcolor` is not found
+	The package `lua` is not found
+	-----> rar-5.0.1-x86_64-1_SBo
 
 
 	$ slpkg -v
