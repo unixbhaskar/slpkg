@@ -49,10 +49,9 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-
 	usage: slpkg [-h] [-v] [-s script source] [-l all, sbo [all, sbo ...]] [-n]
-        	     [-i  [...]] [-u  [...]] [-a  [...]]   [-r  [...]]  [-f  [...]]
-		     [-d  [...]]
+        	     [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]] [-f  [...]]
+            	     [-d  [...]]
 
 	Utility to help package management in Slackware
 
@@ -64,6 +63,7 @@ Command Line Tool Usage
 	  -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
 	                        list of installed packages
 	  -n , --network        find from SBo repositority
+	  -c , --check          check if your package is up to date
 	  -i  [ ...], --install  [ ...]
 	                        install binary packages
 	  -u  [ ...], --upgrade  [ ...]
@@ -81,6 +81,37 @@ Command Line Tool Usage
 Slpkg Examples
 --------------
 
+Check if your packages is up to date (www.slackbuilds.org):
+
+.. code-block:: bash
+
+
+	$ slpkg -c flashplayer-plugin
+	Searching for `flashplayer-plugin` from www.slackbuilds.org Please wait ...
+
+	New version is available !!!
+	+==================================================
+	| flashplayer-plugin 11.2.202.356
+	+==================================================
+
+
+	$ slpkg -c ranger
+	Searching for `ranger` from www.slackbuilds.org Please wait ...
+
+	Your package is up to date
+
+
+	$ slpkg -c termcolor
+	Searching for `termcolor` from www.slackbuilds.org Please wait ...
+
+	The package `termcolor` not found on your system
+
+	New version is available !!!
+	+==================================================
+	| termcolor 1.1.0
+	+==================================================
+
+
 
 Find slackbuild from network (www.slackbuilds.org):
 
@@ -93,7 +124,7 @@ Find slackbuild from network (www.slackbuilds.org):
 	Searching for `brasero` from www.slackbuilds.org Please wait ...
 
 	+=================================================================================
-	|The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
+	| The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
 	+=================================================================================
 
 	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/system/brasero.tar.gz
@@ -111,7 +142,7 @@ And try again:
 	Searching for `bitfighter` from www.slackbuilds.org Please wait ...
 
 	+======================================================================================
-	|The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
+	| The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
 	+======================================================================================
 
 	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
@@ -124,7 +155,7 @@ And try again:
 	Searching for `termcolor` from www.slackbuilds.org Please wait ...
 
 	+======================================================================================
-	|The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
+	| The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
 	+======================================================================================
 
 	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
@@ -253,9 +284,9 @@ Find if your packages installed:
 	$ slpkg -f termcolor lua yetris you-get rar pip
 
 	-----> termcolor-1.1.0-x86_64-1_SBo
-	The package `lua` is not found
+	The package `lua` not found
 	-----> yetris-2.0.1-x86_64-1_SBo
-	The package `you-get` is not found
+	The package `you-get` not found
 	-----> rar-5.0.1-x86_64-1_SBo
 	-----> pip-1.5.4-x86_64-1_SBo
 
@@ -306,7 +337,7 @@ Display the contents of the package:
 	install/
 	install/slack-desc
 	
-	The package `lua` is not found
+	The package `lua` not found
 
 Remove package:
 
@@ -341,8 +372,8 @@ Remove package:
 
 	$ slpkg -f termcolor lua rar
 
-	The package `termcolor` is not found
-	The package `lua` is not found
+	The package `termcolor` not found
+	The package `lua` not found
 	-----> rar-5.0.1-x86_64-1_SBo
 
 

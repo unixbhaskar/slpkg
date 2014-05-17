@@ -16,7 +16,8 @@
 slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
  \fBslpkg\fP \fB[-h]\fP \fB[-v]\fP \fB[-s script source]\fP \fB[-l all, sbo [all, sbo ...]]\fP 
-\fB[-n]\fP \fB[-i [...]]\fP \fB[-u [...]]\fP \fB[-a [...]]\fP \fB[-r[...]]\fP \fB[-f [...]]\fP \fB[-d [...]]\fP
+\fB[-n]\fP \fB[-c]\fP \fB[-i [...]]\fP \fB[-u [...]]\fP \fB[-a [...]]\fP \fB[-r[...]]\fP 
+\fB[-f [...]]\fP \fB[-d [...]]\fP
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal tool written in Python that allows the build, install, upgrade, 
 remove, find and view Slackware packages contents.
@@ -32,6 +33,7 @@ Note : The most definitions needed root privileges.
   \fB-l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]\fP
   \fB                      list of installed packages\fP
   \fB-n , --network        find from SBo repositority\fP
+  \fB-c , --check          check if your package is up to date\fP
   \fB-i  [ ...], --install  [ ...]\fP
   \fB                      install binary packages\fP
   \fB-u  [ ...], --upgrade  [ ...]\fP
@@ -67,6 +69,10 @@ only for packages SBo.
 .PP
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
+.SS -c , --check check if your package is up to date
+\fBslpkg\fP \fB-c\fP <\fIname\fP>
+.PP
+Check if your packages from www.slackbuilds.org is updated.
 .SS -i , --install install binary package
 \fBslpkg\fP \fB-i\fP <\fIpackages.t?z\fP>
 .PP
@@ -110,11 +116,20 @@ For example:
   \fBslpkg \-\-help\fP - display help for slpkg
 .SH EXAMPLES
 
+$ \fBslpkg -c flashplayer-plugin\fP
+  Searching for `flashplayer-plugin` from www.slackbuilds.org Please wait ...
+
+  New version is available !!!
+  +==================================================
+  | flashplayer-plugin 11.2.202.356
+  +==================================================
+
 $ \fBslpkg -n termcolor\fP
+
   Searching for termcolor from www.slackbuilds.org Please wait ...
 
   +=====================================================================================
-  |The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
+  | The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
   +=====================================================================================
 
   Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
@@ -148,11 +163,11 @@ $ \fBslpkg -r termcolor yetris\fP
 
 $ \fBslpkg -f termcolor\fP
 
-  The package 'termcolor' is not found
+  The package 'termcolor' not found
 
 $ \fBslpkg -d termcolor\fP
 
-  The package 'termcolor' is not found
+  The package 'termcolor' not found
 
 $ \fBslpkg -v\fP
 

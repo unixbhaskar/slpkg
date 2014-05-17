@@ -1,8 +1,12 @@
 17-05-2014
+Version 1.2.0
+
+[Feature] - Added if your packages from www.slackbuilds.org is up to date
+
+17-05-2014
 Version 1.1.9
 
 [Updated] - Fix notify message if exist package in fuction remove
-
 
 17-05-2014
 Version 1.1.8
@@ -15,19 +19,16 @@ Version 1.1.7
 
 [Updated] - Fixed functions
 
-
 15-05-2014
 version 1.1.6
 
 [Updated] - Removed stupid option binary search 
-
 
 15-05-2014
 Version 1.1.5
 
 [Feature] - Added multi install, upgrade, remove and find packages
 [Feature] - Added to find from network slackbuilds links and sources
-
 
 14-05-2014
 Version 1.1.4
