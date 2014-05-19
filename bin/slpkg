@@ -16,11 +16,14 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
 
+# grep computer architecture
+uname = os.uname()
+arch = (uname[4])
 
 
 # path file record
@@ -130,12 +133,19 @@ def sbo_source_dwn(sbo_url, name):
         sbo_url = sbo_url.replace("repository", "slackbuilds")
 
 	# read lines from .info files grep download line and return source link
-        for line in url_read(sbo_url).splitlines():
-                if line.startswith('DOWNLOAD='):
-                        line = line[10:-1]
-	
-			return line
+	if arch == "x86_64":
+		for line in url_read(sbo_url).splitlines():
+			if line.startswith('DOWNLOAD_x86_64='):
+                       		line = line[17:-1]
 
+				return line
+			
+	if arch != "x86_64":
+		for line in url_read(sbo_url).splitlines():
+	        	if line.startswith('DOWNLOAD='):
+                        	line = line[10:-1]
+
+				return line
 
 
 # find extra source downloads
@@ -253,6 +263,7 @@ def main():
 	if args.network:
 		find_sbo_url = sbo_search_pkg(args.network) 
 		if find_sbo_url == None:
+			print ("\n")
 			print ("{}The {}'{}'{} not found{}".format(colors.RED,
 				   colors.CYAN, args.network, colors.RED, colors.ENDC))
 			print
@@ -286,42 +297,39 @@ def main():
 	# check if packages from www.slackbuilds.org is up to date
 	if args.check:
 		find_sbo_url = sbo_search_pkg(args.check)		
-		print
 		if find_sbo_url == None:
-                        print
+                        print ("\n")
                         print ("{}The {}`{}`{} not found{}".format(colors.RED,
                                    colors.CYAN, args.check, colors.RED, colors.ENDC))
 
 			print
 		else:
 			find_sbo_version = sbo_version_pkg(find_sbo_url, args.check)
-
 			if find_package(args.check) == []:
-				print
+				print ("\n")
 				print (" {}The package {}`{}`{} not found on your system{}".format(colors.RED,
        	                                   colors.CYAN, args.check, colors.RED,  colors.ENDC))
 				sbo_file = ""
+				print
                	        else:
 				sbo_file = "".join(find_package(args.check)) # convert list to string
 				name_len = len(args.check)
-				uname = os.uname()
-				arch = (uname[4]) # get computer architecture
 				arch_len = len(arch)
 				sbo_file = sbo_file[name_len+1:-arch_len-7]
 
-			if find_sbo_version > sbo_file:
-				print
-                                print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
-                                print ("+" + "=" * 50)
-                                print ("| {} {}".format(args.check, find_sbo_version))
-                                print ("+" + "=" * 50)
-                                print
-			else:
-				print
-                                print ("{}Your package is up to date{}".format(colors.GREEN, colors.ENDC))
-                                print
+				if find_sbo_version > sbo_file:
+					print ("\n")
+                                	print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
+                                	print ("+" + "=" * 50)
+	                                print ("| {} {}".format(args.check, find_sbo_version))
+        	                        print ("+" + "=" * 50)
+                	                print
+				else:
+					print ("\n")
+                                	print ("{}Your package is up to date{}".format(colors.GREEN, colors.ENDC))
+                                	print
 
-
+		
 	# install binary package
         if args.install:
 		s_user(getpass.getuser())
