@@ -93,21 +93,19 @@ def sbo_search_pkg(name):
 	# setup toolbar
 	sys.stdout.flush()
 	sys.stdout.write("\b" * (toolbar_width+1))
-
 	for i in repository:
 	        # update the bar
 		sys.stdout.write(".")
 		sys.stdout.flush()
 		sbo_url_sub = sbo_url + i + "/"
 		find_sbo = re.findall(name, url_read(sbo_url_sub))
-
+		
 		# find sub-category
 		if name in find_sbo:
 			name = sbo_url_sub + name + "/"
 			name = rmv_unused(name)
 
 			return name
-
 
 
 # find slackbuild download
@@ -255,7 +253,6 @@ def main():
 	if args.network:
 		find_sbo_url = sbo_search_pkg(args.network) 
 		if find_sbo_url == None:
-			print
 			print ("{}The {}'{}'{} not found{}".format(colors.RED,
 				   colors.CYAN, args.network, colors.RED, colors.ENDC))
 			print
@@ -268,9 +265,8 @@ def main():
 
 			# caclulate the length of the link
 			sbo_name_len = len(args.network)
-			sbo_url_len = (len(find_sbo_url) + sbo_name_len + 20)
-
-			print
+			sbo_url_len = (len(find_sbo_url) + sbo_name_len + 21)
+			print ("\n")
 			print ("+" + "=" * sbo_url_len)
 			print ("| {}The {}`{}`{} found in --> {}".format(colors.GREEN,
 				   colors.CYAN, args.network, colors.GREEN,
@@ -290,6 +286,7 @@ def main():
 	# check if packages from www.slackbuilds.org is up to date
 	if args.check:
 		find_sbo_url = sbo_search_pkg(args.check)		
+		print
 		if find_sbo_url == None:
                         print
                         print ("{}The {}`{}`{} not found{}".format(colors.RED,
@@ -301,7 +298,7 @@ def main():
 
 			if find_package(args.check) == []:
 				print
-				print ("{}The package {}`{}`{} not found on your system{}".format(colors.RED,
+				print (" {}The package {}`{}`{} not found on your system{}".format(colors.RED,
        	                                   colors.CYAN, args.check, colors.RED,  colors.ENDC))
 				sbo_file = ""
                	        else:
@@ -311,7 +308,7 @@ def main():
 				arch = (uname[4]) # get computer architecture
 				arch_len = len(arch)
 				sbo_file = sbo_file[name_len+1:-arch_len-7]
-					
+
 			if find_sbo_version > sbo_file:
 				print
                                 print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
@@ -320,7 +317,7 @@ def main():
                                 print ("+" + "=" * 50)
                                 print
 			else:
-                                print
+				print
                                 print ("{}Your package is up to date{}".format(colors.GREEN, colors.ENDC))
                                 print
 
