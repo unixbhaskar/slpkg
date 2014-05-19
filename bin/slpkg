@@ -16,7 +16,7 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -87,9 +87,17 @@ def url_read(name):
 # search and found slackbuilds packages links from http://slackbuilds.org
 def sbo_search_pkg(name):
 	i = 0
-	print ("Searching for `{}` from www.slackbuilds.org Please wait ...".format(name))
+	toolbar_width = len(repository)
+	sys.stdout.write("Searching for `" + name + "` from www.slackbuilds.org > Please wait .%s " % (" " * toolbar_width))
 	name = ">" + name + "<"
+	# setup toolbar
+	sys.stdout.flush()
+	sys.stdout.write("\b" * (toolbar_width+1))
+
 	for i in repository:
+	        # update the bar
+		sys.stdout.write(".")
+		sys.stdout.flush()
 		sbo_url_sub = sbo_url + i + "/"
 		find_sbo = re.findall(name, url_read(sbo_url_sub))
 
@@ -275,7 +283,7 @@ def main():
                                    colors.ENDC, find_source_dwn))
 			print ("{}Extra Downloads : {}{}".format(colors.GREEN,
                                    colors.ENDC, " ".join(find_extra_dwn)))
-			print ("{}Package requirements :{}{}".format(colors.YELLOW,
+			print ("{}Package requirements : {}{}".format(colors.YELLOW,
 				   colors.ENDC, find_sbo_req))
 			print
 
@@ -297,24 +305,24 @@ def main():
        	                                   colors.CYAN, args.check, colors.RED,  colors.ENDC))
 				sbo_file = ""
                	        else:
-				sbo_file = find_package(args.check)
+				sbo_file = "".join(find_package(args.check)) # convert list to string
 				name_len = len(args.check)
 				uname = os.uname()
 				arch = (uname[4]) # get computer architecture
 				arch_len = len(arch)
 				sbo_file = sbo_file[name_len+1:-arch_len-7]
-		
-			if find_sbo_version <= sbo_file:
+					
+			if find_sbo_version > sbo_file:
 				print
-				print ("{}Your package is up to date{}".format(colors.GREEN, colors.ENDC))
-				print
+                                print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
+                                print ("+" + "=" * 50)
+                                print ("| {} {}".format(args.check, find_sbo_version))
+                                print ("+" + "=" * 50)
+                                print
 			else:
-				print
-				print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
-				print ("+" + "=" * 50)
-				print ("| {} {}".format(args.check, find_sbo_version))
-				print ("+" + "=" * 50)
-				print		
+                                print
+                                print ("{}Your package is up to date{}".format(colors.GREEN, colors.ENDC))
+                                print
 
 
 	# install binary package
