@@ -283,12 +283,12 @@ Find if your packages installed:
 
 	$ slpkg -f termcolor lua yetris you-get rar pip
 
-	-----> termcolor-1.1.0-x86_64-1_SBo
+	found --> termcolor-1.1.0-x86_64-1_SBo
 	The package `lua` not found
-	-----> yetris-2.0.1-x86_64-1_SBo
+	found --> yetris-2.0.1-x86_64-1_SBo
 	The package `you-get` not found
-	-----> rar-5.0.1-x86_64-1_SBo
-	-----> pip-1.5.4-x86_64-1_SBo
+	found --> rar-5.0.1-x86_64-1_SBo
+	found --> pip-1.5.4-x86_64-1_SBo
 
 
 Display the contents of the package:
@@ -374,7 +374,7 @@ Remove package:
 
 	The package `termcolor` not found
 	The package `lua` not found
-	-----> rar-5.0.1-x86_64-1_SBo
+	found --> rar-5.0.1-x86_64-1_SBo
 
 
 	$ slpkg -v

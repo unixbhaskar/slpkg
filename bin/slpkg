@@ -16,7 +16,7 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -35,7 +35,7 @@ repository = ("academic", "business", "games", "ham",
 	      "misc", "office", "ruby", "accessibility",
 	      "desktop", "gis", "haskell", "multimedia",
 	      "perl", "system", "audio", "development",
-	      "graphics", "lbraries", "network", "python")
+	      "graphics", "libraries", "network", "python")
 
 
 # print out colors class
