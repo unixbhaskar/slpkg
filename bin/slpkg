@@ -16,7 +16,7 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.2.5"
+__version__ = "1.2.6"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -71,6 +71,7 @@ def rmv_unused(name):
 # this fuction return if the package exist
 def find_package(find_pkg):
 	results = []
+
 	for file in os.listdir(packages):
     		if file.startswith(find_pkg):
           		results.append(file)
@@ -93,10 +94,12 @@ def sbo_search_pkg(name):
 	toolbar_width = len(repository)
 	sys.stdout.write("Searching for `" + name + "` from www.slackbuilds.org > Please wait .%s " % (" " * toolbar_width))
 	name = ">" + name + "<"
+
 	# setup toolbar
 	sys.stdout.flush()
 	sys.stdout.write("\b" * (toolbar_width+1))
 	for i in repository:
+
 	        # update the bar
 		sys.stdout.write(".")
 		sys.stdout.flush()
@@ -114,9 +117,10 @@ def sbo_search_pkg(name):
 # find slackbuild download
 def sbo_slackbuild_dwn(sbo_url, name):
         find_sbo = re.findall(">" + name + ".tar.gz" + "<", url_read(sbo_url))
-	find_sbo[0] = rmv_unused(find_sbo[0])
+	find_sbo = " ".join(find_sbo) # convert list to string
+	find_sbo = rmv_unused(find_sbo)
 
-        if find_sbo[0] == name + ".tar.gz":
+        if find_sbo == name + ".tar.gz":
                 sbo_url = sbo_url.replace(name + "/", name + ".tar.gz")
         else:
                 sbo_url = sbo_url.replace(name + "/", name + ".tar.bz2")
@@ -159,9 +163,10 @@ def sbo_source_dwn(sbo_url, name):
 def sbo_extra_dwn(sbo_url, name):
 	sbo_url = sbo_url + name + ".info"
 	sbo_url = sbo_url.replace("repository", "slackbuilds")
+	read_info = url_read(sbo_url)
 	results = []
-	# read lines from .info files remove gaps and return lines to start `http`
-	for line in url_read(sbo_url).splitlines():
+
+	for line in read_info.splitlines():
                 if line.startswith(' '):
                         line = line[10:-1]
 		if line.startswith('http'):
@@ -175,9 +180,9 @@ def sbo_extra_dwn(sbo_url, name):
 def sbo_requires_pkg(sbo_url, name):
 	sbo_url = sbo_url + name + ".info"
 	sbo_url = sbo_url.replace("repository", "slackbuilds")
+	read_info = url_read(sbo_url)
 
-	# find requires line from .info and remove unused chars
-	for line in url_read(sbo_url).splitlines():
+	for line in read_info.splitlines():
 		if line.startswith('REQUIRES="'):
 			line = line[10:-1]	
 
@@ -185,12 +190,13 @@ def sbo_requires_pkg(sbo_url, name):
 
 
 
-# find from www.slackbuilds.org the version of thh package
+# find from www.slackbuilds.org the version of the package
 def sbo_version_pkg(sbo_url, name):
 	sbo_url = sbo_url + name + ".info"
 	sbo_url = sbo_url.replace("repository", "slackbuilds")
+	read_info = url_read(sbo_url)
 
-	for line in url_read(sbo_url).splitlines():
+	for line in read_info.splitlines():
                 if line.startswith('VERSION="'):
                         line = line[9:-1]
 
@@ -301,23 +307,24 @@ def main():
 
 	# check if packages from www.slackbuilds.org is up to date
 	if args.check:
-		find_sbo_url = sbo_search_pkg(args.check)		
-		if find_sbo_url == None:
-                        print ("\n")
-                        print ("{}The {}`{}`{} not found{}".format(colors.RED,
-                                   colors.CYAN, args.check, colors.RED, colors.ENDC))
+		sbo_file = " ".join(find_package(args.check))
+		if sbo_file == "":
+	                print 
+                        print (" {}The package {}`{}`{} not found on your system{}".format(colors.RED,
+        	               colors.CYAN, args.check, colors.RED,  colors.ENDC))
+                        print
 
-			print
 		else:
-			find_sbo_version = sbo_version_pkg(find_sbo_url, args.check)
-			if find_package(args.check) == []:
-				print ("\n")
-				print (" {}The package {}`{}`{} not found on your system{}".format(colors.RED,
-       	                                   colors.CYAN, args.check, colors.RED,  colors.ENDC))
-				sbo_file = ""
-				print
+			find_sbo_url = sbo_search_pkg(args.check)
+	                if find_sbo_url == None:
+         	                 print ("\n")
+                	         print ("{}The {}`{}`{} not found{}".format(colors.RED,
+                        	           colors.CYAN, args.check, colors.RED, colors.ENDC))
+
+                       		 print
+				
                	        else:
-				sbo_file = "".join(find_package(args.check)) # convert list to string
+				find_sbo_version = sbo_version_pkg(find_sbo_url, args.check)
 				name_len = len(args.check)
 				arch_len = len(arch)
 				sbo_file = sbo_file[name_len+1:-arch_len-7]
