@@ -16,7 +16,7 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -40,19 +40,18 @@ repository = ("academic", "business", "games", "ham",
 
 # print out colors class
 class colors:
-	RED = "\e[31m"
-	GREEN = "\e[32m"
-	YELLOW = "\e[93m"
-	CYAN = "\e[36m"
-	DEF_TEXT = "\e[0m"
-	ENDC = "\e[39m"
+	RED = "\x1b[31m"
+	GREEN = "\x1b[32m"
+	YELLOW = "\x1b[33m"
+	CYAN = "\x1b[36m"
+	ENDC = "\x1b[0m"
 
 # check if user is root
 def s_user(user):
 	if user == "root":
 		pass
 	else:
-		os.system("echo -e '{}Must have {}`root`{} privileges ...{}'".format(colors.RED, 
+		print ("{}Must have {}`root`{} privileges ...{}".format(colors.RED, 
 			  colors.GREEN, colors.RED, colors.ENDC))
 		sys.exit()
 
@@ -88,10 +87,9 @@ def url_read(name):
 # search and found slackbuilds packages links from http://slackbuilds.org
 def sbo_search_pkg(name):
 	i = 0
-	os.system("echo -e 'Searching for {} from www.slackbuilds.org Please wait ...'".format("`" + name + "`"))
+	print ("Searching for `{}` from www.slackbuilds.org Please wait ...".format(name))
 	name = ">" + name + "<"
 	for i in repository:
-		
 		sbo_url_sub = sbo_url + i + "/"
 		find_sbo = re.findall(name, url_read(sbo_url_sub))
 
@@ -165,6 +163,8 @@ def sbo_requires_pkg(sbo_url, name):
 			return line
 
 
+
+# find from www.slackbuilds.org the version of thh package
 def sbo_version_pkg(sbo_url, name):
 	sbo_url = sbo_url + name + ".info"
 	sbo_url = sbo_url.replace("repository", "slackbuilds")
@@ -209,7 +209,7 @@ def main():
         if args.verbose:
                 print ("Version: {}".format(__version__))
 		print ("Licence: {}".format(__license__))
-		print ("Email:   {}".format(__email__))
+		print ("Email  : {}".format(__email__))
 		
 	# auto build package from slackbuild script
         if args.slackbuild:
@@ -248,8 +248,8 @@ def main():
 		find_sbo_url = sbo_search_pkg(args.network) 
 		if find_sbo_url == None:
 			print
-			os.system("echo -e '{}The {} not found{}'".format(colors.RED,
-				   colors.CYAN + '`' + args.network + '`' + colors.RED, colors.ENDC))
+			print ("{}The {}'{}'{} not found{}".format(colors.RED,
+				   colors.CYAN, args.network, colors.RED, colors.ENDC))
 			print
 		else:
 			# call sbo functions 
@@ -264,18 +264,18 @@ def main():
 
 			print
 			print ("+" + "=" * sbo_url_len)
-			os.system("echo -e '|{} The {} found in --> {}'".format(colors.GREEN,
-				   colors.CYAN + '`' + args.network + '`' + colors.GREEN,
+			print ("| {}The {}`{}`{} found in --> {}".format(colors.GREEN,
+				   colors.CYAN, args.network, colors.GREEN,
 				   colors.ENDC + find_sbo_url))
 			print ("+" + "=" * sbo_url_len)
 			print
-			os.system("echo -e '{}Download SlackBuild : {}{}'".format(colors.GREEN,
+			print ("{}Download SlackBuild : {}{}".format(colors.GREEN,
                                    colors.ENDC, find_sbo_dwn))
-			os.system("echo -e '{}Source Downloads : {}{}'".format(colors.GREEN,
+			print ("{}Source Downloads : {}{}".format(colors.GREEN,
                                    colors.ENDC, find_source_dwn))
-			os.system("echo -e '{}Extra Downloads : {}{}'".format(colors.GREEN,
+			print ("{}Extra Downloads : {}{}".format(colors.GREEN,
                                    colors.ENDC, " ".join(find_extra_dwn)))
-			os.system("echo -e '{}Package requirements : {}{}'".format(colors.YELLOW,
+			print ("{}Package requirements :{}{}".format(colors.YELLOW,
 				   colors.ENDC, find_sbo_req))
 			print
 
@@ -284,38 +284,35 @@ def main():
 		find_sbo_url = sbo_search_pkg(args.check)		
 		if find_sbo_url == None:
                         print
-                        os.system("echo -e '{}The {} not found{}'".format(colors.RED,
-                                   colors.CYAN + '`' + args.check + '`' + colors.RED, colors.ENDC))
+                        print ("{}The {}`{}`{} not found{}".format(colors.RED,
+                                   colors.CYAN, args.check, colors.RED, colors.ENDC))
 
 			print
 		else:
 			find_sbo_version = sbo_version_pkg(find_sbo_url, args.check)
 
-			args.check = args.check.split() # convert str to list
-			if find_package(args.check[0]) == []:
+			if find_package(args.check) == []:
 				print
-				os.system("echo -e '{}The package {} not found on your system{}'".format(colors.RED,
-       	                                   colors.CYAN + '`' + args.check[0] + '`' + colors.RED,  colors.ENDC))
+				print ("{}The package {}`{}`{} not found on your system{}".format(colors.RED,
+       	                                   colors.CYAN, args.check, colors.RED,  colors.ENDC))
 				sbo_file = ""
                	        else:
-				sbo_file = find_package(args.check[0])
-				sbo_file = "".join(sbo_file) # convert list to str
-				name_len = len(args.check[0])
+				sbo_file = find_package(args.check)
+				name_len = len(args.check)
 				uname = os.uname()
 				arch = (uname[4]) # get computer architecture
 				arch_len = len(arch)
 				sbo_file = sbo_file[name_len+1:-arch_len-7]
 		
-			args.check = "".join(args.check) # convert list to str
 			if find_sbo_version <= sbo_file:
 				print
-				os.system("echo -e '{}Your package is up to date{}'".format(colors.GREEN, colors.ENDC))
+				print ("{}Your package is up to date{}".format(colors.GREEN, colors.ENDC))
 				print
 			else:
 				print
-				os.system("echo -e '{} New version is available !!!{}'".format(colors.YELLOW, colors.ENDC))
+				print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
 				print ("+" + "=" * 50)
-				os.system("echo -e '| {} {}'".format(args.check, find_sbo_version))
+				print ("| {} {}".format(args.check, find_sbo_version))
 				print ("+" + "=" * 50)
 				print		
 
@@ -342,13 +339,13 @@ def main():
 	if args.remove:
 		s_user(getpass.getuser())
 		print
-		os.system("echo -e '{}!!! WARNING !!!{}'".format(colors.YELLOW, colors.ENDC))
+		print ("{}!!! WARNING !!!{}".format(colors.YELLOW, colors.ENDC))
                 remove_pkg = raw_input("Are you sure to remove this package(s) [y/n] ")
                 if remove_pkg == "y" or remove_pkg == "Y":
                 	for i in range(len(args.remove)):
 				if find_package(args.remove[i]) == []:
-					os.system("echo -e '{}The package {} not found{}'".format(colors.RED,
-						   colors.CYAN + '`' + args.remove[i] + '`' + colors.RED, colors.ENDC))
+					print ("{}The package {}`{}`{} not found{}".format(colors.RED,
+						   colors.CYAN, args.remove[i], colors.RED, colors.ENDC))
 				else:
 						os.system("removepkg {}".format(args.remove[i]))
 		print
@@ -359,10 +356,10 @@ def main():
 		print
 		for i in range(len(args.find)):
 			if find_package(args.find[i]) == []:
-				os.system("echo -e '{}The package {} not found{}'".format(colors.RED,
-                                           colors.CYAN + '`' + args.find[i] + '`' + colors.RED,  colors.ENDC))
+				print ("{}The package {}`{}`{} not found{}".format(colors.RED,
+                                           colors.CYAN, args.find[i], colors.RED,  colors.ENDC))
 			else:
-				print ("-----> " + "\n".join(find_package(args.find[i])))
+				print (colors.GREEN + "found --> " + colors.ENDC + "\n".join(find_package(args.find[i])))
 		print
 
 	
@@ -371,8 +368,8 @@ def main():
 		print
 		for i in range(len(args.display)):
 			if find_package(args.display[i]) == []:
-				os.system("echo -e '{}The package {} not found{}'".format(colors.RED,
-					   colors.CYAN + '`' + args.display[i] + '`' + colors.RED,  colors.ENDC))
+				print ("{}The package {}`{}`{} not found{}".format(colors.RED,
+					   colors.CYAN, args.display[i], colors.RED, colors.ENDC))
 			else:
 				os.system("cat {}{}".format(packages, "\n".join(find_package(args.display[i]))))
 		print
