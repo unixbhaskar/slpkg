@@ -16,7 +16,7 @@ import argparse
 import subprocess
 
 __author__ = "dslackw"
-__version__ = "1.2.4"
+__version__ = "1.2.5"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -71,10 +71,10 @@ def rmv_unused(name):
 # this fuction return if the package exist
 def find_package(find_pkg):
 	results = []
-
 	for file in os.listdir(packages):
     		if file.startswith(find_pkg):
           		results.append(file)
+
 	return results
 
 
@@ -131,30 +131,35 @@ def sbo_slackbuild_dwn(sbo_url, name):
 def sbo_source_dwn(sbo_url, name):
         sbo_url = sbo_url + name + ".info"
         sbo_url = sbo_url.replace("repository", "slackbuilds")
-
+	read_info = url_read(sbo_url)
 	# read lines from .info files grep download line and return source link
 	if arch == "x86_64":
-		for line in url_read(sbo_url).splitlines():
+		for line in read_info.splitlines():
 			if line.startswith('DOWNLOAD_x86_64='):
-                       		line = line[17:-1]
+				arch_x86_64_len = len(line)
+				if arch_x86_64_len > 18:
+	                       		line = line[17:-1]
 
-				return line
-			
+					return line
+				else:
+					for line in read_info.splitlines():
+	        				if line.startswith('DOWNLOAD='):
+			                        	line = line[10:-1]
+
+							return line
 	if arch != "x86_64":
-		for line in url_read(sbo_url).splitlines():
-	        	if line.startswith('DOWNLOAD='):
-                        	line = line[10:-1]
+		for line in read_info.splitlines():
+			if line.startswith('DOWNLOAD='):
+	                        line = line[10:-1]
 
-				return line
+                                return line
 
 
 # find extra source downloads
 def sbo_extra_dwn(sbo_url, name):
 	sbo_url = sbo_url + name + ".info"
 	sbo_url = sbo_url.replace("repository", "slackbuilds")
-
 	results = []
-
 	# read lines from .info files remove gaps and return lines to start `http`
 	for line in url_read(sbo_url).splitlines():
                 if line.startswith(' '):

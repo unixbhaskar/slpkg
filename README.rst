@@ -17,7 +17,7 @@ build, upgrade, remove, find and view Slackware packages contents.
 It's a quick and easy way to manage your packages in slackware
 to a command.
 
-Note: The software is in progress...
+[CHANGELOG] : https://github.com/dslackw/slpkg/blob/master/CHANGELOG
 
 Installation
 ------------
