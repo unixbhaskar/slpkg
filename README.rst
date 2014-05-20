@@ -90,7 +90,7 @@ Tracking all dependencies of that package:
 	$ slpkg -t brasero
 
 	+=========================
-	| `brasero' dependencies :
+	| brasero dependencies :
 	+=========================
 	 |
 	 |
@@ -107,7 +107,7 @@ Tracking all dependencies of that package:
 	$ slpkg -t pylint
 
 	+========================
-	| `pylint' dependencies :
+	| pylint dependencies :
 	+========================
 	 |
 	 |
