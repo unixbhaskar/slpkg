@@ -50,7 +50,7 @@ Command Line Tool Usage
 .. code-block:: bash
 
 	usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
-        	     [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
+        	     [-t] [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
             	     [-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
@@ -62,6 +62,7 @@ Command Line Tool Usage
 	                        auto build package
 	  -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
 	                        list of installed packages
+	  -t , --tracking       tracking dependencies
 	  -n , --network        find from SBo repositority
 	  -c , --check          check if your package is up to date
 	  -i  [ ...], --install  [ ...]
@@ -80,6 +81,41 @@ Command Line Tool Usage
 
 Slpkg Examples
 --------------
+
+
+Tracking all dependencies of that package:
+
+.. code-block:: bash
+
+	$ slpkg -t brasero
+
+	+=========================
+	| `brasero' dependencies :
+	+=========================
+	 |
+	 |
+	 -- 1 orc
+	 |
+	 -- 1 gstreamer1
+	 |
+	 -- 1 gst1-plugins-base
+	 |
+	 -- 2 libunique gst1-plugins-bad
+
+
+
+	$ slpkg -t pylint
+
+	+========================
+	| `pylint' dependencies :
+	+========================
+	 |
+	 |
+	 -- 2 pysetuptools logilab-common
+	 |
+	 -- 1 astroid
+
+
 
 Check if your packages is up to date (www.slackbuilds.org):
 
@@ -127,6 +163,7 @@ Find slackbuild from network (www.slackbuilds.org):
 	Package requirements : libunique gst1-plugins-bad
 	
 	Download this package [y/n]
+
 
 And try again:
 

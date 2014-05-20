@@ -23,10 +23,9 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.2.8"
+__version__ = "1.2.9"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
-
 
 
 # grep computer architecture
@@ -38,7 +37,7 @@ arch = (uname[4])
 # path file record
 packages = "/var/log/packages/"
 tmp = "/tmp/"
-
+results = []
 
 
 # SlackBuilds Repository
@@ -66,11 +65,13 @@ class colors:
 
 # check if user is root
 def s_user(user):
+	print	
 	if user == "root":
 		pass
 	else:
 		print ("{}Must have {}`root`{} privileges ...{}".format(colors.RED, 
 			  colors.GREEN, colors.RED, colors.ENDC))
+		print
 		sys.exit()
 
 
@@ -206,7 +207,32 @@ def sbo_requires_pkg(sbo_url, name):
 		if line.startswith('REQUIRES="'):
 			line = line[10:-1]	
 
+
 			return line
+
+
+
+# search for package dependencies
+def sbo_dependencies_pkg(name):
+	if name == "%README%": # avoid to search %README% as dependency
+		name = ""
+	else:
+		find_sbo_url = sbo_search_pkg(name)
+
+		find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
+		dependencies = find_sbo_req.split() # convert string to list
+
+		if dependencies == []:
+			pass
+		else:
+			results.append(dependencies)
+
+		for line in dependencies:
+			print
+			sbo_dependencies_pkg(line)
+	
+
+		return results
 
 
 
@@ -323,6 +349,44 @@ def build_extra2_pkg(script, source, extra, extra2):
 
 
 
+# view list of installed packages
+def pkg_list(name):
+        if "all" in name:
+                print
+                os.chdir(packages)
+                os.system("ls * | more")
+                print
+
+        if "sbo" in name:
+                print
+                os.chdir(packages)
+                os.system("ls * | grep 'SBo' | more")
+                print
+
+
+# find all dependencies
+def pkg_tracking(name):
+	find_dependencies = sbo_dependencies_pkg(name)
+        print ("\n")
+        pkg_len = len(name) + 18
+        print ("+" + "=" * pkg_len)
+        print ("| {}`{}' {}dependencies :{}".format(colors.CYAN, name,
+        	colors.YELLOW, colors.ENDC))
+        print ("+" + "=" * pkg_len)
+        find_dependencies.reverse()
+
+        if find_dependencies == []:
+		pass
+	else:
+		print (" |")
+	        for i in range(len(find_dependencies)):
+		        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
+	                print (" |")
+        	        print " ".join(found)
+        print
+
+
+
 # find from SBo repositority www.slackbuild.org
 def sbo_network(name):
 	find_sbo_url = sbo_search_pkg(name)
@@ -374,22 +438,6 @@ def sbo_network(name):
 			print ("{}Use {}`slpkg -s`{} to build this package{}".format(colors.YELLOW,
 				 colors.CYAN, colors.YELLOW, colors.ENDC))
 			print
-
-
-
-# view list of installed packages
-def pkg_list(name):
-        if "all" in name:
-                print
-                os.chdir(packages)
-                os.system("ls * | more")
-                print
-
-        if "sbo" in name:
-                print
-                os.chdir(packages)
-                os.system("ls * | grep 'SBo' | more")
-                print
 
 
 
@@ -508,6 +556,8 @@ def main():
                             type=str, nargs="+", metavar=('script','source'))
 	parser.add_argument("-l", "--list", help="list of installed packages",
                             nargs="+", choices="all sbo".split(), metavar=('all, sbo'))
+	parser.add_argument("-t", "--tracking", help="tracking dependencies",
+                            type=str, metavar=(''))
 	parser.add_argument("-n", "--network", help="find from SBo repositority",
 			    type=str, metavar=(''))
 	parser.add_argument("-c", "--check", help="check if your package is up to date",
@@ -553,6 +603,9 @@ def main():
 		pkg_list(args.list)
 
 
+	if args.tracking:
+		pkg_tracking(args.tracking)
+
 	if args.network:
 		sbo_network(args.network)
 
@@ -585,7 +638,7 @@ def main():
 		pkg_display(args.display)
 
 
-	if not any([args.verbose, args.slackbuild, args.check, args.network, args.install, args.upgrade, args.reinstall,
+	if not any([args.verbose, args.slackbuild, args.tracking, args.check, args.network, args.install, args.upgrade, args.reinstall,
 		    args.remove, args.list, args.find, args.display]):
                     os.system("slpkg -h")
 

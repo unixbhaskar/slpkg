@@ -16,7 +16,7 @@
 slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
  \fBslpkg\fP \fB[-h]\fP \fB[-v]\fP \fB[-s script [source ...]\fP \fB[-l all, sbo [all, sbo ...]]\fP 
-\fB[-n]\fP \fB[-c]\fP \fB[-i [...]]\fP \fB[-u [...]]\fP \fB[-a [...]]\fP \fB[-r[...]]\fP 
+\fB[-t]\fP \fB[-n]\fP \fB[-c]\fP \fB[-i [...]]\fP \fB[-u [...]]\fP \fB[-a [...]]\fP \fB[-r[...]]\fP 
 \fB[-f [...]]\fP \fB[-d [...]]\fP
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal tool written in Python that allows the build, install, upgrade, 
@@ -32,6 +32,7 @@ Note : The most definitions needed root privileges.
   \fB                      auto build package\fP
   \fB-l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]\fP
   \fB                      list of installed packages\fP
+  \fB-t , --tracking       tracking dependencies\fP
   \fB-n , --network        find from SBo repositority\fP
   \fB-c , --check          check if your package is up to date\fP
   \fB-i  [ ...], --install  [ ...]\fP
@@ -54,8 +55,8 @@ Print the version of program and exit.
 .SH COMMANDS
 .PP
 The following commands are available.
-.SS -s script source, --slackbuild script source
-\fBslpkg\fP \fB-s\fP <\fIscript\fP> <\fIsource\fP>
+.SS -s script source, --slackbuild script source extra
+\fBslpkg\fP \fB-s\fP <\fIscript\fP> <\fIsource\fP> <\fIextra sources\fP>
 .PP
 With this argument, build slackware package quickly and easy.
 Support .tar.gz and .tar.bz2 slackbuilds archives.
@@ -64,13 +65,18 @@ Support .tar.gz and .tar.bz2 slackbuilds archives.
 .PP
 Two display options list, one for all packages and another
 only for packages SBo.
+.SS -t , --tracking tracking dependencies
+\fBslpkg\fP \fB-t\fP <\fIname of package\fP>
+.PP
+Tracking all dependencies of that package.
+The sequence shown is that you must follow to correctly install package.
 .SS -n , --network find from SBo repositority
-\fBslpkg\fP \fB-n\fP <\fIname\fP>
+\fBslpkg\fP \fB-n\fP <\fIname of package\fP>
 .PP
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
 .SS -c , --check check if your package is up to date
-\fBslpkg\fP \fB-c\fP <\fIname\fP>
+\fBslpkg\fP \fB-c\fP <\fIname of package\fP>
 .PP
 Check if your packages from www.slackbuilds.org is updated.
 .SS -i , --install install binary package
@@ -101,7 +107,7 @@ specified either by the full package name (as you'd see listed in
 /var/log/packages/), or by the base package name. 'Requires root
 privileges' (like slackware command removepkg)
 .SS -f --find
-\fBslpkg\fP \fB-f\fP <\fIname of package\fP>
+\fBslpkg\fP \fB-f\fP <\fIname of packages\fP>
 .PP
 Find if package allready installed or not.
 .SS -d --display
@@ -116,6 +122,22 @@ For example:
   \fBslpkg \-\-help\fP - display help for slpkg
 .SH EXAMPLES
 
+$ \fBslpkg -t brasero\fP
+
+  +=========================
+  | `brasero' dependencies :
+  +=========================
+   |
+   |
+   -- 1 orc
+   |
+   -- 1 gstreamer1
+   |
+   -- 1 gst1-plugins-base
+   |
+   -- 2 libunique gst1-plugins-bad
+
+
 $ \fBslpkg -c flashplayer-plugin\fP
   Searching for `flashplayer-plugin` from www.slackbuilds.org Please wait ...
 
@@ -128,9 +150,9 @@ $ \fBslpkg -n termcolor\fP
 
   Searching for termcolor from www.slackbuilds.org Please wait ...
 
-  +=====================================================================================
+  +======================================================================================
   | The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
-  +=====================================================================================
+  +======================================================================================
 
   Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
   Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
