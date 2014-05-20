@@ -49,9 +49,9 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
-             [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
-             [-f  [...]] [-d  [...]]
+	usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
+        	     [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
+            	     [-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
 
