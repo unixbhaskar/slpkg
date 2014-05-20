@@ -15,7 +15,7 @@
 .SH NAME
 slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
- \fBslpkg\fP \fB[-h]\fP \fB[-v]\fP \fB[-s script source]\fP \fB[-l all, sbo [all, sbo ...]]\fP 
+ \fBslpkg\fP \fB[-h]\fP \fB[-v]\fP \fB[-s script [source ...]\fP \fB[-l all, sbo [all, sbo ...]]\fP 
 \fB[-n]\fP \fB[-c]\fP \fB[-i [...]]\fP \fB[-u [...]]\fP \fB[-a [...]]\fP \fB[-r[...]]\fP 
 \fB[-f [...]]\fP \fB[-d [...]]\fP
 .SH DESCRIPTION
@@ -28,7 +28,7 @@ Note : The most definitions needed root privileges.
 .SH EXAMPLES
   \fB-h, --help            show this help message and exit\fP
   \fB-v, --verbose         print version and exit\fP
-  \fB-s script source, --slackbuild script source\fP
+  \fB-s script [source ...], --slackbuild script [source ...]\fP
   \fB                      auto build package\fP
   \fB-l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]\fP
   \fB                      list of installed packages\fP
@@ -137,8 +137,8 @@ $ \fBslpkg -n termcolor\fP
   Extra Downloads : 
   Package requirements :
 
-  Etc. download from www.slackbuilds.org the package termcolor
-  http://slackbuilds.org/repository/14.1/python/termcolor/
+  Download this package [y/n]
+
 
   Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
   must be in the same directory.
@@ -147,7 +147,7 @@ $ \fBslpkg -s termcolor.tar.gz termcolor-1.1.0.tar.gz\fP
 
   Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
-$ \fBslpkg -u termcolor-1.1.0-x86_64-1_SBo.tgz\fP
+$ \fBslpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz\fP
 
   Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
 

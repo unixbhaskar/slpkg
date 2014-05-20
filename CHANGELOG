@@ -1,4 +1,10 @@
 20-05-2014
+Version 1.2.8
+
+[Feature] - Added download package from www.slackbuild.org
+[Feature] - Added to support build packages with extra sources
+
+20-05-2014
 Version 1.2.7
 
 [Updated] - Overwrite code into functions

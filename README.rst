@@ -49,16 +49,16 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-	usage: slpkg [-h] [-v] [-s script source] [-l all, sbo [all, sbo ...]] [-n]
-        	     [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]] [-f  [...]]
-            	     [-d  [...]]
+usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
+             [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
+             [-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
 
 	optional arguments:
   	  -h, --help            show this help message and exit
 	  -v, --verbose         print version and exit
-	  -s script source, --slackbuild script source
+          -s script [source ...], --slackbuild script [source ...]
 	                        auto build package
 	  -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
 	                        list of installed packages
@@ -102,7 +102,7 @@ Check if your packages is up to date (www.slackbuilds.org):
 
 
 	$ slpkg -c termcolor
-	Searching for `termcolor` from www.slackbuilds.org > Please wait ...
+
 
 	The package `termcolor` not found on your system
 
@@ -125,7 +125,8 @@ Find slackbuild from network (www.slackbuilds.org):
 	Source Downloads : https://download.gnome.org/sources/brasero/3.11/brasero-3.11.3.tar.xz
 	Extra Downloads : 
 	Package requirements : libunique gst1-plugins-bad
-
+	
+	Download this package [y/n]
 
 And try again:
 
@@ -144,6 +145,9 @@ And try again:
 	Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
 	Package requirements : OpenAL SDL2 speex libmodplug
 	
+	Download this package [y/n]
+
+
 
 	$ slpkg -n termcolor
 	Searching for `termcolor` from www.slackbuilds.org > Please wait ...
@@ -157,15 +161,16 @@ And try again:
 	Extra Downloads : 
 	Package requirements :
 	
+	Download this package [y/n]
+
+
+	
 
 Auto build tool to build package:
 
 .. code-block:: bash
 
 
-
-	Etc. download from www.slackbuilds.org the package termcolor
-	http://slackbuilds.org/repository/14.1/python/termcolor/
 
 	Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
 	must be in the same directory.
@@ -237,6 +242,8 @@ Auto build tool to build package:
 
 	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
+	Use `slpkg -u` to install - upgrade this package
+	
 
 Upgrade install package:
 
