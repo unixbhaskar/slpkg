@@ -51,7 +51,7 @@ Command Line Tool Usage
 
 	usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
         	     [-t] [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
-             	[-f  [...]] [-d  [...]]
+             	     [-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
 
