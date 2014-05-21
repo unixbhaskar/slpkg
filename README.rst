@@ -21,6 +21,7 @@ Features
 - Τracking dependencies
 - Checking for updated packages
 - Find and Download packages from SBo repositority
+- View README file
 - Install binary packages
 - Install-upgrade packages with new
 - Reinstall the same packages
@@ -164,17 +165,18 @@ Find slackbuild from network (www.slackbuilds.org):
 	$ slpkg -n brasero
 	Searching for `brasero` from www.slackbuilds.org > Please wait ...
 
-	+=================================================================================
+	+==================================================================================
 	| The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
-	+=================================================================================
+	+==================================================================================
+	| Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/system/brasero.tar.gz
+	| Source Downloads : https://download.gnome.org/sources/brasero/3.11/brasero-3.11.3.tar.xz
+	| Extra Downloads : 
+	| Package requirements : libunique gst1-plugins-bad
+	+==================================================================================
+	 README          View the README file
+	 Download        Download this package
 
-	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/system/brasero.tar.gz
-	Source Downloads : https://download.gnome.org/sources/brasero/3.11/brasero-3.11.3.tar.xz
-	Extra Downloads : 
-	Package requirements : libunique gst1-plugins-bad
-	
-	Download this package [y/n]
-
+	_
 
 And try again:
 
@@ -184,17 +186,18 @@ And try again:
 	$ slpkg -n bitfighter
 	Searching for `bitfighter` from www.slackbuilds.org > Please wait ...
 
-	+======================================================================================
+	+=======================================================================================
 	| The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
-	+======================================================================================
+	+=======================================================================================
+	| Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
+	| Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
+	| Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
+	| Package requirements : OpenAL SDL2 speex libmodplug
+	+=======================================================================================
+         README          View the README file
+         Download        Download this package
 
-	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
-	Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
-	Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
-	Package requirements : OpenAL SDL2 speex libmodplug
-	
-	Download this package [y/n]
-
+        _
 
 
 	$ slpkg -n termcolor
@@ -203,14 +206,15 @@ And try again:
 	+======================================================================================
 	| The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
 	+======================================================================================
+	| Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
+	| Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
+	| Extra Downloads : 
+	| Package requirements :
+	+======================================================================================
+         README          View the README file
+         Download        Download this package
 
-	Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
-	Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
-	Extra Downloads : 
-	Package requirements :
-	
-	Download this package [y/n]
-
+        _
 
 	
 

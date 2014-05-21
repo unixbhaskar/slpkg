@@ -23,7 +23,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -104,6 +104,19 @@ def url_read(name):
         read_page = f.read()
 	
 	return read_page
+
+
+
+# read SBo README 
+def pkg_readme(sbo_url, name):
+	sbo_url = sbo_url +  "README"
+        sbo_url = sbo_url.replace("repository", "slackbuilds")
+        readme = url_read(sbo_url)
+	
+	file = open("/tmp/slpkg_README", "w")
+	file.write(readme)
+	file.close()
+
 
 
 
@@ -439,32 +452,40 @@ def sbo_network(name):
                         colors.CYAN, name, colors.GREEN,
                         colors.ENDC + find_sbo_url))
                 print ("+" + "=" * sbo_url_len)
-                print
-                print ("{}Download SlackBuild : {}{}".format(colors.GREEN,
+                print ("| {}Download SlackBuild : {}{}".format(colors.GREEN,
                         colors.ENDC, find_sbo_dwn))
-                print ("{}Source Downloads : {}{}".format(colors.GREEN,
+                print ("| {}Source Downloads : {}{}".format(colors.GREEN,
                         colors.ENDC, find_source_dwn))
-                print ("{}Extra Downloads : {}{}".format(colors.GREEN,
+                print ("| {}Extra Downloads : {}{}".format(colors.GREEN,
                         colors.ENDC, find_extra_dwn))
-                print ("{}Package requirements : {}{}".format(colors.YELLOW,
+                print ("| {}Package requirements : {}{}".format(colors.YELLOW,
                         colors.ENDC, find_sbo_req))
-                print
-	        download_pkg = raw_input("Download this package [y/n] ")
+                print ("+" + "=" * sbo_url_len)
+		print (" {}R{}EADME          View the README file".format(colors.RED, colors.ENDC))
+                print (" {}D{}ownload        Download this package".format(colors.RED, colors.ENDC))
 		print
-		if download_pkg == "y" or download_pkg == "Y":
-			print ("{}Start ...{}".format(colors.GREEN, colors.ENDC))
-			os.system("wget " + find_sbo_dwn)
-			os.system("wget " + find_source_dwn)
+		while True:
+			read = raw_input("_ ")
+			if read == "D" or read == "d":
+				print ("{}Start ...{}".format(colors.GREEN, colors.ENDC))
+				os.system("wget " + find_sbo_dwn)
+				os.system("wget " + find_source_dwn)
 
-			if find_extra_dwn == "":
-				pass
-			else:
-				os.system("wget " + find_extra_dwn)
+				if find_extra_dwn == "":
+					pass
+				else:
+					os.system("wget " + find_extra_dwn)
 					
 
-			print ("{}Use {}`slpkg -s`{} to build this package{}".format(colors.YELLOW,
-				 colors.CYAN, colors.YELLOW, colors.ENDC))
-			print
+				print ("{}Use {}`slpkg -s`{} to build this package{}".format(colors.YELLOW,
+					 colors.CYAN, colors.YELLOW, colors.ENDC))
+				print
+			elif read == "R" or read == "r":
+				pkg_readme(find_sbo_url, name)
+				os.system("man /tmp/./{}".format("slpkg_README"))
+
+			else:
+				break
 
 
 
