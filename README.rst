@@ -11,11 +11,27 @@
     :width: 30%
     :align: left
 
-Slpkg is a terminal tool , written in Python that allows the
-build, upgrade, remove, find and view Slackware packages contents.
+
+Sqlpkg is a terminal tool in order to easy use Slackware packages.
+
+Features
+--------
+- Automatic tool build and install packages
+- List all installed packages
+- Τracking dependencies
+- Checking for updated packages
+- Find and Download packages from SBo repositority
+- Install binary packages
+- Install-upgrade packages with new
+- Reinstall the same packages
+- Remove packages
+- Find installed packages
+- Display the contents of the packages
+
 
 It's a quick and easy way to manage your packages in slackware
 to a command.
+
 
 [CHANGELOG] : https://github.com/dslackw/slpkg/blob/master/CHANGELOG
 
