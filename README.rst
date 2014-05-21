@@ -12,7 +12,7 @@
     :align: left
 
 
-Sqlpkg is a terminal tool in order to easy use Slackware packages.
+Slpkg is a terminal tool in order to easy use Slackware packages.
 
 Features
 --------
