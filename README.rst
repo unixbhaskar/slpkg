@@ -51,32 +51,27 @@ Command Line Tool Usage
 
 	usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
         	     [-t] [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
-            	     [-f  [...]] [-d  [...]]
+             	[-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
 
 	optional arguments:
-  	  -h, --help            show this help message and exit
+	  -h, --help            show this help message and exit
 	  -v, --verbose         print version and exit
-          -s script [source ...], --slackbuild script [source ...]
+	  -s script [source ...]
 	                        auto build package
-	  -l all, sbo [all, sbo ...], --list all, sbo [all, sbo ...]
+	  -l all, sbo [all, sbo ...]
 	                        list of installed packages
-	  -t , --tracking       tracking dependencies
-	  -n , --network        find from SBo repositority
-	  -c , --check          check if your package is up to date
-	  -i  [ ...], --install  [ ...]
-	                        install binary packages
-	  -u  [ ...], --upgrade  [ ...]
-	                        install-upgrade package with new
-	  -a  [ ...], --reinstall  [ ...]
-	                        reinstall the same packages
-	  -r  [ ...], --remove  [ ...]
-	                        remove packages
-	  -f  [ ...], --find  [ ...]
-	                        find if packages installed
-	  -d  [ ...], --display  [ ...]
-	                        display the contents of the packages
+	  -t                    tracking dependencies
+	  -n                    find from SBo repositority
+	  -c                    check if your package is up to date
+	  -i  [ ...]            install binary packages
+	  -u  [ ...]            install-upgrade packages with new
+	  -a  [ ...]            reinstall the same packages
+	  -r  [ ...]            remove packages
+	  -f  [ ...]            find if packages installed
+	  -d  [ ...]            display the contents of the packages
+
 
 
 Slpkg Examples

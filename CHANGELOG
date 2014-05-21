@@ -1,7 +1,12 @@
 21-05-2014
+Version 1.3.0
+
+[Updated] - Fix argparse view
+
+21-05-2014
 Version 1.2.9
 
-Feature] - Added tracking dependencies
+[Feature] - Added tracking dependencies
 
 20-05-2014
 Version 1.2.8

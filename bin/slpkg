@@ -23,7 +23,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.2.9"
+__version__ = "1.3.0"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -156,6 +156,7 @@ def sbo_source_dwn(sbo_url, name):
         sbo_url = sbo_url + name + ".info"
         sbo_url = sbo_url.replace("repository", "slackbuilds")
 	read_info = url_read(sbo_url)
+
 	# read lines from .info files grep download line and return source link
 	if arch == "x86_64":
 		for line in read_info.splitlines():
@@ -215,7 +216,7 @@ def sbo_requires_pkg(sbo_url, name):
 # search for package dependencies
 def sbo_dependencies_pkg(name):
 	if name == "%README%": # avoid to search %README% as dependency
-		name = ""
+		pass
 	else:
 		find_sbo_url = sbo_search_pkg(name)
 
@@ -346,6 +347,32 @@ def build_extra2_pkg(script, source, extra, extra2):
                 print ("{}Wrong file name, Please try again...{}".format(colors.RED,
                         colors.ENDC))
                 print
+
+
+
+# print version
+def pkg_version():
+        print ("Version: {}".format(__version__))
+        print ("Licence: {}".format(__license__))
+        print ("Email  : {}".format(__email__))
+
+
+
+# build packages 
+def pkg_slackbuild(name):
+	 if len(name) == 2:
+        	 build_package(name[0], name[1])
+         elif len(name) == 3:
+                 build_extra_pkg(name[0],
+                 name[1], name[2])
+         elif len(name) == 4:
+                 build_extra2_pkg(name[0], name[1],
+                 name[2], name[3])
+         else:
+                 print
+                 print ("{}Not supported with more than four arguments{}".format(colors.RED,
+                 	colors.ENDC))
+                 print
 
 
 
@@ -552,94 +579,81 @@ def main():
 	parser = argparse.ArgumentParser(description=description)
         parser.add_argument("-v", "--verbose", help="print version and exit",
 			    action="store_true")
-	parser.add_argument("-s", "--slackbuild", help="auto build package",
+	parser.add_argument("-s", help="auto build package",
                             type=str, nargs="+", metavar=('script','source'))
-	parser.add_argument("-l", "--list", help="list of installed packages",
+	parser.add_argument("-l", help="list of installed packages",
                             nargs="+", choices="all sbo".split(), metavar=('all, sbo'))
-	parser.add_argument("-t", "--tracking", help="tracking dependencies",
+	parser.add_argument("-t", help="tracking dependencies",
                             type=str, metavar=(''))
-	parser.add_argument("-n", "--network", help="find from SBo repositority",
+	parser.add_argument("-n", help="find from SBo repositority",
 			    type=str, metavar=(''))
-	parser.add_argument("-c", "--check", help="check if your package is up to date",
+	parser.add_argument("-c", help="check if your package is up to date",
 			    type=str, metavar=(''))
-	parser.add_argument("-i", "--install", help="install binary packages",
+	parser.add_argument("-i", help="install binary packages",
                             type=str, nargs="+", metavar=(''))
-        parser.add_argument("-u", "--upgrade", help="install-upgrade packages with new",
+        parser.add_argument("-u", help="install-upgrade packages with new",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-a", "--reinstall", help="reinstall the same packages",
+	parser.add_argument("-a", help="reinstall the same packages",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-r", "--remove", help="remove packages",
+	parser.add_argument("-r", help="remove packages",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-f", "--find", help="find if packages installed",
+	parser.add_argument("-f", help="find if packages installed",
 			    type=str, nargs="+", metavar=(''))
-	parser.add_argument("-d", "--display", help="display the contents of the packages",
+	parser.add_argument("-d", help="display the contents of the packages",
 			    type=str, nargs="+", metavar=(''))
 	args = parser.parse_args()
 
 
         if args.verbose:
-                print ("Version: {}".format(__version__))
-		print ("Licence: {}".format(__license__))
-		print ("Email  : {}".format(__email__))
+		pkg_version()
 		
 
-        if args.slackbuild:
-		if len(args.slackbuild) == 2:
-			build_package(args.slackbuild[0], args.slackbuild[1])		
-		elif len(args.slackbuild) == 3:
-			build_extra_pkg(args.slackbuild[0],
-					args.slackbuild[1], args.slackbuild[2])
-		elif len(args.slackbuild) == 4:
-			build_extra2_pkg(args.slackbuild[0], args.slackbuild[1],
-					args.slackbuild[2], args.slackbuild[3])
-		else:
-			print
-			print ("{}Not supported with more than four arguments{}".format(colors.RED,
-				 colors.ENDC))
-			print	
+        if args.s:
+		pkg_slackbuild(args.s)
 
 
-        if args.list:
-		pkg_list(args.list)
+        if args.l:
+		pkg_list(args.l)
 
 
-	if args.tracking:
-		pkg_tracking(args.tracking)
-
-	if args.network:
-		sbo_network(args.network)
+	if args.t:
+		pkg_tracking(args.t)
 
 
-	if args.check:
-		sbo_check(args.check)
+	if args.n:
+		sbo_network(args.n)
+
+
+	if args.c:
+		sbo_check(args.c)
 
 		
-        if args.install:
-		pkg_install(args.install)
+        if args.i:
+		pkg_install(args.i)
 		
 
-        if args.upgrade:
-		pkg_upgrade(args.upgrade)
+        if args.u:
+		pkg_upgrade(args.u)
 
 
-	if args.reinstall:
-		pkg_reinstall(args.reinstall)
+	if args.a:
+		pkg_reinstall(args.a)
 
 
-	if args.remove:
-		pkg_remove(args.remove)
+	if args.r:
+		pkg_remove(args.r)
 
 		
-	if args.find:
-		pkg_find(args.find)
+	if args.f:
+		pkg_find(args.f)
 	
 
-	if args.display:
-		pkg_display(args.display)
+	if args.d:
+		pkg_display(args.d)
 
 
-	if not any([args.verbose, args.slackbuild, args.tracking, args.check, args.network, args.install, args.upgrade, args.reinstall,
-		    args.remove, args.list, args.find, args.display]):
+	if not any([args.verbose, args.s, args.t, args.c, args.n, args.i, args.u, args.a,
+		    args.r, args.l, args.f, args.d]):
                     os.system("slpkg -h")
 
 
