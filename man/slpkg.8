@@ -18,8 +18,7 @@ slpkg - Utility to help package management in Slackware
  \fBslpkg\fP \fB-h\fP \fB-v\fP \fB-s script [source ...]\fP \fB-l all, sbo [all, sbo ...]\fP
  \fB-t\fP \fB-n\fP \fB-c\fP \fB-i [...]\fP \fB-u [...]\fP \fB-a [...]\fP \fB-r [...]\fP \fB-f [...]\fP \fB-d [...]\fP
 .SH DESCRIPTION
-\fBslpkg\fP is a terminal tool written in Python that allows the build, install, upgrade, 
-remove, find and view Slackware packages contents.
+\fBslpkg\fP is a terminal tool in order to easy use Slackware packages.
 .PP
 It's a quick and easy way to manage your packages in slackware to a command.
 .SH EXAMPLES
@@ -130,7 +129,7 @@ $ \fBslpkg -t brasero\fP
 
 
 $ \fBslpkg -c flashplayer-plugin\fP
-  Searching for `flashplayer-plugin` from www.slackbuilds.org Please wait ...
+  Searching `flashplayer-plugin` from slackbuilds.org ...
 
   New version is available !!!
   +==================================================
@@ -139,7 +138,7 @@ $ \fBslpkg -c flashplayer-plugin\fP
 
 $ \fBslpkg -n termcolor\fP
 
-  Searching for termcolor from www.slackbuilds.org Please wait ...
+  Searching 'termcolor' from slackbuilds.org ...
 
   +======================================================================================
   | The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
@@ -150,6 +149,8 @@ $ \fBslpkg -n termcolor\fP
   | Package requirements :
   +======================================================================================
    README          View the README file
+   SlackBuild      View the SlackBuild file
+   Info            View the Info file
    Download        Download this package
 
   _

@@ -23,6 +23,8 @@ Features
 - Checking for updated packages
 - Find and Download packages from SBo repositority
 - View README file
+- View SlackBuild file
+- View Info file
 - Install binary packages
 - Install-upgrade packages with new
 - Reinstall the same packages
@@ -117,6 +119,31 @@ Tracking all dependencies of packages:
 
 
 
+	$ slpkg -t awscli
+	
+	+========================
+	| awscli dependencies :
+	+========================
+	 |
+	 |
+	 -- 2 pysetuptools pyasn1
+	 |
+	 -- 1 %README%
+	 |
+	 -- 2 docutils six
+	 |
+	 -- 1 pysetuptools
+	 |
+	 -- 1 %README%
+	 |
+	 -- 2 pysetuptools six
+	 |
+	 -- 2 python-dateutil jmespath
+	 |
+	 -- 4 botocore colorama bcdoc rsa
+
+
+
 	$ slpkg -t pylint
 
 	+========================
@@ -136,7 +163,7 @@ Check if your packages is up to date (www.slackbuilds.org):
 
 
 	$ slpkg -c flashplayer-plugin
-	Searching for `flashplayer-plugin` from www.slackbuilds.org > Please wait ...
+	Searching `flashplayer-plugin` from slackbuilds.org ...
 
 	New version is available !!!
 	+==================================================
@@ -145,13 +172,12 @@ Check if your packages is up to date (www.slackbuilds.org):
 
 
 	$ slpkg -c ranger
-	Searching for `ranger` from www.slackbuilds.org > Please wait ...
+	Searching `ranger` from slackbuilds.org ...
 
 	Your package is up to date
 
 
 	$ slpkg -c termcolor
-
 
 	The package `termcolor` not found on your system
 
@@ -164,7 +190,7 @@ Find slackbuild from network (www.slackbuilds.org):
 	This find the slackbuild , source, extra downloads and package requirements !!!	
 
 	$ slpkg -n brasero
-	Searching for `brasero` from www.slackbuilds.org > Please wait ...
+	Searching `brasero` from slackbuilds.org ...
 
 	+==================================================================================
 	| The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
@@ -175,8 +201,10 @@ Find slackbuild from network (www.slackbuilds.org):
 	| Package requirements : libunique gst1-plugins-bad
 	+==================================================================================
 	 README          View the README file
+	 SlackBuild      View the SlackBuild file
+	 Info            View the Info file
 	 Download        Download this package
-
+	
 	_
 
 And try again:
@@ -185,7 +213,7 @@ And try again:
 .. code-block:: bash
 
 	$ slpkg -n bitfighter
-	Searching for `bitfighter` from www.slackbuilds.org > Please wait ...
+	Searching `bitfighter` from slackbuilds.org ...
 
 	+=======================================================================================
 	| The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
@@ -196,13 +224,15 @@ And try again:
 	| Package requirements : OpenAL SDL2 speex libmodplug
 	+=======================================================================================
          README          View the README file
+	 SlackBuild      View the SlackBuild file
+	 Info            View the Info file
          Download        Download this package
 
         _
 
 
 	$ slpkg -n termcolor
-	Searching for `termcolor` from www.slackbuilds.org > Please wait ...
+	Searching `termcolor` from slackbuilds.org ...
 
 	+======================================================================================
 	| The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
@@ -213,6 +243,8 @@ And try again:
 	| Package requirements :
 	+======================================================================================
          README          View the README file
+	 SlackBuild      View the SlackBuild file
+	 Info            View the Info file
          Download        Download this package
 
         _

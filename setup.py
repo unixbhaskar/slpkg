@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import os, sys, shutil
@@ -7,7 +7,7 @@ from distutils.core import setup
 
 setup(
     name = 'slpkg',
-    version = "1.3.1",
+    version = "1.3.2",
     description = "Python tool to manage Slackware packages",
     keywords = ["slackware", "slpkg", "upgrade", "install", "remove",
 		 "view", "slackpkg", "tool"],
