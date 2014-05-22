@@ -46,7 +46,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -110,6 +110,26 @@ def rmv_unused(name):
 		name = name.replace(i, "")
 
 	return name
+
+# get filename from links
+def get_file(link):
+
+	char = "/"
+
+	j = 0
+	results = []
+	for i in link:
+        	j += 1
+	        results.append(link[-j:])
+        	for file in results:
+                	if file.startswith(char):
+                        	file = file
+	                        break
+
+	file = file.replace("/", "") # remove first char "/" from string
+	file = file.strip(" ") # remove spaces from string
+
+	return file
 
 
 
@@ -356,6 +376,12 @@ def build_extra_pkg(script, source, extra):
         source_tar = source  
 	extra_source = extra 
 
+	print slack_script
+	print source_tar
+	print extra_source
+	
+
+
        # remove file type from slackbuild script and store the name
         pkg_name = slack_script.replace(".tar.gz", "")
         if pkg_name != slack_script:
@@ -366,18 +392,18 @@ def build_extra_pkg(script, source, extra):
         path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
 	try:
 		tar = tarfile.open(slack_script)
-        	tar.extractall()
+       		tar.extractall()
 	        tar.close()
 		shutil.copy2(source_tar, pkg_name)
 		shutil.copy2(extra_source, pkg_name)
-	        os.chdir(path + pkg_name)
+        	os.chdir(path + pkg_name)
 	        os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
 		print ("{}Use {}`slpkg -u`{} to install - upgrade this package{}\n".format(colors.YELLOW,
                                  colors.CYAN, colors.YELLOW, colors.ENDC))
 	except (OSError, IOError):
 		print
                 print ("{}Wrong file name, Please try again...{}\n".format(colors.RED,
-                        colors.ENDC))
+                       colors.ENDC))
 
 
 
@@ -496,7 +522,7 @@ def sbo_network(name):
                 find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, name)
                 find_source_dwn = sbo_source_dwn(find_sbo_url, name)
                 find_extra_dwn = sbo_extra_dwn(find_sbo_url, name)
-		find_extra_dwn = " ".join(find_extra_dwn)
+		find_extra_dwn = " ".join(find_extra_dwn) # convert list to string
 
                 # caclulate the length of the link
                 sbo_name_len = len(name)
@@ -516,10 +542,11 @@ def sbo_network(name):
                 print ("| {}Package requirements : {}{}".format(colors.YELLOW,
                         colors.ENDC, find_sbo_req))
                 print ("+" + "=" * sbo_url_len)
-		print (" {}R{}EADME          View the README file".format(colors.RED, colors.ENDC))
-		print (" {}S{}lackBuild      View the SlackBuild file".format(colors.RED, colors.ENDC))
-                print (" {}I{}nfo            View the Info file".format(colors.RED, colors.ENDC))
-                print (" {}D{}ownload        Download this package".format(colors.RED, colors.ENDC))
+		print (" {}R{}EADME               View the README file".format(colors.RED, colors.ENDC))
+		print (" {}S{}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))
+                print (" {}I{}nfo                 View the Info file".format(colors.RED, colors.ENDC))
+                print (" {}D{}ownload             Download this package".format(colors.RED, colors.ENDC))
+		print (" {}B{}uild                Download and build this package".format(colors.RED, colors.ENDC))
 		print
 		while True:
 			read = raw_input("_ ")
@@ -547,6 +574,39 @@ def sbo_network(name):
 			elif read == "S" or read == "s":
 				read_slackbuild(find_sbo_url, name)
                                 os.system("less /tmp/slpkg/readme/" + name + ".{}".format("SlackBuild"))
+			elif read == "B" or read == "b":
+				script = get_file(find_sbo_dwn)
+				source = get_file(find_source_dwn)
+				print
+                                print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
+                                os.system("wget " + find_sbo_dwn)
+                                os.system("wget " + find_source_dwn)
+
+                                if find_extra_dwn == "":
+                                        pass
+                                else:
+                                        os.system("wget " + find_extra_dwn)
+					find_extra_dwn = find_extra_dwn.split() # convert str to list
+					if len(find_extra_dwn) == 1:
+						extra = get_file(find_extra_dwn[0])
+						build_extra_pkg(script, source, extra)
+						break
+
+					elif len(find_extra_dwn) == 2:
+						extra = get_file(find_extra_dwn[0])
+						extra2 = get_file(find_extra_dwn[1])
+						build_extra2_pkg(script, source, extra, extra2)
+						break
+					else:
+						print
+				                print ("{}Not supported with more than four arguments{}\n".format(colors.RED,
+				                        colors.ENDC))
+						break
+
+				build_package(script, source)
+
+                                break
+
 			else:
 				break
 

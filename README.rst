@@ -25,6 +25,7 @@ Features
 - View README file
 - View SlackBuild file
 - View Info file
+- Auto Download and Build packages
 - Install binary packages
 - Install-upgrade packages with new
 - Reinstall the same packages
@@ -200,10 +201,11 @@ Find slackbuild from network (www.slackbuilds.org):
 	| Extra Downloads : 
 	| Package requirements : libunique gst1-plugins-bad
 	+==================================================================================
-	 README          View the README file
-	 SlackBuild      View the SlackBuild file
-	 Info            View the Info file
-	 Download        Download this package
+	 README               View the README file
+	 SlackBuild           View the SlackBuild file
+	 Info                 View the Info file
+	 Download             Download this package
+	 Build                Download and build this package
 	
 	_
 
@@ -223,10 +225,11 @@ And try again:
 	| Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
 	| Package requirements : OpenAL SDL2 speex libmodplug
 	+=======================================================================================
-         README          View the README file
-	 SlackBuild      View the SlackBuild file
-	 Info            View the Info file
-         Download        Download this package
+         README               View the README file
+	 SlackBuild           View the SlackBuild file
+	 Info                 View the Info file
+         Download             Download this package
+	 Build                Download and build this package
 
         _
 
@@ -242,10 +245,11 @@ And try again:
 	| Extra Downloads : 
 	| Package requirements :
 	+======================================================================================
-         README          View the README file
-	 SlackBuild      View the SlackBuild file
-	 Info            View the Info file
-         Download        Download this package
+         README               View the README file
+	 SlackBuild           View the SlackBuild file
+	 Info                 View the Info file
+         Download             Download this package
+	 Build                Download and build this package
 
         _
 
