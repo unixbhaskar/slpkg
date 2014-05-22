@@ -6,13 +6,14 @@
     :target: https://pypi.python.org/pypi/slpkg
 
 
+Slpkg is a terminal tool in order to easy use Slackware packages.
+
+
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :scale: 60%
     :width: 30%
     :align: left
 
-
-Slpkg is a terminal tool in order to easy use Slackware packages.
 
 Features
 --------
@@ -95,7 +96,7 @@ Slpkg Examples
 --------------
 
 
-Tracking all dependencies of that package:
+Tracking all dependencies of package:
 
 .. code-block:: bash
 
