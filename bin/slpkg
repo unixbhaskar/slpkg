@@ -284,21 +284,26 @@ def sbo_dependencies_pkg(name):
 		pass
 	else:
 		find_sbo_url = sbo_search_pkg(name)
+		if find_sbo_url == None:
+        	        print ("\n")
+	                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
+                	        colors.CYAN, name, colors.RED, colors.ENDC))
 
-		find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
-		dependencies = find_sbo_req.split() # convert string to list
-
-		if dependencies == []:
-			pass
 		else:
-			dep_results.append(dependencies)
+			find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
+			dependencies = find_sbo_req.split() # convert string to list
 
-		for line in dependencies:
-			print
-			sbo_dependencies_pkg(line)
+			if dependencies == []:
+				pass
+			else:
+				dep_results.append(dependencies)
+
+			for line in dependencies:
+				print
+				sbo_dependencies_pkg(line)
 	
 
-		return dep_results
+			return dep_results
 
 
 
@@ -455,23 +460,26 @@ def pkg_list(name):
 # find all dependencies
 def pkg_tracking(name):
 	find_dependencies = sbo_dependencies_pkg(name)
-        print ("\n")
-        pkg_len = len(name) + 18
-        print ("+" + "=" * pkg_len)
-        print ("| {}`{}' {}dependencies :{}".format(colors.CYAN, name,
-        	colors.YELLOW, colors.ENDC))
-        print ("+" + "=" * pkg_len)
-        find_dependencies.reverse()
-
-        if find_dependencies == []:
+	if find_dependencies == None:
 		pass
 	else:
-		print (" |")
-	        for i in range(len(find_dependencies)):
-		        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
-	                print (" |")
-        	        print " ".join(found)
-        print
+	        print ("\n")
+       		pkg_len = len(name) + 18
+	        print ("+" + "=" * pkg_len)
+	        print ("| {}`{}' {}dependencies :{}".format(colors.CYAN, name,
+        		colors.YELLOW, colors.ENDC))
+	        print ("+" + "=" * pkg_len)
+	        find_dependencies.reverse()
+
+        	if find_dependencies == []:
+			pass
+		else:
+			print (" |")
+		        for i in range(len(find_dependencies)):
+			        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
+		                print (" |")
+        		        print " ".join(found)
+	        print
 
 
 

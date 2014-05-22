@@ -3,7 +3,9 @@ Version 1.3.2
 
 [Feature] - Added view info and SlackBuild file
 [Updated] - Fix build arguments messages
-
+[Bugfix]  - Fixed TypeError: unsupported operand type(s) for +: 'NoneType' and 'str'
+	    in sbo_requires_pkg function (sbo_url = sbo_url + name + ".info")
+	
 21-05-2014
 Version 1.3.1
 
