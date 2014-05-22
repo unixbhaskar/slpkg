@@ -96,7 +96,7 @@ Slpkg Examples
 --------------
 
 
-Tracking all dependencies of package:
+Tracking all dependencies of packages:
 
 .. code-block:: bash
 
