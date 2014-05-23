@@ -1,0 +1,198 @@
+.\"                                      -*- nroff -*-
+.\" Copyright (C) 2014 Dimitris Zlatanidis
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.TH Slpkg "8" "5 2014" "slpkg"
+.SH NAME
+slpkg - Utility to help package management in Slackware
+.SH SYNOPSIS
+ \fBslpkg\fP \fB-h\fP \fB-v\fP \fB-s script [source ...]\fP \fB-l all, sbo [all, sbo ...]\fP
+ \fB-t\fP \fB-n\fP \fB-c\fP \fB-i [...]\fP \fB-u [...]\fP \fB-a [...]\fP \fB-r [...]\fP \fB-f [...]\fP \fB-d [...]\fP
+.SH DESCRIPTION
+\fBslpkg\fP is a terminal tool in order to easy use Slackware packages.
+.PP
+It's a quick and easy way to manage your packages in slackware to a command.
+.SH EXAMPLES
+  \fB-h, --help            show this help message and exit\fP
+  \fB-v, --verbose         print version and exit\fP
+  \fB-s script [source ...]\fP
+  \fB			   auto build package\fP
+  \fB-l all, sbo [all, sbo ...]\fP
+  \fB                      list of installed packages\fP
+  \fB-t                    tracking dependencies\fP
+  \fB-n                    find from SBo repositority\fP
+  \fB-c                    check if your package is up to date\fP
+  \fB-i  [ ...]            install binary packages\fP
+  \fB-u  [ ...]            install-upgrade packages with new\fP
+  \fB-a  [ ...]            reinstall the same packages\fP
+  \fB-r  [ ...]            remove packages\fP
+  \fB-f  [ ...]            find if packages installed\fP
+  \fB-d  [ ...]            display the contents of the packages\fP
+
+.SH GLOBAL OPTIONS
+.TP
+\fB\-v\fP, \fB\-\-verbose\fP
+Print the version of program and exit.
+.SH COMMANDS
+.PP
+The following commands are available.
+.SS -s script source extra
+\fBslpkg\fP \fB-s\fP <\fIscript\fP> <\fIsource\fP> <\fIextra sources\fP>
+.PP
+With this argument, build slackware package quickly and easy.
+Support .tar.gz and .tar.bz2 slackbuilds archives.
+.SS -l all, sbo [all, sbo ...]
+\fBslpkg\fP \fB-l\fP <\fIall\fP> <\fIsbo\fP>
+.PP
+Two display options list, one for all packages and another
+only for packages SBo.
+.SS -t , tracking dependencies
+\fBslpkg\fP \fB-t\fP <\fIname of package\fP>
+.PP
+Tracking all dependencies of that package.
+The sequence shown is that you must follow to correctly install package.
+.SS -n , find from SBo repositority
+\fBslpkg\fP \fB-n\fP <\fIname of package\fP>
+.PP
+With this method you can find the SBo script that interests you through
+the network. (www.slackbuilds.org)
+.SS -c , check if your package is up to date
+\fBslpkg\fP \fB-c\fP <\fIname of package\fP>
+.PP
+Check if your packages from www.slackbuilds.org is updated.
+.SS -i , install binary package
+\fBslpkg\fP \fB-i\fP <\fIpackages.t?z\fP>
+.PP
+Installs single binary packages designed for use with the 
+Slackware Linux distribution into your system.
+.SS -u , install-upgrade package with new
+\fBslpkg\fP \fB-u\fP <\fIpackages.t?z\fP>
+.PP
+Normally upgrade only upgrades packages that are already
+installed on the system, and will skip any packages that do not
+already have a version installed. 'Requires root privileges'
+(like slackware command upgradepkg --install-new)
+.SS -a reinstall binary package
+\fBslpkg\fP \fB-a\fP <\fIpackages.t?z\fP>
+.PP
+Upgradepkg usually skips packages if the exact same package
+(matching name, version, arch, and build number) is already
+installed on the system.'Requires root privileges' (like 
+slackware command upgradepkg --reinstall)
+.SS -r , remove package
+\fBslpkg\fP \fB-r\fP <\fIname of packages\fP>
+.PP
+Removes a previously installed Slackware package, while writing
+a progress report to the standard output. A package may be 
+specified either by the full package name (as you'd see listed in
+/var/log/packages/), or by the base package name. 'Requires root
+privileges' (like slackware command removepkg)
+.SS -f find packages
+\fBslpkg\fP \fB-f\fP <\fIname of packages\fP>
+.PP
+Find if package allready installed or not.
+.SS -d display contents
+\fBslpkg\fP \fB-d\fP <\fIname of packages\fP>
+.PP
+Display the contents of the package with all descriptions.
+.SH HELP OPTION
+Specifying the help option displays help for slpkg itself, or a
+command.
+.br
+For example:
+  \fBslpkg \-\-help\fP - display help for slpkg
+.SH EXAMPLES
+
+$ \fBslpkg -t brasero\fP
+
+  +=========================
+  | `brasero' dependencies :
+  +=========================
+   |
+   |
+   -- 1 orc
+   |
+   -- 1 gstreamer1
+   |
+   -- 1 gst1-plugins-base
+   |
+   -- 2 libunique gst1-plugins-bad
+
+
+$ \fBslpkg -c flashplayer-plugin\fP
+  Searching `flashplayer-plugin` from slackbuilds.org ...
+
+  New version is available !!!
+  +==================================================
+  | flashplayer-plugin 11.2.202.356
+  +==================================================
+
+$ \fBslpkg -n termcolor\fP
+
+  Searching 'termcolor' from slackbuilds.org ...
+
+  +======================================================================================
+  | The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
+  +======================================================================================
+  | Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
+  | Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
+  | Extra Downloads : 
+  | Package requirements :
+  +======================================================================================
+   README               View the README file
+   SlackBuild           View the SlackBuild file
+   Info                 View the Info file
+   Download             Download this package
+   Build                Download and build this package
+
+  _
+
+  Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
+  must be in the same directory.
+
+$ \fBslpkg -s termcolor.tar.gz termcolor-1.1.0.tar.gz\fP
+
+  Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
+
+$ \fBslpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz\fP
+
+  Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
+
+$ \fBslpkg -r termcolor yetris\fP
+
+  !!! WARNING !!!
+
+  Are you sure to remove this package [y/n] y
+
+  Package: termcolor-1.1.0-x86_64-1_SBo
+  Package: yetris-2.0.1-x86_64-1_SBo
+          Removing...
+
+$ \fBslpkg -f termcolor\fP
+
+  The package 'termcolor' not found
+
+$ \fBslpkg -d termcolor\fP
+
+  The package 'termcolor' not found
+
+$ \fBslpkg -v\fP
+
+  Version: x.x.x
+
+.SH AUTHOR
+Dimitris Zlatanidis <d.zlatanidis@gmail.com>
+.SH COPYRIGHT
+Copyright \(co 2014 Dimitris Zlatanidis
+
+.SH SEE ALSO
+installpkg(8), upgradepkg(8), removepkg(8), pkgtool(8), slackpkg(8) 

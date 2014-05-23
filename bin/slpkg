@@ -1,0 +1,813 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
+
+'''Slpkg is a terminal tool in order to easy use Slackware packages.
+It's a quick and easy way to manage your packages in slackware to a command.
+
+
+usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
+             [-t] [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
+             [-f  [...]] [-d  [...]]
+
+Utility to help package management in Slackware
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         print version and exit
+  -s script [source ...]
+                        auto build package
+  -l all, sbo [all, sbo ...]
+                        list of installed packages
+  -t                    tracking dependencies
+  -n                    find from SBo repositority
+  -c                    check if your package is up to date
+  -i  [ ...]            install binary packages
+  -u  [ ...]            install-upgrade packages with new
+  -a  [ ...]            reinstall the same packages
+  -r  [ ...]            remove packages
+  -f  [ ...]            find if packages installed
+  -d  [ ...]            display the contents of the packages'''
+
+
+
+
+import os
+import re
+import sys
+import shutil
+import tarfile
+import getpass
+import urllib2
+import argparse
+import subprocess
+
+
+
+__author__ = "dslackw"
+__version__ = "1.3.4"
+__license__ = "GNU General Public License v3 (GPLv3)"
+__email__ = "d.zlatanidis@gmail.com"
+
+
+# grep computer architecture
+uname = os.uname()
+arch = (uname[4])
+
+# create tmp directory
+os.system("mkdir -p /tmp/slpkg/readme/")
+
+
+# path file record
+packages = "/var/log/packages/"
+tmp = "/tmp/"
+
+
+# create dependencies list
+dep_results = []
+
+
+# SlackBuilds repository link
+sbo_url = "http://slackbuilds.org/repository/14.1/"
+
+
+# create repository list
+repository = ("academic", "business", "games", "ham",
+	      "misc", "office", "ruby", "accessibility",
+	      "desktop", "gis", "haskell", "multimedia",
+	      "perl", "system", "audio", "development",
+	      "graphics", "libraries", "network", "python")
+
+
+
+# print out colors class
+class colors:
+	RED = "\x1b[31m"
+	GREEN = "\x1b[32m"
+	YELLOW = "\x1b[33m"
+	CYAN = "\x1b[36m"
+	ENDC = "\x1b[0m"
+
+
+
+# check if user is root
+def s_user(user):
+	print	
+	if user == "root":
+		pass
+	else:
+		print ("{}Must have {}`root`{} privileges ...{}\n".format(colors.RED, 
+			  colors.GREEN, colors.RED, colors.ENDC))
+		sys.exit()
+
+
+
+# remove unused chars
+def rmv_unused(name):
+	rmv = "><"
+        for i in rmv:
+		name = name.replace(i, "")
+
+	return name
+
+
+
+# get filename from links
+def get_file(link):
+	char = "/"
+
+	j = 0
+	results = []
+	for i in link:
+        	j += 1
+	        results.append(link[-j:])
+
+        	for file in results:
+                	if file.startswith(char):
+                        	file = file
+	                        break
+
+	file = file.replace("/", "") # remove first char "/" from string
+	file = file.strip(" ") # remove spaces from string
+
+	return file
+
+
+
+# this fuction return if the package exist
+def find_package(find_pkg, directory):
+	results = []
+
+	for file in os.listdir(directory):
+    		if file.startswith(find_pkg):
+          		results.append(file)
+
+	return results
+
+
+
+# open url and read page
+def url_read(name):
+	f = urllib2.urlopen(name)
+        read_page = f.read()
+	
+	return read_page
+
+
+
+# read SBo README 
+def read_readme(sbo_url, name, site):
+	sbo_url = sbo_url + site
+        sbo_url = sbo_url.replace("repository", "slackbuilds")
+        readme = url_read(sbo_url)
+	
+	file = open("/tmp/slpkg/readme/" + name + "." + site, "w")
+	file.write(readme)
+	file.close()
+
+
+
+# read SBo .info 
+def read_info_slackbuild(sbo_url, name, site):
+	sbo_url = sbo_url + name + site
+        sbo_url = sbo_url.replace("repository", "slackbuilds")
+        info = url_read(sbo_url)
+
+        file = open("/tmp/slpkg/readme/" + name + site, "w")
+        file.write(info)
+        file.close()
+
+
+
+# search and found slackbuilds packages links from http://slackbuilds.org
+def sbo_search_pkg(name):
+	i = 0
+	search_name = re.escape(name) # escapes characters from names like `+`
+	search_name = ">" + search_name + "<" # add special characters to name >< for clean searching result
+
+	toolbar_width = len(repository)
+	sys.stdout.write("Searching `" + name + "` from slackbuilds.org .%s " % (" " * toolbar_width))
+
+	# setup toolbar
+	sys.stdout.flush()
+	sys.stdout.write("\b" * (toolbar_width+1))
+	for i in repository:
+
+	        # update the bar
+		sys.stdout.write(".")
+		sys.stdout.flush()
+		sbo_url_sub = sbo_url + i + "/"
+		find_sbo = re.findall(search_name, url_read(sbo_url_sub))
+
+		find_sbo = " ".join(find_sbo) # convert list to string
+		find_sbo = rmv_unused(find_sbo) # remove unused chars > < from find
+
+		# find sub-category
+		if name in find_sbo:
+			name = sbo_url_sub + name + "/"
+		
+			return name
+
+
+
+# find slackbuild download
+def sbo_slackbuild_dwn(sbo_url, name):
+	search_name = re.escape(name) # escapes characters from names like `+`
+	search_name = ">" + search_name + ".tar.gz<"
+
+        find_sbo = re.findall(search_name, url_read(sbo_url))
+	find_sbo = " ".join(find_sbo) # convert list to string
+	find_sbo = rmv_unused(find_sbo) # remove unused chars > < from find
+
+        if find_sbo == name + ".tar.gz":
+                sbo_url = sbo_url.replace(name + "/", name + ".tar.gz")
+        else:
+                sbo_url = sbo_url.replace(name + "/", name + ".tar.bz2")
+
+        sbo_url = sbo_url.replace("repository", "slackbuilds")
+
+        return sbo_url
+
+
+
+# find source downloads
+def sbo_source_dwn(sbo_url, name):
+        sbo_url = sbo_url + name + ".info"
+        sbo_url = sbo_url.replace("repository", "slackbuilds")
+	read_info = url_read(sbo_url)
+
+	# read lines from .info files grep download line and return source link
+	if arch == "x86_64":
+		for line in read_info.splitlines():
+			if line.startswith('DOWNLOAD_x86_64='):
+				arch_x86_64_len = len(line)
+				if arch_x86_64_len > 18:
+	                       		line = line[17:-1]
+
+					return line
+				else:
+					for line in read_info.splitlines():
+	        				if line.startswith('DOWNLOAD='):
+			                        	line = line[10:-1]
+
+							return line
+	if arch != "x86_64":
+		for line in read_info.splitlines():
+			if line.startswith('DOWNLOAD='):
+	                        line = line[10:-1]
+
+                                return line
+
+
+
+# find extra source downloads
+def sbo_extra_dwn(sbo_url, name):
+	sbo_url = sbo_url + name + ".info"
+	sbo_url = sbo_url.replace("repository", "slackbuilds")
+	read_info = url_read(sbo_url)
+	results = []
+
+	for line in read_info.splitlines():
+                if line.startswith(' '):
+                        line = line[10:-1]
+		if line.startswith('http'):
+			results.append(line)
+			
+	return results
+
+
+
+# search for package requirements
+def sbo_requires_pkg(sbo_url, name):
+	sbo_url = sbo_url + name + ".info"
+	sbo_url = sbo_url.replace("repository", "slackbuilds")
+
+	read_info = url_read(sbo_url)
+
+	for line in read_info.splitlines():
+		if line.startswith('REQUIRES="'):
+			line = line[10:-1]	
+
+
+			return line
+
+
+
+# search for package dependencies
+def sbo_dependencies_pkg(name):
+	if name == "%README%": # avoid to search %README% as dependency
+		pass
+	else:
+		find_sbo_url = sbo_search_pkg(name)
+		if find_sbo_url == None:
+        	        print ("\n")
+	                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
+                	        colors.CYAN, name, colors.RED, colors.ENDC))
+
+		else:
+			find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
+			dependencies = find_sbo_req.split() # convert string to list
+
+			if dependencies == []:
+				pass
+
+			else:
+				dep_results.append(dependencies)
+
+			for line in dependencies:
+				print
+				sbo_dependencies_pkg(line)
+	
+
+			return dep_results
+
+
+
+# find from www.slackbuilds.org the version of the package
+def sbo_version_pkg(sbo_url, name):
+	sbo_url = sbo_url + name + ".info"
+	sbo_url = sbo_url.replace("repository", "slackbuilds")
+	read_info = url_read(sbo_url)
+
+	for line in read_info.splitlines():
+                if line.startswith('VERSION="'):
+                        line = line[9:-1]
+
+                        return line	
+
+
+
+# auto build package from slackbuild script
+def build_package(script, source):
+	slack_script = script
+        source_tar = source
+ 
+       # remove file type from slackbuild script and store the name
+        pkg_name = slack_script.replace(".tar.gz", "")
+        if pkg_name != slack_script:
+	        pass
+        else:
+                pkg_name = slack_script.replace(".tar.bz2", "")
+
+        path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
+	try:
+		tar = tarfile.open(slack_script)
+		tar.extractall()
+		tar.close()
+		shutil.copy2(source_tar, pkg_name)
+	        os.chdir(path + pkg_name)
+	       	os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))	
+                print ("{}Use {}`slpkg -u`{} to install - upgrade this package{}\n".format(colors.YELLOW,
+                                 colors.CYAN, colors.YELLOW, colors.ENDC))
+	except (OSError, IOError):
+		print
+		print ("{}Wrong file name, Please try again...{}\n".format(colors.RED, 
+			colors.ENDC))
+
+
+
+# build package with extra source
+def build_extra_pkg(script, source, extra):
+	slack_script = script  
+        source_tar = source  
+	extra_source = extra 
+
+	print slack_script
+	print source_tar
+	print extra_source
+	
+
+
+       # remove file type from slackbuild script and store the name
+        pkg_name = slack_script.replace(".tar.gz", "")
+        if pkg_name != slack_script:
+                pass
+        else:
+                pkg_name = slack_script.replace(".tar.bz2", "")
+
+        path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
+	try:
+		tar = tarfile.open(slack_script)
+       		tar.extractall()
+	        tar.close()
+		shutil.copy2(source_tar, pkg_name)
+		shutil.copy2(extra_source, pkg_name)
+        	os.chdir(path + pkg_name)
+	        os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
+		print ("{}Use {}`slpkg -u`{} to install - upgrade this package{}\n".format(colors.YELLOW,
+                                 colors.CYAN, colors.YELLOW, colors.ENDC))
+	except (OSError, IOError):
+		print
+                print ("{}Wrong file name, Please try again...{}\n".format(colors.RED,
+                       colors.ENDC))
+
+
+
+# build package with extra-extra sources
+def build_extra2_pkg(script, source, extra, extra2):
+        slack_script = script
+        source_tar = source
+        extra_source = extra
+	extra2_source = extra2
+
+       # remove file type from slackbuild script and store the name
+        pkg_name = slack_script.replace(".tar.gz", "")
+        if pkg_name != slack_script:
+                pass
+        else:
+                pkg_name = slack_script.replace(".tar.bz2", "")
+
+        path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
+        try:
+                tar = tarfile.open(slack_script)
+                tar.extractall()
+                tar.close()
+                shutil.copy2(source_tar, pkg_name)
+                shutil.copy2(extra_source, pkg_name)
+		shutil.copy2(extra2_source, pkg_name)
+                os.chdir(path + pkg_name)
+                os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
+                print ("{}Use {}`slpkg -u`{} to install - upgrade this package{}\n".format(colors.YELLOW,
+  	              colors.CYAN, colors.YELLOW, colors.ENDC))
+        except (OSError, IOError):
+                print
+                print ("{}Wrong file name, Please try again...{}\n".format(colors.RED,
+                        colors.ENDC))
+
+
+
+# print version
+def pkg_version():
+        print ("Version: {}".format(__version__))
+        print ("Licence: {}".format(__license__))
+        print ("Email  : {}".format(__email__))
+
+
+
+# build packages 
+def pkg_slackbuild(name):
+	 s_user(getpass.getuser())	
+	 if len(name) == 2:
+        	 build_package(name[0], name[1])
+         elif len(name) == 3:
+                 build_extra_pkg(name[0],
+                 name[1], name[2])
+         elif len(name) == 4:
+                 build_extra2_pkg(name[0], name[1],
+                 name[2], name[3])
+         elif len(name) > 4:
+                 print
+                 print ("{}Not supported with more than four arguments{}\n".format(colors.RED,
+                 	colors.ENDC))
+	 elif len(name) == 1:
+		 print
+	         print ("{}Must enter at least two arguments{}\n".format(colors.RED,
+                        colors.ENDC))
+
+
+# view list of installed packages
+def pkg_list(name):
+        if "all" in name:
+                print
+                os.chdir(packages)
+                os.system("ls * | more")
+                print
+
+        if "sbo" in name:
+                print
+                os.chdir(packages)
+                os.system("ls * | grep 'SBo' | more")
+                print
+
+
+# find all dependencies
+def pkg_tracking(name):
+	find_dependencies = sbo_dependencies_pkg(name)
+	if find_dependencies == None:
+		pass
+	else:
+	        print ("\n")
+       		pkg_len = len(name) + 18
+	        print ("+" + "=" * pkg_len)
+	        print ("| {}`{}' {}dependencies :{}".format(colors.CYAN, name,
+        		colors.YELLOW, colors.ENDC))
+	        print ("+" + "=" * pkg_len)
+	        find_dependencies.reverse()
+
+        	if find_dependencies == []:
+			pass
+		else:
+			print (" |")
+		        for i in range(len(find_dependencies)):
+			        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
+		                print (" |")
+        		        print " ".join(found)
+	        print
+
+
+
+# find from SBo repositority www.slackbuild.org
+def sbo_network(name):
+	find_sbo_url = sbo_search_pkg(name)
+        if find_sbo_url == None:
+        	print ("\n")
+                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
+                        colors.CYAN, name, colors.RED, colors.ENDC))
+        else:
+                # call sbo functions 
+                find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
+                find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, name)
+                find_source_dwn = sbo_source_dwn(find_sbo_url, name)
+                find_extra_dwn = sbo_extra_dwn(find_sbo_url, name)
+		find_extra_dwn = " ".join(find_extra_dwn) # convert list to string
+
+                # caclulate the length of the link
+                sbo_name_len = len(name)
+                sbo_url_len = (len(find_sbo_url) + sbo_name_len + 21)
+                print ("\n")
+                print ("+" + "=" * sbo_url_len)
+                print ("| {}The {}`{}`{} found in --> {}".format(colors.GREEN,
+                        colors.CYAN, name, colors.GREEN,
+                        colors.ENDC + find_sbo_url))
+                print ("+" + "=" * sbo_url_len)
+                print ("| {}Download SlackBuild : {}{}".format(colors.GREEN,
+                        colors.ENDC, find_sbo_dwn))
+                print ("| {}Source Downloads : {}{}".format(colors.GREEN,
+                        colors.ENDC, find_source_dwn))
+                print ("| {}Extra Downloads : {}{}".format(colors.GREEN,
+                        colors.ENDC, find_extra_dwn))
+                print ("| {}Package requirements : {}{}".format(colors.YELLOW,
+                        colors.ENDC, find_sbo_req))
+                print ("+" + "=" * sbo_url_len)
+		print (" {}R{}EADME               View the README file".format(colors.RED, colors.ENDC))
+		print (" {}S{}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))
+                print (" {}I{}nfo                 View the Info file".format(colors.RED, colors.ENDC))
+                print (" {}D{}ownload             Download this package".format(colors.RED, colors.ENDC))
+		print (" {}B{}uild                Download and build this package".format(colors.RED, colors.ENDC))
+		print
+		while True:
+			read = raw_input("_ ")
+			if read == "D" or read == "d":
+				print
+				print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
+				os.system("wget " + find_sbo_dwn)
+				os.system("wget " + find_source_dwn)
+
+				if find_extra_dwn == "":
+					pass
+				else:
+					os.system("wget " + find_extra_dwn)
+					
+
+				print ("{}Use {}`slpkg -s`{} to build this package{}\n".format(colors.YELLOW,
+					 colors.CYAN, colors.YELLOW, colors.ENDC))
+				break
+
+			elif read == "R" or read == "r":
+				site = "README"
+				read_readme(find_sbo_url, name, site)
+				os.system("less /tmp/slpkg/readme/" + name + ".{}".format(site))
+
+			elif read == "I" or read == "i":
+				site = ".info"
+				read_info_slackbuild(find_sbo_url, name, site)
+                                os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
+
+			elif read == "S" or read == "s":
+				site = ".SlackBuild"
+				read_info_slackbuild(find_sbo_url, name, site)
+                                os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
+
+			elif read == "B" or read == "b":
+				s_user(getpass.getuser())
+				script = get_file(find_sbo_dwn)
+				source = get_file(find_source_dwn)
+				print
+                                print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
+                                os.system("wget " + find_sbo_dwn)
+                                os.system("wget " + find_source_dwn)
+
+                                if find_extra_dwn == "":
+                                        pass
+                                else:
+                                        os.system("wget " + find_extra_dwn)
+					find_extra_dwn = find_extra_dwn.split() # convert str to list
+					if len(find_extra_dwn) == 1:
+						extra = get_file(find_extra_dwn[0])
+						build_extra_pkg(script, source, extra)
+						break
+
+					elif len(find_extra_dwn) == 2:
+						extra = get_file(find_extra_dwn[0])
+						extra2 = get_file(find_extra_dwn[1])
+						build_extra2_pkg(script, source, extra, extra2)
+						break
+					else:
+						print
+				                print ("{}Not supported with more than four arguments{}\n".format(colors.RED,
+				                        colors.ENDC))
+						break
+
+				build_package(script, source)
+
+                                break
+
+			else:
+				break
+
+
+
+# check if packages from www.slackbuilds.org is up to date
+def sbo_check(name):
+	sbo_file = " ".join(find_package(name, packages))
+        if sbo_file == "":
+        	print
+                print (" {}The package {}`{}`{} not found on your system{}\n".format(colors.RED,
+                         colors.CYAN, name, colors.RED,  colors.ENDC))
+
+        else:
+       	        find_sbo_url = sbo_search_pkg(name)
+                if find_sbo_url == None:
+         	       print ("\n")
+                       print ("{}The {}`{}`{} not found{}\n".format(colors.RED,
+                               colors.CYAN, name, colors.RED, colors.ENDC))
+
+                else:
+                       find_sbo_version = sbo_version_pkg(find_sbo_url, name)
+                       name_len = len(name)
+                       arch_len = len(arch)
+                       sbo_file = sbo_file[name_len+1:-arch_len-7]
+
+                       if find_sbo_version > sbo_file:
+	                       print ("\n")
+                               print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
+                               print ("+" + "=" * 50)
+                               print ("| {} {}".format(name, find_sbo_version))
+                               print ("+" + "=" * 50)
+                               print
+
+                       else:
+                               print ("\n")
+                               print ("{}Your package is up to date{}\n".format(colors.GREEN, colors.ENDC))
+				
+
+
+# install binary package
+def pkg_install(name):
+	s_user(getpass.getuser())
+        for i in range(len(name)):
+        	os.system("installpkg {}".format(name[i]))
+
+
+
+# upgrade package with new
+def pkg_upgrade(name):
+        s_user(getpass.getuser())
+        for i in range(len(name)):
+                os.system("upgradepkg --install-new {}".format(name[i]))
+
+
+
+# upgrade package with the same
+def pkg_reinstall(name):
+        s_user(getpass.getuser())
+        for i in range(len(name)):
+                os.system("upgradepkg --reinstall {}".format(name[i]))
+
+
+
+# uninstall package
+def pkg_remove(name):
+	s_user(getpass.getuser())
+        print
+        print ("{}!!! WARNING !!!{}".format(colors.YELLOW, colors.ENDC))
+        remove_pkg = raw_input("Are you sure to remove this package(s) [y/n] ")
+        if remove_pkg == "y" or remove_pkg == "Y":
+        	for i in range(len(name)):
+                	if find_package(name[i], packages) == []:
+                        	print ("{}The package {}`{}`{} not found{}".format(colors.RED,
+                                	colors.CYAN, name[i], colors.RED, colors.ENDC))
+
+                        else:
+                                os.system("removepkg {}".format(name[i]))
+        print
+
+
+
+# print find if package installed on your system
+def pkg_find(name):
+	print
+	for i in range(len(name)):
+        	if find_package(name[i], packages) == []:
+                	print ("{}The package {}`{}`{} not found{}".format(colors.RED,
+                        	colors.CYAN, name[i], colors.RED,  colors.ENDC))
+
+                else:
+                        print (colors.GREEN + "found --> " + colors.ENDC + "\n".join(find_package(name[i], packages)))
+        print         
+
+
+
+# print the package contents
+def pkg_display(name):
+	print
+	for i in range(len(name)):
+        	if find_package(name[i], packages) == []:
+                	print ("{}The package {}`{}`{} not found{}".format(colors.RED,
+                        	colors.CYAN, name[i], colors.RED, colors.ENDC))
+
+                else:
+                        os.system("cat {}{}".format(packages, "\n".join(find_package(name[i], packages))))
+	print
+
+
+
+
+#  main function
+def main():
+	description = "Utility to help package management in Slackware"
+	parser = argparse.ArgumentParser(description=description)
+        parser.add_argument("-v", "--verbose", help="print version and exit",
+			    action="store_true")
+	parser.add_argument("-s", help="auto build package",
+                            type=str, nargs="+", metavar=('script','source'))
+	parser.add_argument("-l", help="list of installed packages",
+                            nargs="+", choices="all sbo".split(), metavar=('all, sbo'))
+	parser.add_argument("-t", help="tracking dependencies",
+                            type=str, metavar=(''))
+	parser.add_argument("-n", help="find from SBo repositority",
+			    type=str, metavar=(''))
+	parser.add_argument("-c", help="check if your package is up to date",
+			    type=str, metavar=(''))
+	parser.add_argument("-i", help="install binary packages",
+                            type=str, nargs="+", metavar=(''))
+        parser.add_argument("-u", help="install-upgrade packages with new",
+			    type=str, nargs="+", metavar=(''))
+	parser.add_argument("-a", help="reinstall the same packages",
+			    type=str, nargs="+", metavar=(''))
+	parser.add_argument("-r", help="remove packages",
+			    type=str, nargs="+", metavar=(''))
+	parser.add_argument("-f", help="find if packages installed",
+			    type=str, nargs="+", metavar=(''))
+	parser.add_argument("-d", help="display the contents of the packages",
+			    type=str, nargs="+", metavar=(''))
+	args = parser.parse_args()
+
+
+        if args.verbose:
+		pkg_version()
+		
+
+        if args.s:
+		pkg_slackbuild(args.s)
+
+
+        if args.l:
+		pkg_list(args.l)
+
+
+	if args.t:
+		pkg_tracking(args.t)
+
+
+	if args.n:
+		sbo_network(args.n)
+
+
+	if args.c:
+		sbo_check(args.c)
+
+		
+        if args.i:
+		pkg_install(args.i)
+		
+
+        if args.u:
+		pkg_upgrade(args.u)
+
+
+	if args.a:
+		pkg_reinstall(args.a)
+
+
+	if args.r:
+		pkg_remove(args.r)
+
+		
+	if args.f:
+		pkg_find(args.f)
+	
+
+	if args.d:
+		pkg_display(args.d)
+
+
+	if not any([args.verbose, args.s, args.t, args.c, args.n, args.i, args.u, args.a,
+		    args.r, args.l, args.f, args.d]):
+                    os.system("slpkg -h")
+
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,201 @@
+23-05-2014
+Version 1.3.4
+
+[Bugfix]  - Fixed (sre_constants.error) recognize package names with special characters
+
+22-05-2014
+Version 1.3.3
+
+[Feature] - Added download and build package
+
+22-05-2014
+Version 1.3.2
+
+[Feature] - Added view info and SlackBuild file
+[Updated] - Fix build arguments messages
+[Bugfix]  - Fixed TypeError: unsupported operand type(s) for +: 'NoneType' and 'str'
+	    in sbo_requires_pkg function (sbo_url = sbo_url + name + ".info")
+	
+21-05-2014
+Version 1.3.1
+
+[Feature] - Added view README file
+
+21-05-2014
+Version 1.3.0
+
+[Updated] - Fix argparse view
+
+21-05-2014
+Version 1.2.9
+
+[Feature] - Added tracking dependencies
+
+20-05-2014
+Version 1.2.8
+
+[Feature] - Added download package from www.slackbuild.org
+[Feature] - Added to support build packages with extra sources
+
+20-05-2014
+Version 1.2.7
+
+[Updated] - Overwrite code into functions
+
+20-05-2014
+Version 1.2.6
+
+[Updated] - Better code, better speed... enjoy !!!
+
+19-05-2014
+Version 1.2.5
+
+[Updated] - Fix download source x86_64 arcitecture
+
+19-05-2014
+Version 1.2.4
+
+[Feature] - Added download source code by pc arcitecture
+
+19-05-2014
+Version 1.2.3
+
+[Updated] - Fix check packages for updates
+[Feature] - Added progress bar to searching
+
+19-05-2014
+Version 1.2.2
+
+[Updated] - Fix libraries repository
+
+19-05-2014
+Version 1.2.1
+
+[Updated] - Fix functions
+
+17-05-2014
+Version 1.2.0
+
+[Feature] - Added if your packages from www.slackbuilds.org is up to date
+
+17-05-2014
+Version 1.1.9
+
+[Updated] - Fix notify message if exist package in fuction remove
+
+17-05-2014
+Version 1.1.8
+
+[Feature] - Added to check root user
+[Updated] - Fix find and display packages
+
+16-05-2014
+Version 1.1.7
+
+[Updated] - Fix functions
+
+15-05-2014
+version 1.1.6
+
+[Updated] - Removed stupid option binary search 
+
+15-05-2014
+Version 1.1.5
+
+[Feature] - Added multi install, upgrade, remove and find packages
+[Feature] - Added to find from network slackbuilds links and sources
+
+14-05-2014
+Version 1.1.4
+
+[Updated] - Updated function sbo_requires_pkg do not use .txt file
+
+14-05-2014
+Version 1.1.3
+
+[Feature] - Added to find requirements package from www.slackbuild.org
+
+13-05-2014
+Version 1.1.2
+
+[Feature] - Added to find already binary packages in /tmp directory
+
+13-05-2014
+Version: 1.1.1
+
+[Updated] - Fix list print out
+
+12-05-2014
+Version 1.1.0
+
+[Feature] - Added search from SBo and print link for download
+
+12-05-2014
+Version 1.0.9
+
+[Updated] - Fix warning messages amd colors print out
+
+12-05-2014
+Version 1.0.8
+
+[Updated] - Added signle install argument
+[Updated] - Fix arguments
+[Updated] - Added 2 options in list argument
+
+11-05-2014
+Version 1.0.7
+
+[Updated] - fix null arguments
+
+11-05-2014
+Version 1.0.6
+
+[Updated] - updated slackbuild argument
+
+10-05-2014
+Version 1.0.5
+
+[Feature] - Added auto build package choice
+[Updated] - man page and README.rst file
+
+10-05-2014
+Version 1.0.3
+
+[Updated] - bin/slpkg added function find_package
+
+10-05-2014
+Version 1.0.2
+
+[Updated] - setup.py file
+[Updated] - man page slpkg.8 added gziped
+
+09-05-2014
+Version 1.0.1
+
+[Feature] - Added support install man page
+
+09-05-2014
+Version 1.0.0
+
+[Feature] - Added man page
+
+09-05-2014
+Version 0.0.3
+
+[Feature] - Added support warning message if remove package
+[Feature] - Replace remove command
+
+08-05-2014
+Version 0.0.2
+
+[Feature] - Added support reinstall package
+[Updated] - Version print out
+
+-------------------------------------------------------------------
+
+07-05-2014
+Version 0.0.1
+
+Notes:
+
+Released version 0.0.1, developmnet status Aplha
