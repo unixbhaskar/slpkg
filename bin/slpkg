@@ -46,7 +46,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.3"
+__version__ = "1.3.4"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -111,9 +111,10 @@ def rmv_unused(name):
 
 	return name
 
+
+
 # get filename from links
 def get_file(link):
-
 	char = "/"
 
 	j = 0
@@ -121,6 +122,7 @@ def get_file(link):
 	for i in link:
         	j += 1
 	        results.append(link[-j:])
+
         	for file in results:
                 	if file.startswith(char):
                         	file = file
@@ -155,39 +157,25 @@ def url_read(name):
 
 
 # read SBo README 
-def read_readme(sbo_url, name):
-	sbo_url = sbo_url +  "README"
+def read_readme(sbo_url, name, site):
+	sbo_url = sbo_url + site
         sbo_url = sbo_url.replace("repository", "slackbuilds")
         readme = url_read(sbo_url)
 	
-	file = open("/tmp/slpkg/readme/" + name + ".README", "w")
+	file = open("/tmp/slpkg/readme/" + name + "." + site, "w")
 	file.write(readme)
 	file.close()
 
 
 
 # read SBo .info 
-def read_info(sbo_url, name):
-	sbo_url = sbo_url + name + ".info"
+def read_info_slackbuild(sbo_url, name, site):
+	sbo_url = sbo_url + name + site
         sbo_url = sbo_url.replace("repository", "slackbuilds")
         info = url_read(sbo_url)
 
-
-        file = open("/tmp/slpkg/readme/" + name + ".info", "w")
+        file = open("/tmp/slpkg/readme/" + name + site, "w")
         file.write(info)
-        file.close()
-
-
-
-# read SBo .SlackBuild
-def read_slackbuild(sbo_url, name):
-        sbo_url = sbo_url + name + ".SlackBuild"
-        sbo_url = sbo_url.replace("repository", "slackbuilds")
-        slackbuild = url_read(sbo_url)
-
-
-        file = open("/tmp/slpkg/readme/" + name + ".SlackBuild", "w")
-        file.write(slackbuild)
         file.close()
 
 
@@ -195,9 +183,11 @@ def read_slackbuild(sbo_url, name):
 # search and found slackbuilds packages links from http://slackbuilds.org
 def sbo_search_pkg(name):
 	i = 0
+	search_name = re.escape(name) # escapes characters from names like `+`
+	search_name = ">" + search_name + "<" # add special characters to name >< for clean searching result
+
 	toolbar_width = len(repository)
 	sys.stdout.write("Searching `" + name + "` from slackbuilds.org .%s " % (" " * toolbar_width))
-	name = ">" + name + "<"
 
 	# setup toolbar
 	sys.stdout.flush()
@@ -208,22 +198,27 @@ def sbo_search_pkg(name):
 		sys.stdout.write(".")
 		sys.stdout.flush()
 		sbo_url_sub = sbo_url + i + "/"
-		find_sbo = re.findall(name, url_read(sbo_url_sub))
-		
+		find_sbo = re.findall(search_name, url_read(sbo_url_sub))
+
+		find_sbo = " ".join(find_sbo) # convert list to string
+		find_sbo = rmv_unused(find_sbo) # remove unused chars > < from find
+
 		# find sub-category
 		if name in find_sbo:
 			name = sbo_url_sub + name + "/"
-			name = rmv_unused(name)
-
+		
 			return name
 
 
 
 # find slackbuild download
 def sbo_slackbuild_dwn(sbo_url, name):
-        find_sbo = re.findall(">" + name + ".tar.gz" + "<", url_read(sbo_url))
+	search_name = re.escape(name) # escapes characters from names like `+`
+	search_name = ">" + search_name + ".tar.gz<"
+
+        find_sbo = re.findall(search_name, url_read(sbo_url))
 	find_sbo = " ".join(find_sbo) # convert list to string
-	find_sbo = rmv_unused(find_sbo)
+	find_sbo = rmv_unused(find_sbo) # remove unused chars > < from find
 
         if find_sbo == name + ".tar.gz":
                 sbo_url = sbo_url.replace(name + "/", name + ".tar.gz")
@@ -287,6 +282,7 @@ def sbo_extra_dwn(sbo_url, name):
 def sbo_requires_pkg(sbo_url, name):
 	sbo_url = sbo_url + name + ".info"
 	sbo_url = sbo_url.replace("repository", "slackbuilds")
+
 	read_info = url_read(sbo_url)
 
 	for line in read_info.splitlines():
@@ -315,6 +311,7 @@ def sbo_dependencies_pkg(name):
 
 			if dependencies == []:
 				pass
+
 			else:
 				dep_results.append(dependencies)
 
@@ -450,6 +447,7 @@ def pkg_version():
 
 # build packages 
 def pkg_slackbuild(name):
+	 s_user(getpass.getuser())	
 	 if len(name) == 2:
         	 build_package(name[0], name[1])
          elif len(name) == 3:
@@ -565,16 +563,24 @@ def sbo_network(name):
 				print ("{}Use {}`slpkg -s`{} to build this package{}\n".format(colors.YELLOW,
 					 colors.CYAN, colors.YELLOW, colors.ENDC))
 				break
+
 			elif read == "R" or read == "r":
-				read_readme(find_sbo_url, name)
-				os.system("less /tmp/slpkg/readme/" + name + ".{}".format("README"))
+				site = "README"
+				read_readme(find_sbo_url, name, site)
+				os.system("less /tmp/slpkg/readme/" + name + ".{}".format(site))
+
 			elif read == "I" or read == "i":
-				read_info(find_sbo_url, name)
-                                os.system("less /tmp/slpkg/readme/" + name + ".{}".format("info"))
+				site = ".info"
+				read_info_slackbuild(find_sbo_url, name, site)
+                                os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
+
 			elif read == "S" or read == "s":
-				read_slackbuild(find_sbo_url, name)
-                                os.system("less /tmp/slpkg/readme/" + name + ".{}".format("SlackBuild"))
+				site = ".SlackBuild"
+				read_info_slackbuild(find_sbo_url, name, site)
+                                os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
+
 			elif read == "B" or read == "b":
+				s_user(getpass.getuser())
 				script = get_file(find_sbo_dwn)
 				source = get_file(find_source_dwn)
 				print
@@ -640,6 +646,7 @@ def sbo_check(name):
                                print ("| {} {}".format(name, find_sbo_version))
                                print ("+" + "=" * 50)
                                print
+
                        else:
                                print ("\n")
                                print ("{}Your package is up to date{}\n".format(colors.GREEN, colors.ENDC))
@@ -681,6 +688,7 @@ def pkg_remove(name):
                 	if find_package(name[i], packages) == []:
                         	print ("{}The package {}`{}`{} not found{}".format(colors.RED,
                                 	colors.CYAN, name[i], colors.RED, colors.ENDC))
+
                         else:
                                 os.system("removepkg {}".format(name[i]))
         print
@@ -694,6 +702,7 @@ def pkg_find(name):
         	if find_package(name[i], packages) == []:
                 	print ("{}The package {}`{}`{} not found{}".format(colors.RED,
                         	colors.CYAN, name[i], colors.RED,  colors.ENDC))
+
                 else:
                         print (colors.GREEN + "found --> " + colors.ENDC + "\n".join(find_package(name[i], packages)))
         print         
@@ -707,6 +716,7 @@ def pkg_display(name):
         	if find_package(name[i], packages) == []:
                 	print ("{}The package {}`{}`{} not found{}".format(colors.RED,
                         	colors.CYAN, name[i], colors.RED, colors.ENDC))
+
                 else:
                         os.system("cat {}{}".format(packages, "\n".join(find_package(name[i], packages))))
 	print
