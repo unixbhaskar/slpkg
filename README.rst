@@ -37,8 +37,8 @@ Features
 It's a quick and easy way to manage your packages in slackware
 to a command.
 
-
 [CHANGELOG] : https://github.com/dslackw/slpkg/blob/master/CHANGELOG
+
 
 Installation
 ------------
