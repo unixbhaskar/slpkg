@@ -46,7 +46,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.4"
+__version__ = "1.3.5"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -486,6 +486,10 @@ def pkg_tracking(name):
 	find_dependencies = sbo_dependencies_pkg(name)
 	if find_dependencies == None:
 		pass
+
+	elif find_dependencies == []:
+		print ("\n")
+		print ("{}No dependencies\n{}".format(colors.GREEN, colors.ENDC))
 	else:
 	        print ("\n")
        		pkg_len = len(name) + 18
@@ -495,14 +499,11 @@ def pkg_tracking(name):
 	        print ("+" + "=" * pkg_len)
 	        find_dependencies.reverse()
 
-        	if find_dependencies == []:
-			pass
-		else:
-			print (" |")
-		        for i in range(len(find_dependencies)):
-			        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
-		                print (" |")
-        		        print " ".join(found)
+		print (" |")
+	        for i in range(len(find_dependencies)):
+		        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
+	                print (" |")
+       		        print " ".join(found)
 	        print
 
 
@@ -680,9 +681,9 @@ def pkg_reinstall(name):
 # uninstall package
 def pkg_remove(name):
 	s_user(getpass.getuser())
-        print
         print ("{}!!! WARNING !!!{}".format(colors.YELLOW, colors.ENDC))
         remove_pkg = raw_input("Are you sure to remove this package(s) [y/n] ")
+	print
         if remove_pkg == "y" or remove_pkg == "Y":
         	for i in range(len(name)):
                 	if find_package(name[i], packages) == []:
@@ -691,6 +692,10 @@ def pkg_remove(name):
 
                         else:
                                 os.system("removepkg {}".format(name[i]))
+				if find_package(name[i], packages) == []:
+					print
+					print ("{}The package {}`{}`{} removed{}".format(colors.YELLOW,
+                                        colors.CYAN, name[i], colors.YELLOW, colors.ENDC))
         print
 
 

@@ -32,7 +32,7 @@ Features
 - Remove packages
 - Find installed packages
 - Display the contents of the packages
-
+- No dependencies
 
 It's a quick and easy way to manage your packages in slackware
 to a command.
@@ -457,7 +457,8 @@ Remove package:
 	WARNING: Unique directory /usr/lib64/python3.3/site-packages/ contains new files
 	WARNING: Unique directory /usr/lib64/python3.3/ contains new files
 	  --> Deleting empty directory /usr/doc/termcolor-1.1.0/
-	Done ...
+
+	The package `termcolor` removed
 
 
 	$ slpkg -f termcolor lua rar
