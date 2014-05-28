@@ -17,6 +17,7 @@ Slpkg is a terminal tool in order to easy use Slackware packages.
 
 Features
 --------
+- Download package with all dependencies build and install all
 - Automatic tool build and install packages
 - List all installed packages
 - Τracking dependencies
@@ -71,8 +72,8 @@ Command Line Tool Usage
 .. code-block:: bash
 
 	usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
-        	     [-t] [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
-             	     [-f  [...]] [-d  [...]]
+        	     [-t] [-n] [-c] [-b] [-i  [...]] [-u  [...]] [-a  [...]]
+             	     [-r  [...]] [-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
 
@@ -86,6 +87,7 @@ Command Line Tool Usage
 	  -t                    tracking dependencies
 	  -n                    find from SBo repositority
 	  -c                    check if your package is up to date
+	  -b                    download, build & install pkg from SBo
 	  -i  [ ...]            install binary packages
 	  -u  [ ...]            install-upgrade packages with new
 	  -a  [ ...]            reinstall the same packages
@@ -98,6 +100,38 @@ Command Line Tool Usage
 Slpkg Examples
 --------------
 
+Find package from slackbuilds.org download, 
+build and install with all dependencies :
+
+.. code-block:: bash
+	
+	$ slpkg -b brasero
+	Searching `brasero` from slackbuilds.org ...
+	Searching `libunique` from slackbuilds.org .....
+	Searching `gst1-plugins-bad` from slackbuilds.org ......
+	Searching `gst1-plugins-base` from slackbuilds.org ........
+	Searching `gstreamer1` from slackbuilds.org ....
+	Searching `orc` from slackbuilds.org ....
+
+	+==============================================================================
+	| Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
+	+==============================================================================
+
+        Verifying package brasero-3.11.3-x86_64-1_SBo.tgz.
+	Installing package brasero-3.11.3-x86_64-1_SBo.tgz:
+	PACKAGE DESCRIPTION:
+	# brasero (CD/DVD burning application)
+	#
+	# Brasero is a application to burn CD/DVD for the Gnome Desktop. It is
+	# designed to be as simple as possible and has some unique features to
+	# enable users to create their discs easily and quickly.
+	#
+	# Homepage: http://projects.gnome.org/brasero
+	#
+	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
+	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
+
+	
 
 Tracking all dependencies of packages:
 

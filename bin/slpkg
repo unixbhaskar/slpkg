@@ -3,13 +3,17 @@
 
 
 
-'''Slpkg is a terminal tool in order to easy use Slackware packages.
-It's a quick and easy way to manage your packages in slackware to a command.
+'''Utility to help package management in Slackware.
+Slpkg is a terminal tool in order to easy use Slackware packages.
+
+
+It's a quick and easy way to manage your packages in Slackware to a command.
+
 
 
 usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
-             [-t] [-n] [-c] [-i  [...]] [-u  [...]] [-a  [...]] [-r  [...]]
-             [-f  [...]] [-d  [...]]
+             [-t] [-n] [-c] [-b] [-i  [...]] [-u  [...]] [-a  [...]]
+             [-r  [...]] [-f  [...]] [-d  [...]]
 
 Utility to help package management in Slackware
 
@@ -23,6 +27,7 @@ optional arguments:
   -t                    tracking dependencies
   -n                    find from SBo repositority
   -c                    check if your package is up to date
+  -b                    download, build & install pkg from SBo
   -i  [ ...]            install binary packages
   -u  [ ...]            install-upgrade packages with new
   -a  [ ...]            reinstall the same packages
@@ -46,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.5"
+__version__ = "1.3.6"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -66,6 +71,8 @@ tmp = "/tmp/"
 
 # create dependencies list
 dep_results = []
+dep_links_results = []
+
 
 
 # SlackBuilds repository link
@@ -111,8 +118,6 @@ def rmv_unused(name):
 
 	return name
 
-
-
 # get filename from links
 def get_file(link):
 	char = "/"
@@ -132,6 +137,26 @@ def get_file(link):
 	file = file.strip(" ") # remove spaces from string
 
 	return file
+
+
+# get version from files
+def get_version(name):
+        char = "-"
+
+        j = 0
+        results = []
+        for i in name:
+                j += 1
+                results.append(name[-j:])
+
+                for file in results:
+                        if file.startswith(char):
+                                file = file
+                                break
+
+        file = file.strip(" ") # remove spaces from string
+
+        return file
 
 
 
@@ -268,6 +293,7 @@ def sbo_extra_dwn(sbo_url, name):
 	read_info = url_read(sbo_url)
 	results = []
 
+
 	for line in read_info.splitlines():
                 if line.startswith(' '):
                         line = line[10:-1]
@@ -296,31 +322,77 @@ def sbo_requires_pkg(sbo_url, name):
 
 # search for package dependencies
 def sbo_dependencies_pkg(name):
+        if name == "%README%": # avoid to search %README% as dependency
+                pass
+        else:
+                find_sbo_url = sbo_search_pkg(name)
+                if find_sbo_url == None:
+                        print ("\n")
+                        print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
+                                colors.CYAN, name, colors.RED, colors.ENDC))
+
+                else:
+                        find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
+                        dependencies = find_sbo_req.split() # convert string to list
+
+                        if dependencies == []:
+                                pass
+
+                        else:
+                                dep_results.append(dependencies)
+
+                        for line in dependencies:
+                                print
+                                sbo_dependencies_pkg(line)
+			
+			return dep_results
+
+
+
+# search for package dependencies
+def sbo_dependencies_links_pkg(name):
 	if name == "%README%": # avoid to search %README% as dependency
 		pass
 	else:
+
 		find_sbo_url = sbo_search_pkg(name)
+
 		if find_sbo_url == None:
-        	        print ("\n")
+	        	print ("\n")
 	                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
-                	        colors.CYAN, name, colors.RED, colors.ENDC))
+              		        colors.CYAN, name, colors.RED, colors.ENDC))
 
 		else:
+			find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, name)
+	                find_source_dwn = sbo_source_dwn(find_sbo_url, name)
+			find_extra_dwn = sbo_extra_dwn(find_sbo_url, name)
 			find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
-			dependencies = find_sbo_req.split() # convert string to list
+
+			# create flag to know how much extra source there are
+			if find_extra_dwn != []:
+				flag = str(len(find_extra_dwn))
+				dep_links_results.append(flag)
+
+        	        sbo_dwn = find_sbo_dwn.split()
+                	source_dwn = find_source_dwn.split()
+			dependencies = find_sbo_req.split()
+			
+			dep_links_results.append(find_extra_dwn)
+			dep_links_results.append(source_dwn)
+	                dep_links_results.append(sbo_dwn)
+
 
 			if dependencies == []:
 				pass
-
+		
 			else:
-				dep_results.append(dependencies)
+				dep_links_results.append(dependencies)
+				for line in dependencies:
+					print
+					sbo_dependencies_links_pkg(line)
 
-			for line in dependencies:
-				print
-				sbo_dependencies_pkg(line)
-	
 
-			return dep_results
+			return dep_links_results
 
 
 
@@ -358,8 +430,7 @@ def build_package(script, source):
 		shutil.copy2(source_tar, pkg_name)
 	        os.chdir(path + pkg_name)
 	       	os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))	
-                print ("{}Use {}`slpkg -u`{} to install - upgrade this package{}\n".format(colors.YELLOW,
-                                 colors.CYAN, colors.YELLOW, colors.ENDC))
+		os.chdir(path)
 	except (OSError, IOError):
 		print
 		print ("{}Wrong file name, Please try again...{}\n".format(colors.RED, 
@@ -372,12 +443,6 @@ def build_extra_pkg(script, source, extra):
 	slack_script = script  
         source_tar = source  
 	extra_source = extra 
-
-	print slack_script
-	print source_tar
-	print extra_source
-	
-
 
        # remove file type from slackbuild script and store the name
         pkg_name = slack_script.replace(".tar.gz", "")
@@ -395,8 +460,6 @@ def build_extra_pkg(script, source, extra):
 		shutil.copy2(extra_source, pkg_name)
         	os.chdir(path + pkg_name)
 	        os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
-		print ("{}Use {}`slpkg -u`{} to install - upgrade this package{}\n".format(colors.YELLOW,
-                                 colors.CYAN, colors.YELLOW, colors.ENDC))
 	except (OSError, IOError):
 		print
                 print ("{}Wrong file name, Please try again...{}\n".format(colors.RED,
@@ -428,8 +491,6 @@ def build_extra2_pkg(script, source, extra, extra2):
 		shutil.copy2(extra2_source, pkg_name)
                 os.chdir(path + pkg_name)
                 os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
-                print ("{}Use {}`slpkg -u`{} to install - upgrade this package{}\n".format(colors.YELLOW,
-  	              colors.CYAN, colors.YELLOW, colors.ENDC))
         except (OSError, IOError):
                 print
                 print ("{}Wrong file name, Please try again...{}\n".format(colors.RED,
@@ -499,11 +560,12 @@ def pkg_tracking(name):
 	        print ("+" + "=" * pkg_len)
 	        find_dependencies.reverse()
 
+
 		print (" |")
 	        for i in range(len(find_dependencies)):
 		        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
 	                print (" |")
-       		        print " ".join(found)
+		        print " ".join(found)
 	        print
 
 
@@ -654,6 +716,169 @@ def sbo_check(name):
 				
 
 
+# find package and dependencies download, build and install
+def sbo_build(name):
+	find_dependencies_links = sbo_dependencies_links_pkg(name)	
+
+	# create one list
+	if find_dependencies_links != []:
+		results = []	
+		for i in range(len(find_dependencies_links)):
+			for j in range(len(find_dependencies_links[i])):
+				results.append(find_dependencies_links[i][j])
+
+
+	# grep only links from list
+	dwn_link = []
+	for link in results:
+               	if link.startswith('http'):
+                       	dwn_link.append(link)
+
+	dwn_link.reverse() # upside-down list
+	
+	files = []
+	for i in range(len(dwn_link)):
+		files.append(get_file(dwn_link[i])) # get tar archives from link
+
+	# get version from source code
+	version = []
+	j = 1
+        for i in range(len(files) / 2):
+		if files[j].endswith("tar.gz"):
+			ver = files[j]
+                        ver = ver[:-7] # remove archive type .tar.gz
+                        ver = get_version(ver) # remove file name and take the version
+			ver = ver.replace("-", "")
+                        version.append(ver)
+                        j += 2
+
+		elif files[j].endswith("tar.bz2"):
+			ver = files[j]
+                        ver = ver[:-8]
+                        ver = get_version(ver)
+			ver = ver.replace("-", "")
+			version.append(ver)
+                        j += 2
+
+		elif files[j].endswith("zip"):
+			ver = files[j]
+                        ver = ver[:-4]
+                        ver = get_version(ver)
+			ver = ver.replace("-", "")
+			version.append(ver)
+                        j += 2			
+
+		elif files[j].endswith("tar.xz"):
+			ver = files[j]
+                        ver = ver[:-7]
+                        ver = get_version(ver)
+                        ver = ver.replace("-", "")
+                        version.append(ver)
+                        j += 2
+
+
+	# get filename from sbo script
+	filename = []
+        y = 0
+        for i in range(len(files) / 2):
+                if files[y].endswith("tar.gz"):
+                        file = files[y]
+                        file = file[:-7]
+                        filename.append(file)
+                        y += 2
+
+                elif files[y].endswith("tar.bz2"):
+                        file = files[y]
+                        file = file[:-8]
+                        filename.append(file)
+                        y += 2
+
+                elif files[y].endswith("zip"):
+                        file = files[y]
+                        file = file[:-4]
+                        filename.append(file)
+                        y += 2
+
+		elif files[y].endswith("tar.xz"):
+			file = files[y]
+                        file = file[:-7]
+                        filename.append(file)
+                        y += 2
+
+
+	# link sbo filename with version
+	filename_version = []
+	for i in range(len(filename)):
+		filename_version.append(filename[i] + "-" + version[i])		
+
+	wget_links = set(dwn_link) # remove duplicate links
+
+	# dwonload links
+	for link in wget_links:
+		os.system("wget {}".format(link))
+
+	# build packages and store slackware files in /tmp directory
+	if results[0] == "1": # check how many extra sources
+
+		for i in range(len(files) / 2):
+			if len(files) < 4:
+	                        script = files[0]
+                                source = files[1]
+                                extra = files[2]
+                                build_extra_pkg(script, source, extra)
+
+                                install_pkg = (subprocess.check_output(["ls /tmp/{}*.tgz".format(filename_version[i])],shell=True).replace("\n", ""))
+                                os.system("upgradepkg --install-new {}".format(install_pkg))
+                                break
+			else:
+
+				script = files[0]
+				source = files[1]		
+				build_package(script, source)
+	
+				install_pkg = (subprocess.check_output(["ls /tmp/{}*.tgz".format(filename_version[i])],shell=True).replace("\n", ""))
+                        	os.system("upgradepkg --install-new {}".format(install_pkg))
+
+				for j in range(0, 2):
+					files.pop(0)
+
+	elif results[0] == "2": # check how many extra sources
+	
+		for i in range(len(files) / 2):
+			if len(files) < 5:
+	        		script = files[0]
+                                source = files[1]
+                                extra = files[2]
+                                extra2 = files[3]
+                                build_extra2_pkg(script, source, extra, extra2)
+
+                                install_pkg = (subprocess.check_output(["ls /tmp/{}*.tgz".format(filename_version[i])],shell=True).replace("\n", ""))
+                                os.system("upgradepkg --install-new {}".format(install_pkg))
+                                break
+			else:
+	                	script = files[0]
+        	                source = files[1]
+                	        build_package(script, source)
+
+				install_pkg = (subprocess.check_output(["ls /tmp/{}*.tgz".format(filename_version[i])],shell=True).replace("\n", ""))
+                        	os.system("upgradepkg --install-new {}".format(install_pkg))
+
+	                        for j in range(0, 2):
+        	                       	files.pop(0)
+	else:
+
+		for i in range(len(files) / 2):
+                        script = files[0]
+                        source = files[1]
+			build_package(script, source)
+			install_pkg = (subprocess.check_output(["ls /tmp/{}*.tgz".format(filename_version[i])],shell=True).replace("\n", ""))
+			os.system("upgradepkg --install-new {}".format(install_pkg))
+			
+			for j in range(0, 2):
+	                        files.pop(0)
+
+	
+
 # install binary package
 def pkg_install(name):
 	s_user(getpass.getuser())
@@ -733,30 +958,46 @@ def pkg_display(name):
 def main():
 	description = "Utility to help package management in Slackware"
 	parser = argparse.ArgumentParser(description=description)
+
         parser.add_argument("-v", "--verbose", help="print version and exit",
 			    action="store_true")
+
 	parser.add_argument("-s", help="auto build package",
                             type=str, nargs="+", metavar=('script','source'))
+
 	parser.add_argument("-l", help="list of installed packages",
                             nargs="+", choices="all sbo".split(), metavar=('all, sbo'))
+
 	parser.add_argument("-t", help="tracking dependencies",
                             type=str, metavar=(''))
+
 	parser.add_argument("-n", help="find from SBo repositority",
 			    type=str, metavar=(''))
+
 	parser.add_argument("-c", help="check if your package is up to date",
 			    type=str, metavar=(''))
+
+	parser.add_argument("-b", help="download, build & install pkg from SBo",
+			    type=str, metavar=(''))
+
 	parser.add_argument("-i", help="install binary packages",
                             type=str, nargs="+", metavar=(''))
+
         parser.add_argument("-u", help="install-upgrade packages with new",
 			    type=str, nargs="+", metavar=(''))
+
 	parser.add_argument("-a", help="reinstall the same packages",
 			    type=str, nargs="+", metavar=(''))
+
 	parser.add_argument("-r", help="remove packages",
 			    type=str, nargs="+", metavar=(''))
+
 	parser.add_argument("-f", help="find if packages installed",
 			    type=str, nargs="+", metavar=(''))
+
 	parser.add_argument("-d", help="display the contents of the packages",
 			    type=str, nargs="+", metavar=(''))
+
 	args = parser.parse_args()
 
 
@@ -783,7 +1024,11 @@ def main():
 	if args.c:
 		sbo_check(args.c)
 
+
+	if args.b:
+		sbo_build(args.b)
 		
+
         if args.i:
 		pkg_install(args.i)
 		
@@ -808,7 +1053,7 @@ def main():
 		pkg_display(args.d)
 
 
-	if not any([args.verbose, args.s, args.t, args.c, args.n, args.i, args.u, args.a,
+	if not any([args.verbose, args.s, args.t, args.c, args.n, args.b, args.i, args.u, args.a,
 		    args.r, args.l, args.f, args.d]):
                     os.system("slpkg -h")
 
