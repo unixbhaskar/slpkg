@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.6"
+__version__ = "1.3.7"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -363,6 +363,7 @@ def sbo_dependencies_links_pkg(name):
               		        colors.CYAN, name, colors.RED, colors.ENDC))
 
 		else:
+			find_version = sbo_version_pkg(find_sbo_url, name)
 			find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, name)
 	                find_source_dwn = sbo_source_dwn(find_sbo_url, name)
 			find_extra_dwn = sbo_extra_dwn(find_sbo_url, name)
@@ -370,14 +371,16 @@ def sbo_dependencies_links_pkg(name):
 
 			# create flag to know how much extra source there are
 			if find_extra_dwn != []:
-				flag = str(len(find_extra_dwn))
+				flag = ("extra" + str(len(find_extra_dwn))).split()
 				dep_links_results.append(flag)
 
+			version = find_version.split()
         	        sbo_dwn = find_sbo_dwn.split()
                 	source_dwn = find_source_dwn.split()
 			dependencies = find_sbo_req.split()
 			
 			dep_links_results.append(find_extra_dwn)
+			dep_links_results.append(version)
 			dep_links_results.append(source_dwn)
 	                dep_links_results.append(sbo_dwn)
 
@@ -387,6 +390,7 @@ def sbo_dependencies_links_pkg(name):
 		
 			else:
 				dep_links_results.append(dependencies)
+
 				for line in dependencies:
 					print
 					sbo_dependencies_links_pkg(line)
@@ -734,50 +738,24 @@ def sbo_build(name):
                	if link.startswith('http'):
                        	dwn_link.append(link)
 
-	dwn_link.reverse() # upside-down list
+
+	# grep the version
+	version = []
+	for ver in results:
+		for i in range(0, 10):
+	                if ver.startswith(str(i)):
+	                        version.append(ver)
+
+	# upside-down lists
+	version .reverse()
+	dwn_link.reverse()
 	
 	files = []
 	for i in range(len(dwn_link)):
 		files.append(get_file(dwn_link[i])) # get tar archives from link
 
-	# get version from source code
-	version = []
-	j = 1
-        for i in range(len(files) / 2):
-		if files[j].endswith("tar.gz"):
-			ver = files[j]
-                        ver = ver[:-7] # remove archive type .tar.gz
-                        ver = get_version(ver) # remove file name and take the version
-			ver = ver.replace("-", "")
-                        version.append(ver)
-                        j += 2
 
-		elif files[j].endswith("tar.bz2"):
-			ver = files[j]
-                        ver = ver[:-8]
-                        ver = get_version(ver)
-			ver = ver.replace("-", "")
-			version.append(ver)
-                        j += 2
-
-		elif files[j].endswith("zip"):
-			ver = files[j]
-                        ver = ver[:-4]
-                        ver = get_version(ver)
-			ver = ver.replace("-", "")
-			version.append(ver)
-                        j += 2			
-
-		elif files[j].endswith("tar.xz"):
-			ver = files[j]
-                        ver = ver[:-7]
-                        ver = get_version(ver)
-                        ver = ver.replace("-", "")
-                        version.append(ver)
-                        j += 2
-
-
-	# get filename from sbo script
+	# removes archives type
 	filename = []
         y = 0
         for i in range(len(files) / 2):
@@ -811,14 +789,19 @@ def sbo_build(name):
 	for i in range(len(filename)):
 		filename_version.append(filename[i] + "-" + version[i])		
 
+
+	print
+	print ("{}Start --> \n{}".format(colors.GREEN, colors.ENDC))
 	wget_links = set(dwn_link) # remove duplicate links
+
 
 	# dwonload links
 	for link in wget_links:
 		os.system("wget {}".format(link))
 
+
 	# build packages and store slackware files in /tmp directory
-	if results[0] == "1": # check how many extra sources
+	if results[0] == "extra1": # check how many extra sources
 
 		for i in range(len(files) / 2):
 			if len(files) < 4:
@@ -842,7 +825,7 @@ def sbo_build(name):
 				for j in range(0, 2):
 					files.pop(0)
 
-	elif results[0] == "2": # check how many extra sources
+	elif results[0] == "extra2": # check how many extra sources
 	
 		for i in range(len(files) / 2):
 			if len(files) < 5:

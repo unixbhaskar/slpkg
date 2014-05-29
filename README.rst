@@ -17,7 +17,8 @@ Slpkg is a terminal tool in order to easy use Slackware packages.
 
 Features
 --------
-- Download package with all dependencies build and install all
+- Download package with all dependencies,
+  build and install all in a command
 - Automatic tool build and install packages
 - List all installed packages
 - Τracking dependencies
