@@ -72,8 +72,8 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-	usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
-        	     [-t] [-n] [-c] [-b] [-i  [...]] [-u  [...]] [-a  [...]]
+	usage: slpkg [-h] [-v] [-a script [source ...]] [-l all, sbo [all, sbo ...]]
+        	     [-t] [-n] [-c] [-s] [-i  [...]] [-u  [...]] [-o  [...]]
              	     [-r  [...]] [-f  [...]] [-d  [...]]
 
 	Utility to help package management in Slackware
@@ -81,17 +81,17 @@ Command Line Tool Usage
 	optional arguments:
 	  -h, --help            show this help message and exit
 	  -v, --verbose         print version and exit
-	  -s script [source ...]
+	  -a script [source ...]
 	                        auto build package
 	  -l all, sbo [all, sbo ...]
 	                        list of installed packages
 	  -t                    tracking dependencies
 	  -n                    find from SBo repositority
 	  -c                    check if your package is up to date
-	  -b                    download, build & install pkg from SBo
+	  -s                    download, build & install pkg from SBo
 	  -i  [ ...]            install binary packages
 	  -u  [ ...]            install-upgrade packages with new
-	  -a  [ ...]            reinstall the same packages
+	  -o  [ ...]            reinstall the same packages
 	  -r  [ ...]            remove packages
 	  -f  [ ...]            find if packages installed
 	  -d  [ ...]            display the contents of the packages
@@ -106,7 +106,7 @@ build and install with all dependencies :
 
 .. code-block:: bash
 	
-	$ slpkg -b brasero
+	$ slpkg -s brasero
 	Searching `brasero` from slackbuilds.org ...
 	Searching `libunique` from slackbuilds.org .....
 	Searching `gst1-plugins-bad` from slackbuilds.org ......
@@ -155,44 +155,6 @@ Tracking all dependencies of packages:
 
 
 
-	$ slpkg -t awscli
-	
-	+========================
-	| awscli dependencies :
-	+========================
-	 |
-	 |
-	 -- 2 pysetuptools pyasn1
-	 |
-	 -- 1 %README%
-	 |
-	 -- 2 docutils six
-	 |
-	 -- 1 pysetuptools
-	 |
-	 -- 1 %README%
-	 |
-	 -- 2 pysetuptools six
-	 |
-	 -- 2 python-dateutil jmespath
-	 |
-	 -- 4 botocore colorama bcdoc rsa
-
-
-
-	$ slpkg -t pylint
-
-	+========================
-	| pylint dependencies :
-	+========================
-	 |
-	 |
-	 -- 2 pysetuptools logilab-common
-	 |
-	 -- 1 astroid
-
-
-
 Check if your packages is up to date (www.slackbuilds.org):
 
 .. code-block:: bash
@@ -225,28 +187,6 @@ Find slackbuild from network (www.slackbuilds.org):
 
 	This find the slackbuild , source, extra downloads and package requirements !!!	
 
-	$ slpkg -n brasero
-	Searching `brasero` from slackbuilds.org ...
-
-	+==================================================================================
-	| The `brasero` found in --> http://slackbuilds.org/repository/14.1/system/brasero/
-	+==================================================================================
-	| Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/system/brasero.tar.gz
-	| Source Downloads : https://download.gnome.org/sources/brasero/3.11/brasero-3.11.3.tar.xz
-	| Extra Downloads : 
-	| Package requirements : libunique gst1-plugins-bad
-	+==================================================================================
-	 README               View the README file
-	 SlackBuild           View the SlackBuild file
-	 Info                 View the Info file
-	 Download             Download this package
-	 Build                Download and build this package
-	
-	_
-
-And try again:
-
-
 .. code-block:: bash
 
 	$ slpkg -n bitfighter
@@ -269,27 +209,6 @@ And try again:
         _
 
 
-	$ slpkg -n termcolor
-	Searching `termcolor` from slackbuilds.org ...
-
-	+======================================================================================
-	| The `termcolor` found in --> http://slackbuilds.org/repository/14.1/python/termcolor/
-	+======================================================================================
-	| Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/python/termcolor.tar.gz
-	| Source Downloads : https://pypi.python.org/packages/source/t/termcolor/termcolor-1.1.0.tar.gz
-	| Extra Downloads : 
-	| Package requirements :
-	+======================================================================================
-         README               View the README file
-	 SlackBuild           View the SlackBuild file
-	 Info                 View the Info file
-         Download             Download this package
-	 Build                Download and build this package
-
-        _
-
-	
-
 Auto build tool to build package:
 
 .. code-block:: bash
@@ -299,7 +218,7 @@ Auto build tool to build package:
 	Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
 	must be in the same directory.
 
-	$ slpkg -s termcolor.tar.gz termcolor-1.1.0.tar.gz
+	$ slpkg -a termcolor.tar.gz termcolor-1.1.0.tar.gz
 
 	termcolor/
 	termcolor/slack-desc

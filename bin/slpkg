@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.8"
+__version__ = "1.3.9"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -76,7 +76,7 @@ dep_links_results = []
 
 
 # SlackBuilds repository link
-sbo_url = "http://slackbuilds.org/repository/14.1/"
+SBo_url = "http://slackbuilds.org/repository/14.1/"
 
 
 # create repository list
@@ -182,10 +182,10 @@ def url_read(name):
 
 
 # read SBo README 
-def read_readme(sbo_url, name, site):
-	sbo_url = sbo_url + site
-        sbo_url = sbo_url.replace("repository", "slackbuilds")
-        readme = url_read(sbo_url)
+def read_readme(SBo_url, name, site):
+	SBo_url = SBo_url + site
+        SBo_url = SBo_url.replace("repository", "slackbuilds")
+        readme = url_read(SBo_url)
 	
 	file = open("/tmp/slpkg/readme/" + name + "." + site, "w")
 	file.write(readme)
@@ -194,10 +194,10 @@ def read_readme(sbo_url, name, site):
 
 
 # read SBo .info 
-def read_info_slackbuild(sbo_url, name, site):
-	sbo_url = sbo_url + name + site
-        sbo_url = sbo_url.replace("repository", "slackbuilds")
-        info = url_read(sbo_url)
+def read_info_slackbuild(SBo_url, name, site):
+	SBo_url = SBo_url + name + site
+        SBo_url = SBo_url.replace("repository", "slackbuilds")
+        info = url_read(SBo_url)
 
         file = open("/tmp/slpkg/readme/" + name + site, "w")
         file.write(info)
@@ -206,7 +206,7 @@ def read_info_slackbuild(sbo_url, name, site):
 
 
 # search and found slackbuilds packages links from http://slackbuilds.org
-def sbo_search_pkg(name):
+def SBo_search_pkg(name):
 	i = 0
 	search_name = re.escape(name) # escapes characters from names like `+`
 	search_name = ">" + search_name + "<" # add special characters to name >< for clean searching result
@@ -222,45 +222,35 @@ def sbo_search_pkg(name):
 	        # update the bar
 		sys.stdout.write(".")
 		sys.stdout.flush()
-		sbo_url_sub = sbo_url + i + "/"
-		find_sbo = re.findall(search_name, url_read(sbo_url_sub))
+		SBo_url_sub = SBo_url + i + "/"
+		find_SBo = re.findall(search_name, url_read(SBo_url_sub))
 
-		find_sbo = " ".join(find_sbo) # convert list to string
-		find_sbo = rmv_unused(find_sbo) # remove unused chars > < from find
+		find_SBo = " ".join(find_SBo) # convert list to string
+		find_SBo = rmv_unused(find_SBo) # remove unused chars > < from find
 
 		# find sub-category
-		if name in find_sbo:
-			name = sbo_url_sub + name + "/"
+		if name in find_SBo:
+			name = SBo_url_sub + name + "/"
 		
 			return name
 
 
 
 # find slackbuild download
-def sbo_slackbuild_dwn(sbo_url, name):
-	search_name = re.escape(name) # escapes characters from names like `+`
-	search_name = ">" + search_name + ".tar.gz<"
+def SBo_slackbuild_dwn(SBo_url, name):
 
-        find_sbo = re.findall(search_name, url_read(sbo_url))
-	find_sbo = " ".join(find_sbo) # convert list to string
-	find_sbo = rmv_unused(find_sbo) # remove unused chars > < from find
+        SBo_url = SBo_url.replace(name + "/", name + ".tar.gz")
+	SBo_url = SBo_url.replace("repository", "slackbuilds")
 
-        if find_sbo == name + ".tar.gz":
-                sbo_url = sbo_url.replace(name + "/", name + ".tar.gz")
-        else:
-                sbo_url = sbo_url.replace(name + "/", name + ".tar.bz2")
-
-        sbo_url = sbo_url.replace("repository", "slackbuilds")
-
-        return sbo_url
+        return SBo_url
 
 
 
 # find source downloads
-def sbo_source_dwn(sbo_url, name):
-        sbo_url = sbo_url + name + ".info"
-        sbo_url = sbo_url.replace("repository", "slackbuilds")
-	read_info = url_read(sbo_url)
+def SBo_source_dwn(SBo_url, name):
+        SBo_url = SBo_url + name + ".info"
+        SBo_url = SBo_url.replace("repository", "slackbuilds")
+	read_info = url_read(SBo_url)
 
 	# read lines from .info files grep download line and return source link
 	if arch == "x86_64":
@@ -287,10 +277,10 @@ def sbo_source_dwn(sbo_url, name):
 
 
 # find extra source downloads
-def sbo_extra_dwn(sbo_url, name):
-	sbo_url = sbo_url + name + ".info"
-	sbo_url = sbo_url.replace("repository", "slackbuilds")
-	read_info = url_read(sbo_url)
+def SBo_extra_dwn(SBo_url, name):
+	SBo_url = SBo_url + name + ".info"
+	SBo_url = SBo_url.replace("repository", "slackbuilds")
+	read_info = url_read(SBo_url)
 	results = []
 
 
@@ -305,11 +295,11 @@ def sbo_extra_dwn(sbo_url, name):
 
 
 # search for package requirements
-def sbo_requires_pkg(sbo_url, name):
-	sbo_url = sbo_url + name + ".info"
-	sbo_url = sbo_url.replace("repository", "slackbuilds")
+def SBo_requires_pkg(SBo_url, name):
+	SBo_url = SBo_url + name + ".info"
+	SBo_url = SBo_url.replace("repository", "slackbuilds")
 
-	read_info = url_read(sbo_url)
+	read_info = url_read(SBo_url)
 
 	for line in read_info.splitlines():
 		if line.startswith('REQUIRES="'):
@@ -321,19 +311,19 @@ def sbo_requires_pkg(sbo_url, name):
 
 
 # search for package dependencies
-def sbo_dependencies_pkg(name):
+def SBo_dependencies_pkg(name):
         if name == "%README%": # avoid to search %README% as dependency
                 pass
         else:
-                find_sbo_url = sbo_search_pkg(name)
-                if find_sbo_url == None:
+                find_SBo_url = SBo_search_pkg(name)
+                if find_SBo_url == None:
                         print ("\n")
                         print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
                                 colors.CYAN, name, colors.RED, colors.ENDC))
 
                 else:
-                        find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
-                        dependencies = find_sbo_req.split() # convert string to list
+                        find_SBo_req = SBo_requires_pkg(find_SBo_url, name)
+                        dependencies = find_SBo_req.split() # convert string to list
 
                         if dependencies == []:
                                 pass
@@ -343,31 +333,31 @@ def sbo_dependencies_pkg(name):
 
                         for line in dependencies:
                                 print
-                                sbo_dependencies_pkg(line)
+                                SBo_dependencies_pkg(line)
 			
 			return dep_results
 
 
 
 # search for package dependencies
-def sbo_dependencies_links_pkg(name):
+def SBo_dependencies_links_pkg(name):
 	if name == "%README%": # avoid to search %README% as dependency
 		pass
 	else:
 
-		find_sbo_url = sbo_search_pkg(name)
+		find_SBo_url = SBo_search_pkg(name)
 
-		if find_sbo_url == None:
+		if find_SBo_url == None:
 	        	print ("\n")
 	                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
               		        colors.CYAN, name, colors.RED, colors.ENDC))
 
 		else:
-			find_version = sbo_version_pkg(find_sbo_url, name)
-			find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, name)
-	                find_source_dwn = sbo_source_dwn(find_sbo_url, name)
-			find_extra_dwn = sbo_extra_dwn(find_sbo_url, name)
-			find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
+			find_version = SBo_version_pkg(find_SBo_url, name)
+			find_SBo_dwn = SBo_slackbuild_dwn(find_SBo_url, name)
+	                find_source_dwn = SBo_source_dwn(find_SBo_url, name)
+			find_extra_dwn = SBo_extra_dwn(find_SBo_url, name)
+			find_SBo_req = SBo_requires_pkg(find_SBo_url, name)
 
 			# create flag to know how much extra source there are
 			if find_extra_dwn != []:
@@ -375,15 +365,14 @@ def sbo_dependencies_links_pkg(name):
 				dep_links_results.append(flag)
 
 			version = find_version.split()
-        	        sbo_dwn = find_sbo_dwn.split()
+        	        SBo_dwn = find_SBo_dwn.split()
                 	source_dwn = find_source_dwn.split()
-			dependencies = find_sbo_req.split()
+			dependencies = find_SBo_req.split()
 			
 			dep_links_results.append(find_extra_dwn)
 			dep_links_results.append(version)
 			dep_links_results.append(source_dwn)
-	                dep_links_results.append(sbo_dwn)
-
+	                dep_links_results.append(SBo_dwn)
 
 			if dependencies == []:
 				pass
@@ -393,7 +382,7 @@ def sbo_dependencies_links_pkg(name):
 
 				for line in dependencies:
 					print
-					sbo_dependencies_links_pkg(line)
+					SBo_dependencies_links_pkg(line)
 
 
 			return dep_links_results
@@ -401,10 +390,10 @@ def sbo_dependencies_links_pkg(name):
 
 
 # find from www.slackbuilds.org the version of the package
-def sbo_version_pkg(sbo_url, name):
-	sbo_url = sbo_url + name + ".info"
-	sbo_url = sbo_url.replace("repository", "slackbuilds")
-	read_info = url_read(sbo_url)
+def SBo_version_pkg(SBo_url, name):
+	SBo_url = SBo_url + name + ".info"
+	SBo_url = SBo_url.replace("repository", "slackbuilds")
+	read_info = url_read(SBo_url)
 
 	for line in read_info.splitlines():
                 if line.startswith('VERSION="'):
@@ -548,7 +537,7 @@ def pkg_list(name):
 
 # find all dependencies
 def pkg_tracking(name):
-	find_dependencies = sbo_dependencies_pkg(name)
+	find_dependencies = SBo_dependencies_pkg(name)
 	if find_dependencies == None:
 		pass
 
@@ -575,38 +564,38 @@ def pkg_tracking(name):
 
 
 # find from SBo repositority www.slackbuild.org
-def sbo_network(name):
-	find_sbo_url = sbo_search_pkg(name)
-        if find_sbo_url == None:
+def SBo_network(name):
+	find_SBo_url = SBo_search_pkg(name)
+        if find_SBo_url == None:
         	print ("\n")
                 print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
                         colors.CYAN, name, colors.RED, colors.ENDC))
         else:
                 # call sbo functions 
-                find_sbo_req = sbo_requires_pkg(find_sbo_url, name)
-                find_sbo_dwn = sbo_slackbuild_dwn(find_sbo_url, name)
-                find_source_dwn = sbo_source_dwn(find_sbo_url, name)
-                find_extra_dwn = sbo_extra_dwn(find_sbo_url, name)
+                find_SBo_req = SBo_requires_pkg(find_SBo_url, name)
+                find_SBo_dwn = SBo_slackbuild_dwn(find_SBo_url, name)
+                find_source_dwn = SBo_source_dwn(find_SBo_url, name)
+                find_extra_dwn = SBo_extra_dwn(find_SBo_url, name)
 		find_extra_dwn = " ".join(find_extra_dwn) # convert list to string
 
                 # caclulate the length of the link
-                sbo_name_len = len(name)
-                sbo_url_len = (len(find_sbo_url) + sbo_name_len + 21)
+                SBo_name_len = len(name)
+                SBo_url_len = (len(find_SBo_url) + SBo_name_len + 21)
                 print ("\n")
-                print ("+" + "=" * sbo_url_len)
+                print ("+" + "=" * SBo_url_len)
                 print ("| {}The {}`{}`{} found in --> {}".format(colors.GREEN,
                         colors.CYAN, name, colors.GREEN,
-                        colors.ENDC + find_sbo_url))
-                print ("+" + "=" * sbo_url_len)
+                        colors.ENDC + find_SBo_url))
+                print ("+" + "=" * SBo_url_len)
                 print ("| {}Download SlackBuild : {}{}".format(colors.GREEN,
-                        colors.ENDC, find_sbo_dwn))
+                        colors.ENDC, find_SBo_dwn))
                 print ("| {}Source Downloads : {}{}".format(colors.GREEN,
                         colors.ENDC, find_source_dwn))
                 print ("| {}Extra Downloads : {}{}".format(colors.GREEN,
                         colors.ENDC, find_extra_dwn))
                 print ("| {}Package requirements : {}{}".format(colors.YELLOW,
-                        colors.ENDC, find_sbo_req))
-                print ("+" + "=" * sbo_url_len)
+                        colors.ENDC, find_SBo_req))
+                print ("+" + "=" * SBo_url_len)
 		print (" {}R{}EADME               View the README file".format(colors.RED, colors.ENDC))
 		print (" {}S{}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))
                 print (" {}I{}nfo                 View the Info file".format(colors.RED, colors.ENDC))
@@ -618,7 +607,7 @@ def sbo_network(name):
 			if read == "D" or read == "d":
 				print
 				print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-				os.system("wget " + find_sbo_dwn)
+				os.system("wget " + find_SBo_dwn)
 				os.system("wget " + find_source_dwn)
 
 				if find_extra_dwn == "":
@@ -633,26 +622,26 @@ def sbo_network(name):
 
 			elif read == "R" or read == "r":
 				site = "README"
-				read_readme(find_sbo_url, name, site)
+				read_readme(find_SBo_url, name, site)
 				os.system("less /tmp/slpkg/readme/" + name + ".{}".format(site))
 
 			elif read == "I" or read == "i":
 				site = ".info"
-				read_info_slackbuild(find_sbo_url, name, site)
+				read_info_slackbuild(find_SBo_url, name, site)
                                 os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
 
 			elif read == "S" or read == "s":
 				site = ".SlackBuild"
-				read_info_slackbuild(find_sbo_url, name, site)
+				read_info_slackbuild(find_SBo_url, name, site)
                                 os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
 
 			elif read == "B" or read == "b":
 				s_user(getpass.getuser())
-				script = get_file(find_sbo_dwn)
+				script = get_file(find_SBo_dwn)
 				source = get_file(find_source_dwn)
 				print
                                 print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-                                os.system("wget " + find_sbo_dwn)
+                                os.system("wget " + find_SBo_dwn)
                                 os.system("wget " + find_source_dwn)
 
                                 if find_extra_dwn == "":
@@ -686,31 +675,31 @@ def sbo_network(name):
 
 
 # check if packages from www.slackbuilds.org is up to date
-def sbo_check(name):
-	sbo_file = " ".join(find_package(name, packages))
-        if sbo_file == "":
+def SBo_check(name):
+	SBo_file = " ".join(find_package(name, packages))
+        if SBo_file == "":
         	print
                 print (" {}The package {}`{}`{} not found on your system{}\n".format(colors.RED,
                          colors.CYAN, name, colors.RED,  colors.ENDC))
 
         else:
-       	        find_sbo_url = sbo_search_pkg(name)
-                if find_sbo_url == None:
+       	        find_SBo_url = SBo_search_pkg(name)
+                if find_SBo_url == None:
          	       print ("\n")
                        print ("{}The {}`{}`{} not found{}\n".format(colors.RED,
                                colors.CYAN, name, colors.RED, colors.ENDC))
 
                 else:
-                       find_sbo_version = sbo_version_pkg(find_sbo_url, name)
+                       find_SBo_version = SBo_version_pkg(find_SBo_url, name)
                        name_len = len(name)
                        arch_len = len(arch)
-                       sbo_file = sbo_file[name_len+1:-arch_len-7]
+                       SBo_file = SBo_file[name_len+1:-arch_len-7]
 
-                       if find_sbo_version > sbo_file:
+                       if find_SBo_version > SBo_file:
 	                       print ("\n")
                                print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
                                print ("+" + "=" * 50)
-                               print ("| {} {}".format(name, find_sbo_version))
+                               print ("| {} {}".format(name, find_SBo_version))
                                print ("+" + "=" * 50)
                                print
 
@@ -721,9 +710,9 @@ def sbo_check(name):
 
 
 # find package and dependencies download, build and install
-def sbo_build(name):
+def SBo_build(name):
 	s_user(getpass.getuser())
-	find_dependencies_links = sbo_dependencies_links_pkg(name)	
+	find_dependencies_links = SBo_dependencies_links_pkg(name)	
 
 
 	if find_dependencies_links == None:
@@ -753,15 +742,16 @@ def sbo_build(name):
 	# upside-down lists
 	version .reverse()
 	dwn_link.reverse()
-	
+
+
+	# get tar archives from link	
 	files = []
 	for i in range(len(dwn_link)):
-		files.append(get_file(dwn_link[i])) # get tar archives from link
+		files.append(get_file(dwn_link[i]))
 
 
 	# removes archives type
 	filename = []
-
         y = 0
         for i in range(len(files) / 2):
                 if files[y].endswith("tar.gz"):
@@ -950,7 +940,7 @@ def main():
         parser.add_argument("-v", "--verbose", help="print version and exit",
 			    action="store_true")
 
-	parser.add_argument("-s", help="auto build package",
+	parser.add_argument("-a", help="auto build package",
                             type=str, nargs="+", metavar=('script','source'))
 
 	parser.add_argument("-l", help="list of installed packages",
@@ -965,7 +955,7 @@ def main():
 	parser.add_argument("-c", help="check if your package is up to date",
 			    type=str, metavar=(''))
 
-	parser.add_argument("-b", help="download, build & install pkg from SBo",
+	parser.add_argument("-s", help="download, build & install pkg from SBo",
 			    type=str, metavar=(''))
 
 	parser.add_argument("-i", help="install binary packages",
@@ -974,7 +964,7 @@ def main():
         parser.add_argument("-u", help="install-upgrade packages with new",
 			    type=str, nargs="+", metavar=(''))
 
-	parser.add_argument("-a", help="reinstall the same packages",
+	parser.add_argument("-o", help="reinstall the same packages",
 			    type=str, nargs="+", metavar=(''))
 
 	parser.add_argument("-r", help="remove packages",
@@ -993,8 +983,8 @@ def main():
 		pkg_version()
 		
 
-        if args.s:
-		pkg_slackbuild(args.s)
+        if args.a:
+		pkg_slackbuild(args.a)
 
 
         if args.l:
@@ -1006,15 +996,15 @@ def main():
 
 
 	if args.n:
-		sbo_network(args.n)
+		SBo_network(args.n)
 
 
 	if args.c:
-		sbo_check(args.c)
+		SBo_check(args.c)
 
 
-	if args.b:
-		sbo_build(args.b)
+	if args.s:
+		SBo_build(args.s)
 		
 
         if args.i:
@@ -1025,8 +1015,8 @@ def main():
 		pkg_upgrade(args.u)
 
 
-	if args.a:
-		pkg_reinstall(args.a)
+	if args.o:
+		pkg_reinstall(args.o)
 
 
 	if args.r:
@@ -1041,7 +1031,7 @@ def main():
 		pkg_display(args.d)
 
 
-	if not any([args.verbose, args.s, args.t, args.c, args.n, args.b, args.i, args.u, args.a,
+	if not any([args.verbose, args.s, args.t, args.c, args.n, args.o, args.i, args.u, args.a,
 		    args.r, args.l, args.f, args.d]):
                     os.system("slpkg -h")
 
