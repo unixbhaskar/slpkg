@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.3.7"
+__version__ = "1.3.8"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -100,10 +100,10 @@ class colors:
 
 # check if user is root
 def s_user(user):
-	print	
 	if user == "root":
 		pass
 	else:
+		print
 		print ("{}Must have {}`root`{} privileges ...{}\n".format(colors.RED, 
 			  colors.GREEN, colors.RED, colors.ENDC))
 		sys.exit()
@@ -722,10 +722,14 @@ def sbo_check(name):
 
 # find package and dependencies download, build and install
 def sbo_build(name):
+	s_user(getpass.getuser())
 	find_dependencies_links = sbo_dependencies_links_pkg(name)	
 
-	# create one list
-	if find_dependencies_links != []:
+
+	if find_dependencies_links == None:
+		sys.exit()
+	
+	elif find_dependencies_links != []:
 		results = []	
 		for i in range(len(find_dependencies_links)):
 			for j in range(len(find_dependencies_links[i])):
@@ -757,6 +761,7 @@ def sbo_build(name):
 
 	# removes archives type
 	filename = []
+
         y = 0
         for i in range(len(files) / 2):
                 if files[y].endswith("tar.gz"):
