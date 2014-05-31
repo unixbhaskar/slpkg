@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -144,26 +144,6 @@ def get_file(link, char):
 	return file
 
 
-# get version from files
-def get_version(name):
-        char = "-"
-
-        j = 0
-        results = []
-        for i in name:
-                j += 1
-                results.append(name[-j:])
-
-                for file in results:
-                        if file.startswith(char):
-                                file = file
-                                break
-
-        file = file.strip(" ") # remove spaces from string
-
-        return file
-
-
 
 # this fuction return if the package exist
 def find_package(find_pkg, directory):
@@ -243,7 +223,6 @@ def SBo_search_pkg(name):
 
 # find slackbuild download
 def SBo_slackbuild_dwn(SBo_url, name):
-
         SBo_url = SBo_url.replace(name + "/", name + ".tar.gz")
 	SBo_url = SBo_url.replace("repository", "slackbuilds")
 
@@ -287,7 +266,6 @@ def SBo_extra_dwn(SBo_url, name):
 	SBo_url = SBo_url.replace("repository", "slackbuilds")
 	read_info = url_read(SBo_url)
 	results = []
-
 
 	for line in read_info.splitlines():
                 if line.startswith(' '):
@@ -789,16 +767,17 @@ def SBo_build(name):
 	for i in range(len(filename)):
 		filename_version.append(filename[i] + "-" + version[i])		
 
-
-	print
-	print ("{}Start --> \n{}".format(colors.GREEN, colors.ENDC))
 	wget_links = set(dwn_link) # remove duplicate links
-
 
 	# dwonload links
 	for link in wget_links:
-		os.system("wget {}".format(link))
-
+		if find_package(filename_version[i], packages) == []:
+			os.system("wget {}".format(link))
+			print
+		        print ("{}Start --> \n{}".format(colors.GREEN, colors.ENDC))
+		else:
+			print
+			pass
 
 	# build packages and store slackware files in /tmp directory
 	if results[0] == "extra1": # check how many extra sources
@@ -817,7 +796,6 @@ def SBo_build(name):
 
 				else:
 
-					print
                                         print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
                                         colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
                                         print
@@ -834,7 +812,6 @@ def SBo_build(name):
 
 				else:
 
-					print
                                         print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
                                         colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
                                         print
@@ -859,7 +836,6 @@ def SBo_build(name):
 	                                break
 				else:
 
-					print
                                         print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
                                         colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
                                         print
@@ -875,7 +851,6 @@ def SBo_build(name):
 	                        	os.system("upgradepkg --install-new {}".format(install_pkg))
 				else:
 
-					print
                                 	print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
                                         colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
                                 	print
@@ -895,7 +870,6 @@ def SBo_build(name):
 				os.system("upgradepkg --install-new {}".format(install_pkg))
 			
 			else:
-				print
 				print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
                                         colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
 				print
