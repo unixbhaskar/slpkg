@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.4.2"
+__version__ = "1.4.3"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -380,10 +380,6 @@ def build_package(script, source):
  
        # remove file type from slackbuild script and store the name
         pkg_name = slack_script.replace(".tar.gz", "")
-        if pkg_name != slack_script:
-	        pass
-        else:
-                pkg_name = slack_script.replace(".tar.bz2", "")
 
         path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
 	try:
@@ -409,10 +405,6 @@ def build_extra_pkg(script, source, extra):
 
        # remove file type from slackbuild script and store the name
         pkg_name = slack_script.replace(".tar.gz", "")
-        if pkg_name != slack_script:
-                pass
-        else:
-                pkg_name = slack_script.replace(".tar.bz2", "")
 
         path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
 	try:
@@ -439,10 +431,6 @@ def build_extra2_pkg(script, source, extra, extra2):
 
        # remove file type from slackbuild script and store the name
         pkg_name = slack_script.replace(".tar.gz", "")
-        if pkg_name != slack_script:
-                pass
-        else:
-                pkg_name = slack_script.replace(".tar.bz2", "")
 
         path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
         try:
@@ -684,6 +672,7 @@ def SBo_build(name):
 	dependencies_links = SBo_dependencies_links_pkg(name)	
 
 
+	# crate one list for all
 	if dependencies_links == None:
 		sys.exit()
 	
@@ -719,7 +708,8 @@ def SBo_build(name):
 	for i in range(len(dwn_link)):
 		files.append(get_file(dwn_link[i], "/"))
 	
-	# removes archive type
+
+	# removes archive type and store the package name
 	filename = []
         y = 0
         for i in range(len(files) / 2):
@@ -730,7 +720,7 @@ def SBo_build(name):
                         y += 2
 
 
-	# link sbo filename with version
+	# link sbo filename with version to create package installation
 	filename_version = []
 	for i in range(len(filename)):
 		filename_version.append(filename[i] + "-" + version[i])		
@@ -758,7 +748,7 @@ def SBo_build(name):
 
 	dwn_link = set(dwn_link) # remove double links
 
-	# dwonload links
+	# dwonload links if not exist
 	for link in dwn_link:
 		print
        		print ("{}Start --> \n{}".format(colors.GREEN, colors.ENDC))	
@@ -768,7 +758,7 @@ def SBo_build(name):
 
 	print ("\n")	
 	# build packages and store slackware files in /tmp directory
-	if results[0] == "extra1": # check how many extra sources
+	if results[0] == "extra1": # check for one (1) extra sources
 		for i in range(len(files) / 2):
 			if len(files) < 4:
 	                        script = files[0]
@@ -793,7 +783,7 @@ def SBo_build(name):
 					files.pop(0)
 
 
-	elif results[0] == "extra2": # check how many extra sources
+	elif results[0] == "extra2": # check for two (2) extra sources
 	
 		for i in range(len(files) / 2):
 			if len(files) < 5:
@@ -818,6 +808,11 @@ def SBo_build(name):
 
 	                        for j in range(0, 2):
         	                       	files.pop(0)
+	elif  results[0] > "extra2":
+		print
+	        print ("{}Not supported with more than four arguments{}\n".format(colors.RED,
+        	        colors.ENDC))
+		sys.exit()
 	else:
 
 		for i in range(len(files) / 2):

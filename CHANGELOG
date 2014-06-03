@@ -1,4 +1,10 @@
 03-06-2014
+Version
+
+[Updated] - Fix to avoid build packages with more than four arguments.
+
+
+03-06-2014
 Version 1.4.2
 
 [Updated] - Fix to avoid build package if already installed
