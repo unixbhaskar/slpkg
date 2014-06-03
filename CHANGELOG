@@ -1,5 +1,12 @@
 03-06-2014
-Version
+Version 1.4.4
+
+[Feature] - Added support ALL extra sources
+[Updated] - Fix out of range in SBo version link with filename
+
+
+03-06-2014
+Version 1.4.3
 
 [Updated] - Fix to avoid build packages with more than four arguments.
 

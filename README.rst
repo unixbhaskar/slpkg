@@ -131,8 +131,14 @@ build and install with all dependencies :
 	#
 	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
 	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
-
 	
+	The package `orc` was installed
+	The package `gstreamer1` was installed
+	The package `gst1-plugins-base` was installed
+	The package `gst1-plugins-bad` was installed
+	The package `libunique` was installed
+	The package `brasero` was installed
+
 
 Tracking all dependencies of packages:
 
