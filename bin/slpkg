@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -79,7 +79,6 @@ tmp = "/tmp/"
 # create dependencies list
 dep_results = []
 dep_links_results = []
-
 
 
 # SlackBuilds repository link
@@ -211,7 +210,7 @@ def SBo_search_pkg(name):
 		find_SBo = re.findall(search_name, url_read(SBo_url_sub))
 
 		find_SBo = " ".join(find_SBo) # convert list to string
-		find_SBo = rmv_unused(find_SBo) # remove unused chars > < from find
+		find_SBo = rmv_unused(find_SBo) # remove unused chars '> <'
 
 		# find sub-category
 		if name in find_SBo:
@@ -251,12 +250,6 @@ def SBo_source_dwn(SBo_url, name):
 			                        	line = line[10:-1]
 
 							return line
-	if arch != "x86_64":
-		for line in read_info.splitlines():
-			if line.startswith('DOWNLOAD='):
-	                        line = line[10:-1]
-
-                                return line
 
 
 
@@ -298,19 +291,18 @@ def SBo_dependencies_pkg(name):
         if name == "%README%": # avoid to search %README% as dependency
                 pass
         else:
-                find_SBo_url = SBo_search_pkg(name)
-                if find_SBo_url == None:
+                SBo_url = SBo_search_pkg(name)
+                if SBo_url == None:
                         print ("\n")
                         print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
                                 colors.CYAN, name, colors.RED, colors.ENDC))
 
                 else:
-                        find_SBo_req = SBo_requires_pkg(find_SBo_url, name)
-                        dependencies = find_SBo_req.split() # convert string to list
+                        SBo_req = SBo_requires_pkg(SBo_url, name)
+                        dependencies = SBo_req.split() # convert string to list
 
                         if dependencies == []:
                                 pass
-
                         else:
                                 dep_results.append(dependencies)
 
@@ -328,42 +320,37 @@ def SBo_dependencies_links_pkg(name):
 		pass
 	else:
 
-		find_SBo_url = SBo_search_pkg(name)
+		SBo_url = SBo_search_pkg(name)
 
-		if find_SBo_url == None:
+		if SBo_url == None:
 	        	print ("\n")
 	                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
               		        colors.CYAN, name, colors.RED, colors.ENDC))
 
 		else:
-			find_version = SBo_version_pkg(find_SBo_url, name)
-			find_SBo_dwn = SBo_slackbuild_dwn(find_SBo_url, name)
-	                find_source_dwn = SBo_source_dwn(find_SBo_url, name)
-			find_extra_dwn = SBo_extra_dwn(find_SBo_url, name)
-			find_SBo_req = SBo_requires_pkg(find_SBo_url, name)
+			version = SBo_version_pkg(SBo_url, name).split()
+			SBo_dwn = SBo_slackbuild_dwn(SBo_url, name).split()
+	                source_dwn = SBo_source_dwn(SBo_url, name).split()
+			extra_dwn = SBo_extra_dwn(SBo_url, name)
+			SBo_req = SBo_requires_pkg(SBo_url, name).split()
 
 			# create flag to know how much extra source there are
-			if find_extra_dwn != []:
-				flag = ("extra" + str(len(find_extra_dwn))).split()
+			if extra_dwn != []:
+				flag = ("extra" + str(len(extra_dwn))).split()
 				dep_links_results.append(flag)
 
-			version = find_version.split()
-        	        SBo_dwn = find_SBo_dwn.split()
-                	source_dwn = find_source_dwn.split()
-			dependencies = find_SBo_req.split()
-			
-			dep_links_results.append(find_extra_dwn)
+			dep_links_results.append(extra_dwn)
 			dep_links_results.append(version)
 			dep_links_results.append(source_dwn)
 	                dep_links_results.append(SBo_dwn)
 
-			if dependencies == []:
+			if SBo_req == []:
 				pass
 		
 			else:
-				dep_links_results.append(dependencies)
+				dep_links_results.append(SBo_req)
 
-				for line in dependencies:
+				for line in SBo_req:
 					print
 					SBo_dependencies_links_pkg(line)
 
@@ -520,11 +507,11 @@ def pkg_list(name):
 
 # find all dependencies
 def pkg_tracking(name):
-	find_dependencies = SBo_dependencies_pkg(name)
-	if find_dependencies == None:
+	dependencies = SBo_dependencies_pkg(name)
+	if dependencies == None:
 		pass
 
-	elif find_dependencies == []:
+	elif dependencies == []:
 		print ("\n")
 		print ("{}No dependencies\n{}".format(colors.GREEN, colors.ENDC))
 	else:
@@ -534,12 +521,12 @@ def pkg_tracking(name):
 	        print ("| {}`{}' {}dependencies :{}".format(colors.CYAN, name,
         		colors.YELLOW, colors.ENDC))
 	        print ("+" + "=" * pkg_len)
-	        find_dependencies.reverse()
+	        dependencies.reverse()
 
 
 		print (" |")
-	        for i in range(len(find_dependencies)):
-		        found = " --", str(len(find_dependencies[i])), " ".join(find_dependencies[i])
+	        for i in range(len(dependencies)):
+		        found = " --", str(len(dependencies[i])), " ".join(dependencies[i])
 	                print (" |")
 		        print " ".join(found)
 	        print
@@ -548,36 +535,35 @@ def pkg_tracking(name):
 
 # find from SBo repositority www.slackbuild.org
 def SBo_network(name):
-	find_SBo_url = SBo_search_pkg(name)
-        if find_SBo_url == None:
+	SBo_url = SBo_search_pkg(name)
+        if SBo_url == None:
         	print ("\n")
                 print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
                         colors.CYAN, name, colors.RED, colors.ENDC))
         else:
                 # call sbo functions 
-                find_SBo_req = SBo_requires_pkg(find_SBo_url, name)
-                find_SBo_dwn = SBo_slackbuild_dwn(find_SBo_url, name)
-                find_source_dwn = SBo_source_dwn(find_SBo_url, name)
-                find_extra_dwn = SBo_extra_dwn(find_SBo_url, name)
-		find_extra_dwn = " ".join(find_extra_dwn) # convert list to string
+                SBo_req = SBo_requires_pkg(SBo_url, name)
+                SBo_dwn = SBo_slackbuild_dwn(SBo_url, name)
+                source_dwn = SBo_source_dwn(SBo_url, name)
+                extra_dwn = "".join(SBo_extra_dwn(SBo_url, name))
 
                 # caclulate the length of the link
                 SBo_name_len = len(name)
-                SBo_url_len = (len(find_SBo_url) + SBo_name_len + 21)
+                SBo_url_len = (len(SBo_url) + SBo_name_len + 21)
                 print ("\n")
                 print ("+" + "=" * SBo_url_len)
                 print ("| {}The {}`{}`{} found in --> {}".format(colors.GREEN,
                         colors.CYAN, name, colors.GREEN,
-                        colors.ENDC + find_SBo_url))
+                        colors.ENDC + SBo_url))
                 print ("+" + "=" * SBo_url_len)
                 print ("| {}Download SlackBuild : {}{}".format(colors.GREEN,
-                        colors.ENDC, find_SBo_dwn))
+                        colors.ENDC, SBo_dwn))
                 print ("| {}Source Downloads : {}{}".format(colors.GREEN,
-                        colors.ENDC, find_source_dwn))
+                        colors.ENDC, source_dwn))
                 print ("| {}Extra Downloads : {}{}".format(colors.GREEN,
-                        colors.ENDC, find_extra_dwn))
+                        colors.ENDC, extra_dwn))
                 print ("| {}Package requirements : {}{}".format(colors.YELLOW,
-                        colors.ENDC, find_SBo_req))
+                        colors.ENDC, SBo_req))
                 print ("+" + "=" * SBo_url_len)
 		print (" {}R{}EADME               View the README file".format(colors.RED, colors.ENDC))
 		print (" {}S{}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))
@@ -590,56 +576,56 @@ def SBo_network(name):
 			if read == "D" or read == "d":
 				print
 				print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-				os.system("wget " + find_SBo_dwn)
-				os.system("wget " + find_source_dwn)
+				os.system("wget -nc " + SBo_dwn)
+				os.system("wget -nc " + source_dwn)
 
-				if find_extra_dwn == "":
+				if extra_dwn == "":
 					pass
 				else:
-					os.system("wget " + find_extra_dwn)
+					os.system("wget " + extra_dwn)
 					
 
-				print ("{}Use {}`slpkg -s`{} to build this package{}\n".format(colors.YELLOW,
+				print ("{}Use {}`slpkg -a`{} to build this package{}\n".format(colors.YELLOW,
 					 colors.CYAN, colors.YELLOW, colors.ENDC))
 				break
 
 			elif read == "R" or read == "r":
 				site = "README"
-				read_readme(find_SBo_url, name, site)
+				read_readme(SBo_url, name, site)
 				os.system("less /tmp/slpkg/readme/" + name + ".{}".format(site))
 
 			elif read == "I" or read == "i":
 				site = ".info"
-				read_info_slackbuild(find_SBo_url, name, site)
+				read_info_slackbuild(SBo_url, name, site)
                                 os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
 
 			elif read == "S" or read == "s":
 				site = ".SlackBuild"
-				read_info_slackbuild(find_SBo_url, name, site)
+				read_info_slackbuild(SBo_url, name, site)
                                 os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
 
 			elif read == "B" or read == "b":
 				s_user(getpass.getuser())
-				script = get_file(find_SBo_dwn, "/")
-				source = get_file(find_source_dwn, "/")
+				script = get_file(SBo_dwn, "/")
+				source = get_file(source_dwn, "/")
 				print
                                 print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-                                os.system("wget " + find_SBo_dwn)
-                                os.system("wget " + find_source_dwn)
+                                os.system("wget -nc " + SBo_dwn)
+                                os.system("wget -nc " + source_dwn)
 
-                                if find_extra_dwn == "":
+                                if extra_dwn == "":
                                         pass
                                 else:
-                                        os.system("wget " + find_extra_dwn)
-					find_extra_dwn = find_extra_dwn.split() # convert str to list
+                                        os.system("wget -nc " + extra_dwn)
+					extra_dwn = extra_dwn.split() # convert str to list
 					if len(find_extra_dwn) == 1:
-						extra = get_file(find_extra_dwn[0], "/")
+						extra = get_file(extra_dwn[0], "/")
 						build_extra_pkg(script, source, extra)
 						break
 
-					elif len(find_extra_dwn) == 2:
-						extra = get_file(find_extra_dwn[0], "/")
-						extra2 = get_file(find_extra_dwn[1], "/")
+					elif len(extra_dwn) == 2:
+						extra = get_file(extra_dwn[0], "/")
+						extra2 = get_file(extra_dwn[1], "/")
 						build_extra2_pkg(script, source, extra, extra2)
 						break
 					else:
@@ -666,23 +652,23 @@ def SBo_check(name):
                          colors.CYAN, name, colors.RED,  colors.ENDC))
 
         else:
-       	        find_SBo_url = SBo_search_pkg(name)
-                if find_SBo_url == None:
+       	        SBo_url = SBo_search_pkg(name)
+                if SBo_url == None:
          	       print ("\n")
                        print ("{}The {}`{}`{} not found{}\n".format(colors.RED,
                                colors.CYAN, name, colors.RED, colors.ENDC))
 
                 else:
-                       find_SBo_version = SBo_version_pkg(find_SBo_url, name)
+                       SBo_version = SBo_version_pkg(SBo_url, name)
                        name_len = len(name)
                        arch_len = len(arch)
                        SBo_file = SBo_file[name_len+1:-arch_len-7]
 
-                       if find_SBo_version > SBo_file:
+                       if SBo_version > SBo_file:
 	                       print ("\n")
                                print ("{} New version is available !!!{}".format(colors.YELLOW, colors.ENDC))
                                print ("+" + "=" * 50)
-                               print ("| {} {}".format(name, find_SBo_version))
+                               print ("| {} {}".format(name, SBo_version))
                                print ("+" + "=" * 50)
                                print
 
@@ -695,17 +681,17 @@ def SBo_check(name):
 # find package and dependencies download, build and install
 def SBo_build(name):
 	s_user(getpass.getuser())
-	find_dependencies_links = SBo_dependencies_links_pkg(name)	
+	dependencies_links = SBo_dependencies_links_pkg(name)	
 
 
-	if find_dependencies_links == None:
+	if dependencies_links == None:
 		sys.exit()
 	
-	elif find_dependencies_links != []:
+	elif dependencies_links != []:
 		results = []	
-		for i in range(len(find_dependencies_links)):
-			for j in range(len(find_dependencies_links[i])):
-				results.append(find_dependencies_links[i][j])
+		for i in range(len(dependencies_links)):
+			for j in range(len(dependencies_links[i])):
+				results.append(dependencies_links[i][j])
 
 
 	# grep only links from list
@@ -722,6 +708,7 @@ def SBo_build(name):
 	                if ver.startswith(str(i)):
 	                        version.append(ver)
 
+
 	# upside-down lists
 	version .reverse()
 	dwn_link.reverse()
@@ -731,32 +718,13 @@ def SBo_build(name):
 	files = []
 	for i in range(len(dwn_link)):
 		files.append(get_file(dwn_link[i], "/"))
-
-
-	# removes archives type
+	
+	# removes archive type
 	filename = []
         y = 0
         for i in range(len(files) / 2):
                 if files[y].endswith("tar.gz"):
                         file = files[y]
-                        file = file[:-7]
-                        filename.append(file)
-                        y += 2
-
-                elif files[y].endswith("tar.bz2"):
-                        file = files[y]
-                        file = file[:-8]
-                        filename.append(file)
-                        y += 2
-
-                elif files[y].endswith("zip"):
-                        file = files[y]
-                        file = file[:-4]
-                        filename.append(file)
-                        y += 2
-
-		elif files[y].endswith("tar.xz"):
-			file = files[y]
                         file = file[:-7]
                         filename.append(file)
                         y += 2
@@ -767,54 +735,59 @@ def SBo_build(name):
 	for i in range(len(filename)):
 		filename_version.append(filename[i] + "-" + version[i])		
 
-	wget_links = set(dwn_link) # remove duplicate links
 
-	# dwonload links
-	for link in wget_links:
+
+	# remove packages links if already installed
+	i = 0
+	for file in filename_version:
+        	if find_package(file, packages) == []:
+			i += 2
+        	else:
+                	for j in range(0, 2):
+                                dwn_link.pop(i)
+				files.pop(i)
+			
+	# create list with packages for install
+	pkg_for_install = []
+	i = 0
+	for i in range(len(filename_version)):
 		if find_package(filename_version[i], packages) == []:
-			os.system("wget {}".format(link))
-			print
-		        print ("{}Start --> \n{}".format(colors.GREEN, colors.ENDC))
+			pkg_for_install.append(filename_version[i])
 		else:
-			print
 			pass
 
+	dwn_link = set(dwn_link) # remove double links
+
+	# dwonload links
+	for link in dwn_link:
+		print
+       		print ("{}Start --> \n{}".format(colors.GREEN, colors.ENDC))	
+		os.system("wget -nc {}".format(link))
+	
+
+
+	print ("\n")	
 	# build packages and store slackware files in /tmp directory
 	if results[0] == "extra1": # check how many extra sources
-
 		for i in range(len(files) / 2):
 			if len(files) < 4:
-				if find_package(filename_version[i], packages) == []:
-		                        script = files[0]
-        	                        source = files[1]
-                	                extra = files[2]
-                        	        build_extra_pkg(script, source, extra)
+	                        script = files[0]
+       	                        source = files[1]
+               	                extra = files[2]
+                       	        build_extra_pkg(script, source, extra)
 
-					install_pkg = tmp + filename_version[i] + SBo_arch + SBo_tag + SBo_filetype
-	                                os.system("upgradepkg --install-new {}".format(install_pkg))
-        	                        break
+				install_pkg = tmp + pkg_for_install[i] + SBo_arch + SBo_tag + SBo_filetype
+                                os.system("upgradepkg --install-new {}".format(install_pkg))
+       	                        break
 
-				else:
-
-                                        print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
-                                        colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
-                                        print
-				
 			else:
 
-				if find_package(filename_version[i], packages) == []:
-					script = files[0]
-					source = files[1]		
-					build_package(script, source)
+				script = files[0]
+				source = files[1]		
+				build_package(script, source)
 	
-					install_pkg = tmp + filename_version[i] + SBo_arch + SBo_tag + SBo_filetype
-                        		os.system("upgradepkg --install-new {}".format(install_pkg))
-
-				else:
-
-                                        print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
-                                        colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
-                                        print
+				install_pkg = tmp + pkg_for_install[i] + SBo_arch + SBo_tag + SBo_filetype
+                       		os.system("upgradepkg --install-new {}".format(install_pkg))
 
 				for j in range(0, 2):
 					files.pop(0)
@@ -824,60 +797,49 @@ def SBo_build(name):
 	
 		for i in range(len(files) / 2):
 			if len(files) < 5:
-				if find_package(filename_version[i], packages) == []:
-		        		script = files[0]
-        	                        source = files[1]
-                	                extra = files[2]
-                        	        extra2 = files[3]
-                                	build_extra2_pkg(script, source, extra, extra2)
+	        		script = files[0]
+       	                        source = files[1]
+               	                extra = files[2]
+                       	        extra2 = files[3]
+                               	build_extra2_pkg(script, source, extra, extra2)
 
-					install_pkg = tmp + filename_version[i] + SBo_arch + SBo_tag + SBo_filetype
-        	                        os.system("upgradepkg --install-new {}".format(install_pkg))
-	                                break
-				else:
-
-                                        print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
-                                        colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
-                                        print
+				install_pkg = tmp + pkg_for_install[i] + SBo_arch + SBo_tag + SBo_filetype
+       	                        os.system("upgradepkg --install-new {}".format(install_pkg))
+                                break
 
 			else:
 
-				if find_package(filename_version[i], packages) == []:
-		                	script = files[0]
-        		                source = files[1]
-                		        build_package(script, source)
-	
-					install_pkg = tmp + filename_version[i] + SBo_arch + SBo_tag + SBo_filetype
-	                        	os.system("upgradepkg --install-new {}".format(install_pkg))
-				else:
+	                	script = files[0]
+       		                source = files[1]
+               		        build_package(script, source)
 
-                                	print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
-                                        colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
-                                	print
+				install_pkg = tmp + pkg_for_install[i] + SBo_arch + SBo_tag + SBo_filetype
+                        	os.system("upgradepkg --install-new {}".format(install_pkg))
 
 	                        for j in range(0, 2):
         	                       	files.pop(0)
 	else:
 
 		for i in range(len(files) / 2):
-
-			if find_package(filename_version[i], packages) == []:
-	                        script = files[0]
-        	                source = files[1]
-				build_package(script, source)
+                        script = files[0]
+       	                source = files[1]
+			build_package(script, source)
 			
-	 			install_pkg = tmp + filename_version[i] + SBo_arch + SBo_tag + SBo_filetype
-				os.system("upgradepkg --install-new {}".format(install_pkg))
-			
-			else:
-				print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
-                                        colors.CYAN, filename_version[i], colors.GREEN, colors.ENDC))
-				print
+ 			install_pkg = tmp + pkg_for_install[i] + SBo_arch + SBo_tag + SBo_filetype
+			os.system("upgradepkg --install-new {}".format(install_pkg))
 
 			for j in range(0, 2):
 	                        files.pop(0)
 
-	
+
+	for pkg in pkg_for_install:
+		if find_package(pkg, packages) != []:
+			print ("{}The package {}`{}`{} was installed{}".format(colors.GREEN,
+        			colors.CYAN, pkg, colors.GREEN, colors.ENDC))
+	print
+
+
+
 
 # install binary package
 def pkg_install(name):
@@ -959,7 +921,7 @@ def main():
 	description = "Utility to help package management in Slackware"
 	parser = argparse.ArgumentParser(description=description)
 
-        parser.add_argument("-v", "--verbose", help="print version and exit",
+	parser.add_argument("-v", "--verbose", help="print version and exit",
 			    action="store_true")
 
 	parser.add_argument("-a", help="auto build package",
@@ -983,7 +945,7 @@ def main():
 	parser.add_argument("-i", help="install binary packages",
                             type=str, nargs="+", metavar=(''))
 
-        parser.add_argument("-u", help="install-upgrade packages with new",
+	parser.add_argument("-u", help="install-upgrade packages with new",
 			    type=str, nargs="+", metavar=(''))
 
 	parser.add_argument("-o", help="reinstall the same packages",
@@ -1001,15 +963,15 @@ def main():
 	args = parser.parse_args()
 
 
-        if args.verbose:
+	if args.verbose:
 		pkg_version()
 		
 
-        if args.a:
+	if args.a:
 		pkg_slackbuild(args.a)
 
 
-        if args.l:
+	if args.l:
 		pkg_list(args.l)
 
 
@@ -1029,11 +991,11 @@ def main():
 		SBo_build(args.s)
 		
 
-        if args.i:
+	if args.i:
 		pkg_install(args.i)
 		
-
-        if args.u:
+   
+	if args.u:
 		pkg_upgrade(args.u)
 
 

@@ -185,10 +185,6 @@ Find slackbuild from network (www.slackbuilds.org):
 .. code-block:: bash
 
 
-	This find the slackbuild , source, extra downloads and package requirements !!!	
-
-.. code-block:: bash
-
 	$ slpkg -n bitfighter
 	Searching `bitfighter` from slackbuilds.org ...
 
