@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.4.4"
+__version__ = "1.4.5"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -644,7 +644,9 @@ def SBo_build(name):
 	dwn_link = []
 	for link in results:
                	if link.startswith('http'):
-                       	dwn_link.append(link)
+        	      	dwn_link.append(link)
+		if link.startswith('ftp'):
+			dwn_link.append(link)
 
 
 	# grep the version
@@ -694,14 +696,15 @@ def SBo_build(name):
 				files.pop(i)
 			
 
-	# create list with packages for install
+	# create list with packages for install and packages already installed
 	pkg_for_install = []
+	pkg_already_installed = []
 	i = 0
 	for i in range(len(filename_version)):
 		if find_package(filename_version[i], packages) == []:
 			pkg_for_install.append(filename_version[i])
 		else:
-			pass
+			pkg_already_installed.append(filename_version[i])
 
 	dwn_link = set(dwn_link) # remove double links
 
@@ -717,8 +720,8 @@ def SBo_build(name):
 	i = 0
 	if pkg_for_install == []:
 		for pkg in filename_version:
-	               	print ("{}The package {}`{}`{} is already installed{}".format(colors.GREEN,
-        	               	colors.CYAN, pkg, colors.GREEN, colors.ENDC))		
+	               	print ("{}The package {}`{}`{} is already installed{}".format(colors.YELLOW,
+        	               	colors.CYAN, pkg, colors.YELLOW, colors.ENDC))		
 
 	else:
 
@@ -767,6 +770,11 @@ def SBo_build(name):
 			if find_package(pkg, packages) != []:
 				print ("{}The package {}`{}`{} was installed{}".format(colors.GREEN,
         				colors.CYAN, pkg, colors.GREEN, colors.ENDC))
+		for pkg in pkg_already_installed:
+			if find_package(pkg, packages) != []:
+				print ("{}The package {}`{}`{} is arlready installed{}".format(colors.YELLOW,
+                                        colors.CYAN, pkg, colors.YELLOW, colors.ENDC))
+
 	print
 
 
