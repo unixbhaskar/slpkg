@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.4.5"
+__version__ = "1.4.6"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -61,8 +61,8 @@ uname = os.uname()
 arch = (uname[4])
 
 
-# SBo fietype packages
-SBo_arch = "-" + arch + "-"
+# SBo fietype binary packages for install
+SBo_arch = "*"
 SBo_tag = "?_SBo"
 SBo_filetype = ".tgz"
 
@@ -758,8 +758,8 @@ def SBo_build(name):
         			source = files[1]
 	        	        build_package(script, source)
 
-        	        	install_pkg = tmp + pkg_for_install[i] + SBo_arch + SBo_tag + SBo_filetype
-	                	os.system("upgradepkg --install-new {}".format(install_pkg))
+				install_pkg = tmp + pkg_for_install[i] + SBo_arch + SBo_tag + SBo_filetype
+                                os.system("upgradepkg --install-new {}".format(install_pkg))
 
 		                for j in range(0, 2):
         		        	files.pop(0)
@@ -807,7 +807,7 @@ def pkg_reinstall(name):
 # uninstall package
 def pkg_remove(name):
 	s_user(getpass.getuser())
-        print ("{}!!! WARNING !!!{}".format(colors.YELLOW, colors.ENDC))
+        print ("{}!!! WARNING !!!{}".format(colors.RED, colors.ENDC))
         remove_pkg = raw_input("Are you sure to remove this package(s) [y/n] ")
 	print
         if remove_pkg == "y" or remove_pkg == "Y":
