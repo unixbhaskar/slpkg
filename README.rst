@@ -174,6 +174,8 @@ Check if your packages is up to date (www.slackbuilds.org):
 	| flashplayer-plugin 11.2.202.356
 	+==================================================
 
+	Would you like to install ? [Y/y]
+
 
 	$ slpkg -c ranger
 	Searching `ranger` from slackbuilds.org ...
@@ -207,6 +209,7 @@ Find slackbuild from network (www.slackbuilds.org):
 	 Info                 View the Info file
          Download             Download this package
 	 Build                Download and build this package
+	 Install              Download/Build/Install
 
         _
 
