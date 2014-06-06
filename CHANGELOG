@@ -1,3 +1,9 @@
+06.06.2014
+Version 1.4.9
+
+[Updated] - Fix exit from loop after build in option 'network'
+[Updated] - Source code
+
 06-06-2014
 Version 1.4.8
 
@@ -26,19 +32,16 @@ Version 1.4.4
 [Feature] - Added support ALL extra sources
 [Updated] - Fix out of range in SBo version link with filename
 
-
 03-06-2014
 Version 1.4.3
 
 [Updated] - Fix to avoid build packages with more than four arguments.
-
 
 03-06-2014
 Version 1.4.2
 
 [Updated] - Fix to avoid build package if already installed
 [Updated] - Fix not download if file already installed
-
 
 31-05-2014
 Version 1.4.1

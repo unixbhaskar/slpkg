@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.4.8"
+__version__ = "1.4.9"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -86,11 +86,28 @@ SBo_url = "http://slackbuilds.org/repository/14.1/"
 
 
 # create repository list
-repository = ("academic", "business", "games", "ham",
-	      "misc", "office", "ruby", "accessibility",
-	      "desktop", "gis", "haskell", "multimedia",
-	      "perl", "system", "audio", "development",
-	      "graphics", "libraries", "network", "python")
+repository = [
+	'academic',
+	'business',
+	'games',
+	'ham',
+	'misc',
+	'office',
+	'ruby',
+	'accessibility',
+	'desktop',
+	'gis',
+	'haskell',
+	'multimedia',
+	'perl',
+	'system',
+	'audio',
+	'development',
+	'graphics',
+	'libraries',
+	'network',
+	'python'
+]
 
 
 
@@ -117,8 +134,8 @@ def s_user(user):
 # remove unused chars
 def rmv_unused(name):
 	rmv = "><"
-        for i in rmv:
-		name = name.replace(i, "")
+        for ch in rmv:
+		name = name.replace(ch, "")
 
 	return name
 
@@ -128,7 +145,7 @@ def rmv_unused(name):
 def get_file(link, char):
 	j = 0
 	results = []
-	for i in link:
+	for urls in link:
         	j += 1
 	        results.append(link[-j:])
 
@@ -137,10 +154,7 @@ def get_file(link, char):
                         	file = file
 	                        break
 
-	file = file.replace(char, "")
-	file = file.strip(" ")
-
-	return file
+	return file.replace(char, "").strip(' ')
 
 
 
@@ -159,17 +173,13 @@ def find_package(find_pkg, directory):
 # open url and read page
 def url_read(name):
 	f = urllib2.urlopen(name)
-        read_page = f.read()
+        return f.read()
 	
-	return read_page
-
 
 
 # read SBo README 
 def read_readme(SBo_url, name, site):
-	SBo_url = SBo_url + site
-        SBo_url = SBo_url.replace("repository", "slackbuilds")
-        readme = url_read(SBo_url)
+        readme = url_read((SBo_url + site).replace("repository", "slackbuilds"))
 	
 	file = open("/tmp/slpkg/readme/" + name + "." + site, "w")
 	file.write(readme)
@@ -179,9 +189,7 @@ def read_readme(SBo_url, name, site):
 
 # read SBo .info 
 def read_info_slackbuild(SBo_url, name, site):
-	SBo_url = SBo_url + name + site
-        SBo_url = SBo_url.replace("repository", "slackbuilds")
-        info = url_read(SBo_url)
+	info = url_read((SBo_url + name + site).replace("repository", "slackbuilds"))
 
         file = open("/tmp/slpkg/readme/" + name + site, "w")
         file.write(info)
@@ -211,57 +219,49 @@ def SBo_search_pkg(name):
 		find_SBo = rmv_unused(find_SBo)
 
 		if name in find_SBo:
-			name = SBo_url_sub + name + "/"
+			return SBo_url_sub + name + "/"
 		
-			return name
-
 
 
 # find slackbuild download
 def SBo_slackbuild_dwn(SBo_url, name):
         SBo_url = SBo_url.replace(name + "/", name + ".tar.gz")
-	SBo_url = SBo_url.replace("repository", "slackbuilds")
 
-        return SBo_url
+	return SBo_url.replace("repository", "slackbuilds")
 
 
 
 # find source downloads
 def SBo_source_dwn(SBo_url, name):
-        SBo_url = SBo_url + name + ".info"
-        SBo_url = SBo_url.replace("repository", "slackbuilds")
-	read_info = url_read(SBo_url)
+	read_info = url_read((SBo_url + name + ".info").replace("repository", "slackbuilds"))
 
 	if arch == "x86_64":
 		for line in read_info.splitlines():
 			if line.startswith('DOWNLOAD_x86_64='):
-				arch_x86_64_len = len(line)
-				if arch_x86_64_len > 18:
-	                       		line = line[17:-1]
+				if len(line) > 18:
 
-					return line
+	                       		return line[17:-1]
+
 				else:
 					for line in read_info.splitlines():
 	        				if line.startswith('DOWNLOAD='):
-			                        	line = line[10:-1]
 
-							return line
+			                        	return line[10:-1]
 
 
 
 # find extra source downloads
 def SBo_extra_dwn(SBo_url, name):
-	SBo_url = SBo_url + name + ".info"
-	SBo_url = SBo_url.replace("repository", "slackbuilds")
-	read_info = url_read(SBo_url)
+	read_info = url_read((SBo_url + name + ".info").replace("repository", "slackbuilds"))
 	results = []
 
 	for line in read_info.splitlines():
                 if line.startswith(' '):
-			line = line[:-1]
-                        line = line.replace(" ", "")
+			line = line[:-1].replace(" ", "")
+
 		if line.startswith('http'):
 			results.append(line)
+
 		if line.startswith('ftp'):
                         results.append(line)
 			
@@ -271,17 +271,12 @@ def SBo_extra_dwn(SBo_url, name):
 
 # search for package requirements
 def SBo_requires_pkg(SBo_url, name):
-	SBo_url = SBo_url + name + ".info"
-	SBo_url = SBo_url.replace("repository", "slackbuilds")
-
-	read_info = url_read(SBo_url)
+	read_info = url_read((SBo_url + name + ".info").replace("repository", "slackbuilds"))
 
 	for line in read_info.splitlines():
 		if line.startswith('REQUIRES="'):
-			line = line[10:-1]	
 
-
-			return line
+			return line[10:-1]	
 
 
 
@@ -316,7 +311,7 @@ def SBo_dependencies_links_pkg(name):
 
 		if SBo_url == None:
 	        	print ("\n")
-	                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
+	                print ("{}The {}`{}`{} not found{}\n".format(colors.RED,
               		        colors.CYAN, name, colors.RED, colors.ENDC))
 
 		else:
@@ -349,33 +344,26 @@ def SBo_dependencies_links_pkg(name):
 
 # find from www.slackbuilds.org the version of the package
 def SBo_version_pkg(SBo_url, name):
-	SBo_url = SBo_url + name + ".info"
-	SBo_url = SBo_url.replace("repository", "slackbuilds")
-	read_info = url_read(SBo_url)
+	read_info = url_read((SBo_url + name + ".info").replace("repository", "slackbuilds"))	 
 
 	for line in read_info.splitlines():
                 if line.startswith('VERSION="'):
-                        line = line[9:-1]
+                        return line[9:-1]
 
-                        return line	
 
 
 # build packages with extra source
 def build_extra_pkg(script, source, extra):
-	slack_script = script
-        source_tar = source
-        extra_source = extra
-	
-        pkg_name = slack_script.replace(".tar.gz", "")
+        pkg_name = script.replace(".tar.gz", "")
 
         path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
         try:
-                tar = tarfile.open(slack_script)
+                tar = tarfile.open(script)
                 tar.extractall()
                 tar.close()
-                shutil.copy2(source_tar, pkg_name)
+                shutil.copy2(source, pkg_name)
 
-		for es in extra_source:
+		for es in extra:
                 	shutil.copy2(es, pkg_name)
 
                 os.chdir(path + pkg_name)
@@ -389,17 +377,14 @@ def build_extra_pkg(script, source, extra):
 
 # auto build package from slackbuild script
 def build_package(script, source):
-	slack_script = script
-        source_tar = source
- 
-        pkg_name = slack_script.replace(".tar.gz", "")
+        pkg_name = script.replace(".tar.gz", "")
 
         path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
 	try:
-		tar = tarfile.open(slack_script)
+		tar = tarfile.open(script)
 		tar.extractall()
 		tar.close()
-		shutil.copy2(source_tar, pkg_name)
+		shutil.copy2(source, pkg_name)
 	        os.chdir(path + pkg_name)
 	       	os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))	
 		os.chdir(path)
@@ -460,7 +445,7 @@ def pkg_tracking(name):
 	        print ("\n")
        		pkg_len = len(name) + 18
 	        print ("+" + "=" * pkg_len)
-	        print ("| {}`{}' {}dependencies :{}".format(colors.CYAN, name,
+	        print ("| {}`{}` {}dependencies :{}".format(colors.CYAN, name,
         		colors.YELLOW, colors.ENDC))
 	        print ("+" + "=" * pkg_len)
 	        dependencies.reverse()
@@ -480,7 +465,7 @@ def SBo_network(name):
 	SBo_url = SBo_search_pkg(name)
         if SBo_url == None:
         	print ("\n")
-                print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
+                print ("{}The {}`{}`{} not found{}\n".format(colors.RED,
                         colors.CYAN, name, colors.RED, colors.ENDC))
         else:
 
@@ -566,7 +551,8 @@ def SBo_network(name):
 					break
 
 				build_package(script, source)
-
+				break
+			
 			elif read == "I" or read == "i":
 				s_user(getpass.getuser())
 				pkg_for_install = name + "-" + SBo_version
@@ -664,6 +650,7 @@ def SBo_check(name):
                 	 	                       extra.append(get_file(ex, "/"))
 
                         	                       build_extra_pkg(script, source, extra)
+
 						       install_pkg = tmp + pkg_for_install + SBo_arch + SBo_tag + SBo_filetype
 		                                       os.system("upgradepkg --install-new {}".format(install_pkg))
 						       sys.exit()
@@ -845,7 +832,7 @@ def pkg_install(name):
         for i in range(len(name)):
 		try:
 			print
-			print subprocess.check_output('installpkg ' + name[i], shell=True)
+			print subprocess.check_output('installpkg %s' % name[i], shell=True)
 		except subprocess.CalledProcessError: 
                         print ("{}Cannot install {}`{}`{} file not found\n{}".format(colors.RED, colors.CYAN,    
                                 name[i], colors.RED, colors.ENDC))
@@ -857,7 +844,7 @@ def pkg_upgrade(name):
         s_user(getpass.getuser())
         for i in range(len(name)):
 		try:
-			print subprocess.check_output('upgradepkg --install-new ' + name[i], shell=True)
+			print subprocess.check_output('upgradepkg --install-new %s' % name[i], shell=True)
 		except subprocess.CalledProcessError:
 			print
 			print ("{}Cannot install {}`{}`{} file not found\n{}".format(colors.RED, colors.CYAN, 	
@@ -870,7 +857,7 @@ def pkg_reinstall(name):
         s_user(getpass.getuser())
         for i in range(len(name)):
 		try:
-			print subprocess.check_output('upgradepkg --reinstall ' + name[i], shell=True)
+			print subprocess.check_output('upgradepkg --reinstall %s' % name[i], shell=True)
                 except subprocess.CalledProcessError:
                         print
                         print ("{}Cannot install {}`{}`{} file not found\n{}".format(colors.RED, colors.CYAN,
