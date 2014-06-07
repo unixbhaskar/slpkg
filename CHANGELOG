@@ -1,4 +1,10 @@
-06.06.2014
+07-06-2014
+Version 1.5.0
+
+[Updated] - Fix download if server file is newer than local
+[Updated] - Source code
+
+06-06-2014
 Version 1.4.9
 
 [Updated] - Fix exit from loop after build in option 'network'

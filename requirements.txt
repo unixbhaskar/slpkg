@@ -1,1 +1,2 @@
-none
+- Python 2.7.5
+- Slackware Linux 14.1

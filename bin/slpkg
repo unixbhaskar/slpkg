@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.4.9"
+__version__ = "1.5.0"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -199,7 +199,6 @@ def read_info_slackbuild(SBo_url, name, site):
 
 # search and found slackbuilds packages links from http://slackbuilds.org
 def SBo_search_pkg(name):
-	i = 0
 	search_name = re.escape(name)
 	search_name = ">" + search_name + "<"
 
@@ -208,15 +207,14 @@ def SBo_search_pkg(name):
 
 	sys.stdout.flush()
 	sys.stdout.write("\b" * (toolbar_width+1))
-	for i in repository:
+	for kind in repository:
 
 		sys.stdout.write(".")
 		sys.stdout.flush()
-		SBo_url_sub = SBo_url + i + "/"
+		SBo_url_sub = SBo_url + kind + "/"
 		find_SBo = re.findall(search_name, url_read(SBo_url_sub))
 
-		find_SBo = " ".join(find_SBo)
-		find_SBo = rmv_unused(find_SBo)
+		find_SBo = rmv_unused(" ".join(find_SBo))
 
 		if name in find_SBo:
 			return SBo_url_sub + name + "/"
@@ -253,6 +251,7 @@ def SBo_source_dwn(SBo_url, name):
 # find extra source downloads
 def SBo_extra_dwn(SBo_url, name):
 	read_info = url_read((SBo_url + name + ".info").replace("repository", "slackbuilds"))
+
 	results = []
 
 	for line in read_info.splitlines():
@@ -284,6 +283,7 @@ def SBo_requires_pkg(SBo_url, name):
 def SBo_dependencies_pkg(name):
         if name != "%README%":
                 SBo_url = SBo_search_pkg(name)
+
                 if SBo_url == None:
                         print ("\n")
                         print ("{}The {}'{}'{} not found{}\n".format(colors.RED,
@@ -477,11 +477,11 @@ def SBo_network(name):
 
                 SBo_name_len = len(name)
                 SBo_url_len = (len(SBo_url) + SBo_name_len + 21)
+
                 print ("\n")
                 print ("+" + "=" * SBo_url_len)
                 print ("| {}The {}`{}`{} found in --> {}".format(colors.GREEN,
-                        colors.CYAN, name, colors.GREEN,
-                        colors.ENDC + SBo_url))
+                        colors.CYAN, name, colors.GREEN, colors.ENDC + SBo_url))
                 print ("+" + "=" * SBo_url_len)
                 print ("| {}Download SlackBuild : {}{}".format(colors.GREEN,
                         colors.ENDC, SBo_dwn))
@@ -496,22 +496,19 @@ def SBo_network(name):
 		print (" {}S{}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))
                 print (" In{}f{}o                 View the Info file".format(colors.RED, colors.ENDC))
                 print (" {}D{}ownload             Download this package".format(colors.RED, colors.ENDC))
-		print (" {}B{}uild                Download and build this package".format(colors.RED, colors.ENDC))
-		print (" {}I{}nstall              Download/Build/Install".format(colors.RED, colors.ENDC))
-		print
-		while True:
+		print (" {}B{}uild                Download and build".format(colors.RED, colors.ENDC))
+		print (" {}I{}nstall              Download/Build/Install\n".format(colors.RED, colors.ENDC))
 
+		while True:
 			read = raw_input("_ ")
 
 			if read == "D" or read == "d":
 				print	
 				print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-				os.system("wget -nc " + SBo_dwn)
-				os.system("wget -nc " + source_dwn)
+				os.system("wget -N " + SBo_dwn)
+				os.system("wget -N " + source_dwn)
 
-				if extra_dwn == "":
-					pass
-				else:
+				if extra_dwn != "":
 					os.system("wget " + extra_dwn)
 					
 				break
@@ -537,15 +534,15 @@ def SBo_network(name):
 				source = get_file(source_dwn, "/")
 				print
                                 print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-                                os.system("wget -nc " + SBo_dwn)
-                                os.system("wget -nc " + source_dwn)
+                                os.system("wget -N " + SBo_dwn)
+                                os.system("wget -N " + source_dwn)
 
 				extra = []			
                                 if extra_dwn != "":
-	                                os.system("wget -nc " + extra_dwn)
+	                                os.system("wget -N " + extra_dwn)
 					extra_dwn = extra_dwn.split()
-					for ex in extra_dwn:
-						extra.append(get_file(ex, "/"))
+					for link in extra_dwn:
+						extra.append(get_file(link, "/"))
 
 					build_extra_pkg(script, source, extra)
 					break
@@ -562,15 +559,15 @@ def SBo_network(name):
         	                        source = get_file(source_dwn, "/")
                 	                print
                         	        print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-                                	os.system("wget -nc " + SBo_dwn)
-	                                os.system("wget -nc " + source_dwn)
+                                	os.system("wget -N " + SBo_dwn)
+	                                os.system("wget -N " + source_dwn)
 
         	                        extra = []
                 	                if extra_dwn != "":
-	                                        os.system("wget -nc " + extra_dwn)
+	                                        os.system("wget -N " + extra_dwn)
         	                                extra_dwn = extra_dwn.split()
-                	                        for ex in extra_dwn:
-                        	                        extra.append(get_file(ex, "/"))
+                	                        for link in extra_dwn:
+                        	                        extra.append(get_file(link, "/"))
 
                                 	        build_extra_pkg(script, source, extra)
 
@@ -639,15 +636,15 @@ def SBo_check(name):
                                         source = get_file(source_dwn, "/")
                                	        print
                                        	print ("{}Start -->{}\n".format(colors.GREEN, colors.ENDC))
-	                                os.system("wget -nc " + SBo_dwn)
-        	                        os.system("wget -nc " + source_dwn)
+	                                os.system("wget -N " + SBo_dwn)
+        	                        os.system("wget -N " + source_dwn)
 
                 	                extra = []
                                         if extra_dwn != "":
-                                               	os.system("wget -nc " + extra_dwn)
+                                               	os.system("wget -N " + extra_dwn)
 	                                        extra_dwn = extra_dwn.split()
-        	                                for ex in extra_dwn:
-                	 	                       extra.append(get_file(ex, "/"))
+        	                                for link in extra_dwn:
+                	 	                       extra.append(get_file(link, "/"))
 
                         	                       build_extra_pkg(script, source, extra)
 
@@ -729,51 +726,48 @@ def SBo_build(name):
 		filename_version.append(filename[i] + "-" + version[i])		
 
 
-	''' remove packages links if already installed '''
+	''' remove links and files if packages already installed 
+	    and keep lists for report'''
 	i = 0
+	pkg_for_install = []
+        pkg_already_installed = []
+
 	for file in filename_version:
         	if find_package(file, packages) == []:
 			i += 2
+			pkg_for_install.append(file)
+
         	else:
+			pkg_already_installed.append(file)
                 	for j in range(0, 2):
                                 dwn_link.pop(i)
 				files.pop(i)
 			
 
-	''' create list with packages for install and packages already installed '''
-	pkg_for_install = []
-	pkg_already_installed = []
-	i = 0
-	for i in range(len(filename_version)):
-		if find_package(filename_version[i], packages) == []:
-			pkg_for_install.append(filename_version[i])
-		else:
-			pkg_already_installed.append(filename_version[i])
-
-
 	''' remove double links '''
 	dwn_link = set(dwn_link)
 
 
-	''' dwonload links if not exist '''
+	''' download links if not exist or previously than server'''
 	for link in dwn_link:
 		print
        		print ("{}Start --> \n{}".format(colors.GREEN, colors.ENDC))	
-		os.system("wget -nc {}".format(link))
+		os.system("wget -N {}".format(link))
 	
 	print ("\n")	
 
 	''' build packages and install slackware packages '''
-	i = 0
 	if pkg_for_install == []:
 		for pkg in filename_version:
 	               	print ("{}The package {}`{}`{} is already installed{}".format(colors.YELLOW,
         	               	colors.CYAN, pkg, colors.YELLOW, colors.ENDC))		
 
 	else:
+
 		''' check for extra sources '''
 		if results[0].startswith("extra"):
 			extra_Num = int(results[0].replace("extra", ""))
+			i = 0
 			for i in range(len(files) / 2):
 				if len(files) == extra_Num + 2:
 					script = files[0]
@@ -799,7 +793,8 @@ def SBo_build(name):
 
 
 		else:
-
+	
+			i = 0		
 			for i in range(len(files) / 2):
 				script = files[0]
         			source = files[1]
