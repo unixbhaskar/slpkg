@@ -51,7 +51,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.5.0"
+__version__ = "1.5.1"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -240,11 +240,10 @@ def SBo_source_dwn(SBo_url, name):
 
 	                       		return line[17:-1]
 
-				else:
-					for line in read_info.splitlines():
-	        				if line.startswith('DOWNLOAD='):
+	for line in read_info.splitlines():
+		if line.startswith('DOWNLOAD='):
 
-			                        	return line[10:-1]
+		       	return line[10:-1]
 
 
 
