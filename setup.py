@@ -1,22 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os, sys, shutil
+import os
+import sys
+import shutil
 
 from distutils.core import setup
 
 setup(
-    name = 'slpkg',
-    version = "1.5.1",
-    description = "Python tool to manage Slackware packages",
-    keywords = ["slackware", "slpkg", "upgrade", "install", "remove",
-		 "view", "slackpkg", "tool"],
-    author = "dslackw",
-    author_email = "d.zlatanidis@gmail.com",
-    url = "https://github.com/dslackw/slpkg",
-    scripts = ['bin/slpkg'],
-    package_data = {"": ["LICENSE", "README.rst", "CHANGELOG"]},
-    classifiers = [
+    name='slpkg',
+    version="1.5.1",
+    description="Python tool to manage Slackware packages",
+    keywords=["slackware", "slpkg", "upgrade", "install", "remove",
+              "view", "slackpkg", "tool"],
+    author="dslackw",
+    author_email="d.zlatanidis@gmail.com",
+    url="https://github.com/dslackw/slpkg",
+    scripts=['bin/slpkg'],
+    package_data={"": ["LICENSE", "README.rst", "CHANGELOG"]},
+    classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python",
