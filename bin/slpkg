@@ -49,7 +49,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.5.2"
+__version__ = "1.5.3"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -177,6 +177,7 @@ def url_read(name):
 
 # read SBo README
 def read_readme(SBo_url, name, site):
+    s_user(getpass.getuser())
     readme = url_read((SBo_url + site).replace("repository", "slackbuilds"))
 
     file = open("/tmp/slpkg/readme/" + name + "." + site, "w")
@@ -186,6 +187,7 @@ def read_readme(SBo_url, name, site):
 
 # read SBo .info
 def read_info_slackbuild(SBo_url, name, site):
+    s_user(getpass.getuser())
     info = url_read(
         (SBo_url +
          name +
@@ -211,7 +213,6 @@ def SBo_search_pkg(name):
     sys.stdout.flush()
     sys.stdout.write("\b" * (toolbar_width + 1))
     for kind in repository:
-
         sys.stdout.write(".")
         sys.stdout.flush()
         SBo_url_sub = SBo_url + kind + "/"
@@ -434,9 +435,9 @@ def build_package(script, source):
 
 # print version
 def pkg_version():
-    print ("Version: {}".format(__version__))
-    print ("Licence: {}".format(__license__))
-    print ("Email  : {}".format(__email__))
+    print ("Version : {}".format(__version__))
+    print ("Licence : {}".format(__license__))
+    print ("Email   : {}".format(__email__))
 
 
 # build packages
@@ -1068,12 +1069,8 @@ def main():
     parser.add_argument("-a", help="auto build package",
                         type=str, nargs="+", metavar=('script', 'source'))
 
-    parser.add_argument(
-        "-l",
-        help="list of installed packages",
-        nargs="+",
-        choices="all sbo".split(),
-        metavar=('all, sbo'))
+    parser.add_argument("-l", help="list of installed packages", nargs="+", 
+                        choices="all sbo".split(), metavar=('all, sbo'))
 
     parser.add_argument("-t", help="tracking dependencies",
                         type=str, metavar=(''))

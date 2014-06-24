@@ -1,4 +1,10 @@
 24-06-2014
+Version 1.5.3
+
+[Updated] - Fix IOError: [Errno 13] Permission denied: (file = open("/tmp/slpkg/readme/" + name + 
+            site, "w"))
+
+24-06-2014
 Version 1.5.2
 
 [Updated] - Fix urllib2.URLError: <urlopen error [Errno 111] Connection refused>
