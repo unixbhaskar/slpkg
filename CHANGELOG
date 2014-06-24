@@ -1,3 +1,8 @@
+24-06-2014
+Version 1.5.2
+
+[Updated] - Fix urllib2.URLError: <urlopen error [Errno 111] Connection refused>
+
 12-06-2014
 Version 1.5.1
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-'''Utility to help package management in Slackware.
+''' Utility to help package management in Slackware.
 Slpkg is a terminal tool in order to easy use Slackware packages.
 
 
@@ -32,7 +32,9 @@ optional arguments:
   -a  [ ...]            reinstall the same packages
   -r  [ ...]            remove packages
   -f  [ ...]            find if packages installed
-  -d  [ ...]            display the contents of the packages'''
+  -d  [ ...]            display the contents of the packages
+
+'''
 
 
 import os
@@ -47,7 +49,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -144,10 +146,8 @@ def get_file(link, char):
     for urls in link:
         j += 1
         results.append(link[-j:])
-
         for file in results:
             if file.startswith(char):
-                file = file
                 break
 
     return file.replace(char, "").strip(' ')
@@ -166,8 +166,13 @@ def find_package(find_pkg, directory):
 
 # open url and read page
 def url_read(name):
-    f = urllib2.urlopen(name)
-    return f.read()
+    try:
+        f = urllib2.urlopen(name)
+        return f.read()
+    except urllib2.URLError:
+	print
+	print "slpkg: error: connection refused"
+	sys.exit()
 
 
 # read SBo README
