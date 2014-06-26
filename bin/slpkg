@@ -49,7 +49,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.5.3"
+__version__ = "1.5.2"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -141,16 +141,15 @@ def rmv_unused(name):
 
 # get filename from links
 def get_file(link, char):
-    j = 0
+    i = 0
     results = []
-    for urls in link:
-        j += 1
-        results.append(link[-j:])
-        for file in results:
-            if file.startswith(char):
-                break
+    for file in range(len(link)):
+        i -= 1
+        results.append(link[i])
+        if link[i] == char:
+            break
 
-    return file.replace(char, "").strip(' ')
+    return ''.join(results[::-1]).replace('/', '').strip(' ')
 
 
 # this fuction return if the package exist
