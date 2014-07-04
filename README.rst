@@ -10,9 +10,7 @@ Slpkg is a terminal tool in order to easy use Slackware packages.
 
 
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
-    :scale: 60%
-    :width: 30%
-    :align: left
+    :alt: logo
 
 
 Features
