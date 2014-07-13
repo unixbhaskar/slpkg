@@ -39,6 +39,11 @@ to a command.
 
 `[CHANGELOG] <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
 
+Video Tutorial
+==============
+
+.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
+    :target: https://asciinema.org/a/10790
 
 Installation
 ------------
