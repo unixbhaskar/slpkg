@@ -47,11 +47,11 @@ Using slackware command:
 
 .. code-block:: bash
 	
-	Download from `SlackBuilds <http://slackbuilds.org>`_
+	Download from SlackBuilds http://slackbuilds.org
 
 	or
 
-	using sbopkg tool `SBOPKG <http://www.sbopkg.org>`_
+	using sbopkg tool SBOPKG http://www.sbopkg.org
 
 Using pip:
 
