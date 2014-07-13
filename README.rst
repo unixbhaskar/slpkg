@@ -37,7 +37,7 @@ Features
 It's a quick and easy way to manage your packages in slackware
 to a command.
 
-[CHANGELOG] : https://github.com/dslackw/slpkg/blob/master/CHANGELOG
+`[CHANGELOG] <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
 
 
 Installation
@@ -47,11 +47,11 @@ Using slackware command:
 
 .. code-block:: bash
 	
-	Download from http://slackbuilds.org
+	Download from `SlackBuilds <http://slackbuilds.org>`_
 
 	or
 
-	using sbopkg tool http://www.sbopkg.org
+	using sbopkg tool `SBOPKG <http://www.sbopkg.org>`_
 
 Using pip:
 

@@ -49,7 +49,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version__ = "1.5.3"
+__version__ = "1.5.4"
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
 
@@ -187,12 +187,7 @@ def read_readme(SBo_url, name, site):
 # read SBo .info
 def read_info_slackbuild(SBo_url, name, site):
     s_user(getpass.getuser())
-    info = url_read(
-        (SBo_url +
-         name +
-         site).replace(
-            "repository",
-            "slackbuilds"))
+    info = url_read((SBo_url + name + site).replace("repository", "slackbuilds"))
 
     file = open("/tmp/slpkg/readme/" + name + site, "w")
     file.write(info)
@@ -578,21 +573,21 @@ def SBo_network(name):
             elif read == "R" or read == "r":
                 site = "README"
                 read_readme(SBo_url, name, site)
-                os.system(
-                    "less /tmp/slpkg/readme/" +
-                    name +
-                    ".{}".format(site))
+                os.system("less /tmp/slpkg/readme/{}.{}".format(name, site))
+                os.remove("/tmp/slpkg/readme/{}.{}".format(name, site))
 
             elif read == "F" or read == "f":
                 site = ".info"
                 read_info_slackbuild(SBo_url, name, site)
-                os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
+                os.system("less /tmp/slpkg/readme/{}{}".format(name, site))
+                os.remove("/tmp/slpkg/readme/{}{}".format(name, site))
 
             elif read == "S" or read == "s":
                 site = ".SlackBuild"
                 read_info_slackbuild(SBo_url, name, site)
-                os.system("less /tmp/slpkg/readme/" + name + "{}".format(site))
-
+                os.system("less /tmp/slpkg/readme/{}{}".format(name, site))
+                os.remove("/tmp/slpkg/readme/{}{}".format(name, site))
+                
             elif read == "B" or read == "b":
                 s_user(getpass.getuser())
                 script = get_file(SBo_dwn, "/")
