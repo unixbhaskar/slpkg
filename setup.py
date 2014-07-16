@@ -6,17 +6,20 @@ import sys
 import shutil
 
 from distutils.core import setup
+from slpkg import __version__, __email__, __author__
+
 
 setup(
     name='slpkg',
-    version="1.5.4",
+    packages=['slpkg'],
+    scripts=['bin/slpkg'],
+    version=__version__,
     description="Python tool to manage Slackware packages",
     keywords=["slackware", "slpkg", "upgrade", "install", "remove",
               "view", "slackpkg", "tool"],
-    author="dslackw",
-    author_email="d.zlatanidis@gmail.com",
+    author=__author__,
+    author_email=__email__,
     url="https://github.com/dslackw/slpkg",
-    scripts=['bin/slpkg'],
     package_data={"": ["LICENSE", "README.rst", "CHANGELOG"]},
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
@@ -26,7 +29,7 @@ setup(
         "Development Status :: 3 - Alpha",
         "Topic :: Intersetup.pynet :: Utilities"],
     long_description=open("README.rst").read()
-)
+    )
 
 if 'install' in sys.argv:
     man_path = "/usr/man/man8/"

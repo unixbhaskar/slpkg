@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: slpkg
-Version: 1.5.4
+Version: 1.5.5
 Author: dslackw
 Author-email: d zlatanidis at gmail com
 Maintainer: dslackw
@@ -461,7 +461,7 @@ files
         .. code-block:: bash
         
             $ man slpkg
-Classifier: Development Status :: 3 - Alpha
+Classifier: Development Status :: 5 - Alpha
 Classifier: Environment :: Console
 Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
 Classifier: Operating System :: POSIX
