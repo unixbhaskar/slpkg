@@ -5,9 +5,12 @@ import os
 import sys
 import shutil
 
-from distutils.core import setup
 from slpkg import __version__, __email__, __author__
 
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 setup(
     name='slpkg',
@@ -16,18 +19,25 @@ setup(
     version=__version__,
     description="Python tool to manage Slackware packages",
     keywords=["slackware", "slpkg", "upgrade", "install", "remove",
-              "view", "slackpkg", "tool"],
+        "view", "slackpkg", "tool", "build"],
     author=__author__,
     author_email=__email__,
     url="https://github.com/dslackw/slpkg",
     package_data={"": ["LICENSE", "README.rst", "CHANGELOG"]},
     classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: POSIX :: Linux",
+        "Operating System :: Unix",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
-        "Development Status :: 3 - Alpha",
-        "Topic :: Intersetup.pynet :: Utilities"],
+        "Programming Language :: Unix Shell",
+        "Topic :: Software Development :: Build Tools",
+        "Topic :: System :: Archiving :: Packaging",
+        "Topic :: System :: Software Distribution",
+        "Topic :: Utilities"],
     long_description=open("README.rst").read()
     )
 
