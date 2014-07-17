@@ -49,7 +49,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version_info__ = (1, 5, 6)
+__version_info__ = (1, 5, 7)
 __version__ = "{0}.{1}.{2}".format(*__version_info__)
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
@@ -161,8 +161,8 @@ def url_read(name):
         f = urllib2.urlopen(name)
         return f.read()
     except urllib2.URLError:
-	print ("\nslpkg: error: connection refused")
-	sys.exit()
+	    print ("\nslpkg: error: connection refused")
+    	sys.exit()
 
 def read_readme(SBo_url, name, site):
     '''

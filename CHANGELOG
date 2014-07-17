@@ -1,4 +1,9 @@
 17-07-2014
+Version 1.5.7
+
+[Updated] - Fix IndentationError: expected an indented block
+
+17-07-2014
 Version 1.5.6
 
 [Updated] - Added setuptools
