@@ -49,7 +49,7 @@ import subprocess
 
 
 __author__ = "dslackw"
-__version_info__ = (1, 5, 7)
+__version_info__ = (1, 5, 8)
 __version__ = "{0}.{1}.{2}".format(*__version_info__)
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
@@ -78,7 +78,7 @@ dep_links_results = []
 # SlackBuilds repository link
 SBo_url = "http://slackbuilds.org/repository/14.1/"
 
-# create repository list
+# SlackBuilds repository list
 repository = [
     'academic',
     'business',
@@ -759,7 +759,29 @@ def pkg_remove(name):
     Unistall Slackware binary packages
     '''
     s_user(getpass.getuser())
-    print ("{}!!! WARNING !!!{}".format(colors.RED, colors.ENDC))
+    pkg = []
+    for i in range(len(name)):
+        if find_package(name[i], packages) == []:
+            print ("{}The package {}`{}`{} not found{}".format(colors.CYAN, colors.ENDC,
+                    name[i], colors.CYAN, colors.ENDC))
+        else:
+            pkg.append(name[i])
+    if pkg == []:
+        sys.exit()
+    print ("These package(s) will be deleted:")
+    count = []
+    for i in range(len(name)):
+        pkg = find_package(name[i], packages)
+        if pkg != []:
+            print colors.RED + '\n'.join(pkg) + colors.ENDC
+            count.append(pkg)
+    sum_pkgs = 0
+    for i in range(len(count)):
+        sum_pkgs += len(count[i])
+    if sum_pkgs > 1:
+        print ("{} packages matching".format(sum_pkgs))
+        print ("Perhaps you need to specify the package")
+        print ("Example: slpkg -r pip-1.5.6")
     remove_pkg = raw_input("Are you sure to remove this package(s) [Y/y] ")
     if remove_pkg == "y" or remove_pkg == "Y":
         results_removed = []

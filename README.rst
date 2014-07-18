@@ -392,8 +392,9 @@ Remove package:
 .. code-block:: bash
 
 	$ slpkg -r termcolor
-	!!! WARNING !!!
-	Are you sure to remove this package(s) [y/n] y
+	These package(s) will be deleted:
+    termcolor-1.1.0-x86_64-1_SBo
+    Are you sure to remove this package(s) [y/n] y
 
 	Package: termcolor-1.1.0-x86_64-1_SBo
 		Removing... 
