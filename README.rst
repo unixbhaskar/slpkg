@@ -15,13 +15,12 @@ Slpkg is a terminal tool in order to easy use Slackware packages.
 Features
 --------
 
+- Build packages from source with all dependencies
 - Find and Download packages from slackbuilds.org
 - Automatic tool build and install packages
-- Download package with all dependencies
 - Display the contents of the packages
 - Install-upgrade Slackware packages
 - Build and install all in a command
-- Auto Download and Build packages
 - Checking for updated packages
 - List all installed packages
 - Find installed package
