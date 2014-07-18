@@ -16,8 +16,8 @@ Features
 --------
 - Find and Download packages from slackbuilds.org
 - Automatic tool build and install packages
-- Download package with all dependencies,
-- build and install all in a command
+- Download package with all dependencies
+- Build and install all in a command
 - Display the contents of the packages
 - Install-upgrade Slackware packages
 - Auto Download and Build packages
