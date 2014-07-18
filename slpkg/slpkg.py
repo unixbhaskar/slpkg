@@ -161,8 +161,8 @@ def url_read(name):
         f = urllib2.urlopen(name)
         return f.read()
     except urllib2.URLError:
-	    print ("\nslpkg: error: connection refused")
-    	sys.exit()
+        print ("\nslpkg: error: connection refused")
+        sys.exit()
 
 def read_readme(SBo_url, name, site):
     '''
