@@ -12,26 +12,21 @@ Slpkg is a terminal tool in order to easy use Slackware packages.
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :alt: logo
 
-
 Features
 --------
+- Find and Download packages from slackbuilds.org
+- Automatic tool build and install packages
 - Download package with all dependencies,
   build and install all in a command
-- Automatic tool build and install packages
-- List all installed packages
-- Τracking dependencies
-- Checking for updated packages
-- Find and Download packages from SBo repositority
-- View README file
-- View SlackBuild file
-- View Info file
-- Auto Download and Build packages
-- Install binary packages
-- Install-upgrade packages with new
-- Reinstall the same packages
-- Remove packages
-- Find installed packages
 - Display the contents of the packages
+- Install-upgrade Slackware packages
+- Auto Download and Build packages
+- Checking for updated packages
+- List all installed packages
+- Find installed package
+- Read SlackBuilds files
+- Τracking dependencies
+- Remove packages
 - No dependencies
 
 It's a quick and easy way to manage your packages in slackware
