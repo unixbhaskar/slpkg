@@ -1,4 +1,9 @@
 18-07-2014
+Version 1.5.9
+
+[Updated] - Create sub-modules
+
+18-07-2014
 Version 1.5.8
 
 [Updated] - Report packages before removed (slpkg -r)
