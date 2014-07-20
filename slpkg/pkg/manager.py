@@ -7,133 +7,129 @@ import getpass
 import subprocess
 
 from ..colors import colors
-from ..functions import s_user
+from ..messages import file_not_found, s_user, template
+from ..__metadata__ import packages, __prog__, uname, arch
 
 from find import find_package
 
-packages = "/var/log/packages/"
-
-def pkg_install(name):
+def pkg_install(binary):
     '''
     Install Slackware binary packages
     '''
     s_user(getpass.getuser())
-    for i in range(len(name)):
+    for pkg in range(len(binary)):
         try:
-            print subprocess.check_output('installpkg %s' % name[i], shell=True)
+            print subprocess.check_output('installpkg {0}'.format(binary[pkg]), shell=True)
         except subprocess.CalledProcessError:
-            print ("\n{}Cannot install {}`{}`{} file not found\n{}".format(colors.RED,
-                    colors.CYAN, name[i], colors.RED, colors.ENDC))
+            file_not_found(binary[pkg])
 
-def pkg_upgrade(name):
+def pkg_upgrade(binary):
     '''
     Upgrade Slackware binary packages
     '''
     s_user(getpass.getuser())
-    for i in range(len(name)):
+    for pkg in range(len(binary)):
         try:
-            print subprocess.check_output('upgradepkg --install-new %s' % name[i], shell=True)
+            print subprocess.check_output('upgradepkg --install-new {0}'.format(binary[pkg]),
+                                           shell=True)
         except subprocess.CalledProcessError:
-            print ("\n{}Cannot install {}`{}`{} file not found\n{}".format(colors.RED,
-                    colors.CYAN, name[i], colors.RED, colors.ENDC))
+            file_not_found(binary[pkg])
 
-def pkg_reinstall(name):
+def pkg_reinstall(binary):
     '''
     Reinstall Slackware binary packages
     '''
     s_user(getpass.getuser())
-    for i in range(len(name)):
+    for pkg in range(len(binary)):
         try:
-            print subprocess.check_output('upgradepkg --reinstall %s' % name[i], shell=True)
+            print subprocess.check_output('upgradepkg --reinstall {0}'.format(binary[pkg]),
+                                           shell=True)
         except subprocess.CalledProcessError:
-            print ("\n{}Cannot install {}`{}`{} file not found\n{}".format(colors.RED,
-                    colors.CYAN, name[i], colors.RED, colors.ENDC))
+            file_not_found(binary[pkg])
 
-def pkg_remove(name):
+def pkg_remove(binary):
     '''
     Unistall Slackware binary packages
     '''
     s_user(getpass.getuser())
-    pkg = []
-    for i in range(len(name)):
-        if find_package(name[i], packages) == []:
-            print ("{}The package {}`{}`{} not found{}".format(colors.CYAN, colors.ENDC,
-                    name[i], colors.CYAN, colors.ENDC))
+    pkgs = []
+    for pkg in range(len(binary)):
+        if find_package(binary[pkg], packages) == []:
+             file_not_found(binary[pkg])
         else:
-            pkg.append(name[i])
-    if pkg == []:
+            pkgs.append(binary[pkg])
+    if pkgs == []:
         sys.exit()
     print ("These package(s) will be deleted:")
     count = []
-    for i in range(len(name)):
-        pkg = find_package(name[i], packages)
-        if pkg != []:
-            print colors.RED + '\n'.join(pkg) + colors.ENDC
-            count.append(pkg)
+    for pkg in range(len(binary)):
+        pkgs = find_package(binary[pkg], packages)
+        if pkgs != []:
+            print colors.RED + '\n'.join(pkgs) + colors.ENDC
+            count.append(pkgs)
     sum_pkgs = 0
     for i in range(len(count)):
         sum_pkgs += len(count[i])
-    if sum_pkgs > 1:
-        print ("{} packages matching".format(sum_pkgs))
-        print ("Perhaps you need to specify the package")
-        print ("Example: slpkg -r pip-1.5.6")
+    print ("{0}{1} package marked{2}".format(colors.GREEN, sum_pkgs, colors.ENDC))
     remove_pkg = raw_input("Are you sure to remove this package(s) [Y/y] ")
     if remove_pkg == "y" or remove_pkg == "Y":
         results_removed = []
         not_found = []
-        for i in range(len(name)):
-            if find_package(name[i], packages) == []:
-                not_found.append(name[i])
+        for pkg in range(len(binary)):
+            if find_package(binary[pkg], packages) == []:
+                not_found.append(binary[pkg])
             else:
-                os.system("removepkg {}".format(name[i]))
-                results_removed.append(name[i])
-        print
+                try:
+                    print subprocess.check_output('removepkg {0}'.format(binary[pkg]),
+                                               shell=True)
+                except subprocess.CalledProcessError:
+                    file_not_found(binary[pkg])
+                results_removed.append(binary[pkg])
+        template(78)
         for file in results_removed:
             if find_package(file, packages) == []:
-                print ("{}The package {}`{}`{} removed{}".format(colors.YELLOW,
-                        colors.CYAN, file,colors.YELLOW, colors.ENDC))
+                print ("| {0}: package: {1} removed".format(__prog__, file))
         for file in not_found:
-            print ("{}The package {}`{}`{} not found{}".format(colors.RED, colors.CYAN,
-                    file, colors.RED, colors.ENDC))
-    print
+            print ("| {0}: package: {1} not found".format(__prog__, file))
+        template(78)
+        print
 
-def pkg_find(name):
+def pkg_find(binary):
     '''
     Find installed Slackware packages
     '''
     print
-    for i in range(len(name)):
-        if find_package(name[i], packages) == []:
-            print ("{}The package {}`{}`{} not found{}".format(colors.RED, colors.CYAN,
-                    name[i], colors.RED, colors.ENDC))
+    for pkg in range(len(binary)):
+        if find_package(binary[pkg], packages) == []:
+            print ("{0}: package: {1} not found".format(__prog__, binary[pkg]))
         else:
-            print (colors.GREEN + "found --> " + colors.ENDC + "\n".join(find_package(
-                   name[i], packages)))
+            found_pkg = find_package(binary[pkg], packages)
+            sbo_tag_len = len(arch) + 7
+            found_pkg = found_pkg[0][:-sbo_tag_len]
+            print (__prog__ + ": package: " + colors.GREEN + "found --> " + colors.ENDC + found_pkg)
     print
 
-def pkg_display(name):
+def pkg_display(binary):
     '''
     Print the Slackware packages contents
     '''
-    print
-    for i in range(len(name)):
-        if find_package(name[i], packages) == []:
-            print ("{}The package {}`{}`{} not found{}".format(colors.RED, colors.CYAN,
-                    name[i], colors.RED, colors.ENDC))
+    for pkg in range(len(binary)):
+        if find_package(binary[pkg], packages) == []:
+            file_not_found(binary[pkg])
         else:
-            os.system("cat {}{}".format(packages, "\n".join(find_package(name[i], packages))))
-    print
+            print subprocess.check_output("cat {0}{1}".format(packages,
+                  "\n".join(find_package(binary[pkg], packages))), shell=True)
 
-def pkg_list(name):
+def pkg_list(binary):
     '''
     List with the installed packages
     '''
-    if "all" in name:
+    if "all" in binary:
         print
         os.chdir(packages)
         os.system("ls * | more")
         print
-    if "sbo" in name:
+    if "sbo" in binary:
         print
         os.chdir(packages)
         os.system("ls * | grep 'SBo' | more")

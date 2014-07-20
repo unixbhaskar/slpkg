@@ -2,11 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-
 from ..url_read import url_read
-
-uname = os.uname()
-arch = (uname[4])
+from ..__metadata__ import uname, arch
 
 def sbo_source_dwn(sbo_url, name):
     '''

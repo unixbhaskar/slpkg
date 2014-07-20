@@ -41,15 +41,15 @@ import argparse
 from version import *
 from functions import *
 from colors import colors
+from __metadata__ import __prog__
 
 from pkg.build import *
 from pkg.manager import *
 
-from sbo.build import *
+from sbo.slackbuild import *
 from sbo.dependency import *
 from sbo.check import sbo_check
 from sbo.views import sbo_network
-
 
 def pkg_slackbuild(name):
     '''
@@ -61,8 +61,8 @@ def pkg_slackbuild(name):
     elif len(name) > 2:
         build_extra_pkg(name[0], name[1], name[2:])
     else:
-        print ("\n{}Must enter at least two arguments{}\n".format(
-                colors.RED, colors.ENDC))
+        print ("\n{0}: error: must enter at least two arguments\n".format(
+                __prog__))
 
 def main():
     description = "Utility to help package management in Slackware"

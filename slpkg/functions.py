@@ -3,17 +3,6 @@
 
 import sys
 
-from colors import colors
-
-def s_user(user):
-    '''
-    Check for root user
-    '''
-    if user != "root":
-        print ("\n{}Must have {}`root`{} privileges ...{}\n".format(
-                colors.RED, colors.GREEN, colors.RED, colors.ENDC))
-        sys.exit()
-
 def rmv_unused(name):
     '''
     Remove unused chars

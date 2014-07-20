@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from ..colors import colors
+from ..__metadata__ import __prog__
+from ..messages import pkg_not_found, template
 
 from greps import *
 from search import sbo_search_pkg
@@ -17,9 +19,7 @@ def sbo_dependencies_pkg(name):
     if name != "%README%":
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-            print ("\n\n{}The {}'{}'{} not found{}\n".format(
-                    colors.RED, colors.CYAN, name, colors.RED,
-                    colors.ENDC))
+            pkg_not_found(name)
         else:
             sbo_req = sbo_requires_pkg(sbo_url, name)
             dependencies = sbo_req.split()
@@ -37,9 +37,7 @@ def sbo_dependencies_links_pkg(name):
     if name != "%README%":
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-            print ("\n\n{}The {}`{}`{} not found{}\n".format(
-                    colors.RED, colors.CYAN, name, colors.RED,
-                    colors.ENDC))
+             pkg_not_found(name)
         else:
             version = ("@" + sbo_version_pkg(sbo_url, name)).split()
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name).split()
@@ -68,17 +66,18 @@ def pkg_tracking(name):
     if dependencies is None:
         pass
     elif dependencies == []:
-        print ("\n\n{}No dependencies\n{}".format(colors.GREEN, colors.ENDC))
+        print ("\n\n{0}: package: {1} no dependencies\n".format( __prog__, name))
     else:
         pkg_len = len(name) + 18
-        print ("\n\n+" + "=" * pkg_len)
-        print ("| {}`{}` {}dependencies :{}".format(colors.CYAN, name,
-                                                    colors.YELLOW, colors.ENDC))
-        print ("+" + "=" * pkg_len)
+        print ("\n")
+        template(pkg_len)
+        print ("| {0}`{1}`{2} dependencies :{3}".format(colors.CYAN, name,
+                                              colors.YELLOW, colors.ENDC))
+        template(pkg_len)
         dependencies.reverse()
         print (" |")
         for i in range(len(dependencies)):
-            found = " --", str(len(dependencies[i])), " ".join(dependencies[i])
+            found = " +--", str(len(dependencies[i])), ", ".join(dependencies[i])
             print (" |")
             print " ".join(found)
         print

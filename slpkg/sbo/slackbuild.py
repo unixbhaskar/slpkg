@@ -2,23 +2,20 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import getpass
 
-from ..pkg.build import *
 from ..colors import colors
+from ..functions import get_file
+from ..__metadata__ import tmp, packages, __prog__
+from ..__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from ..messages import s_user, pkg_found, pkg_installed, template
+
+from ..pkg.build import *
 from ..pkg.find import find_package
-from ..functions import s_user, get_file
+from ..pkg.manager import pkg_upgrade
 
 from dependency import sbo_dependencies_links_pkg
-
-tmp = "/tmp/"
-packages = "/var/log/packages/"
-
-# SBo fietype binary packages
-sbo_arch = "*"
-sbo_tag = "?_SBo"
-sbo_filetype = ".tgz"
-
 
 def sbo_build(name):
     '''
@@ -106,16 +103,17 @@ def sbo_build(name):
     download links if not exist or previously than server
     '''
     for link in dwn_link:
-        print ("\n{}Start --> \n{}".format(colors.GREEN, colors.ENDC))
-        os.system("wget -N {}".format(link))
+        print ("\n{0} Start --> \n{1}".format(colors.GREEN, colors.ENDC))
+        os.system("wget -N %s" % link)
     print ("\n")
     '''
     build packages and install slackware packages
     '''
+    template(78)
     if pkg_for_install == []:
         for pkg in filename_version:
-            print ("{}The package {}`{}`{} is already installed{}".format(colors.YELLOW,
-                    colors.CYAN, pkg, colors.YELLOW, colors.ENDC))
+            pkg_found(pkg)
+        template(78)
     else:
         '''
         check for extra sources
@@ -129,15 +127,15 @@ def sbo_build(name):
                     source = files[1]
                     extra = files[2:]
                     build_extra_pkg(script, source, extra)
-                    install_pkg = tmp + pkg_for_install[i] + sbo_arch + sbo_tag + sbo_filetype
-                    os.system("upgradepkg --install-new {}".format(install_pkg))
+                    binary = (tmp + pkg_for_install[i] + sbo_arch + sbo_tag + sbo_filetype).split()
+                    pkg_upgrade(binary)
                     break
                 else:
                     script = files[0]
                     source = files[1]
                     build_package(script, source)
-                    install_pkg = tmp + pkg_for_install[i] + sbo_arch + sbo_tag + sbo_filetype
-                    os.system("upgradepkg --install-new {}".format(install_pkg))
+                    binary = (tmp + pkg_for_install[i] + sbo_arch + sbo_tag + sbo_filetype).split()
+                    pkg_upgrade(binary)
                     for j in range(0, 2):
                         files.pop(0)
         else:
@@ -146,16 +144,16 @@ def sbo_build(name):
                 script = files[0]
                 source = files[1]
                 build_package(script, source)
-                install_pkg = tmp + pkg_for_install[i] + sbo_arch + sbo_tag + sbo_filetype
-                os.system("upgradepkg --install-new {}".format(install_pkg))
+                binary = (tmp + pkg_for_install[i] + sbo_arch + sbo_tag + sbo_filetype).split()
+                pkg_upgrade(binary)
                 for j in range(0, 2):
                     files.pop(0)
+        template(78)
         for pkg in pkg_for_install:
             if find_package(pkg, packages) != []:
-                print ("{}The package {}`{}`{} was installed{}".format(colors.GREEN,colors.CYAN,
-                        pkg, colors.GREEN, colors.ENDC))
+                pkg_installed(pkg)
         for pkg in pkg_already_installed:
             if find_package(pkg, packages) != []:
-                print ("{}The package {}`{}`{} is arlready installed{}".format(colors.YELLOW,
-                        colors.CYAN, pkg, colors.YELLOW, colors.ENDC))
+                pkg_found(pkg)
+        template(78)
     print

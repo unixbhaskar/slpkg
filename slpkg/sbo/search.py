@@ -9,7 +9,6 @@ from ..functions import rmv_unused
 
 from repository import repository
 
-
 def sbo_search_pkg(name):
     '''
     Find SlackBuilds packages links from repository slackbuilds.org

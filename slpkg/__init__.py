@@ -2,4 +2,4 @@
 # -*- coding: utf-8 -*-
 
 from main import *
-from version import __author__, __version__, __license__, __email__
+from __metadata__ import __author__, __version__, __license__, __email__

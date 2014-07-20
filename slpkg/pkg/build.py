@@ -6,6 +6,8 @@ import shutil
 import tarfile
 import subprocess
 
+from ..messages import file_not_found
+
 def build_extra_pkg(script, source, extra):
     '''
     Build package with extra source
@@ -20,10 +22,9 @@ def build_extra_pkg(script, source, extra):
         for es in extra:
             shutil.copy2(es, pkg_name)
         os.chdir(path + pkg_name)
-        os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
+        os.system("sh {0}{1}{2}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
     except (OSError, IOError):
-        print ("\n{}Wrong file name, Please try again...{}\n".format(
-                colors.RED, colors.ENDC))
+        file_not_found(file='')
 
 def build_package(script, source):
     '''
@@ -37,9 +38,7 @@ def build_package(script, source):
         tar.close()
         shutil.copy2(source, pkg_name)
         os.chdir(path + pkg_name)
-        os.system("sh {}{}{}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
+        os.system("sh {0}{1}{2}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
         os.chdir(path)
     except (OSError, IOError):
-        print ("\n{}Wrong file name, Please try again...{}\n".format(
-                colors.RED, colors.ENDC))
-
+        file_not_found(file='')

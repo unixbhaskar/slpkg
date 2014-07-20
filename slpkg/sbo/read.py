@@ -4,7 +4,7 @@
 import os
 import getpass
 
-from ..functions import s_user
+from ..messages import s_user
 from ..url_read import url_read
 
 # create tmp directory

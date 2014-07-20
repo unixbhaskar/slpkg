@@ -1,3 +1,10 @@
+21-07-2014
+Version 1.6.0
+
+[Updated] - Fix remove package (slpkg -r)
+            Added and fix messages
+            Create __metadata__
+
 18-07-2014
 Version 1.5.9
 
