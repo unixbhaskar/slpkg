@@ -65,7 +65,9 @@ def pkg_remove(binary):
     for pkg in range(len(binary)):
         pkgs = find_package(binary[pkg], packages)
         if pkgs != []:
-            print colors.RED + '\n'.join(pkgs) + colors.ENDC
+            sbo_tag_len = len(arch) + 7
+            found_pkg = pkgs[0][:-sbo_tag_len]
+            print (colors.RED + found_pkg + colors.ENDC)
             count.append(pkgs)
     sum_pkgs = 0
     for i in range(len(count)):
@@ -81,7 +83,7 @@ def pkg_remove(binary):
             else:
                 try:
                     print subprocess.check_output('removepkg {0}'.format(binary[pkg]),
-                                               shell=True)
+                                                   shell=True)
                 except subprocess.CalledProcessError:
                     file_not_found(binary[pkg])
                 results_removed.append(binary[pkg])

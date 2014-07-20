@@ -5,9 +5,7 @@
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 
-
 Slpkg is a terminal tool in order to easy use Slackware packages.
-
 
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :alt: logo
@@ -62,8 +60,6 @@ Using pip:
 	uninstall:
 
 	$ pip uninstall slpkg
-
-
 
 Command Line Tool Usage
 -----------------------
@@ -130,12 +126,12 @@ build and install with all dependencies :
 	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
 	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 	
-	The package `orc` was installed
-	The package `gstreamer1` was installed
-	The package `gst1-plugins-base` was installed
-	The package `gst1-plugins-bad` was installed
-	The package `libunique` was installed
-	The package `brasero` was installed
+	slpkg: package: orc was installed
+	slpkg: package: gstreamer1 installed
+	slpkg: package: gst1-plugins-base installed
+	slpkg: package: gst1-plugins-bad installed
+	slpkg: package: libunique installed
+	slpkg: package: brasero installed
 
 
 Tracking all dependencies of packages:
@@ -145,7 +141,7 @@ Tracking all dependencies of packages:
 	$ slpkg -t brasero
 
 	+=========================
-	| brasero dependencies :
+	| brasero dependencies   :
 	+=========================
 	 |
 	 |
@@ -165,10 +161,10 @@ Check if your packages is up to date (www.slackbuilds.org):
 	$ slpkg -c flashplayer-plugin
 	Searching `flashplayer-plugin` from slackbuilds.org ...
 
-	New version is available !!!
-	+==================================================
-	| flashplayer-plugin 11.2.202.356
-	+==================================================
+	New version is available:
+    +==============================================================================
+    | slpkg: package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
+    +==============================================================================
 
 	Would you like to install ? [Y/y]
 
@@ -192,14 +188,14 @@ Find slackbuild from network (www.slackbuilds.org):
 	$ slpkg -n bitfighter
 	Searching `bitfighter` from slackbuilds.org ...
 
-	+=======================================================================================
+	+===============================================================================
 	| The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
-	+=======================================================================================
+	+===============================================================================
 	| Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
 	| Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
 	| Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
 	| Package requirements : OpenAL SDL2 speex libmodplug
-	+=======================================================================================
+	+===============================================================================
          README               View the README file
 	 SlackBuild           View the SlackBuild file
 	 Info                 View the Info file
@@ -286,9 +282,6 @@ Auto build tool to build package:
 
 	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
-	Use `slpkg -u` to install - upgrade this package
-	
-
 Upgrade install package:
 
 .. code-block:: bash
@@ -328,13 +321,12 @@ Find if your packages installed:
 
 	$ slpkg -f termcolor lua yetris you-get rar pip
 
-	found --> termcolor-1.1.0-x86_64-1_SBo
-	The package `lua` not found
-	found --> yetris-2.0.1-x86_64-1_SBo
-	The package `you-get` not found
-	found --> rar-5.0.1-x86_64-1_SBo
-	found --> pip-1.5.4-x86_64-1_SBo
-
+	slpkg: package: found --> termcolor-1.1.0
+	slpkg: package: lua not found
+	slpkg: package: found --> yetris-2.0.1
+	slpkg: package: you-get not found
+	slpkg: package: found --> rar-5.0.1
+	slpkg: package: found --> pip-1.5.4
 
 Display the contents of the package:
 
@@ -391,6 +383,7 @@ Remove package:
 	$ slpkg -r termcolor
         These package(s) will be deleted:
         termcolor-1.1.0-x86_64-1_SBo
+        1 package marked
         Are you sure to remove this package(s) [y/n] y
 
 	Package: termcolor-1.1.0-x86_64-1_SBo
@@ -414,15 +407,15 @@ Remove package:
 	WARNING: Unique directory /usr/lib64/python3.3/ contains new files
 	  --> Deleting empty directory /usr/doc/termcolor-1.1.0/
 
-	The package `termcolor` removed
-
+	+==============================================================================
+    | slpkg: package: termcolor removed
+    +==============================================================================
 
 	$ slpkg -f termcolor lua rar
 
-	The package `termcolor` not found
-	The package `lua` not found
-	found --> rar-5.0.1-x86_64-1_SBo
-
+	slpkg: package: termcolor not found
+	slpkg: package: lua not found
+	slpkg: package: found --> rar-5.0.1
 
 	$ slpkg -v
 	Version: x.x.x
