@@ -373,7 +373,7 @@ Display the contents of the package:
 	install/
 	install/slack-desc
 	
-	The package `lua` not found
+	slpkg: package: lua not found
 
 Remove package:
 
