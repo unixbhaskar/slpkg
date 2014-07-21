@@ -157,30 +157,29 @@ Check if your packages is up to date (www.slackbuilds.org):
 
 .. code-block:: bash
 
+    $ slpkg -c flashplayer-plugin
+    Searching `flashplayer-plugin` from slackbuilds.org ...
 
-	$ slpkg -c flashplayer-plugin
-	Searching `flashplayer-plugin` from slackbuilds.org ...
-
-	New version is available:
+    New version is available:
     +==============================================================================
     | slpkg: package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
     +==============================================================================
 
-	Would you like to install ? [Y/y]
+    Would you like to install ? [Y/y]
 
 
-	$ slpkg -c ranger
-	Searching `ranger` from slackbuilds.org ...
+    $ slpkg -c ranger
+    Searching `ranger` from slackbuilds.org ...
 
-	Your package is up to date
-
-
-	$ slpkg -c termcolor
-
-	The package `termcolor` not found on your system
+    Your package is up to date
 
 
-Find slackbuild from network (www.slackbuilds.org):
+    $ slpkg -c termcolor
+
+    The package `termcolor` not found on your system
+
+
+    Find slackbuild from network (www.slackbuilds.org):
 
 .. code-block:: bash
 
@@ -380,38 +379,38 @@ Remove package:
 
 .. code-block:: bash
 
-	$ slpkg -r termcolor
-        These package(s) will be deleted:
-        termcolor-1.1.0-x86_64-1_SBo
-        1 package marked
-        Are you sure to remove this package(s) [y/n] y
+    $ slpkg -r termcolor
+    These package(s) will be deleted:
+    termcolor-1.1.0-x86_64-1_SBo
+    1 package marked
+    Are you sure to remove this package(s) [y/n] y
 
-	Package: termcolor-1.1.0-x86_64-1_SBo
-		Removing... 
+    Package: termcolor-1.1.0-x86_64-1_SBo
+        Removing... 
 
-	Removing package /var/log/packages/termcolor-1.1.0-x86_64-1_SBo...
-	Removing files:
-	  --> Deleting /usr/doc/termcolor-1.1.0/CHANGES.rst
-	  --> Deleting /usr/doc/termcolor-1.1.0/COPYING.txt
-	  --> Deleting /usr/doc/termcolor-1.1.0/PKG-INFO
-	  --> Deleting /usr/doc/termcolor-1.1.0/README.rst
-	  --> Deleting /usr/doc/termcolor-1.1.0/termcolor.SlackBuild
-	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
-	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor.py
-	  --> Deleting /usr/lib64/python2.7/site-packages/termcolor.pyc
-	  --> Deleting /usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
-	  --> Deleting /usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
-	  --> Deleting /usr/lib64/python3.3/site-packages/termcolor.py
-	  --> Deleting empty directory /usr/lib64/python3.3/site-packages/__pycache__/
-	WARNING: Unique directory /usr/lib64/python3.3/site-packages/ contains new files
-	WARNING: Unique directory /usr/lib64/python3.3/ contains new files
-	  --> Deleting empty directory /usr/doc/termcolor-1.1.0/
+    Removing package /var/log/packages/termcolor-1.1.0-x86_64-1_SBo...
+        Removing files:
+    --> Deleting /usr/doc/termcolor-1.1.0/CHANGES.rst
+    --> Deleting /usr/doc/termcolor-1.1.0/COPYING.txt
+    --> Deleting /usr/doc/termcolor-1.1.0/PKG-INFO
+    --> Deleting /usr/doc/termcolor-1.1.0/README.rst
+    --> Deleting /usr/doc/termcolor-1.1.0/termcolor.SlackBuild
+    --> Deleting /usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+    --> Deleting /usr/lib64/python2.7/site-packages/termcolor.py
+    --> Deleting /usr/lib64/python2.7/site-packages/termcolor.pyc
+    --> Deleting /usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
+    --> Deleting /usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
+    --> Deleting /usr/lib64/python3.3/site-packages/termcolor.py
+    --> Deleting empty directory /usr/lib64/python3.3/site-packages/__pycache__/
+    WARNING: Unique directory /usr/lib64/python3.3/site-packages/ contains new files
+    WARNING: Unique directory /usr/lib64/python3.3/ contains new files
+    --> Deleting empty directory /usr/doc/termcolor-1.1.0/
 
-	+==============================================================================
+    +==============================================================================
     | slpkg: package: termcolor removed
     +==============================================================================
 
-	$ slpkg -f termcolor lua rar
+    $ slpkg -f termcolor lua rar
 
 	slpkg: package: termcolor not found
 	slpkg: package: lua not found
