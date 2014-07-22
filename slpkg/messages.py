@@ -5,41 +5,35 @@ import sys
 from colors import colors
 from __metadata__ import __prog__
 
-def file_not_found(file):
-    '''
-    Print message when binary file not found
-    '''
-    print ("\n{0}: can't find {1}: No such file or directrory\n".format(__prog__, file))
-
-def pkg_not_found(pkg):
+def pkg_not_found(pkg, message):
     '''
     Print message when package not found
     '''
-    print ("\n\n{0}: can't find {1}: from slackbuilds.org\n".format(__prog__, pkg))
+    print ("\n{0}: No such package {1}: {2}\n".format(__prog__, pkg, message))
 
 def pkg_found(pkg):
     '''
     Print message when package found
     '''
-    print ("| {0}: package: {1} is already installed".format(__prog__, pkg))
+    print ("| {0}: package {1} is already installed".format(__prog__, pkg))
 
 def pkg_installed(pkg):
     '''
     Print message when package installed
     '''
-    print ("| {0}: package: {1} installed".format(__prog__, pkg))
+    print ("| {0}: package {1} installed".format(__prog__, pkg))
 
 def s_user(user):
     '''
     Check for root user
     '''
     if user != "root":
-        print ("\n{0}: error: must have root privileges\n".format(__prog__))
+        print ("{0}: error: must have root privileges".format(__prog__))
         sys.exit()
 
 def template(max):
     '''
-    Print massage tamplate
+    Print view template
     '''
     print ("+" + "=" * max)
 

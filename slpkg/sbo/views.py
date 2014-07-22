@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 
 
-from ..colors import colors
-from ..functions import get_file
-from ..__metadata__ import tmp, packages
-from ..__metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from ..messages import s_user, pkg_not_found, pkg_found, view_sbo, template
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.__metadata__ import tmp, packages
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from slpkg.messages import s_user, pkg_not_found, pkg_found, view_sbo, template
 
-from ..pkg.build import *
-from ..pkg.find import find_package
-from ..pkg.manager import pkg_upgrade
+from slpkg.pkg.build import *
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from read import *
 from greps import *
@@ -24,7 +24,7 @@ def sbo_network(name):
     '''
     sbo_url = sbo_search_pkg(name)
     if sbo_url is None:
-        pkg_not_found(name)
+        pkg_not_found(name, message="Can't find")
     else:
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
@@ -98,7 +98,7 @@ def sbo_network(name):
                     break
                 else:
                     template(78)
-                    pkg_found(name)
+                    pkg_found(''.join(find_package(name, packages)))
                     template(78)
                     break
             else:

@@ -90,8 +90,6 @@ Command Line Tool Usage
 	  -f  [ ...]            find if packages installed
 	  -d  [ ...]            display the contents of the packages
 
-
-
 Slpkg Examples
 --------------
 
@@ -126,12 +124,12 @@ build and install with all dependencies :
 	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
 	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 	
-	slpkg: package: orc was installed
-	slpkg: package: gstreamer1 installed
-	slpkg: package: gst1-plugins-base installed
-	slpkg: package: gst1-plugins-bad installed
-	slpkg: package: libunique installed
-	slpkg: package: brasero installed
+	slpkg: package orc was installed
+	slpkg: package gstreamer1 installed
+	slpkg: package gst1-plugins-base installed
+	slpkg: package gst1-plugins-bad installed
+	slpkg: package libunique installed
+	slpkg: package brasero installed
 
 
 Tracking all dependencies of packages:
@@ -167,22 +165,19 @@ Check if your packages is up to date (www.slackbuilds.org):
 
     Would you like to install ? [Y/y]
 
-
     $ slpkg -c ranger
     Searching `ranger` from slackbuilds.org ...
 
-    Your package is up to date
+    slpkg: package ranger is up to date
 
 
     $ slpkg -c termcolor
 
-    The package `termcolor` not found on your system
+    slpkg: No such package termcolor: Can't find
 
-
-    Find slackbuild from network (www.slackbuilds.org):
+Find slackbuild from slackbuilds.org:
 
 .. code-block:: bash
-
 
 	$ slpkg -n bitfighter
 	Searching `bitfighter` from slackbuilds.org ...
@@ -204,12 +199,9 @@ Check if your packages is up to date (www.slackbuilds.org):
 
         _
 
-
 Auto build tool to build package:
 
 .. code-block:: bash
-
-
 
 	Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
 	must be in the same directory.
@@ -302,7 +294,6 @@ Upgrade install package:
 	#
 	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
 
-
 Of course you can install mass-packages:
 
 .. code-block:: bash
@@ -313,19 +304,21 @@ Of course you can install mass-packages:
 
 	$ slpkg -i *.t?z
 
-
 Find if your packages installed:
 
 .. code-block:: bash
 
 	$ slpkg -f termcolor lua yetris you-get rar pip
+	found --> termcolor-1.1.0-x86_64-1_SBo
 
-	slpkg: package: found --> termcolor-1.1.0
-	slpkg: package: lua not found
-	slpkg: package: found --> yetris-2.0.1
-	slpkg: package: you-get not found
-	slpkg: package: found --> rar-5.0.1
-	slpkg: package: found --> pip-1.5.4
+	slpkg: No such package lua: Can't find
+
+	found --> yetris-2.0.1-x86_64-1_SBo
+
+	slpkg: No such package you-get: Can't find
+
+	found --> rar-5.0.1-x86_64-1_SBo
+	found --> pip-1.5.4-x86_64-1_SBo
 
 Display the contents of the package:
 
@@ -373,17 +366,17 @@ Display the contents of the package:
 	install/
 	install/slack-desc
 	
-	slpkg: package: lua not found
+	slpkg: No such package lua: Can't find
 
 Remove package:
 
 .. code-block:: bash
 
     $ slpkg -r termcolor
-    These package(s) will be deleted:
-    termcolor-1.1.0
-    1 package marked
-    Are you sure to remove this package(s) [y/n] y
+
+    delete --> termcolor-1.1.0-x86_64-1_SBo
+
+    Are you sure to remove 1 package(s) [Y/y] y
 
     Package: termcolor-1.1.0-x86_64-1_SBo
         Removing... 
@@ -412,9 +405,9 @@ Remove package:
 
     $ slpkg -f termcolor lua rar
 
-	slpkg: package: termcolor not found
-	slpkg: package: lua not found
-	slpkg: package: found --> rar-5.0.1
+	slpkg: No such package termcolor: Can't find
+	slpkg: No such package lua: Can't find
+	found --> rar-5.0.1-x86_64-1_SBo
 
 	$ slpkg -v
 	Version: x.x.x
@@ -426,3 +419,4 @@ Man page it is available for full support:
 .. code-block:: bash
 
 	$ man slpkg
+

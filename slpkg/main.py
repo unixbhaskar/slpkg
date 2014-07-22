@@ -51,18 +51,6 @@ from sbo.dependency import *
 from sbo.check import sbo_check
 from sbo.views import sbo_network
 
-def pkg_slackbuild(name):
-    '''
-    Select build package for build with extra source or not
-    '''
-    s_user(getpass.getuser())
-    if len(name) == 2:
-        build_package(name[0], name[1])
-    elif len(name) > 2:
-        build_extra_pkg(name[0], name[1], name[2:])
-    else:
-        print ("\n{0}: error: must enter at least two arguments\n".format(
-                __prog__))
 
 def main():
     description = "Utility to help package management in Slackware"
@@ -97,7 +85,14 @@ def main():
     if args.verbose:
         pkg_version()
     if args.a:
-        pkg_slackbuild(args.a)
+        s_user(getpass.getuser())
+        if len(args.a) == 2:
+            build_package(args.a[0], args.a[1])
+        elif len(args.a) > 2:
+            build_extra_pkg(args.a[0], args.a[1], args.a[2:])
+        else:
+            print ("\n{0}: error: must enter at least two arguments\n".format(
+                    __prog__))
     if args.l:
         pkg_list(args.l)
     if args.t:

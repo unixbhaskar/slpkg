@@ -5,15 +5,15 @@ import os
 import sys
 import getpass
 
-from ..colors import colors
-from ..functions import get_file
-from ..__metadata__ import tmp, packages, __prog__
-from ..__metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from ..messages import s_user, pkg_found, pkg_installed, template
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.__metadata__ import tmp, packages, __prog__
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from slpkg.messages import s_user, pkg_found, pkg_installed, template
 
-from ..pkg.build import *
-from ..pkg.find import find_package
-from ..pkg.manager import pkg_upgrade
+from slpkg.pkg.build import *
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from dependency import sbo_dependencies_links_pkg
 
@@ -35,7 +35,7 @@ def sbo_build(name):
             for j in range(len(dependencies_links[i])):
                 results.append(dependencies_links[i][j])
     '''
-    grep only links from list
+    grep http links from list
     '''
     dwn_link = []
     for link in results:
@@ -44,7 +44,7 @@ def sbo_build(name):
         if link.startswith('ftp'):
             dwn_link.append(link)
     '''
-    grep the version
+    grep package version
     '''
     version = []
     for ver in results:
@@ -74,7 +74,7 @@ def sbo_build(name):
             filename.append(file)
             y += 2
     '''
-    link sbo filename with version to create package installation
+    create package installation package + version
     '''
     filename_version = []
     for i in range(len(filename)):
@@ -156,4 +156,4 @@ def sbo_build(name):
             if find_package(pkg, packages) != []:
                 pkg_found(pkg)
         template(78)
-    print
+    print # new line at end

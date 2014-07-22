@@ -4,15 +4,15 @@
 import os
 import getpass
 
-from ..pkg.build import *
-from ..pkg.find import find_package
-from ..pkg.manager import pkg_upgrade
+from slpkg.pkg.build import *
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
-from ..colors import colors
-from ..functions import get_file
-from ..__metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from ..__metadata__ import __prog__, tmp, packages, uname, arch
-from ..messages import file_not_found, pkg_not_found, s_user, template
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.messages import pkg_not_found, s_user, template
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from slpkg.__metadata__ import __prog__, tmp, packages, uname, arch
 
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
@@ -24,11 +24,11 @@ def sbo_check(name):
     '''
     sbo_file = " ".join(find_package(name, packages))
     if sbo_file == "":
-        file_not_found(name)
+        pkg_not_found(name, message="Can't find")
     else:
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-            pkg_not_found(name)
+            pkg_not_found(name, message="Can't find")
         else:
             sbo_version = sbo_version_pkg(sbo_url, name)
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
@@ -59,7 +59,8 @@ def sbo_check(name):
                         for link in extra_dwn:
                             extra.append(get_file(link, "/"))
                             build_extra_pkg(script, source, extra)
-                            binary = (tmp + pkg_for_install + sbo_arch + sbo_tag + sbo_filetype).split()
+                            binary = (tmp + pkg_for_install + sbo_arch + sbo_tag + \
+                                      sbo_filetype).split()
                             pkg_upgrade(binary)
                             sys.exit()
                     build_package(script, source)
@@ -67,4 +68,5 @@ def sbo_check(name):
                     pkg_upgrade(binary)
                 print
             else:
-                print ("\n\n{0}: package: {1} is up to date\n".format(__prog__, name))
+                print ("\n\n{0}: package {1} is up to date\n".format(__prog__,
+                    "".join(find_package(name, packages))))

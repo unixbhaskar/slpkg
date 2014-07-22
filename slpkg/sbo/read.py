@@ -4,8 +4,8 @@
 import os
 import getpass
 
-from ..messages import s_user
-from ..url_read import url_read
+from slpkg.messages import s_user
+from slpkg.url_read import url_read
 
 # create tmp directory
 os.system("mkdir -p /tmp/slpkg/readme/")
@@ -22,7 +22,7 @@ def read_readme(sbo_url, name, site):
 
 def read_info_slackbuild(sbo_url, name, site):
     '''
-    Read .info SlackBuild file
+    Read info SlackBuild file
     '''
     s_user(getpass.getuser())
     info = url_read((sbo_url + name + site).replace("repository", "slackbuilds"))

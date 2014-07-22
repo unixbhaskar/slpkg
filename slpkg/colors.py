@@ -3,7 +3,7 @@
 
 class colors:
     '''
-    Print out colors class
+    Print foreground colors class
     '''
     RED = "\x1b[31m"
     GREEN = "\x1b[32m"

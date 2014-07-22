@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-from ..url_read import url_read
-from ..__metadata__ import uname, arch
+from slpkg.url_read import url_read
+from slpkg.__metadata__ import uname, arch
 
 def sbo_source_dwn(sbo_url, name):
     '''
-    Find source code link for download
+    Grep source code download link
     '''
     read_info = url_read((sbo_url + name + ".info").replace(
                           "repository", "slackbuilds"))
@@ -22,7 +22,7 @@ def sbo_source_dwn(sbo_url, name):
 
 def sbo_extra_dwn(sbo_url, name):
     '''
-    Find exrtra source code link for download
+    Grep extra source code download link
     '''
     read_info = url_read((sbo_url + name + ".info").replace(
                           "repository", "slackbuilds"))
@@ -38,20 +38,20 @@ def sbo_extra_dwn(sbo_url, name):
 
 def sbo_requires_pkg(sbo_url, name):
     '''
-    Search for package requirements
+    Grep package requirements
     '''
     read_info = url_read((sbo_url + name + ".info").replace(
-                            "repository", "slackbuilds"))
+                          "repository", "slackbuilds"))
     for line in read_info.splitlines():
         if line.startswith('REQUIRES="'):
             return line[10:-1]
 
 def sbo_version_pkg(sbo_url, name):
     '''
-    Find the version package from slackbuilds.org
+    Grep package version
     '''
     read_info = url_read((sbo_url + name + ".info").replace(
-                            "repository", "slackbuilds"))
+                          "repository", "slackbuilds"))
     for line in read_info.splitlines():
         if line.startswith('VERSION="'):
             return line[9:-1]

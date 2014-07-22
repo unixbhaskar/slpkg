@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from ..colors import colors
-from ..__metadata__ import __prog__
-from ..messages import pkg_not_found, template
+from slpkg.colors import colors
+from slpkg.__metadata__ import __prog__
+from slpkg.messages import pkg_not_found, template
 
 from greps import *
 from search import sbo_search_pkg
@@ -19,14 +19,14 @@ def sbo_dependencies_pkg(name):
     if name != "%README%":
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-            pkg_not_found(name)
+            pkg_not_found(name, message="Can't find")
         else:
             sbo_req = sbo_requires_pkg(sbo_url, name)
             dependencies = sbo_req.split()
             if dependencies != []:
                 dep_results.append(dependencies)
             for line in dependencies:
-                print
+                print # new line after dependency
                 sbo_dependencies_pkg(line)
             return dep_results
 
@@ -37,7 +37,7 @@ def sbo_dependencies_links_pkg(name):
     if name != "%README%":
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-             pkg_not_found(name)
+             pkg_not_found(name, message="Can't find")
         else:
             version = ("@" + sbo_version_pkg(sbo_url, name)).split()
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name).split()
@@ -54,7 +54,7 @@ def sbo_dependencies_links_pkg(name):
             if sbo_req != []:
                 dep_links_results.append(sbo_req)
             for line in sbo_req:
-                print
+                print # new line after dependecy
                 sbo_dependencies_links_pkg(line)
             return dep_links_results
 
@@ -66,7 +66,7 @@ def pkg_tracking(name):
     if dependencies is None:
         pass
     elif dependencies == []:
-        print ("\n\n{0}: package: {1} no dependencies\n".format( __prog__, name))
+        print ("\n\n{0}: package {1} no dependencies\n".format( __prog__, name))
     else:
         pkg_len = len(name) + 18
         print ("\n")
@@ -80,4 +80,4 @@ def pkg_tracking(name):
             found = " +--", str(len(dependencies[i])), ", ".join(dependencies[i])
             print (" |")
             print " ".join(found)
-        print
+        print # new line at end
