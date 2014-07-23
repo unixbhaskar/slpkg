@@ -4,15 +4,15 @@
 import os
 import getpass
 
-from slpkg.pkg.build import *
-from slpkg.pkg.find import find_package
-from slpkg.pkg.manager import pkg_upgrade
+from pkg.build import *
+from pkg.find import find_package
+from pkg.manager import pkg_upgrade
 
-from slpkg.colors import colors
-from slpkg.functions import get_file
-from slpkg.messages import pkg_not_found, s_user, template
-from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from slpkg.__metadata__ import __prog__, tmp, packages, uname, arch
+from colors import colors
+from functions import get_file
+from messages import pkg_not_found, s_user, template
+from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from __metadata__ import __prog__, tmp, packages, uname, arch
 
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
@@ -22,13 +22,17 @@ def sbo_check(name):
     '''
     Check if packages is up to date from slackbuilds.org
     '''
-    sbo_file = " ".join(find_package(name, packages))
+    sbo_file = " ".join(find_package(name + sp, packages))
     if sbo_file == "":
-        pkg_not_found(name, message="Can't find")
+        message = "Can't find"
+        bol, eol = "\n", "\n"
+        pkg_not_found(bol, name, message, eol)
     else:
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-            pkg_not_found(name, message="Can't find")
+            message = "Can't find"
+            bol, eol = "\n", "\n"
+            pkg_not_found(bol, name, message, eol)
         else:
             sbo_version = sbo_version_pkg(sbo_url, name)
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
@@ -69,4 +73,4 @@ def sbo_check(name):
                 print
             else:
                 print ("\n\n{0}: package {1} is up to date\n".format(__prog__,
-                    "".join(find_package(name, packages))))
+                    "".join(find_package(name + sp, packages))))

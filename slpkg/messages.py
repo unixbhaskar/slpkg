@@ -5,11 +5,11 @@ import sys
 from colors import colors
 from __metadata__ import __prog__
 
-def pkg_not_found(pkg, message):
+def pkg_not_found(bol, pkg, message, eol):
     '''
     Print message when package not found
     '''
-    print ("\n{0}: No such package {1}: {2}\n".format(__prog__, pkg, message))
+    print ("{0}{1}: No such package {2}: {3}{4}".format(bol, __prog__, pkg, message, eol))
 
 def pkg_found(pkg):
     '''
@@ -28,7 +28,7 @@ def s_user(user):
     Check for root user
     '''
     if user != "root":
-        print ("{0}: error: must have root privileges".format(__prog__))
+        print ("\n{0}: error: must have root privileges\n".format(__prog__))
         sys.exit()
 
 def template(max):
@@ -54,4 +54,3 @@ def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, extra_dwn, sbo_req):
     print (" {0}D{1}ownload             Download this package".format(colors.RED, colors.ENDC))
     print (" {0}B{1}uild                Download and build".format(colors.RED, colors.ENDC))
     print (" {0}I{1}nstall              Download/Build/Install\n".format(colors.RED, colors.ENDC))
-

@@ -9,6 +9,6 @@ def find_package(find_pkg, directory):
     '''
     results = []
     for file in os.listdir(directory):
-        if file.startswith(find_pkg + '-'):
+        if file.startswith(find_pkg):
             results.append(file)
     return results

@@ -6,7 +6,7 @@ import shutil
 import tarfile
 import subprocess
 
-from slpkg.messages import pkg_not_found
+from messages import pkg_not_found
 
 def build_extra_pkg(script, source, extra):
     '''
@@ -24,7 +24,9 @@ def build_extra_pkg(script, source, extra):
         os.chdir(path + pkg_name)
         os.system("sh {0}{1}{2}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
     except (OSError, IOError):
-        pkg_not_found(pkg='', message="Wrong file")
+        message = "Wrong file"
+        bol, eol, pkg = "\n", "\n", ""
+        pkg_not_found(bol, pkg, message, eol)
 
 def build_package(script, source):
     '''
@@ -41,4 +43,7 @@ def build_package(script, source):
         os.system("sh {0}{1}{2}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
         os.chdir(path)
     except (OSError, IOError):
-        pkg_not_found(pkg='', message="Wrong file")
+        message = "Wrong file"
+        bol, eol, pkg = "\n", "\n", ""
+        pkg_not_found(bol, pkg, message, eol)
+

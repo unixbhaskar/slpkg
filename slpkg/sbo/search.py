@@ -4,8 +4,8 @@
 import re
 import sys
 
-from slpkg.url_read import url_read
-from slpkg.functions import rmv_unused
+from url_read import url_read
+from functions import rmv_unused
 
 from repository import repository
 
@@ -25,9 +25,9 @@ def sbo_search_pkg(name):
         sys.stdout.write(".")
         sys.stdout.flush()
         sbo_url_sub = sbo_url + kind + "/"
-        find_SBo = re.findall(search_name, url_read(sbo_url_sub))
-        find_SBo = rmv_unused(" ".join(find_SBo))
-        if name in find_SBo:
+        find_sbo = re.findall(search_name, url_read(sbo_url_sub))
+        find_sbo = rmv_unused(" ".join(find_sbo))
+        if name in find_sbo:
             return sbo_url_sub + name + "/"
     sys.stdout.write("\n")
 

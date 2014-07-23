@@ -6,9 +6,9 @@ import sys
 import getpass
 import subprocess
 
-from slpkg.colors import colors
-from slpkg.messages import pkg_not_found, s_user, template
-from slpkg.__metadata__ import packages, __prog__, uname, arch
+from colors import colors
+from messages import pkg_not_found, s_user, template
+from __metadata__ import packages, __prog__, uname, arch, sp
 
 from find import find_package
 
@@ -21,7 +21,12 @@ def pkg_install(binary):
         try:
             print subprocess.check_output('installpkg {0}'.format(binary[pkg]), shell=True)
         except subprocess.CalledProcessError:
-            pkg_not_found(binary[pkg], message="Can't install")
+            message = "Can't install"
+            if len(binary) > 1:
+                bol, eol = "", ""
+            else:
+                bol, eol = "\n", "\n"
+            pkg_not_found(bol, binary[pkg], message, eol)
 
 def pkg_upgrade(binary):
     '''
@@ -33,7 +38,12 @@ def pkg_upgrade(binary):
             print subprocess.check_output('upgradepkg --install-new {0}'.format(binary[pkg]),
                                            shell=True)
         except subprocess.CalledProcessError:
-            pkg_not_found(binary[pkg], message="Can't upgrade")
+            message = "Can't upgrade"
+            if len(binary) > 1:
+                bol, eol = "", ""
+            else:
+                bol, eol = "\n", "\n"
+            pkg_not_found(bol, binary[pkg], message, eol)
 
 def pkg_reinstall(binary):
     '''
@@ -45,7 +55,12 @@ def pkg_reinstall(binary):
             print subprocess.check_output('upgradepkg --reinstall {0}'.format(binary[pkg]),
                                            shell=True)
         except subprocess.CalledProcessError:
-            pkg_not_found(binary[pkg], message="Can't reinstall")
+            message = "Can't reinstall"
+            if len(binary) > 1:
+                bol, eol = "", ""
+            else:
+                bol, eol = "\n", "\n"
+            pkg_not_found(bol, binary[pkg], message, eol)
 
 def pkg_remove(binary):
     '''
@@ -54,16 +69,21 @@ def pkg_remove(binary):
     s_user(getpass.getuser())
     pkgs = []
     for pkg in range(len(binary)):
-        if find_package(binary[pkg], packages) == []:
-             pkg_not_found(binary[pkg], message="Can't remove")
+        if find_package(binary[pkg] + sp, packages) == []:
+             message = "Can't remove"
+             if len(binary) > 1:
+                 bol, eol = "", ""
+             else:
+                 bol, eol = "\n", "\n"
+             pkg_not_found(bol, binary[pkg], message, eol)
         else:
             pkgs.append(binary[pkg])
     if pkgs == []:
         sys.exit()
     count = []
+    print # new line at start
     for pkg in range(len(binary)):
-        pkgs = find_package(binary[pkg], packages)
-        print # new line at start
+        pkgs = find_package(binary[pkg] + sp, packages)
         if pkgs != []:
             print (colors.RED + "delete --> " + colors.ENDC + "\n           ".join(pkgs))
             count.append(pkgs)
@@ -75,18 +95,18 @@ def pkg_remove(binary):
         results_removed = []
         not_found = []
         for pkg in range(len(binary)):
-            if find_package(binary[pkg], packages) == []:
+            if find_package(binary[pkg] + sp, packages) == []:
                 not_found.append(binary[pkg])
             else:
                 try:
-                    results_removed.append("".join(find_package(binary[pkg], packages)))
+                    results_removed.append("".join(find_package(binary[pkg] + sp, packages)))
                     print subprocess.check_output('removepkg {0}'.format(binary[pkg]),
                                                    shell=True)
                 except subprocess.CalledProcessError:
                     file_not_found(binary[pkg])
         template(78)
         for file in results_removed:
-            if find_package(file, packages) == []:
+            if find_package(file + sp, packages) == []:
                 print ("| {0}: package: {1} removed".format(__prog__, file))
         for file in not_found:
             print ("| {0}: package: {1} not found".format(__prog__, file))
@@ -98,22 +118,32 @@ def pkg_find(binary):
     Find installed Slackware packages
     '''
     for pkg in range(len(binary)):
-        if find_package(binary[pkg], packages) == []:
-            pkg_not_found(binary[pkg], message="Can't find")
+        if find_package(binary[pkg] + sp, packages) == []:
+            message = "Can't find"
+            if len(binary) > 1:
+                bol, eol = "", ""
+            else:
+                bol, eol = "\n", "\n"
+            pkg_not_found(bol, binary[pkg], message, eol)
         else:
             print (colors.GREEN + "found --> " + colors.ENDC + "\n          ".join(
-                   find_package(binary[pkg], packages)))
+                   find_package(binary[pkg] + sp, packages)))
 
 def pkg_display(binary):
     '''
     Print the Slackware packages contents
     '''
     for pkg in range(len(binary)):
-        if find_package(binary[pkg], packages) == []:
-            pkg_not_found(binary[pkg], message="Can't find")
+        if find_package(binary[pkg] + sp, packages) == []:
+            message = "Can't dislpay"
+            if len(binary) > 1:
+                bol, eol = "", ""
+            else:
+                bol, eol = "\n", "\n"
+            pkg_not_found(bol, binary[pkg], message, eol)
         else:
             print subprocess.check_output("cat {0}{1}".format(packages,
-                  " /var/log/packages/".join(find_package(binary[pkg], packages))), shell=True)
+                  " /var/log/packages/".join(find_package(binary[pkg] +sp, packages))), shell=True)
 
 def pkg_list(binary):
     '''

@@ -51,6 +51,7 @@ from sbo.dependency import *
 from sbo.check import sbo_check
 from sbo.views import sbo_network
 
+from slack.upgrade import upgrade_all
 
 def main():
     description = "Utility to help package management in Slackware"
@@ -66,7 +67,7 @@ def main():
     parser.add_argument("-n", help="find from SBo repositority",
                         type=str, metavar=(''))
     parser.add_argument("-c", help="check if your package is up to date",
-                        type=str, metavar=(''))
+                        type=str, nargs="+", metavar=('sbo, slack'))
     parser.add_argument("-s", help="download, build & install pkg from SBo",
                         type=str, metavar=(''))
     parser.add_argument("-i", help="install binary packages",
@@ -83,7 +84,7 @@ def main():
                         type=str, nargs="+", metavar=(''))
     args = parser.parse_args()
     if args.verbose:
-        pkg_version()
+        prog_version()
     if args.a:
         s_user(getpass.getuser())
         if len(args.a) == 2:
@@ -100,7 +101,19 @@ def main():
     if args.n:
         sbo_network(args.n)
     if args.c:
-        sbo_check(args.c)
+        if len(args.c) == 2:
+            if "sbo" in args.c:
+                sbo_check(''.join(args.c[1]))
+            elif "slack" in args.c:
+                if args.c[1] == "update":
+                    upgrade_all()
+                else:
+                     print ("\n{0}: invalid option: choose from check, update\n".format(__prog__))
+         
+        else:
+            print ("\n{0}: error: must enter at least two arguments\n".format(
+                    __prog__))
+    
     if args.s:
         sbo_build(args.s)
     if args.i:

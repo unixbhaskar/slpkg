@@ -24,3 +24,14 @@ def get_file(link, char):
         if link[i] == char:
             break
     return ''.join(results[::-1]).replace('/', '').strip(' ')
+
+def get_to(arg, char):
+    '''
+    Get any string before char
+    '''
+    result = []
+    for c in arg:
+        result.append(c)
+        if c == char:
+            break
+    return ''.join(result).replace(char, '')

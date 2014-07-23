@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from slpkg.colors import colors
-from slpkg.__metadata__ import __prog__
-from slpkg.messages import pkg_not_found, template
+from colors import colors
+from __metadata__ import __prog__
+from messages import pkg_not_found, template
 
 from greps import *
 from search import sbo_search_pkg
@@ -19,7 +19,9 @@ def sbo_dependencies_pkg(name):
     if name != "%README%":
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-            pkg_not_found(name, message="Can't find")
+            message = "From slackbuilds.org"
+            bol, eol = "\n", "\n"
+            pkg_not_found(bol, name, message, eol)
         else:
             sbo_req = sbo_requires_pkg(sbo_url, name)
             dependencies = sbo_req.split()
@@ -37,7 +39,9 @@ def sbo_dependencies_links_pkg(name):
     if name != "%README%":
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-             pkg_not_found(name, message="Can't find")
+            message = "From slackbuilds.org"
+            bol, eol = "\n", "\n"
+            pkg_not_found(bol, name, message, eol)
         else:
             version = ("@" + sbo_version_pkg(sbo_url, name)).split()
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name).split()
@@ -60,7 +64,7 @@ def sbo_dependencies_links_pkg(name):
 
 def pkg_tracking(name):
     '''
-    Find dependecies from package and print all
+    Find package dependecies and print all
     '''
     dependencies = sbo_dependencies_pkg(name)
     if dependencies is None:
