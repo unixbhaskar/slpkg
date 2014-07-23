@@ -36,7 +36,7 @@ Video Tutorial
 ==============
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/10790
+    :target: https://asciinema.org/a/10939
 
 Installation
 ------------
@@ -124,7 +124,7 @@ build and install with all dependencies :
 	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
 	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 	
-	slpkg: package orc was installed
+	slpkg: package orc installed
 	slpkg: package gstreamer1 installed
 	slpkg: package gst1-plugins-base installed
 	slpkg: package gst1-plugins-bad installed
