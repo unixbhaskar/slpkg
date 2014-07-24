@@ -85,7 +85,7 @@ def pkg_remove(binary):
     for pkg in range(len(binary)):
         pkgs = find_package(binary[pkg] + sp, packages)
         if pkgs != []:
-            print (colors.RED + "delete --> " + colors.ENDC + "\n           ".join(pkgs))
+            print (colors.RED + "[ delete ] --> " + colors.ENDC + "\n           ".join(pkgs))
             count.append(pkgs)
     sum_pkgs = 0
     for i in range(len(count)):
@@ -126,7 +126,7 @@ def pkg_find(binary):
                 bol, eol = "\n", "\n"
             pkg_not_found(bol, binary[pkg], message, eol)
         else:
-            print (colors.GREEN + "found --> " + colors.ENDC + "\n          ".join(
+            print (colors.GREEN + "[ installed ] - " + colors.ENDC + "\n          ".join(
                    find_package(binary[pkg] + sp, packages)))
 
 def pkg_display(binary):

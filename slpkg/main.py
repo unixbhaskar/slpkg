@@ -1,40 +1,33 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
-''' Utility to help package management in Slackware.
-Slpkg is a terminal tool in order to easy use Slackware packages.
-
-
-It's a quick and easy way to manage your packages in Slackware to a command.
-
-
-
-usage: slpkg [-h] [-v] [-s script [source ...]] [-l all, sbo [all, sbo ...]]
-             [-t] [-n] [-c] [-b] [-i  [...]] [-u  [...]] [-a  [...]]
-             [-r  [...]] [-f  [...]] [-d  [...]]
+'''
+usage: main.py [-h] [-v] [-a script [source ...]] [-l all, sbo [all, sbo ...]]
+               [-t] [-n] [-c sbo, slack [sbo, slack ...]] [-s] [-i  [...]]
+               [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
 
 Utility to help package management in Slackware
 
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         print version and exit
-  -s script [source ...]
+  -a script [source ...]
                         auto build package
   -l all, sbo [all, sbo ...]
                         list of installed packages
   -t                    tracking dependencies
   -n                    find from SBo repositority
-  -c                    check if your package is up to date
-  -b                    download, build & install pkg from SBo
+  -c sbo, slack [sbo, slack ...]
+                        check if your package is up to date
+  -s                    download, build & install pkg from SBo
   -i  [ ...]            install binary packages
   -u  [ ...]            install-upgrade packages with new
-  -a  [ ...]            reinstall the same packages
+  -o  [ ...]            reinstall the same packages
   -r  [ ...]            remove packages
   -f  [ ...]            find if packages installed
   -d  [ ...]            display the contents of the packages
-
 '''
+
 
 import argparse
 
@@ -51,7 +44,7 @@ from sbo.dependency import *
 from sbo.check import sbo_check
 from sbo.views import sbo_network
 
-from slack.upgrade import upgrade_all
+from slack.patches import patches
 
 def main():
     description = "Utility to help package management in Slackware"
@@ -105,11 +98,10 @@ def main():
             if "sbo" in args.c:
                 sbo_check(''.join(args.c[1]))
             elif "slack" in args.c:
-                if args.c[1] == "update":
-                    upgrade_all()
+                if args.c[1] == "upgrade":
+                    patches()
                 else:
                      print ("\n{0}: invalid option: choose from check, update\n".format(__prog__))
-         
         else:
             print ("\n{0}: error: must enter at least two arguments\n".format(
                     __prog__))

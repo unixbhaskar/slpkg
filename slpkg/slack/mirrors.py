@@ -2,16 +2,17 @@
 # -*- coding: utf-8 -*-
 
 from __metadata__ import uname, arch
+from slack_version import slack_ver
 
-def mirrors(name):
+def mirrors(name, location):
     '''
-    Choose Slackware mirror based
-    architecture
+    Select Slackware mirror packages
+    based architecture
     '''
     if arch == "x86_64":
-        http = "http://mirrors.slackware.com/slackware/slackware64-14.1/patches/packages/" + name
+        http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(slack_ver(), location, name)
     else:
-        http = "http://mirrors.slackware.com/slackware/slackware-14.1/patches/packages/" + name
+        http = "http://mirrors.slackware.com/slackware/slackware-{0}/{1}{3}".format(slack_ver(), location, name)
     return http
 
- 
+

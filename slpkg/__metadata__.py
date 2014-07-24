@@ -16,6 +16,7 @@ sp = "-"
 
 ''' temponary path '''
 tmp = "/tmp/"
+dwn_path = tmp + "slpkg/"
 
 ''' packages log files path '''
 packages = "/var/log/packages/"

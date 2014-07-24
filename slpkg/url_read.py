@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys
 import urllib2
 from __metadata__ import __prog__
 
@@ -12,5 +13,5 @@ def url_read(link):
         f = urllib2.urlopen(link)
         return f.read()
     except urllib2.URLError:
-        print ("\n{0}: error: connection refused".format(__prog__))
+        print ("\n{0}: error: connection refused\n".format(__prog__))
         sys.exit()

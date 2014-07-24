@@ -4,6 +4,9 @@
 import re
 
 def slack_ver():
+    '''
+    Slackware version
+    '''
     f = open('/etc/slackware-version', 'r')
     sv = f.read()
     f.close()
