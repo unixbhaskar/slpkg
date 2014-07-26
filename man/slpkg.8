@@ -16,8 +16,8 @@
 slpkg - Utility to help package management in Slackware
 .SH SYNOPSIS
  \fBslpkg\fP \fB-h\fP \fB-v\fP \fB-a script [source ...]\fP \fB-l all, sbo [all, sbo ...]\fP
- \fB-t\fP \fB-n\fP \fB-c\fP \fB-s\fP \fB-i [...]\fP \fB-u [...]\fP \fB-o [...]\fP \fB-r [...]\fP \fB-f 
-[...]\fP \fB-d [...]\fP
+ \fB-t\fP \fB-n\fP \fB-c sbo, slack [sbo, slack ...]\fP \fB-s\fP \fB-i [...]\fP \fB-u [...]\fP
+ \fB-o [...]\fP \fB-r [...]\fP \fB-f [...]\fP \fB-d [...]\fP
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal tool in order to easy use Slackware packages.
 .PP
@@ -31,7 +31,8 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB                      list of installed packages\fP
   \fB-t                    tracking dependencies\fP
   \fB-n                    find from SBo repositority\fP
-  \fB-c                    check if your package is up to date\fP
+  \fB-c sbo, slack [sbo, slack ...]\fp                   
+  \fb                      check if your package is up to date\fP
   \fB-s                    download, build & install pkg from SBo\fP
   \fB-i  [ ...]            install binary packages\fP
   \fB-u  [ ...]            install-upgrade packages with new\fP
@@ -50,7 +51,7 @@ The following commands are available.
 .SS -a script source extra
 \fBslpkg\fP \fB-a\fP <\fIscript\fP> <\fIsource\fP> <\fIextra sources\fP>
 .PP
-With this argument, build slackware package quickly and easy.
+With this argument, build slackware package from source quickly and easy.
 Support .tar.gz and .tar.bz2 slackbuilds archives.
 .SS -l all, sbo [all, sbo ...]
 \fBslpkg\fP \fB-l\fP <\fIall\fP> <\fIsbo\fP>
@@ -67,10 +68,11 @@ The sequence shown is that you must follow to correctly install package.
 .PP
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
-.SS -c , check if your package is up to date
-\fBslpkg\fP \fB-c\fP <\fIname of package\fP>
+.SS -c , sbo, slack [sbo, slack ...] check if your package is up to date
+\fBslpkg\fP \fB-c\fP <\fIsbo\fP> <\fIslack\fP> <\fIname of package\fP>
 .PP
-Check if your packages from www.slackbuilds.org is updated.
+Check your packages from Slackware official mirrors or from 
+slackbuilds.org is up to date.
 .SS -s , find, download, build and install package with all dependencies
 \fBslpkg\fP \fB-s\fP <\fIname of package\fP>
 .PP
@@ -136,12 +138,12 @@ $ \fBslpkg -t brasero\fP
    -- 2 libunique gst1-plugins-bad
 
 $ \fBslpkg -s brasero\fP
-  Searching `brasero` from slackbuilds.org ...
-  Searching `libunique` from slackbuilds.org ...
-  Searching `gst1-plugins-bad` from slackbuilds.org ...
-  Searching `gst1-plugins-base` from slackbuilds.org ...
-  Searching `gstreamer1` from slackbuilds.org ...
-  Searching `orc` from slackbuilds.org ...
+  Searching [ brasero ] from slackbuilds.org ...
+  Searching [ libunique ] from slackbuilds.org ...
+  Searching [ gst1-plugins-bad ] from slackbuilds.org ...
+  Searching [ gst1-plugins-base ] from slackbuilds.org ...
+  Searching [ gstreamer1 ] from slackbuilds.org ...
+  Searching [ orc ] from slackbuilds.org ...
 
   +==============================================================================
   | Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
@@ -162,16 +164,19 @@ $ \fBslpkg -s brasero\fP
   Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 
 
-$ \fBslpkg -c flashplayer-plugin\fP
+$ \fBslpkg -c sbo flashplayer-plugin\fP
   Searching `flashplayer-plugin` from slackbuilds.org ...
 
   New version is available:
   +==============================================================================
-  | slpkg: package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
+  | Package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
   +==============================================================================
  
   Would you like to install ? [Y/y]
 
+$ \fBslpkg -c slack upgrade\fp
+
+  Your system is up to date
 
 $ \fBslpkg -n termcolor\fP
 
@@ -207,7 +212,7 @@ $ \fBslpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz\fP
 
 $ \fBslpkg -r termcolor yetris\fP
   
-  delete -- > termcolor-1.1.0-x86_64-1_SBo
+  [ delete ] -- > termcolor-1.1.0-x86_64-1_SBo
 
   Are you sure to remove 1 package(s) [Y/y]
     
@@ -215,15 +220,15 @@ $ \fBslpkg -r termcolor yetris\fP
   Package: yetris-2.0.1-x86_64-1_SBo
           Removing...
 
-  The package `termcolor` removed
+  Package termcolor removed
 
 $ \fBslpkg -f termcolor\fP
 
-  slpkg: package: termcolor not found
+  Package: termcolor not found
 
 $ \fBslpkg -d termcolor\fP
 
-  slpkg: package: termcolor not found
+  Package: termcolor not found
 
 $ \fBslpkg -v\fP
 

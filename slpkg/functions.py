@@ -3,15 +3,6 @@
 
 import sys
 
-def rmv_unused(name):
-    '''
-    Remove unused chars
-    '''
-    rmv = "><"
-    for ch in rmv:
-        name = name.replace(ch, "")
-    return name
-
 def get_file(link, char):
     '''
     Get filename from links
@@ -24,14 +15,3 @@ def get_file(link, char):
         if link[i] == char:
             break
     return ''.join(results[::-1]).replace('/', '').strip(' ')
-
-def get_to(arg, char):
-    '''
-    Get any string before char
-    '''
-    result = []
-    for c in arg:
-        result.append(c)
-        if c == char:
-            break
-    return ''.join(result).replace(char, '')

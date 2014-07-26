@@ -1,3 +1,12 @@
+26-07-2014
+Version 1.6.2
+
+[Feature] - Added distribution upgrade from official Slackware mirrors
+            `slpkg -c slack upgrade`
+
+[Updated] - Change detection packages mode. 2x much faster
+            Fix messages
+
 22-07-2014
 Version 1.6.1
 

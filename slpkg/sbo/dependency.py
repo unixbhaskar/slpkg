@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from colors import colors
-from __metadata__ import __prog__
-from messages import pkg_not_found, template
+from slpkg.colors import colors
+from slpkg.messages import pkg_not_found, template
 
 from greps import *
 from search import sbo_search_pkg
@@ -28,7 +27,6 @@ def sbo_dependencies_pkg(name):
             if dependencies != []:
                 dep_results.append(dependencies)
             for line in dependencies:
-                print # new line after dependency
                 sbo_dependencies_pkg(line)
             return dep_results
 
@@ -58,7 +56,6 @@ def sbo_dependencies_links_pkg(name):
             if sbo_req != []:
                 dep_links_results.append(sbo_req)
             for line in sbo_req:
-                print # new line after dependecy
                 sbo_dependencies_links_pkg(line)
             return dep_links_results
 
@@ -70,10 +67,10 @@ def pkg_tracking(name):
     if dependencies is None:
         pass
     elif dependencies == []:
-        print ("\n\n{0}: package {1} no dependencies\n".format( __prog__, name))
+        print ("\nPackage {1} no dependencies\n".format(name))
     else:
+        print # new line at start
         pkg_len = len(name) + 18
-        print ("\n")
         template(pkg_len)
         print ("| {0}`{1}`{2} dependencies :{3}".format(colors.CYAN, name,
                                               colors.YELLOW, colors.ENDC))

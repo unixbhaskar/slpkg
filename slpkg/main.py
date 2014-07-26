@@ -18,7 +18,7 @@ optional arguments:
   -t                    tracking dependencies
   -n                    find from SBo repositority
   -c sbo, slack [sbo, slack ...]
-                        check if your package is up to date
+                        check if your packages is up to date
   -s                    download, build & install pkg from SBo
   -i  [ ...]            install binary packages
   -u  [ ...]            install-upgrade packages with new
@@ -34,7 +34,7 @@ import argparse
 from version import *
 from functions import *
 from colors import colors
-from __metadata__ import __prog__
+from messages import err_args
 
 from pkg.build import *
 from pkg.manager import *
@@ -59,7 +59,7 @@ def main():
                         type=str, metavar=(''))
     parser.add_argument("-n", help="find from SBo repositority",
                         type=str, metavar=(''))
-    parser.add_argument("-c", help="check if your package is up to date",
+    parser.add_argument("-c", help="check if your packages is up to date",
                         type=str, nargs="+", metavar=('sbo, slack'))
     parser.add_argument("-s", help="download, build & install pkg from SBo",
                         type=str, metavar=(''))
@@ -85,8 +85,7 @@ def main():
         elif len(args.a) > 2:
             build_extra_pkg(args.a[0], args.a[1], args.a[2:])
         else:
-            print ("\n{0}: error: must enter at least two arguments\n".format(
-                    __prog__))
+            err_args(bol='\n', eol='\n')
     if args.l:
         pkg_list(args.l)
     if args.t:
@@ -101,11 +100,9 @@ def main():
                 if args.c[1] == "upgrade":
                     patches()
                 else:
-                     print ("\n{0}: invalid option: choose from check, update\n".format(__prog__))
+                    print ("\nError: invalid option choose { upgrade }\n")
         else:
-            print ("\n{0}: error: must enter at least two arguments\n".format(
-                    __prog__))
-    
+            err_args(bol='\n', eol='\n')
     if args.s:
         sbo_build(args.s)
     if args.i:

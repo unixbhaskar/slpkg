@@ -6,9 +6,9 @@ import sys
 import getpass
 import subprocess
 
-from colors import colors
-from messages import pkg_not_found, s_user, template
-from __metadata__ import packages, __prog__, uname, arch, sp
+from slpkg.colors import colors
+from slpkg.__metadata__ import pkg_path, uname, arch, sp
+from slpkg.messages import pkg_not_found, s_user, template
 
 from find import find_package
 
@@ -69,7 +69,7 @@ def pkg_remove(binary):
     s_user(getpass.getuser())
     pkgs = []
     for pkg in range(len(binary)):
-        if find_package(binary[pkg] + sp, packages) == []:
+        if find_package(binary[pkg] + sp, pkg_path) == []:
              message = "Can't remove"
              if len(binary) > 1:
                  bol, eol = "", ""
@@ -83,9 +83,9 @@ def pkg_remove(binary):
     count = []
     print # new line at start
     for pkg in range(len(binary)):
-        pkgs = find_package(binary[pkg] + sp, packages)
+        pkgs = find_package(binary[pkg] + sp, pkg_path)
         if pkgs != []:
-            print (colors.RED + "[ delete ] --> " + colors.ENDC + "\n           ".join(pkgs))
+            print (colors.RED + "[ delete ] --> " + colors.ENDC + "\n               ".join(pkgs))
             count.append(pkgs)
     sum_pkgs = 0
     for i in range(len(count)):
@@ -95,21 +95,21 @@ def pkg_remove(binary):
         results_removed = []
         not_found = []
         for pkg in range(len(binary)):
-            if find_package(binary[pkg] + sp, packages) == []:
+            if find_package(binary[pkg] + sp, pkg_path) == []:
                 not_found.append(binary[pkg])
             else:
                 try:
-                    results_removed.append("".join(find_package(binary[pkg] + sp, packages)))
+                    results_removed.append("".join(find_package(binary[pkg] + sp, pkg_path)))
                     print subprocess.check_output('removepkg {0}'.format(binary[pkg]),
                                                    shell=True)
                 except subprocess.CalledProcessError:
                     file_not_found(binary[pkg])
         template(78)
         for file in results_removed:
-            if find_package(file + sp, packages) == []:
-                print ("| {0}: package: {1} removed".format(__prog__, file))
+            if find_package(file + sp, pkg_path) == []:
+                print ("| Package: {0} removed".format(file))
         for file in not_found:
-            print ("| {0}: package: {1} not found".format(__prog__, file))
+            print ("| Package: {0} not found".format(file))
         template(78)
         print # new line at end
 
@@ -118,7 +118,7 @@ def pkg_find(binary):
     Find installed Slackware packages
     '''
     for pkg in range(len(binary)):
-        if find_package(binary[pkg] + sp, packages) == []:
+        if find_package(binary[pkg] + sp, pkg_path) == []:
             message = "Can't find"
             if len(binary) > 1:
                 bol, eol = "", ""
@@ -127,14 +127,14 @@ def pkg_find(binary):
             pkg_not_found(bol, binary[pkg], message, eol)
         else:
             print (colors.GREEN + "[ installed ] - " + colors.ENDC + "\n          ".join(
-                   find_package(binary[pkg] + sp, packages)))
+                   find_package(binary[pkg] + sp, pkg_path)))
 
 def pkg_display(binary):
     '''
     Print the Slackware packages contents
     '''
     for pkg in range(len(binary)):
-        if find_package(binary[pkg] + sp, packages) == []:
+        if find_package(binary[pkg] + sp, pkg_path) == []:
             message = "Can't dislpay"
             if len(binary) > 1:
                 bol, eol = "", ""
@@ -142,8 +142,8 @@ def pkg_display(binary):
                 bol, eol = "\n", "\n"
             pkg_not_found(bol, binary[pkg], message, eol)
         else:
-            print subprocess.check_output("cat {0}{1}".format(packages,
-                  " /var/log/packages/".join(find_package(binary[pkg] +sp, packages))), shell=True)
+            print subprocess.check_output("cat {0}{1}".format(pkg_path,
+                  " /var/log/packages/".join(find_package(binary[pkg] +sp, pkg_path))), shell=True)
 
 def pkg_list(binary):
     '''
@@ -151,11 +151,11 @@ def pkg_list(binary):
     '''
     if "all" in binary:
         print
-        os.chdir(packages)
+        os.chdir(pkg_path)
         os.system("ls * | more")
         print
     if "sbo" in binary:
         print
-        os.chdir(packages)
+        os.chdir(pkg_path)
         os.system("ls * | grep 'SBo' | more")
         print

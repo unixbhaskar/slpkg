@@ -5,15 +5,15 @@ import os
 import sys
 import getpass
 
-from colors import colors
-from functions import get_file
-from __metadata__ import tmp, packages, __prog__
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from messages import s_user, pkg_found, pkg_installed, template
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.__metadata__ import tmp, pkg_path, sp
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from slpkg.messages import s_user, pkg_found, pkg_installed, template
 
-from pkg.build import *
-from pkg.find import find_package
-from pkg.manager import pkg_upgrade
+from slpkg.pkg.build import *
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from dependency import sbo_dependencies_links_pkg
 
@@ -80,14 +80,14 @@ def sbo_build(name):
     for i in range(len(filename)):
         filename_version.append(filename[i] + "-" + version[i])
     '''
-    remove links and files if packages already installed
+    remove links and files if packages ready installed
     and keep lists for report
     '''
     i = 0
     pkg_for_install = []
     pkg_already_installed = []
     for file in filename_version:
-        if find_package(file + sp, packages) == []:
+        if find_package(file + sp, pkg_path) == []:
             i += 2
             pkg_for_install.append(file)
         else:
@@ -105,9 +105,9 @@ def sbo_build(name):
     for link in dwn_link:
         print ("\n{0} Start --> \n{1}".format(colors.GREEN, colors.ENDC))
         os.system("wget -N %s" % link)
-    print ("\n")
+    print # print new line at start
     '''
-    build packages and install slackware packages
+    build packages and install slackware binary file
     '''
     template(78)
     if pkg_for_install == []:
@@ -150,10 +150,10 @@ def sbo_build(name):
                     files.pop(0)
         template(78)
         for pkg in pkg_for_install:
-            if find_package(pkg + sp, packages) != []:
+            if find_package(pkg + sp, pkg_path) != []:
                 pkg_installed(pkg)
         for pkg in pkg_already_installed:
-            if find_package(pkg + sp, packages) != []:
+            if find_package(pkg + sp, pkg_path) != []:
                 pkg_found(pkg)
         template(78)
     print # new line at end

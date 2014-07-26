@@ -11,11 +11,12 @@ Slpkg is a terminal tool in order to easy use Slackware packages.
     :alt: logo
 
 Features
---------
+========
 
 - Build packages from source with all dependencies
 - Find and Download packages from slackbuilds.org
 - Automatic tool build and install packages
+- Check if your distribution is up to date
 - Display the contents of the packages
 - Install-upgrade Slackware packages
 - Build and install all in a command
@@ -81,8 +82,9 @@ Command Line Tool Usage
 	                        list of installed packages
 	  -t                    tracking dependencies
 	  -n                    find from SBo repositority
-	  -c                    check if your package is up to date
-	  -s                    download, build & install pkg from SBo
+	  -c sbo, slack [sbo, slack ...]
+                            check if your packages is up to date
+      -s                    download, build & install pkg from SBo
 	  -i  [ ...]            install binary packages
 	  -u  [ ...]            install-upgrade packages with new
 	  -o  [ ...]            reinstall the same packages
@@ -99,12 +101,12 @@ build and install with all dependencies :
 .. code-block:: bash
 	
 	$ slpkg -s brasero
-	Searching `brasero` from slackbuilds.org ...
-	Searching `libunique` from slackbuilds.org .....
-	Searching `gst1-plugins-bad` from slackbuilds.org ......
-	Searching `gst1-plugins-base` from slackbuilds.org ........
-	Searching `gstreamer1` from slackbuilds.org ....
-	Searching `orc` from slackbuilds.org ....
+	Searching [ brasero ] from slackbuilds.org ...
+	Searching [ libunique ] from slackbuilds.org ...
+	Searching [ gst1-plugins-bad ] from slackbuilds.org ...
+	Searching [ gst1-plugins-base ] from slackbuilds.org ...
+	Searching [ gstreamer1 ] from slackbuilds.org ...
+	Searching [ orc ] from slackbuilds.org ...
 
 	+==============================================================================
 	| Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
@@ -124,13 +126,14 @@ build and install with all dependencies :
 	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
 	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 	
-	slpkg: package orc installed
-	slpkg: package gstreamer1 installed
-	slpkg: package gst1-plugins-base installed
-	slpkg: package gst1-plugins-bad installed
-	slpkg: package libunique installed
-	slpkg: package brasero installed
-
+	+==============================================================================
+    | Package orc installed
+	| Package gstreamer1 installed
+	| Package gst1-plugins-base installed
+	| Package gst1-plugins-bad installed
+	| Package libunique installed
+	| Package brasero installed
+    +==============================================================================
 
 Tracking all dependencies of packages:
 
@@ -151,11 +154,11 @@ Tracking all dependencies of packages:
 	 |
 	 -- 2 libunique gst1-plugins-bad
 
-Check if your packages is up to date (www.slackbuilds.org):
+Check if your packages is up to date from slackbuilds.org:
 
 .. code-block:: bash
 
-    $ slpkg -c flashplayer-plugin
+    $ slpkg -c sbo flashplayer-plugin
     Searching `flashplayer-plugin` from slackbuilds.org ...
 
     New version is available:
@@ -165,15 +168,22 @@ Check if your packages is up to date (www.slackbuilds.org):
 
     Would you like to install ? [Y/y]
 
-    $ slpkg -c ranger
+    $ slpkg -c sbo ranger
     Searching `ranger` from slackbuilds.org ...
 
-    slpkg: package ranger is up to date
-
+    Package ranger is up to date
 
     $ slpkg -c termcolor
 
-    slpkg: No such package termcolor: Can't find
+    No such package termcolor: Can't find
+
+Check if your packages is up to date from `Slackware official mirrors <http://mirrors.slackware.com/>`_
+
+.. code-block:: bash
+
+    $ slpkg -c slack upgrade
+
+    Your system is up to date
 
 Find slackbuild from slackbuilds.org:
 
@@ -199,7 +209,7 @@ Find slackbuild from slackbuilds.org:
 
         _
 
-Auto build tool to build package:
+Auto tool to build package:
 
 .. code-block:: bash
 
@@ -309,16 +319,12 @@ Find if your packages installed:
 .. code-block:: bash
 
 	$ slpkg -f termcolor lua yetris you-get rar pip
-	found --> termcolor-1.1.0-x86_64-1_SBo
-
-	slpkg: No such package lua: Can't find
-
-	found --> yetris-2.0.1-x86_64-1_SBo
-
-	slpkg: No such package you-get: Can't find
-
-	found --> rar-5.0.1-x86_64-1_SBo
-	found --> pip-1.5.4-x86_64-1_SBo
+	[ installed ] - termcolor-1.1.0-x86_64-1_SBo
+	No such package lua: Can't find
+	[ installed ] - yetris-2.0.1-x86_64-1_SBo
+	No such package you-get: Can't find
+	[ installed ] - rar-5.0.1-x86_64-1_SBo
+	[ installed ] -  pip-1.5.4-x86_64-1_SBo
 
 Display the contents of the package:
 
@@ -366,7 +372,7 @@ Display the contents of the package:
 	install/
 	install/slack-desc
 	
-	slpkg: No such package lua: Can't find
+	No such package lua: Can't find
 
 Remove package:
 
@@ -374,7 +380,7 @@ Remove package:
 
     $ slpkg -r termcolor
 
-    delete --> termcolor-1.1.0-x86_64-1_SBo
+    [ delete ] --> termcolor-1.1.0-x86_64-1_SBo
 
     Are you sure to remove 1 package(s) [Y/y] y
 
@@ -400,14 +406,14 @@ Remove package:
     --> Deleting empty directory /usr/doc/termcolor-1.1.0/
 
     +==============================================================================
-    | slpkg: package: termcolor removed
+    | Package: termcolor removed
     +==============================================================================
 
     $ slpkg -f termcolor lua rar
 
-	slpkg: No such package termcolor: Can't find
-	slpkg: No such package lua: Can't find
-	found --> rar-5.0.1-x86_64-1_SBo
+	No such package termcolor: Can't find
+	No such package lua: Can't find
+	[ installed ] - rar-5.0.1-x86_64-1_SBo
 
 	$ slpkg -v
 	Version: x.x.x

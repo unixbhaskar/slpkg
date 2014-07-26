@@ -4,15 +4,15 @@
 import os
 import getpass
 
-from pkg.build import *
-from pkg.find import find_package
-from pkg.manager import pkg_upgrade
+from slpkg.pkg.build import *
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
-from colors import colors
-from functions import get_file
-from messages import pkg_not_found, s_user, template
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from __metadata__ import __prog__, tmp, packages, uname, arch
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.messages import pkg_not_found, s_user, template
+from slpkg.__metadata__ import tmp, pkg_path, uname, arch, sp
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
 
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
@@ -22,7 +22,7 @@ def sbo_check(name):
     '''
     Check if packages is up to date from slackbuilds.org
     '''
-    sbo_file = " ".join(find_package(name + sp, packages))
+    sbo_file = " ".join(find_package(name + sp, pkg_path))
     if sbo_file == "":
         message = "Can't find"
         bol, eol = "\n", "\n"
@@ -40,11 +40,10 @@ def sbo_check(name):
             extra_dwn = " ".join(sbo_extra_dwn(sbo_url, name))
             sbo_file = sbo_file[len(name) + 1:-len(arch) - 7]
             if sbo_version > sbo_file:
-                print ("\n")
-                print ("New version is available:")
+                print ("\nNew version is available:")
                 template(78)
-                print ("| {0}: package: {1} {2} --> {3} {4}".format(
-                        __prog__, name, sbo_file,  name, sbo_version))
+                print ("| Package: {0} {1} --> {2} {3}".format(
+                        name, sbo_file,  name, sbo_version))
                 template(78)
                 print
                 read = raw_input("Would you like to install ? [Y/y] ")
@@ -72,5 +71,5 @@ def sbo_check(name):
                     pkg_upgrade(binary)
                 print
             else:
-                print ("\n\n{0}: package {1} is up to date\n".format(__prog__,
-                    "".join(find_package(name + sp, packages))))
+                print ("\nPackage {0} is up to date\n".format(
+                    "".join(find_package(name + sp, pkg_path))))

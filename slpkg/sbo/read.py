@@ -4,10 +4,10 @@
 import os
 import getpass
 
-from messages import s_user
-from url_read import url_read
+from slpkg.messages import s_user
+from slpkg.url_read import url_read
 
-# create tmp directory
+# create tmp directory if not exist
 os.system("mkdir -p /tmp/slpkg/readme/")
 
 def read_readme(sbo_url, name, site):

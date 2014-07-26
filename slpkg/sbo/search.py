@@ -4,30 +4,26 @@
 import re
 import sys
 
-from url_read import url_read
-from functions import rmv_unused
+from slpkg.colors import colors
+from slpkg.url_read import url_read
+from slpkg.functions import get_file
 
-from repository import repository
+from slpkg.slack.slack_version import slack_ver
 
 def sbo_search_pkg(name):
     '''
     Find SlackBuilds packages links from repository slackbuilds.org
     '''
-    sbo_url = "http://slackbuilds.org/repository/14.1/"
-    search_name = re.escape(name)
-    search_name = ">" + search_name + "<"
-    toolbar_width = len(repository)
-    sys.stdout.write("Searching `" + name + "` from slackbuilds.org .%s " %
-                    (" " * toolbar_width))
-    sys.stdout.flush()
-    sys.stdout.write("\b" * (toolbar_width + 1))
-    for kind in repository:
-        sys.stdout.write(".")
-        sys.stdout.flush()
-        sbo_url_sub = sbo_url + kind + "/"
-        find_sbo = re.findall(search_name, url_read(sbo_url_sub))
-        find_sbo = rmv_unused(" ".join(find_sbo))
-        if name in find_sbo:
-            return sbo_url_sub + name + "/"
-    sys.stdout.write("\n")
-
+    sbo_location = []
+    print ('Searching {0}[ {1} ]{2} from slackbuilds.org ...'.format(
+            colors.CYAN, name, colors.ENDC))
+    sbo_url = ("http://slackbuilds.org/repository/{0}/".format(slack_ver()))
+    SLACKBUILDS_TXT = url_read(("http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(
+                                 slack_ver())))
+    for line in SLACKBUILDS_TXT.splitlines():
+        if line.startswith('SLACKBUILD LOCATION'):
+            sbo_location.append(line.replace('SLACKBUILD LOCATION: ./', ''))
+    for loc in sbo_location:
+        if get_file(loc, '/') == name:
+            return sbo_url + loc.replace(name, '') + name + "/"
+    
