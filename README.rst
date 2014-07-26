@@ -163,7 +163,7 @@ Check if your packages is up to date from slackbuilds.org:
 
     New version is available:
     +==============================================================================
-    | slpkg: package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
+    | Package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
     +==============================================================================
 
     Would you like to install ? [Y/y]
