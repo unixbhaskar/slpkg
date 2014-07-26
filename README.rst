@@ -67,30 +67,30 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-	usage: slpkg [-h] [-v] [-a script [source ...]] [-l all, sbo [all, sbo ...]]
-        	     [-t] [-n] [-c] [-s] [-i  [...]] [-u  [...]] [-o  [...]]
-             	     [-r  [...]] [-f  [...]] [-d  [...]]
+    usage: slpkg [-h] [-v] [-a script [source ...]] [-l all, sbo [all, sbo ...]]
+                 [-t] [-n] [-c] [-s] [-i  [...]] [-u  [...]] [-o  [...]]
+                 [-r  [...]] [-f  [...]] [-d  [...]]
 
-	Utility to help package management in Slackware
+    Utility to help package management in Slackware
 
-	optional arguments:
-	  -h, --help            show this help message and exit
-	  -v, --verbose         print version and exit
-	  -a script [source ...]
-	                        auto build package
-	  -l all, sbo [all, sbo ...]
-	                        list of installed packages
-	  -t                    tracking dependencies
-	  -n                    find from SBo repositority
-	  -c sbo, slack [sbo, slack ...]
+      optional arguments:
+      -h, --help            show this help message and exit
+      -v, --verbose         print version and exit
+      -a script [source ...]
+                            auto build package
+      -l all, sbo [all, sbo ...]
+                            list of installed packages
+      -t                    tracking dependencies
+      -n                    find from SBo repositority
+      -c sbo, slack [sbo, slack ...]
                             check if your packages is up to date
       -s                    download, build & install pkg from SBo
-	  -i  [ ...]            install binary packages
-	  -u  [ ...]            install-upgrade packages with new
-	  -o  [ ...]            reinstall the same packages
-	  -r  [ ...]            remove packages
-	  -f  [ ...]            find if packages installed
-	  -d  [ ...]            display the contents of the packages
+      -i  [ ...]            install binary packages
+      -u  [ ...]            install-upgrade packages with new
+      -o  [ ...]            reinstall the same packages
+      -r  [ ...]            remove packages
+      -f  [ ...]            find if packages installed
+      -d  [ ...]            display the contents of the packages
 
 Slpkg Examples
 --------------
