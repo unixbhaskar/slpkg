@@ -100,59 +100,59 @@ build and install with all dependencies :
 
 .. code-block:: bash
 	
-	$ slpkg -s brasero
-	Searching [ brasero ] from slackbuilds.org ...
-	Searching [ libunique ] from slackbuilds.org ...
-	Searching [ gst1-plugins-bad ] from slackbuilds.org ...
-	Searching [ gst1-plugins-base ] from slackbuilds.org ...
-	Searching [ gstreamer1 ] from slackbuilds.org ...
-	Searching [ orc ] from slackbuilds.org ...
+    $ slpkg -s brasero
+    Searching [ brasero ] from slackbuilds.org ...
+    Searching [ libunique ] from slackbuilds.org ...
+    Searching [ gst1-plugins-bad ] from slackbuilds.org ...
+    Searching [ gst1-plugins-base ] from slackbuilds.org ...
+    Searching [ gstreamer1 ] from slackbuilds.org ...
+    Searching [ orc ] from slackbuilds.org ...
 
-	+==============================================================================
-	| Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
-	+==============================================================================
+    +==============================================================================
+    | Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
+    +==============================================================================
 
     Verifying package brasero-3.11.3-x86_64-1_SBo.tgz.
-	Installing package brasero-3.11.3-x86_64-1_SBo.tgz:
-	PACKAGE DESCRIPTION:
-	# brasero (CD/DVD burning application)
-	#
-	# Brasero is a application to burn CD/DVD for the Gnome Desktop. It is
-	# designed to be as simple as possible and has some unique features to
-	# enable users to create their discs easily and quickly.
-	#
-	# Homepage: http://projects.gnome.org/brasero
-	#
-	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
-	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
+    Installing package brasero-3.11.3-x86_64-1_SBo.tgz:
+    PACKAGE DESCRIPTION:
+    # brasero (CD/DVD burning application)
+    #
+    # Brasero is a application to burn CD/DVD for the Gnome Desktop. It is
+    # designed to be as simple as possible and has some unique features to
+    # enable users to create their discs easily and quickly.
+    #
+    # Homepage: http://projects.gnome.org/brasero
+    #
+    Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
+    Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 	
     +==============================================================================
     | Package orc installed
-	| Package gstreamer1 installed
-	| Package gst1-plugins-base installed
-	| Package gst1-plugins-bad installed
-	| Package libunique installed
-	| Package brasero installed
+    | Package gstreamer1 installed
+    | Package gst1-plugins-base installed
+    | Package gst1-plugins-bad installed
+    | Package libunique installed
+    | Package brasero installed
     +==============================================================================
 
 Tracking all dependencies of packages:
 
 .. code-block:: bash
 
-	$ slpkg -t brasero
+    $ slpkg -t brasero
 
-	+=========================
+    +=========================
     | brasero dependencies   :
-	+=========================
-	 |
-	 |
-	 -- 1 orc
-	 |
-	 -- 1 gstreamer1
-	 |
-	 -- 1 gst1-plugins-base
-	 |
-	 -- 2 libunique gst1-plugins-bad
+    +=========================
+    |
+    |
+    +-- 1 orc
+    |
+    +-- 1 gstreamer1
+    |
+    +-- 1 gst1-plugins-base
+    |
+    +-- 2 libunique gst1-plugins-bad
 
 Check if your packages is up to date from slackbuilds.org:
 
@@ -189,17 +189,17 @@ Find slackbuild from slackbuilds.org:
 
 .. code-block:: bash
 
-	$ slpkg -n bitfighter
-	Searching `bitfighter` from slackbuilds.org ...
+    $ slpkg -n bitfighter
+    Searching `bitfighter` from slackbuilds.org ...
 
-	+===============================================================================
-	| The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
-	+===============================================================================
-	| Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
-	| Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
-	| Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
-	| Package requirements : OpenAL SDL2 speex libmodplug
-	+===============================================================================
+    +===============================================================================
+    | The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
+    +===============================================================================
+    | Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
+    | Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
+    | Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
+    | Package requirements : OpenAL SDL2 speex libmodplug
+    +===============================================================================
     README               View the README file
     SlackBuild           View the SlackBuild file
     Info                 View the Info file
@@ -411,14 +411,14 @@ Remove package:
 
     $ slpkg -f termcolor lua rar
 
-	No such package termcolor: Cant find
-	No such package lua: Cant find
-	[ installed ] - rar-5.0.1-x86_64-1_SBo
+    No such package termcolor: Cant find
+    No such package lua: Cant find
+    [ installed ] - rar-5.0.1-x86_64-1_SBo
 
-	$ slpkg -v
-	Version: x.x.x
-	Licence: GNU General Public License v3 (GPLv3)
-	Email:   d.zlatanidis@gmail.com
+    $ slpkg -v
+    Version: x.x.x
+    Licence: GNU General Public License v3 (GPLv3)
+    Email:   d.zlatanidis@gmail.com
 
 Man page it is available for full support:
 
