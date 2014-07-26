@@ -112,7 +112,7 @@ build and install with all dependencies :
 	| Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
 	+==============================================================================
 
-        Verifying package brasero-3.11.3-x86_64-1_SBo.tgz.
+    Verifying package brasero-3.11.3-x86_64-1_SBo.tgz.
 	Installing package brasero-3.11.3-x86_64-1_SBo.tgz:
 	PACKAGE DESCRIPTION:
 	# brasero (CD/DVD burning application)
@@ -126,7 +126,7 @@ build and install with all dependencies :
 	Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
 	Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 	
-	+==============================================================================
+    +==============================================================================
     | Package orc installed
 	| Package gstreamer1 installed
 	| Package gst1-plugins-base installed
@@ -142,7 +142,7 @@ Tracking all dependencies of packages:
 	$ slpkg -t brasero
 
 	+=========================
-	| brasero dependencies   :
+    | brasero dependencies   :
 	+=========================
 	 |
 	 |
@@ -200,14 +200,14 @@ Find slackbuild from slackbuilds.org:
 	| Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
 	| Package requirements : OpenAL SDL2 speex libmodplug
 	+===============================================================================
-         README               View the README file
-	 SlackBuild           View the SlackBuild file
-	 Info                 View the Info file
-         Download             Download this package
-	 Build                Download and build this package
-	 Install              Download/Build/Install
+    README               View the README file
+    SlackBuild           View the SlackBuild file
+    Info                 View the Info file
+    Download             Download this package
+    Build                Download and build this package
+    Install              Download/Build/Install
 
-        _
+    _
 
 Auto tool to build package:
 
@@ -320,9 +320,9 @@ Find if your packages installed:
 
 	$ slpkg -f termcolor lua yetris you-get rar pip
 	[ installed ] - termcolor-1.1.0-x86_64-1_SBo
-	No such package lua: Can't find
+	No such package lua: Cant find
 	[ installed ] - yetris-2.0.1-x86_64-1_SBo
-	No such package you-get: Can't find
+	No such package you-get: Cant find
 	[ installed ] - rar-5.0.1-x86_64-1_SBo
 	[ installed ] -  pip-1.5.4-x86_64-1_SBo
 
@@ -372,7 +372,7 @@ Display the contents of the package:
 	install/
 	install/slack-desc
 	
-	No such package lua: Can't find
+	No such package lua: Cant find
 
 Remove package:
 
@@ -411,8 +411,8 @@ Remove package:
 
     $ slpkg -f termcolor lua rar
 
-	No such package termcolor: Can't find
-	No such package lua: Can't find
+	No such package termcolor: Cant find
+	No such package lua: Cant find
 	[ installed ] - rar-5.0.1-x86_64-1_SBo
 
 	$ slpkg -v
