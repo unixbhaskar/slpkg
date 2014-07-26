@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-
 from slpkg.url_read import url_read
 from slpkg.__metadata__ import uname, arch
 

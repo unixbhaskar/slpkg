@@ -177,7 +177,7 @@ Check if your packages is up to date from slackbuilds.org:
 
     No such package termcolor: Can't find
 
-Check if your packages is up to date from `Slackware official mirrors <http://mirrors.slackware.com/>`_
+Check if your distribution is up to date from `Slackware official mirrors <http://mirrors.slackware.com/>`_
 
 .. code-block:: bash
 
@@ -324,7 +324,7 @@ Find if your packages installed:
 	[ installed ] - yetris-2.0.1-x86_64-1_SBo
 	No such package you-get: Cant find
 	[ installed ] - rar-5.0.1-x86_64-1_SBo
-	[ installed ] -  pip-1.5.4-x86_64-1_SBo
+	[ installed ] - pip-1.5.4-x86_64-1_SBo
 
 Display the contents of the package:
 

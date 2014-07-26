@@ -3,17 +3,14 @@
 
 import os
 import getpass
-
 from slpkg.pkg.build import *
 from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade
-
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.messages import pkg_not_found, s_user, template
 from slpkg.__metadata__ import tmp, pkg_path, uname, arch, sp
 from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
-
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from greps import sbo_source_dwn, sbo_extra_dwn, sbo_version_pkg
@@ -40,7 +37,7 @@ def sbo_check(name):
             extra_dwn = " ".join(sbo_extra_dwn(sbo_url, name))
             sbo_file = sbo_file[len(name) + 1:-len(arch) - 7]
             if sbo_version > sbo_file:
-                print ("\nNew version is available:")
+                print ("\n{0}New version is available:{1}".format(colors.YELLOW, colors.ENDC))
                 template(78)
                 print ("| Package: {0} {1} --> {2} {3}".format(
                         name, sbo_file,  name, sbo_version))

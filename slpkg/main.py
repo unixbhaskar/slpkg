@@ -28,22 +28,17 @@ optional arguments:
   -d  [ ...]            display the contents of the packages
 '''
 
-
 import argparse
-
 from version import *
 from functions import *
 from colors import colors
 from messages import err_args
-
 from pkg.build import *
 from pkg.manager import *
-
 from sbo.slackbuild import *
 from sbo.dependency import *
 from sbo.check import sbo_check
 from sbo.views import sbo_network
-
 from slack.patches import patches
 
 def main():
@@ -101,6 +96,8 @@ def main():
                     patches()
                 else:
                     print ("\nError: invalid option choose { upgrade }\n")
+            else:
+                print ("\nError: invalid option choose { sbo, slack }\n")
         else:
             err_args(bol='\n', eol='\n')
     if args.s:

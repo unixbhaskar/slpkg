@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-
 from slpkg.colors import colors
 from slpkg.url_read import url_read
 from slpkg.__metadata__ import pkg_path, slpkg_path
-
 from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade
-
 from mirrors import mirrors
 
 def patches():

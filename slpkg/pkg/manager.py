@@ -5,11 +5,9 @@ import os
 import sys
 import getpass
 import subprocess
-
 from slpkg.colors import colors
 from slpkg.__metadata__ import pkg_path, uname, arch, sp
 from slpkg.messages import pkg_not_found, s_user, template
-
 from find import find_package
 
 def pkg_install(binary):

@@ -4,13 +4,11 @@
 import os
 import sys
 import getpass
-
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.__metadata__ import tmp, pkg_path, sp
 from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
 from slpkg.messages import s_user, pkg_found, pkg_installed, template
-
 from slpkg.pkg.build import *
 from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade

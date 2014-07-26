@@ -3,11 +3,9 @@
 
 import re
 import sys
-
 from slpkg.colors import colors
 from slpkg.url_read import url_read
 from slpkg.functions import get_file
-
 from slpkg.slack.slack_version import slack_ver
 
 def sbo_search_pkg(name):

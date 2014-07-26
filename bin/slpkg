@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+# Slpkg is a terminal tool in order to easy use
+# Slackware packages
+
 from slpkg import main
 
 if __name__ == "__main__":
