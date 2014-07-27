@@ -45,13 +45,14 @@ def template(max):
 def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, extra_dwn, sbo_req):
     print # new line at start
     template(78)
-    print ("| {0}The {1}`{2}`{3} found in --> {4}".format(colors.GREEN,
+    print ("| {0}Package {1}{2}{3} --> {4}".format(colors.GREEN,
             colors.CYAN, pkg, colors.GREEN, colors.ENDC + sbo_url))
     template(78)
-    print ("| {0}Download SlackBuild : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_dwn))
-    print ("| {0}Source Downloads : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
-    print ("| {0}Extra Downloads : {1}{2}".format(colors.GREEN, colors.ENDC, extra_dwn))
-    print ("| {0}Package requirements : {1}{2}".format(colors.YELLOW, colors.ENDC, sbo_req))
+    print ("| {0}SlackBuild : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_dwn))
+    print ("| {0}Source : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
+    print ("| {0}Extra : {1}{2}".format(colors.GREEN, colors.ENDC, extra_dwn))
+    print ("| {0}Requirements : {1}{2}".format(colors.YELLOW, colors.ENDC,
+                                               ", ".join(sbo_req.split())))
     template(78)
     print (" {0}R{1}EADME               View the README file".format(colors.RED, colors.ENDC))
     print (" {0}S{1}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))

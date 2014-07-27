@@ -1,3 +1,9 @@
+28-07-2014
+Version 1.6.4
+
+[Updated] - Fix messages
+            FIx IndexError: tuple index out of range
+
 27-07-2014
 Version 1.6.3
 

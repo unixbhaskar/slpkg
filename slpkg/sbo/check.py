@@ -21,13 +21,13 @@ def sbo_check(name):
     '''
     sbo_file = " ".join(find_package(name + sp, pkg_path))
     if sbo_file == "":
-        message = "Can't find"
+        message = "Not installed"
         bol, eol = "\n", "\n"
         pkg_not_found(bol, name, message, eol)
     else:
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
-            message = "Can't find"
+            message = "From slackbuilds.org"
             bol, eol = "\n", "\n"
             pkg_not_found(bol, name, message, eol)
         else:

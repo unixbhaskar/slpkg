@@ -144,15 +144,16 @@ Tracking all dependencies of packages:
     +=========================
     | brasero dependencies   :
     +=========================
-    |
-    |
-    +-- 1 orc
-    |
-    +-- 1 gstreamer1
-    |
-    +-- 1 gst1-plugins-base
-    |
-    +-- 2 libunique gst1-plugins-bad
+    \ 
+     +---[ Tree of dependecies ]
+     |
+     +-- 1 orc
+     |
+     +-- 1 gstreamer1
+     |
+     +-- 1 gst1-plugins-base
+     |
+     +-- 2 libunique gst1-plugins-bad
 
 Check if your packages is up to date from slackbuilds.org:
 
@@ -193,19 +194,19 @@ Find slackbuild from slackbuilds.org:
     Searching `bitfighter` from slackbuilds.org ...
 
     +===============================================================================
-    | The `bitfighter` found in --> http://slackbuilds.org/repository/14.1/games/bitfighter/
+    | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
-    | Download SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
-    | Source Downloads : http://bitfighter.org/files/bitfighter-019c.tar.gz 
-    | Extra Downloads : https://bitfighter.googlecode.com/files/classic_level_pack.zip
-    | Package requirements : OpenAL SDL2 speex libmodplug
+    | SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
+    | Source : http://bitfighter.org/files/bitfighter-019c.tar.gz 
+    | Extra : https://bitfighter.googlecode.com/files/classic_level_pack.zip
+    | Requirements : OpenAL SDL2 speex libmodplug
     +===============================================================================
-    README               View the README file
-    SlackBuild           View the SlackBuild file
-    Info                 View the Info file
-    Download             Download this package
-    Build                Download and build this package
-    Install              Download/Build/Install
+     README               View the README file
+     SlackBuild           View the SlackBuild file
+     Info                 View the Info file
+     Download             Download this package
+     Build                Download and build this package
+     Install              Download/Build/Install
 
     _
 

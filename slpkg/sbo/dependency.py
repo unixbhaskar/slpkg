@@ -66,18 +66,19 @@ def pkg_tracking(name):
     if dependencies is None:
         pass
     elif dependencies == []:
-        print ("\nPackage {1} no dependencies\n".format(name))
+        print ("\nPackage {0} no dependencies\n".format(name))
     else:
         print # new line at start
-        pkg_len = len(name) + 18
+        pkg_len = len(name) + 24
         template(pkg_len)
-        print ("| {0}`{1}`{2} dependencies :{3}".format(colors.CYAN, name,
-                                              colors.YELLOW, colors.ENDC))
+        print ("| Package {0}{1}{2} dependencies :".format(colors.CYAN, name,
+                                              colors.ENDC))
         template(pkg_len)
         dependencies.reverse()
-        print (" |")
+        print ("\\")
+        print (" +---{0}[ Tree of dependencies ]{1}".format(colors.YELLOW, colors.ENDC))
         for i in range(len(dependencies)):
-            found = " +--", str(len(dependencies[i])), ", ".join(dependencies[i])
             print (" |")
-            print " ".join(found)
+            print (" ".join((" +--", str(len(dependencies[i])),
+            ", ".join(dependencies[i]))))
         print # new line at end
