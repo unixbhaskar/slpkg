@@ -1,14 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from slpkg.colors import colors
-from slpkg.functions import get_file
-from slpkg.__metadata__ import tmp, pkg_path, slpkg_path, sp
-from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from slpkg.messages import s_user, pkg_not_found, pkg_found, view_sbo, template
-from slpkg.pkg.build import *
-from slpkg.pkg.find import find_package
-from slpkg.pkg.manager import pkg_upgrade
+from colors import colors
+from functions import get_file
+from __metadata__ import tmp, pkg_path, slpkg_path, sp
+from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from messages import s_user, pkg_not_found, pkg_found, view_sbo, template
+
+from pkg.build import *
+from pkg.find import find_package
+from pkg.manager import pkg_upgrade
+
 from read import *
 from greps import *
 from search import sbo_search_pkg
@@ -30,7 +32,9 @@ def sbo_network(name):
         sbo_version = sbo_version_pkg(sbo_url, name)
         source_dwn = sbo_source_dwn(sbo_url, name)
         extra_dwn = " ".join(sbo_extra_dwn(sbo_url, name))
-        view_sbo(name, sbo_url, sbo_dwn, source_dwn, extra_dwn, sbo_req)
+        view_sbo(name, sbo_url, get_file(sbo_dwn, '/'), get_file(source_dwn, '/'),
+                 ', '.join([get_file(extra_dwn, '/') for extra_dwn in extra_dwn.split()]),
+                 sbo_req)
         while True:
             read = raw_input("_ ")
             if read == "D" or read == "d":

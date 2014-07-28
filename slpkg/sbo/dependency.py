@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from slpkg.colors import colors
-from slpkg.messages import pkg_not_found, template
+from colors import colors
+from messages import pkg_not_found, template
+
 from greps import *
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn

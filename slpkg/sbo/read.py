@@ -3,8 +3,8 @@
 
 import os
 import getpass
-from slpkg.messages import s_user
-from slpkg.url_read import url_read
+from messages import s_user
+from url_read import url_read
 
 # create tmp directory if not exist
 os.system("mkdir -p /tmp/slpkg/readme/")

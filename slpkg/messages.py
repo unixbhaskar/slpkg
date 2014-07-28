@@ -3,6 +3,7 @@
 
 import sys
 from colors import colors
+from __metadata__ import __all__
 
 def pkg_not_found(bol, pkg, message, eol):
     '''
@@ -22,11 +23,30 @@ def pkg_installed(pkg):
     '''
     print ("| Package {0} installed".format(pkg))
 
-def err_args(bol, eol):
+def ext_err_args():
+    '''
+    Extended error arguments view
+    '''
+    print ("usage: {0} [-h] [-v] [-a script [source ...]]".format(__all__))
+    print ("           [-l all, sbo, slack, noarch, other [all, sbo, slack, \
+            noarch, other ...]]")
+    print ("           [-c sbo, slack [sbo, slack ...]] [-t] [-n]")
+    print ("           [-s sbo, slack [sbo, slack ...]] [-i  [...]] [-u  [...]]")
+    print ("           [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]")
+
+def err1_args(invalid, choices):
     '''
     Print error message arguments
     '''
-    print ("{0}Error: must enter at least two arguments{1}".format(bol, eol))
+    print ("{0}: error: invalid choice: '{1}' choose from {2}".format(
+            __all__, invalid, choices))
+
+def err2_args():
+    '''
+    Print error message arguments
+    '''
+    print ("{0}: error: must enter at least two arguments".format(
+            __all__))
 
 def s_user(user):
     '''

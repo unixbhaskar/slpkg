@@ -3,14 +3,16 @@
 
 import os
 import getpass
-from slpkg.pkg.build import *
-from slpkg.pkg.find import find_package
-from slpkg.pkg.manager import pkg_upgrade
-from slpkg.colors import colors
-from slpkg.functions import get_file
-from slpkg.messages import pkg_not_found, s_user, template
-from slpkg.__metadata__ import tmp, pkg_path, uname, arch, sp
-from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from pkg.build import *
+from pkg.find import find_package
+from pkg.manager import pkg_upgrade
+
+from colors import colors
+from functions import get_file
+from messages import pkg_not_found, s_user, template
+from __metadata__ import tmp, pkg_path, uname, arch, sp
+from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
+
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from greps import sbo_source_dwn, sbo_extra_dwn, sbo_version_pkg

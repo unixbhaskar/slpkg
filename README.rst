@@ -5,7 +5,7 @@
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 
-Slpkg is a terminal tool in order to easy use Slackware packages.
+Slpkg is a terminal multitool in order to easy use Slackware packages.
 
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
     :alt: logo
@@ -67,30 +67,34 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-    usage: slpkg [-h] [-v] [-a script [source ...]] [-l all, sbo [all, sbo ...]]
-                 [-t] [-n] [-c] [-s] [-i  [...]] [-u  [...]] [-o  [...]]
-                 [-r  [...]] [-f  [...]] [-d  [...]]
+    usage: slpkg   [-h] [-v] [-a script [source ...]]
+                   [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]]
+                   [-c sbo, slack [sbo, slack ...]]
+                   [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
+                   [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
 
-    Utility to help package management in Slackware
+    Utility for easy management packages in Slackware
 
-      optional arguments:
+    optional arguments:
       -h, --help            show this help message and exit
       -v, --verbose         print version and exit
       -a script [source ...]
                             auto build package
-      -l all, sbo [all, sbo ...]
+      -l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]
                             list of installed packages
-      -t                    tracking dependencies
-      -n                    find from SBo repositority
       -c sbo, slack [sbo, slack ...]
                             check if your packages is up to date
-      -s                    download, build & install pkg from SBo
+      -s sbo, slack [sbo, slack ...]
+                            download, build & install packages
+      -t                    tracking dependencies
+      -n                    find packages from SBo repository
       -i  [ ...]            install binary packages
-      -u  [ ...]            install-upgrade packages with new
-      -o  [ ...]            reinstall the same packages
+      -u  [ ...]            upgrade binary packages
+      -o  [ ...]            reinstall binary packages
       -r  [ ...]            remove packages
       -f  [ ...]            find if packages installed
       -d  [ ...]            display the contents of the packages
+
 
 Slpkg Examples
 --------------
@@ -153,14 +157,14 @@ Tracking all dependencies of packages:
      |
      +-- 1 gst1-plugins-base
      |
-     +-- 2 libunique gst1-plugins-bad
+     +-- 2 libunique, gst1-plugins-bad
 
 Check if your packages is up to date from slackbuilds.org:
 
 .. code-block:: bash
 
     $ slpkg -c sbo flashplayer-plugin
-    Searching `flashplayer-plugin` from slackbuilds.org ...
+    Searching [ flashplayer-plugin ] from slackbuilds.org ...
 
     New version is available:
     +==============================================================================
@@ -170,11 +174,11 @@ Check if your packages is up to date from slackbuilds.org:
     Would you like to install ? [Y/y]
 
     $ slpkg -c sbo ranger
-    Searching `ranger` from slackbuilds.org ...
+    Searching [ ranger ] from slackbuilds.org ...
 
     Package ranger is up to date
 
-    $ slpkg -c termcolor
+    $ slpkg -c sbo termcolor
 
     No such package termcolor: Can't find
 
@@ -191,15 +195,15 @@ Find slackbuild from slackbuilds.org:
 .. code-block:: bash
 
     $ slpkg -n bitfighter
-    Searching `bitfighter` from slackbuilds.org ...
+    Searching [ bitfighter ] from slackbuilds.org ...
 
     +===============================================================================
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
-    | SlackBuild : http://slackbuilds.org/slackbuilds/14.1/games/bitfighter.tar.gz
-    | Source : http://bitfighter.org/files/bitfighter-019c.tar.gz 
-    | Extra : https://bitfighter.googlecode.com/files/classic_level_pack.zip
-    | Requirements : OpenAL SDL2 speex libmodplug
+    | SlackBuild : bitfighter.tar.gz
+    | Source : bitfighter-019c.tar.gz 
+    | Extra : classic_level_pack.zip
+    | Requirements : OpenAL, SDL2, speex, libmodplug
     +===============================================================================
      README               View the README file
      SlackBuild           View the SlackBuild file

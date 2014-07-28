@@ -2,27 +2,30 @@
 # -*- coding: utf-8 -*-
 
 '''
-usage: main.py [-h] [-v] [-a script [source ...]] [-l all, sbo [all, sbo ...]]
-               [-t] [-n] [-c sbo, slack [sbo, slack ...]] [-s] [-i  [...]]
+usage: slpkg   [-h] [-v] [-a script [source ...]]
+               [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]]
+               [-c sbo, slack [sbo, slack ...]]
+               [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
                [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
 
-Utility to help package management in Slackware
+Utility for easy management packages in Slackware
 
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         print version and exit
   -a script [source ...]
                         auto build package
-  -l all, sbo [all, sbo ...]
+  -l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]
                         list of installed packages
-  -t                    tracking dependencies
-  -n                    find from SBo repositority
   -c sbo, slack [sbo, slack ...]
                         check if your packages is up to date
-  -s                    download, build & install pkg from SBo
+  -s sbo, slack [sbo, slack ...]
+                        download, build & install packages
+  -t                    tracking dependencies
+  -n                    find packages from SBo repository
   -i  [ ...]            install binary packages
-  -u  [ ...]            install-upgrade packages with new
-  -o  [ ...]            reinstall the same packages
+  -u  [ ...]            upgrade binary packages
+  -o  [ ...]            reinstall binary packages
   -r  [ ...]            remove packages
   -f  [ ...]            find if packages installed
   -d  [ ...]            display the contents of the packages
@@ -32,37 +35,43 @@ import argparse
 from version import *
 from functions import *
 from colors import colors
-from messages import err_args
+from messages import ext_err_args
+from messages import err1_args, err2_args
+
 from pkg.build import *
 from pkg.manager import *
+
 from sbo.slackbuild import *
 from sbo.dependency import *
 from sbo.check import sbo_check
 from sbo.views import sbo_network
+
 from slack.patches import patches
+from slack.install import install
 
 def main():
-    description = "Utility to help package management in Slackware"
+    description = "Utility for easy management packages in Slackware"
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("-v", "--verbose", help="print version and exit",
                         action="store_true")
     parser.add_argument("-a", help="auto build package",
                         type=str, nargs="+", metavar=('script', 'source'))
     parser.add_argument("-l", help="list of installed packages", nargs="+", 
-                        choices="all sbo".split(), metavar=('all, sbo'))
-    parser.add_argument("-t", help="tracking dependencies",
-                        type=str, metavar=(''))
-    parser.add_argument("-n", help="find from SBo repositority",
-                        type=str, metavar=(''))
+                        choices="all sbo slack noarch other".split(),
+			            metavar=('all, sbo, slack, noarch, other'))
     parser.add_argument("-c", help="check if your packages is up to date",
                         type=str, nargs="+", metavar=('sbo, slack'))
-    parser.add_argument("-s", help="download, build & install pkg from SBo",
+    parser.add_argument("-s", help="download, build & install packages",
+                        type=str, nargs="+", metavar=('sbo, slack'))
+    parser.add_argument("-t", help="tracking dependencies",
+                        type=str, metavar=(''))
+    parser.add_argument("-n", help="find packages from SBo repository",
                         type=str, metavar=(''))
     parser.add_argument("-i", help="install binary packages",
                         type=str, nargs="+", metavar=(''))
-    parser.add_argument("-u", help="install-upgrade packages with new",
+    parser.add_argument("-u", help="upgrade binary packages",
                         type=str, nargs="+", metavar=(''))
-    parser.add_argument("-o", help="reinstall the same packages",
+    parser.add_argument("-o", help="reinstall binary packages",
                         type=str, nargs="+", metavar=(''))
     parser.add_argument("-r", help="remove packages",
                         type=str, nargs="+", metavar=(''))
@@ -95,13 +104,45 @@ def main():
                 if args.c[1] == "upgrade":
                     patches()
                 else:
-                    print ("\nError: invalid option choose { upgrade }\n")
+                    choices = ['upgrade']
+                    ext_err_args()
+                    err1_args(''.join(args.c), choices)
             else:
-                print ("\nError: invalid option choose { sbo, slack }\n")
+                choices = ['sbo', 'slack']
+                ext_err_args()
+                err1_args(''.join(args.c[0]), choices)
+        elif len(args.c) < 2:
+            if "sbo" in args.c or "slack" in args.c:
+                ext_err_args()
+                err2_args()
+            else:
+                choices = ['sbo', 'slack']
+                ext_err_args()
+                err1_args(''.join(args.c), choices)
         else:
-            err_args(bol='\n', eol='\n')
+            ext_err_args()
+            err2_args()    
     if args.s:
-        sbo_build(args.s)
+        if len(args.s) == 2:
+            if "sbo" in args.s:
+                sbo_build(''.join(args.s[1]))
+            elif "slack" in args.s:
+                install(''.join(args.s[1]))
+            else:
+                choices = ['sbo', 'slack']
+                ext_err_args()
+                err1_args(''.join(args.s), choices)
+        elif len(args.s) < 2:
+            if "sbo" in args.s or "slack" in args.s:
+                ext_err_args()
+                err2_args()
+            else:
+                choices = ['sbo', 'slack']
+                ext_err_args()
+                err1_args(''.join(args.s), choices)
+        else:
+            ext_err_args()
+            err2_args()
     if args.i:
         pkg_install(args.i)
     if args.u:

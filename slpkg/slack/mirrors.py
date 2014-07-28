@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from slpkg.__metadata__ import arch
+from __metadata__ import arch
 from slack_version import slack_ver
 
 def mirrors(name, location):
