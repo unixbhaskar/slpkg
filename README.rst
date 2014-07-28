@@ -104,7 +104,7 @@ build and install with all dependencies :
 
 .. code-block:: bash
 	
-    $ slpkg -s brasero
+    $ slpkg -s sbo brasero
     Searching [ brasero ] from slackbuilds.org ...
     Searching [ libunique ] from slackbuilds.org ...
     Searching [ gst1-plugins-bad ] from slackbuilds.org ...
@@ -138,6 +138,21 @@ build and install with all dependencies :
     | Package libunique installed
     | Package brasero installed
     +==============================================================================
+
+Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
+download and install:
+
+.. code-block:: bash
+
+    $ slpkg -s slack mozilla
+
+    Packages with name matching [ mozilla ]
+
+    [ install ] --> mozilla-firefox-24.1.0esr-x86_64-1
+    [ install ] --> mozilla-nss-3.15.2-x86_64-2
+    [ install ] --> mozilla-thunderbird-24.1.0-x86_64-1
+
+    Would you like to install [Y/y]
 
 Tracking all dependencies of packages:
 
