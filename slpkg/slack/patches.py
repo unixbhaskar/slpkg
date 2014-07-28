@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-from colors import colors
-from url_read import url_read
-from __metadata__ import pkg_path, slpkg_path
+from slpkg.colors import colors
+from slpkg.url_read import url_read
+from slpkg.__metadata__ import pkg_path, slpkg_path
 
-from pkg.find import find_package
-from pkg.manager import pkg_upgrade
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from mirrors import mirrors
 

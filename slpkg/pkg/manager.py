@@ -5,9 +5,9 @@ import os
 import sys
 import getpass
 import subprocess
-from colors import colors
-from __metadata__ import pkg_path, uname, arch, sp
-from messages import pkg_not_found, s_user, template
+from slpkg.colors import colors
+from slpkg.__metadata__ import pkg_path, uname, arch, sp
+from slpkg.messages import pkg_not_found, s_user, template
 
 from find import find_package
 

@@ -4,15 +4,15 @@
 import os
 import sys
 import getpass
-from colors import colors
-from functions import get_file
-from __metadata__ import tmp, pkg_path, sp
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from messages import s_user, pkg_found, pkg_installed, template
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.__metadata__ import tmp, pkg_path, sp
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from slpkg.messages import s_user, pkg_found, pkg_installed, template
 
-from pkg.build import *
-from pkg.find import find_package
-from pkg.manager import pkg_upgrade
+from slpkg.pkg.build import *
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from dependency import sbo_dependencies_links_pkg
 

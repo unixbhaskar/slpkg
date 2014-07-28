@@ -1,15 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-from colors import colors
-from functions import get_file
-from __metadata__ import tmp, pkg_path, slpkg_path, sp
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
-from messages import s_user, pkg_not_found, pkg_found, view_sbo, template
+import os
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.__metadata__ import tmp, pkg_path, slpkg_path, sp
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from slpkg.messages import s_user, pkg_not_found, pkg_found, view_sbo, template
 
-from pkg.build import *
-from pkg.find import find_package
-from pkg.manager import pkg_upgrade
+from slpkg.pkg.build import *
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from read import *
 from greps import *

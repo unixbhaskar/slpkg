@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-from url_read import url_read
-from __metadata__ import uname, arch
+from slpkg.url_read import url_read
+from slpkg.__metadata__ import uname, arch
 
 def sbo_source_dwn(sbo_url, name):
     '''

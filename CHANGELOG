@@ -1,9 +1,10 @@
-29-07-2014
+28-07-2014
 Version 1.6.5
 
 [Feature] - Added slack, noarch and other in list (slpkg -l)
             Added index in list (slpkg -l)
             Added install packages via official Slackware mirrors
+            Fix messages
 
 [Updated] - Arguments views
 
