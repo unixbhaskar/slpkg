@@ -1,6 +1,5 @@
 .. code-block:: bash
                                                                                 
-                                                                                
                      lllllll                    kkkkkkkk                            
                      l:::::l                    k::::::k                            
                      l:::::l                    k::::::k                            
@@ -24,7 +23,6 @@
                             p:::::::p                             gg:::::::::::::g  
                             ppppppppp                              ggg::::::ggg    
                                                                       gggggg
-
 
 .. image:: https://badge.fury.io/py/slpkg.png
     :target: http://badge.fury.io/py/slpkg

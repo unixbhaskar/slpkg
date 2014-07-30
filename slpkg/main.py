@@ -2,13 +2,29 @@
 # -*- coding: utf-8 -*-
 
 '''
-       .__          __            
-  _____|  | ______ |  | __  ____  
- /  ___/  | \____ \|  |/ / / ___\ 
- \___ \|  |_|  |_> >    < / /_/  >
-/____  >____/   __/|__|_ \\___  / 
-     \/     |__|        \/_____/  
-
+                 lllllll                    kkkkkkkk
+                 l:::::l                    k::::::k
+                 l:::::l                    k::::::k
+                 l:::::l                    k::::::k
+    ssssssssss    l::::lppppp   ppppppppp    k:::::k    kkkkkkkggggggggg   ggggg
+  ss::::::::::s   l::::lp::::ppp:::::::::p   k:::::k   k:::::kg:::::::::ggg::::g
+ss:::::::::::::s  l::::lp:::::::::::::::::p  k:::::k  k:::::kg:::::::::::::::::g
+s::::::ssss:::::s l::::lpp::::::ppppp::::::p k:::::k k:::::kg::::::ggggg::::::gg
+ s:::::s  ssssss  l::::l p:::::p     p:::::p k::::::k:::::k g:::::g     g:::::g
+   s::::::s       l::::l p:::::p     p:::::p k:::::::::::k  g:::::g     g:::::g
+      s::::::s    l::::l p:::::p     p:::::p k:::::::::::k  g:::::g     g:::::g
+ssssss   s:::::s  l::::l p:::::p    p::::::p k::::::k:::::k g::::::g    g:::::g
+s:::::ssss::::::sl::::::lp:::::ppppp:::::::pk::::::k k:::::kg:::::::ggggg:::::g
+s::::::::::::::s l::::::lp::::::::::::::::p k::::::k  k:::::kg::::::::::::::::g
+ s:::::::::::ss  l::::::lp::::::::::::::pp  k::::::k   k:::::kgg::::::::::::::g
+  sssssssssss    llllllllp::::::pppppppp    kkkkkkkk    kkkkkkk gggggggg::::::g
+                         p:::::p                                        g:::::g
+                         p:::::p                            gggggg      g:::::g
+                        p:::::::p                           g:::::gg   gg:::::g
+                        p:::::::p                            g::::::ggg:::::::g
+                        p:::::::p                             gg:::::::::::::g
+                        ppppppppp                              ggg::::::ggg
+                                                                  gggggg
 
 usage: slpkg   [-h] [-v] [-a script [source ...]]
                [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]]
