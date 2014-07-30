@@ -5,13 +5,12 @@
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 
-.. code-block:: bash
-           .__          __            
-      _____|  | ______ |  | __  ____  
-     /  ___/  | \____ \|  |/ / / ___\ 
-     \___ \|  |_|  |_> >    < / /_/  >
-    /____  >____/   __/|__|_ \\___  / 
-         \/     |__|        \/_____/  
+       .__          __            
+  _____|  | ______ |  | __  ____  
+ /  ___/  | \____ \|  |/ / / ___\ 
+ \___ \|  |_|  |_> >    < / /_/  >
+/____  >____/   __/|__|_ \\___  / 
+     \/     |__|        \/_____/  
 
 Slpkg is a terminal multitool in order to easy use Slackware packages.
 
