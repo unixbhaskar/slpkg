@@ -172,7 +172,7 @@ Tracking all dependencies of packages:
     | brasero dependencies   :
     +=========================
     \ 
-     +---[ Tree of dependecies ]
+     +---[ Tree of dependencies ]
      |
      +-- 1 orc
      |
