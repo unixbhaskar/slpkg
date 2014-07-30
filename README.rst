@@ -5,13 +5,6 @@
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 
-       .__          __            
-  _____|  | ______ |  | __  ____  
- /  ___/  | \____ \|  |/ / / ___\ 
- \___ \|  |_|  |_> >    < / /_/  >
-/____  >____/   __/|__|_ \\___  / 
-     \/     |__|        \/_____/  
-
 Slpkg is a terminal multitool in order to easy use Slackware packages.
 
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
@@ -73,6 +66,14 @@ Command Line Tool Usage
 -----------------------
 
 .. code-block:: bash
+
+           .__          __            
+      _____|  | ______ |  | __  ____  
+     /  ___/  | \____ \|  |/ / / ___\ 
+     \___ \|  |_|  |_> >    < / /_/  >
+    /____  >____/   __/|__|_ \\___  / 
+         \/     |__|        \/_____/  
+    
 
     usage: slpkg   [-h] [-v] [-a script [source ...]]
                    [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]]
