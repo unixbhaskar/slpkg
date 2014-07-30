@@ -1,4 +1,3 @@
-Slpkg
 .. code-block:: bash
                                                                                 
                                                                                 
