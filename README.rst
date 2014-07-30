@@ -106,7 +106,7 @@ build and install with all dependencies :
     $ slpkg -s sbo brasero
     
     +==============================================================================
-    | Build dependecies tree for package brasero
+    | Build dependencies tree for package brasero
     +==============================================================================
     Searching [ brasero ] from slackbuilds.org ...
     Searching [ libunique ] from slackbuilds.org ...
