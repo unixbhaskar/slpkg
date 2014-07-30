@@ -2,6 +2,14 @@
 # -*- coding: utf-8 -*-
 
 '''
+       .__          __            
+  _____|  | ______ |  | __  ____  
+ /  ___/  | \____ \|  |/ / / ___\ 
+ \___ \|  |_|  |_> >    < / /_/  >
+/____  >____/   __/|__|_ \\___  / 
+     \/     |__|        \/_____/  
+
+
 usage: slpkg   [-h] [-v] [-a script [source ...]]
                [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]]
                [-c sbo, slack [sbo, slack ...]]
@@ -38,7 +46,7 @@ from colors import colors
 from messages import ext_err_args
 from messages import err1_args, err2_args
 
-from pkg.build import *
+from pkg.build import build_package
 from pkg.manager import *
 
 from sbo.slackbuild import *
@@ -83,13 +91,7 @@ def main():
     if args.verbose:
         prog_version()
     if args.a:
-        s_user(getpass.getuser())
-        if len(args.a) == 2:
-            build_package(args.a[0], args.a[1])
-        elif len(args.a) > 2:
-            build_extra_pkg(args.a[0], args.a[1], args.a[2:])
-        else:
-            err_args(bol='\n', eol='\n')
+        build_package(args.a[0], args.a[1], args.a[2:])
     if args.l:
         pkg_list(args.l)
     if args.t:

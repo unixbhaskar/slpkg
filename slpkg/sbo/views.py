@@ -8,7 +8,7 @@ from slpkg.__metadata__ import tmp, pkg_path, slpkg_path, sp
 from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype
 from slpkg.messages import s_user, pkg_not_found, pkg_found, view_sbo, template
 
-from slpkg.pkg.build import *
+from slpkg.pkg.build import build_package
 from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade
 
@@ -19,7 +19,7 @@ from download import sbo_slackbuild_dwn
 
 def sbo_network(name):
     '''
-    View SalckBuild package links, read or install them 
+    View SlackBuild package, read or install them 
     from slackbuilds.org
     '''
     sbo_url = sbo_search_pkg(name)
@@ -40,10 +40,10 @@ def sbo_network(name):
             read = raw_input("_ ")
             if read == "D" or read == "d":
                 print ("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                os.system("wget -N " + sbo_dwn)
-                os.system("wget -N " + source_dwn)
-                if extra_dwn != "":
-                    os.system("wget " + extra_dwn)
+                os.system("wget -N {0} {1}".format(sbo_dwn, source_dwn))
+                if extra_dwn:
+                    for src in extra_dwn.split():
+                        os.system("wget -N {0}".format(src))
                 break
             elif read == "R" or read == "r":
                 site = "README"
@@ -65,45 +65,37 @@ def sbo_network(name):
                 script = get_file(sbo_dwn, "/")
                 source = get_file(source_dwn, "/")
                 print ("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                os.system("wget -N " + sbo_dwn)
-                os.system("wget -N " + source_dwn)
+                os.system("wget -N {0} {1}".format(sbo_dwn, source_dwn))
                 extra = []
-                if extra_dwn != "":
-                    os.system("wget -N " + extra_dwn)
-                    extra_dwn = extra_dwn.split()
-                    for link in extra_dwn:
-                        extra.append(get_file(link, "/"))
-                    build_extra_pkg(script, source, extra)
-                    break
-                build_package(script, source)
+                if extra_dwn:
+                    for src in extra_dwn.split():
+                        os.system("wget -N {0}".format(src))
+                        extra.append(get_file(src, "/"))
+                build_package(script, source, extra)
                 break
             elif read == "I" or read == "i":
                 s_user(getpass.getuser())
-                pkg_for_install = name + "-" + sbo_version
-                if find_package(pkg_for_install + sp, pkg_path) == []:
+                prgnam = sbo_prgnam_pkg(sbo_url, name)
+                pkg_for_install = ("{0}-{1}".format(prgnam, sbo_version))
+                if find_package(prgnam + sp, pkg_path) == []:
                     script = get_file(sbo_dwn, "/")
                     source = get_file(source_dwn, "/")
                     print ("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                    os.system("wget -N " + sbo_dwn)
-                    os.system("wget -N " + source_dwn)
+                    os.system("wget -N {0} {1}".format(sbo_dwn, source_dwn))
                     extra = []
-                    if extra_dwn != "":
-                        os.system("wget -N " + extra_dwn)
-                        extra_dwn = extra_dwn.split()
-                        for link in extra_dwn:
-                            extra.append(get_file(link, "/"))
-                        build_extra_pkg(script, source, extra)
-                        binary = (tmp + pkg_for_install + sbo_arch + sbo_tag + sbo_filetype).split()
-                        pkg_upgrade(binary)
-                        break
-                    build_package(script, source)
+                    if extra_dwn:
+                        for src in extra_dwn.split():
+                            os.system("wget -N {0}".format(src))
+                            extra.append(get_file(src, "/"))
+                    build_package(script, source, extra)
                     binary = (tmp + pkg_for_install + sbo_arch + sbo_tag + sbo_filetype).split()
                     pkg_upgrade(binary)
                     break
                 else:
                     template(78)
-                    pkg_found(''.join(find_package(name + sp, pkg_path)))
+                    pkg_found(''.join(find_package(prgnam + sp, pkg_path)))
                     template(78)
+                    print # new line at end
                     break
             else:
                 break

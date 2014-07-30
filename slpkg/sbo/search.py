@@ -11,14 +11,14 @@ from slpkg.slack.slack_version import slack_ver
 
 def sbo_search_pkg(name):
     '''
-    Find SlackBuilds packages links from repository slackbuilds.org
+    Find SlackBuilds packages from slackbuilds.org
     '''
     sbo_location = []
     print ('Searching {0}[ {1} ]{2} from slackbuilds.org ...'.format(
             colors.CYAN, name, colors.ENDC))
     sbo_url = ("http://slackbuilds.org/repository/{0}/".format(slack_ver()))
-    SLACKBUILDS_TXT = url_read(("http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(
-                                 slack_ver())))
+    SLACKBUILDS_TXT = url_read((
+    "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
     for line in SLACKBUILDS_TXT.splitlines():
         if line.startswith('SLACKBUILD LOCATION'):
             sbo_location.append(line.replace('SLACKBUILD LOCATION: ./', ''))

@@ -5,6 +5,14 @@
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 
+.. code-block:: bash
+           .__          __            
+      _____|  | ______ |  | __  ____  
+     /  ___/  | \____ \|  |/ / / ___\ 
+     \___ \|  |_|  |_> >    < / /_/  >
+    /____  >____/   __/|__|_ \\___  / 
+         \/     |__|        \/_____/  
+
 Slpkg is a terminal multitool in order to easy use Slackware packages.
 
 .. image:: https://raw.githubusercontent.com/dslackw/slpkg/master/logo/slpkg.png
@@ -105,6 +113,10 @@ build and install with all dependencies :
 .. code-block:: bash
 	
     $ slpkg -s sbo brasero
+    
+    +==============================================================================
+    | Build dependecies tree for package brasero
+    +==============================================================================
     Searching [ brasero ] from slackbuilds.org ...
     Searching [ libunique ] from slackbuilds.org ...
     Searching [ gst1-plugins-bad ] from slackbuilds.org ...
@@ -112,6 +124,11 @@ build and install with all dependencies :
     Searching [ gstreamer1 ] from slackbuilds.org ...
     Searching [ orc ] from slackbuilds.org ...
 
+    +==============================================================================
+    | Start download, build and install packages
+    +==============================================================================
+    Searching [ orc ] from slackbuilds.org ...
+    
     +==============================================================================
     | Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
     +==============================================================================

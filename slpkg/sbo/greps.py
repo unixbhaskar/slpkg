@@ -46,6 +46,16 @@ def sbo_requires_pkg(sbo_url, name):
         if line.startswith('REQUIRES="'):
             return line[10:-1]
 
+def sbo_prgnam_pkg(sbo_url, name):
+    '''
+    Grep program name
+    '''
+    read_info = url_read((sbo_url + name + ".info").replace(
+                          "repository", "slackbuilds"))
+    for line in read_info.splitlines():
+        if line.startswith('PRGNAM="'):
+            return line[8:-1]
+
 def sbo_version_pkg(sbo_url, name):
     '''
     Grep package version
