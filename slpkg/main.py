@@ -46,7 +46,7 @@ optional arguments:
   -s sbo, slack [sbo, slack ...]
                         download, build & install packages
   -t                    tracking dependencies
-  -n                    find packages from SBo repository
+  -n                    view packages from SBo repository
   -i  [ ...]            install binary packages
   -u  [ ...]            upgrade binary packages
   -o  [ ...]            reinstall binary packages
