@@ -339,16 +339,16 @@ Find if your packages installed:
 
 .. code-block:: bash
 
-	$ slpkg -f termcolor lua yetris you-get rar pip
+    $ slpkg -f termcolor lua yetris you-get rar pip
 	
     Packages with name matching [ termcolor, lua, yetris, you-get, rar, pip ]
 
     [ installed ] - termcolor-1.1.0-x86_64-1_SBo
-	No such package lua: Cant find
-	[ installed ] - yetris-2.0.1-x86_64-1_SBo
-	No such package you-get: Cant find
-	[ installed ] - rar-5.0.1-x86_64-1_SBo
-	[ installed ] - pip-1.5.4-x86_64-1_SBo
+    No such package lua: Cant find
+    [ installed ] - yetris-2.0.1-x86_64-1_SBo
+    No such package you-get: Cant find
+    [ installed ] - rar-5.0.1-x86_64-1_SBo
+    [ installed ] - pip-1.5.4-x86_64-1_SBo
 
 Display the contents of the package:
 
