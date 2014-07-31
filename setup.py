@@ -49,3 +49,4 @@ if 'install' in sys.argv:
         man_page = "man/slpkg.8"
         shutil.copy2(man_page, man_path)
         os.chmod(man_path, int('444', 8))
+

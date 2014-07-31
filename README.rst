@@ -1,11 +1,11 @@
-.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
-    :target: slpkg logo
 .. image:: https://badge.fury.io/py/slpkg.png
     :target: http://badge.fury.io/py/slpkg
 .. image:: https://pypip.in/d/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
+.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
+    :target: https://github.com/dslackw/slpkg 
 
 Slpkg is a terminal multitool in order to easy use Slackware packages.
 
@@ -67,7 +67,7 @@ Command Line Tool Usage
 .. code-block:: bash
 
     usage: slpkg   [-h] [-v] [-a script [source ...]]
-                   [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]]
+                   [-l all, sbo, slack, noarch, other]
                    [-c sbo, slack [sbo, slack ...]]
                    [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
                    [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
@@ -79,19 +79,19 @@ Command Line Tool Usage
       -v, --verbose         print version and exit
       -a script [source ...]
                             auto build package
-      -l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]
+      -l all, sbo, slack, noarch, other
                             list of installed packages
       -c sbo, slack [sbo, slack ...]
                             check if your packages is up to date
       -s sbo, slack [sbo, slack ...]
                             download, build & install packages
       -t                    tracking dependencies
-      -n                    find packages from SBo repository
+      -n                    view packages from SBo repository
       -i  [ ...]            install binary packages
       -u  [ ...]            upgrade binary packages
       -o  [ ...]            reinstall binary packages
       -r  [ ...]            remove packages
-      -f  [ ...]            find if packages installed
+      -f  [ ...]            view installed packages
       -d  [ ...]            display the contents of the packages
 
 
@@ -119,7 +119,9 @@ build and install with all dependencies :
     | Start download, build and install packages
     +==============================================================================
     Searching [ orc ] from slackbuilds.org ...
-    
+    .
+    .
+    .
     +==============================================================================
     | Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
     +==============================================================================
@@ -138,15 +140,6 @@ build and install with all dependencies :
     Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
     Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 	
-    +==============================================================================
-    | Package orc installed
-    | Package gstreamer1 installed
-    | Package gst1-plugins-base installed
-    | Package gst1-plugins-bad installed
-    | Package libunique installed
-    | Package brasero installed
-    +==============================================================================
-
 Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
 download and install:
 
@@ -347,7 +340,10 @@ Find if your packages installed:
 .. code-block:: bash
 
 	$ slpkg -f termcolor lua yetris you-get rar pip
-	[ installed ] - termcolor-1.1.0-x86_64-1_SBo
+	
+    Packages with name matching [ termcolor, lua, yetris, you-get, rar, pip ]
+
+    [ installed ] - termcolor-1.1.0-x86_64-1_SBo
 	No such package lua: Cant find
 	[ installed ] - yetris-2.0.1-x86_64-1_SBo
 	No such package you-get: Cant find
@@ -407,7 +403,9 @@ Remove package:
 .. code-block:: bash
 
     $ slpkg -r termcolor
-
+    
+    Packages with name matching [ termcolor ]
+    
     [ delete ] --> termcolor-1.1.0-x86_64-1_SBo
 
     Are you sure to remove 1 package(s) [Y/y] y
@@ -439,6 +437,8 @@ Remove package:
 
     $ slpkg -f termcolor lua rar
 
+    Packages with name matching [ termcolor, lua, rar ] 
+    
     No such package termcolor: Cant find
     No such package lua: Cant find
     [ installed ] - rar-5.0.1-x86_64-1_SBo

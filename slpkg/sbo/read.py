@@ -5,9 +5,10 @@ import os
 import getpass
 from slpkg.messages import s_user
 from slpkg.url_read import url_read
+from slpkg.__metadata__ import slpkg_path
 
 # create tmp directory if not exist
-os.system("mkdir -p /tmp/slpkg/readme/")
+os.system("mkdir -p /tmp/readme/")
 
 def read_readme(sbo_url, name, site):
     '''
@@ -15,7 +16,7 @@ def read_readme(sbo_url, name, site):
     '''
     s_user(getpass.getuser())
     readme = url_read((sbo_url + site).replace("repository", "slackbuilds"))
-    file = open("/tmp/slpkg/readme/" + name + "." + site, "w")
+    file = open("{0}readme/{1}.{2}".format(slpkg_path, name, site), "w")
     file.write(readme)
     file.close()
 
@@ -25,6 +26,6 @@ def read_info_slackbuild(sbo_url, name, site):
     '''
     s_user(getpass.getuser())
     info = url_read((sbo_url + name + site).replace("repository", "slackbuilds"))
-    file = open("/tmp/slpkg/readme/" + name + site, "w")
+    file = open("{0}readme/{1}{2}".format(slpkg_path, name, site), "w")
     file.write(info)
     file.close()

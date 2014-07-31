@@ -27,7 +27,7 @@ s::::::::::::::s l::::::lp::::::::::::::::p k::::::k  k:::::kg::::::::::::::::g
                                                                   gggggg
 
 usage: slpkg   [-h] [-v] [-a script [source ...]]
-               [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]]
+               [-l all, sbo, slack, noarch, other]
                [-c sbo, slack [sbo, slack ...]]
                [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
                [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
@@ -38,7 +38,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         print version and exit
   -a script [source ...]
-                        auto build package
+                        auto build packages
   -l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]
                         list of installed packages
   -c sbo, slack [sbo, slack ...]
@@ -51,7 +51,7 @@ optional arguments:
   -u  [ ...]            upgrade binary packages
   -o  [ ...]            reinstall binary packages
   -r  [ ...]            remove packages
-  -f  [ ...]            find if packages installed
+  -f  [ ...]            view packages installed
   -d  [ ...]            display the contents of the packages
 '''
 
@@ -78,9 +78,9 @@ def main():
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("-v", "--verbose", help="print version and exit",
                         action="store_true")
-    parser.add_argument("-a", help="auto build package",
+    parser.add_argument("-a", help="auto build packages",
                         type=str, nargs="+", metavar=('script', 'source'))
-    parser.add_argument("-l", help="list of installed packages", nargs="+", 
+    parser.add_argument("-l", help="list of installed packages",  
                         choices="all sbo slack noarch other".split(),
 			            metavar=('all, sbo, slack, noarch, other'))
     parser.add_argument("-c", help="check if your packages is up to date",
@@ -89,7 +89,7 @@ def main():
                         type=str, nargs="+", metavar=('sbo, slack'))
     parser.add_argument("-t", help="tracking dependencies",
                         type=str, metavar=(''))
-    parser.add_argument("-n", help="find packages from SBo repository",
+    parser.add_argument("-n", help="view packages from SBo repository",
                         type=str, metavar=(''))
     parser.add_argument("-i", help="install binary packages",
                         type=str, nargs="+", metavar=(''))
@@ -99,7 +99,7 @@ def main():
                         type=str, nargs="+", metavar=(''))
     parser.add_argument("-r", help="remove packages",
                         type=str, nargs="+", metavar=(''))
-    parser.add_argument("-f", help="find if packages installed",
+    parser.add_argument("-f", help="view installed packages",
                         type=str, nargs="+", metavar=(''))
     parser.add_argument("-d", help="display the contents of the packages",
                         type=str, nargs="+", metavar=(''))

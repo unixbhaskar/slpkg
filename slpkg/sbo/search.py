@@ -25,4 +25,3 @@ def sbo_search_pkg(name):
     for loc in sbo_location:
         if get_file(loc, '/') == name:
             return sbo_url + loc.replace(name, '') + name + "/"
-    

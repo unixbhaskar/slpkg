@@ -28,8 +28,7 @@ def ext_err_args():
     Extended error arguments view
     '''
     print ("usage: {0} [-h] [-v] [-a script [source ...]]".format(__all__))
-    print ("           [-l all, sbo, slack, noarch, other [all, sbo, slack, \
-            noarch, other ...]]")
+    print ("           [-l all, sbo, slack, noarch, other]")
     print ("           [-c sbo, slack [sbo, slack ...]] [-t] [-n]")
     print ("           [-s sbo, slack [sbo, slack ...]] [-i  [...]] [-u  [...]]")
     print ("           [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]")

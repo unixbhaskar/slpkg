@@ -64,4 +64,4 @@ def sbo_check(name):
                     pkg_upgrade(binary)                     
             else:
                 print ("\nPackage {0} is up to date\n".format(
-                    "".join(find_package(name + sp, pkg_path))))
+                       "".join(find_package(name + sp, pkg_path))))

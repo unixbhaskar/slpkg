@@ -48,18 +48,18 @@ def sbo_network(name):
             elif read == "R" or read == "r":
                 site = "README"
                 read_readme(sbo_url, name, site)
-                os.system("less {0}/readme/{1}.{2}".format(slpkg_path, name, site))
-                os.remove("{0}/readme/{1}.{2}".format(slpkg_path, name, site))
+                os.system("less {0}readme/{1}.{2}".format(slpkg_path, name, site))
+                os.remove("{0}readme/{1}.{2}".format(slpkg_path, name, site))
             elif read == "F" or read == "f":
                 site = ".info"
                 read_info_slackbuild(sbo_url, name, site)
-                os.system("less {0}/readme/{1}{2}".format(slpkg_path, name, site))
-                os.remove("{0}/readme/{1}{2}".format(slpkg_path, name, site))
+                os.system("less {0}readme/{1}{2}".format(slpkg_path, name, site))
+                os.remove("{0}readme/{1}{2}".format(slpkg_path, name, site))
             elif read == "S" or read == "s":
                 site = ".SlackBuild"
                 read_info_slackbuild(sbo_url, name, site)
-                os.system("less {0}/readme/{1}{2}".format(slpkg_path, name, site))
-                os.remove("{0}/readme/{1}{2}".format(slpkg_path, name, site))
+                os.system("less {0}readme/{1}{2}".format(slpkg_path, name, site))
+                os.remove("{0}readme/{1}{2}".format(slpkg_path, name, site))
             elif read == "B" or read == "b":
                 s_user(getpass.getuser())
                 script = get_file(sbo_dwn, "/")
