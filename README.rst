@@ -7,13 +7,14 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
-Slpkg is a terminal multitool in order to easy use Slackware packages.
+Slpkg is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
+packages.
 
 Features
 ========
 
 - Build packages from source with all dependencies
-- Find and Download packages from slackbuilds.org
+- Find and Download packages from `slackbuilds.org <http://slackbuilds.org/>`_
 - Automatic tool build and install packages
 - Check if your distribution is up to date
 - Display the contents of the packages
@@ -44,22 +45,22 @@ Installation
 Using slackware command:
 
 .. code-block:: bash
-	
-	Download from SlackBuilds http://slackbuilds.org
+    
+    Download from SlackBuilds http://slackbuilds.org
 
-	or
+    or
 
-	using sbopkg tool SBOPKG http://www.sbopkg.org
+    using sbopkg tool SBOPKG http://www.sbopkg.org
 
 Using pip:
 
 .. code-block:: bash
 
-	$ pip install slpkg
-	
-	uninstall:
+    $ pip install slpkg
+    
+    uninstall:
 
-	$ pip uninstall slpkg
+    $ pip uninstall slpkg
 
 Command Line Tool Usage
 -----------------------
@@ -102,7 +103,7 @@ Find package from slackbuilds.org download,
 build and install with all dependencies :
 
 .. code-block:: bash
-	
+    
     $ slpkg -s sbo brasero
     
     +==============================================================================
@@ -139,7 +140,7 @@ build and install with all dependencies :
     #
     Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
     Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
-	
+    
 Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
 download and install:
 
@@ -198,7 +199,8 @@ Check if your packages is up to date from slackbuilds.org:
 
     No such package termcolor: Can't find
 
-Check if your distribution is up to date from `Slackware official mirrors <http://mirrors.slackware.com/>`_
+Check if your distribution is up to date from `Slackware official mirrors 
+<http://mirrors.slackware.com/>`_
 
 .. code-block:: bash
 
@@ -234,113 +236,116 @@ Auto tool to build package:
 
 .. code-block:: bash
 
-	Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
-	must be in the same directory.
+    Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
+    must be in the same directory.
 
-	$ slpkg -a termcolor.tar.gz termcolor-1.1.0.tar.gz
+    $ slpkg -a termcolor.tar.gz termcolor-1.1.0.tar.gz
 
-	termcolor/
-	termcolor/slack-desc
-	termcolor/termcolor.info
-	termcolor/README
-	termcolor/termcolor.SlackBuild
-	termcolor-1.1.0/
-	termcolor-1.1.0/CHANGES.rst
-	termcolor-1.1.0/COPYING.txt
-	termcolor-1.1.0/README.rst
-	termcolor-1.1.0/setup.py
-	termcolor-1.1.0/termcolor.py
-	termcolor-1.1.0/PKG-INFO
-	running install
-	running build
-	running build_py
-	creating build
-	creating build/lib
-	copying termcolor.py -> build/lib
-	running install_lib
-	creating /tmp/SBo/package-termcolor/usr
-	creating /tmp/SBo/package-termcolor/usr/lib64
-	creating /tmp/SBo/package-termcolor/usr/lib64/python2.7
-	creating /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
-	copying build/lib/termcolor.py -> /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
-	byte-compiling /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor.py to termcolor.pyc
-	running install_egg_info
-	Writing /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+    termcolor/
+    termcolor/slack-desc
+    termcolor/termcolor.info
+    termcolor/README
+    termcolor/termcolor.SlackBuild
+    termcolor-1.1.0/
+    termcolor-1.1.0/CHANGES.rst
+    termcolor-1.1.0/COPYING.txt
+    termcolor-1.1.0/README.rst
+    termcolor-1.1.0/setup.py
+    termcolor-1.1.0/termcolor.py
+    termcolor-1.1.0/PKG-INFO
+    running install
+    running build
+    running build_py
+    creating build
+    creating build/lib
+    copying termcolor.py -> build/lib
+    running install_lib
+    creating /tmp/SBo/package-termcolor/usr
+    creating /tmp/SBo/package-termcolor/usr/lib64
+    creating /tmp/SBo/package-termcolor/usr/lib64/python2.7
+    creating /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
+    copying build/lib/termcolor.py -> 
+/tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
+    byte-compiling /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor.py 
+to termcolor.pyc
+    running install_egg_info
+    Writing 
+/tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
 
-	Slackware package maker, version 3.14159.
+    Slackware package maker, version 3.14159.
 
-	Searching for symbolic links:
+    Searching for symbolic links:
 
-	No symbolic links were found, so we won't make an installation script.
-	You can make your own later in ./install/doinst.sh and rebuild the
-	package if you like.
+    No symbolic links were found, so we won't make an installation script.
+    You can make your own later in ./install/doinst.sh and rebuild the
+    package if you like.
 
-	This next step is optional - you can set the directories in your package
-	to some sane permissions. If any of the directories in your package have
-	special permissions, then DO NOT reset them here!
+    This next step is optional - you can set the directories in your package
+    to some sane permissions. If any of the directories in your package have
+    special permissions, then DO NOT reset them here!
 
-	Would you like to reset all directory permissions to 755 (drwxr-xr-x) and
-	directory ownerships to root.root ([y]es, [n]o)? n
+    Would you like to reset all directory permissions to 755 (drwxr-xr-x) and
+    directory ownerships to root.root ([y]es, [n]o)? n
 
-	Creating Slackware package:  /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
+    Creating Slackware package:  /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
 
-	./
-	usr/
-	usr/lib64/
-	usr/lib64/python2.7/
-	usr/lib64/python2.7/site-packages/
-	usr/lib64/python2.7/site-packages/termcolor.py
-	usr/lib64/python2.7/site-packages/termcolor.pyc
-	usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
-	usr/doc/
-	usr/doc/termcolor-1.1.0/
-	usr/doc/termcolor-1.1.0/termcolor.SlackBuild
-	usr/doc/termcolor-1.1.0/README.rst
-	usr/doc/termcolor-1.1.0/CHANGES.rst
-	usr/doc/termcolor-1.1.0/PKG-INFO
-	usr/doc/termcolor-1.1.0/COPYING.txt
-	install/
-	install/slack-desc
+    ./
+    usr/
+    usr/lib64/
+    usr/lib64/python2.7/
+    usr/lib64/python2.7/site-packages/
+    usr/lib64/python2.7/site-packages/termcolor.py
+    usr/lib64/python2.7/site-packages/termcolor.pyc
+    usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+    usr/doc/
+    usr/doc/termcolor-1.1.0/
+    usr/doc/termcolor-1.1.0/termcolor.SlackBuild
+    usr/doc/termcolor-1.1.0/README.rst
+    usr/doc/termcolor-1.1.0/CHANGES.rst
+    usr/doc/termcolor-1.1.0/PKG-INFO
+    usr/doc/termcolor-1.1.0/COPYING.txt
+    install/
+    install/slack-desc
 
-	Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
+    Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
 Upgrade install package:
 
 .. code-block:: bash
 
-	$ slpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
+    $ slpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
 
-	+==============================================================================
-	| Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
-	+==============================================================================
+    +==============================================================================
+    | Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
+    +==============================================================================
 
-	Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
-	Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
-	PACKAGE DESCRIPTION:
-	# termcolor (ANSII Color formatting for output in terminal)
-	#
-	# termcolor allows you to format your output in terminal.
-	#
-	# Project URL: https://pypi.python.org/pypi/termcolor
-	#
-	Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
+    Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
+    Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
+    PACKAGE DESCRIPTION:
+    # termcolor (ANSII Color formatting for output in terminal)
+    #
+    # termcolor allows you to format your output in terminal.
+    #
+    # Project URL: https://pypi.python.org/pypi/termcolor
+    #
+    Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
 
 Of course you can install mass-packages:
 
 .. code-block:: bash
 
-	$ slpkg -u *.t?z
-	
-	or 
+    $ slpkg -u *.t?z
+    
+    or 
 
-	$ slpkg -i *.t?z
+    $ slpkg -i *.t?z
 
 Find if your packages installed:
 
 .. code-block:: bash
 
     $ slpkg -f termcolor lua yetris you-get rar pip
-	
+    
     Packages with name matching [ termcolor, lua, yetris, you-get, rar, pip ]
 
     [ installed ] - termcolor-1.1.0-x86_64-1_SBo
@@ -354,49 +359,49 @@ Display the contents of the package:
 
 .. code-block:: bash
 
-	$ slpkg -d termcolor lua
+    $ slpkg -d termcolor lua
 
-	PACKAGE NAME:     termcolor-1.1.0-x86_64-1_SBo
-	COMPRESSED PACKAGE SIZE:     8.0K
-	UNCOMPRESSED PACKAGE SIZE:     60K
-	PACKAGE LOCATION: ./termcolor-1.1.0-x86_64-1_SBo.tgz
-	PACKAGE DESCRIPTION:
-	termcolor: termcolor (ANSII Color formatting for output in terminal)
-	termcolor:
-	termcolor: termcolor allows you to format your output in terminal.
-	termcolor:
-	termcolor:
-	termcolor: Project URL: https://pypi.python.org/pypi/termcolor
-	termcolor:
-	termcolor:
-	termcolor:
-	termcolor:
-	FILE LIST:
-	./
-	usr/
-	usr/lib64/
-	usr/lib64/python2.7/
-	usr/lib64/python2.7/site-packages/
-	usr/lib64/python2.7/site-packages/termcolor.py
-	usr/lib64/python2.7/site-packages/termcolor.pyc
-	usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
-	usr/lib64/python3.3/
-	usr/lib64/python3.3/site-packages/
-	usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
-	usr/lib64/python3.3/site-packages/__pycache__/
-	usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
-	usr/lib64/python3.3/site-packages/termcolor.py
-	usr/doc/
-	usr/doc/termcolor-1.1.0/
-	usr/doc/termcolor-1.1.0/termcolor.SlackBuild
-	usr/doc/termcolor-1.1.0/README.rst
-	usr/doc/termcolor-1.1.0/CHANGES.rst
-	usr/doc/termcolor-1.1.0/PKG-INFO
-	usr/doc/termcolor-1.1.0/COPYING.txt
-	install/
-	install/slack-desc
-	
-	No such package lua: Cant find
+    PACKAGE NAME:     termcolor-1.1.0-x86_64-1_SBo
+    COMPRESSED PACKAGE SIZE:     8.0K
+    UNCOMPRESSED PACKAGE SIZE:     60K
+    PACKAGE LOCATION: ./termcolor-1.1.0-x86_64-1_SBo.tgz
+    PACKAGE DESCRIPTION:
+    termcolor: termcolor (ANSII Color formatting for output in terminal)
+    termcolor:
+    termcolor: termcolor allows you to format your output in terminal.
+    termcolor:
+    termcolor:
+    termcolor: Project URL: https://pypi.python.org/pypi/termcolor
+    termcolor:
+    termcolor:
+    termcolor:
+    termcolor:
+    FILE LIST:
+    ./
+    usr/
+    usr/lib64/
+    usr/lib64/python2.7/
+    usr/lib64/python2.7/site-packages/
+    usr/lib64/python2.7/site-packages/termcolor.py
+    usr/lib64/python2.7/site-packages/termcolor.pyc
+    usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+    usr/lib64/python3.3/
+    usr/lib64/python3.3/site-packages/
+    usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
+    usr/lib64/python3.3/site-packages/__pycache__/
+    usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
+    usr/lib64/python3.3/site-packages/termcolor.py
+    usr/doc/
+    usr/doc/termcolor-1.1.0/
+    usr/doc/termcolor-1.1.0/termcolor.SlackBuild
+    usr/doc/termcolor-1.1.0/README.rst
+    usr/doc/termcolor-1.1.0/CHANGES.rst
+    usr/doc/termcolor-1.1.0/PKG-INFO
+    usr/doc/termcolor-1.1.0/COPYING.txt
+    install/
+    install/slack-desc
+    
+    No such package lua: Cant find
 
 Remove package:
 
@@ -452,5 +457,4 @@ Man page it is available for full support:
 
 .. code-block:: bash
 
-	$ man slpkg
-
+    $ man slpkg
