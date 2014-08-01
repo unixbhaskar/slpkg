@@ -15,6 +15,7 @@ Features
 
 - Build packages from source with all dependencies
 - Find and Download packages from `slackbuilds.org <http://slackbuilds.org/>`_
+- Grabs packages from slackbuilds.org in real time
 - Automatic tool build and install packages
 - Check if your distribution is up to date
 - Display the contents of the packages
