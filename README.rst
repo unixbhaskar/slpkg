@@ -56,7 +56,7 @@ Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last updates):
 
 Using Slackware command:
     
-`[Download] <http://slackbuilds.org/repository/14.1/system/slpkg>`_ from slackbuilds.org
+`[Download] <http://slackbuilds.org/repository/14.1/system/slpkg/>`_ from slackbuilds.org
 
 or
 
