@@ -2,29 +2,29 @@
 # -*- coding: utf-8 -*-
 
 '''
-                 lllllll                    kkkkkkkk
-                 l:::::l                    k::::::k
-                 l:::::l                    k::::::k
-                 l:::::l                    k::::::k
-    ssssssssss    l::::lppppp   ppppppppp    k:::::k    kkkkkkkggggggggg   ggggg
-  ss::::::::::s   l::::lp::::ppp:::::::::p   k:::::k   k:::::kg:::::::::ggg::::g
-ss:::::::::::::s  l::::lp:::::::::::::::::p  k:::::k  k:::::kg:::::::::::::::::g
-s::::::ssss:::::s l::::lpp::::::ppppp::::::p k:::::k k:::::kg::::::ggggg::::::gg
- s:::::s  ssssss  l::::l p:::::p     p:::::p k::::::k:::::k g:::::g     g:::::g
-   s::::::s       l::::l p:::::p     p:::::p k:::::::::::k  g:::::g     g:::::g
-      s::::::s    l::::l p:::::p     p:::::p k:::::::::::k  g:::::g     g:::::g
-ssssss   s:::::s  l::::l p:::::p    p::::::p k::::::k:::::k g::::::g    g:::::g
-s:::::ssss::::::sl::::::lp:::::ppppp:::::::pk::::::k k:::::kg:::::::ggggg:::::g
-s::::::::::::::s l::::::lp::::::::::::::::p k::::::k  k:::::kg::::::::::::::::g
- s:::::::::::ss  l::::::lp::::::::::::::pp  k::::::k   k:::::kgg::::::::::::::g
-  sssssssssss    llllllllp::::::pppppppp    kkkkkkkk    kkkkkkk gggggggg::::::g
-                         p:::::p                                        g:::::g
-                         p:::::p                            gggggg      g:::::g
-                        p:::::::p                           g:::::gg   gg:::::g
-                        p:::::::p                            g::::::ggg:::::::g
-                        p:::::::p                             gg:::::::::::::g
-                        ppppppppp                              ggg::::::ggg
-                                                                  gggggg
+                     SSSSSSS                    SSSSSSSS
+                     SSSSSSS                    SSSSSSSS
+                     SSSSSSS                    SSSSSSSS
+                     SSSSSSS                    SSSSSSSS
+        SSSSSSSSSS    SSSSSSSSSSS   SSSSSSSSS    SSSSSSS    SSSSSSSSSSSSSSSS   SSSSS
+      SSSSSSSSSSSSS   SSSSSSSSSSSSSSSSSSSSSSSS   SSSSSSS   SSSSSSSSSSSSSSSSSSSSSSSSS
+    SSSSSSSSSSSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSS  SSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSSS
+    SSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSS SSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSSS
+     SSSSSSS  SSSSSS  SSSSSS SSSSSSS     SSSSSSS SSSSSSSSSSSSSS SSSSSSS     SSSSSSS
+       SSSSSSSS       SSSSSS SSSSSSS     SSSSSSS SSSSSSSSSSSSS  SSSSSSS     SSSSSSS
+          SSSSSSSS    SSSSSS SSSSSSS     SSSSSSS SSSSSSSSSSSSS  SSSSSSS     SSSSSSS
+    SSSSSS   SSSSSSS  SSSSSS SSSSSSS    SSSSSSSS SSSSSSSSSSSSSS SSSSSSSS    SSSSSSS
+    SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSS
+    SSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSS SSSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSS
+     SSSSSSSSSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSS  SSSSSSSS   SSSSSSSSSSSSSSSSSSSSSSSS
+      SSSSSSSSSSS    SSSSSSSSSSSSSSSSSSSSSSS    SSSSSSSS    SSSSSSS SSSSSSSSSSSSSSS
+                             SSSSSSS                                        SSSSSSS
+                             SSSSSSS                            SSSSSS      SSSSSSS
+                            SSSSSSSSS                           SSSSSSSS   SSSSSSSS
+                            SSSSSSSSS                            SSSSSSSSSSSSSSSSSS
+                            SSSSSSSSS                             SSSSSSSSSSSSSSSS
+                            SSSSSSSSS                              SSSSSSSSSSSS
+                                                                      SSSSSS
 
 usage: slpkg   [-h] [-v] [-a script [source ...]]
                [-l all, sbo, slack, noarch, other]

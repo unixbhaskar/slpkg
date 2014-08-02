@@ -26,15 +26,15 @@ def sbo_extra_dwn(sbo_url, name):
     '''
     read_info = url_read((sbo_url + name + ".info").replace(
                           "repository", "slackbuilds"))
-    results = []
-    for line in read_info.splitlines():
-        if line.startswith(' '):
-            line = line[:-1].replace(' ', '')
+    extra = []
+    for line in read_info.split():
+        if line.endswith('"'):
+            line = line[:-1].replace('"', '')
         if line.startswith('http'):
-            results.append(line)
+            extra.append(line)
         if line.startswith('ftp'):
-            results.append(line)
-    return results
+            extra.append(line)
+    return extra
 
 def sbo_requires_pkg(sbo_url, name):
     '''

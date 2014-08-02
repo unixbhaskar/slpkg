@@ -13,7 +13,8 @@ packages.
 Features
 ========
 
-- Build packages from source with all dependencies
+- Build third party packages from source with all dependencies
+- Install packages through from official `Slackware <http://www.slackware.com/>`_ mirrors
 - Find and Download packages from `slackbuilds.org <http://slackbuilds.org/>`_
 - Grabs packages from slackbuilds.org in real time
 - Automatic tool build and install packages
@@ -29,7 +30,7 @@ Features
 - Remove packages
 - No dependencies
 
-It's a quick and easy way to manage your packages in slackware
+It's a quick and easy way to manage your packages in `Slackware <http://www.slackware.com/>`_
 to a command.
 
 `[CHANGELOG] <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
@@ -43,17 +44,7 @@ Video Tutorial
 Installation
 ------------
 
-Using slackware command:
-
-.. code-block:: bash
-    
-    Download from SlackBuilds http://slackbuilds.org
-
-    or
-
-    using sbopkg tool SBOPKG http://www.sbopkg.org
-
-Using pip:
+Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last updates):
 
 .. code-block:: bash
 
@@ -63,6 +54,18 @@ Using pip:
 
     $ pip uninstall slpkg
 
+Using Slackware command:
+    
+`[Download] <http://slackbuilds.org/repository/14.1/system/slpkg>`_ from slackbuilds.org
+
+or
+
+using `SBOPKG <http://www.sbopkg.org>`_ tool
+
+Download binary package from SourceForge:
+
+`[Download] <https://sourceforge.net/projects/slpkg>`_ slpkg
+    
 Command Line Tool Usage
 -----------------------
 
@@ -108,19 +111,19 @@ build and install with all dependencies :
     $ slpkg -s sbo brasero
     
     +==============================================================================
-    | Build dependencies tree for package brasero
+    | Build dependencies tree for package brasero:
     +==============================================================================
-    Searching [ brasero ] from slackbuilds.org ...
-    Searching [ libunique ] from slackbuilds.org ...
-    Searching [ gst1-plugins-bad ] from slackbuilds.org ...
-    Searching [ gst1-plugins-base ] from slackbuilds.org ...
-    Searching [ gstreamer1 ] from slackbuilds.org ...
-    Searching [ orc ] from slackbuilds.org ...
+    [ found ] --> brasero
+    [ found ] --> libunique
+    [ found ] --> gst1-plugins-bad
+    [ found ] --> gst1-plugins-base
+    [ found ] --> gstreamer1
+    [ found ] --> orc
 
     +==============================================================================
     | Start download, build and install packages
     +==============================================================================
-    Searching [ orc ] from slackbuilds.org ...
+    [ found ] --> orc
     .
     .
     .
@@ -163,6 +166,15 @@ Tracking all dependencies of packages:
 
     $ slpkg -t brasero
 
+    Search dependencies for package brasero from slackbuilds.org:
+
+    [ found ] -->  brasero
+    [ found ] -->  libunique
+    [ found ] -->  gst1-plugins-bad
+    [ found ] -->  gst1-plugins-base
+    [ found ] -->  gstreamer1
+    [ found ] -->  orc
+
     +=========================
     | brasero dependencies   :
     +=========================
@@ -182,7 +194,10 @@ Check if your packages is up to date from slackbuilds.org:
 .. code-block:: bash
 
     $ slpkg -c sbo flashplayer-plugin
-    Searching [ flashplayer-plugin ] from slackbuilds.org ...
+    
+    Search for package flashplayer-plugin from slackbuilds.org:
+    
+    [ found ] --> flashplayer-plugin
 
     New version is available:
     +==============================================================================
@@ -192,13 +207,16 @@ Check if your packages is up to date from slackbuilds.org:
     Would you like to install ? [Y/y]
 
     $ slpkg -c sbo ranger
-    Searching [ ranger ] from slackbuilds.org ...
+    
+    Search for package ranger from slackbuilds.org:
 
-    Package ranger is up to date
+    [ found ] --> ranger
+
+    Package ranger-1.6.1-x86_64-1_SBo is up to date
 
     $ slpkg -c sbo termcolor
 
-    No such package termcolor: Can't find
+    No such package termcolor: Not installed
 
 Check if your distribution is up to date from `Slackware official mirrors 
 <http://mirrors.slackware.com/>`_
@@ -207,14 +225,23 @@ Check if your distribution is up to date from `Slackware official mirrors
 
     $ slpkg -c slack upgrade
 
-    Your system is up to date
+    These packages need upgrading:
+
+    [ upgrade ] --> dhcpcd-6.0.5-x86_64-3_slack14.1.txz
+    [ upgrade ] --> samba-4.1.11-x86_64-1_slack14.1.txz
+    [ upgrade ] --> xscreensaver-5.29-x86_64-1_slack14.1.txz
+
+    Would you like to upgrade ? [Y/y]
 
 Find slackbuild from slackbuilds.org:
 
 .. code-block:: bash
 
     $ slpkg -n bitfighter
-    Searching [ bitfighter ] from slackbuilds.org ...
+    
+    Search for package bitfighter from slackbuilds.org:
+    
+    [ found ] --> bitfighter
 
     +===============================================================================
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
@@ -266,12 +293,12 @@ Auto tool to build package:
     creating /tmp/SBo/package-termcolor/usr/lib64/python2.7
     creating /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
     copying build/lib/termcolor.py -> 
-/tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
+    /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
     byte-compiling /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor.py 
-to termcolor.pyc
+    to termcolor.pyc
     running install_egg_info
     Writing 
-/tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+    /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
 
     Slackware package maker, version 3.14159.
 

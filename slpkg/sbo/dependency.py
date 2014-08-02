@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys
 from slpkg.colors import colors
 from slpkg.messages import pkg_not_found, template
 
@@ -14,25 +15,30 @@ def sbo_dependencies_pkg(name):
     '''
     Build tree of dependencies
     '''
-    if name != "%README%":
-        sbo_url = sbo_search_pkg(name)
-        if sbo_url is None:
-            message = "From slackbuilds.org"
-            bol, eol = "\n", "\n"
-            pkg_not_found(bol, name, message, eol)
-        else:
-            sbo_req = sbo_requires_pkg(sbo_url, name)
-            dependencies = sbo_req.split()
-            if dependencies != []:
-                dep_results.append(dependencies)
-            for line in dependencies:
-                sbo_dependencies_pkg(line)
-            return dep_results
+    try:
+        if name is not "%README%":
+            sbo_url = sbo_search_pkg(name)
+            if sbo_url is None:
+                message = "From slackbuilds.org"
+                bol, eol = "", "\n"
+                pkg_not_found(bol, name, message, eol)
+            else:
+                sbo_req = sbo_requires_pkg(sbo_url, name)
+                dependencies = sbo_req.split()
+                if dependencies != []:
+                    dep_results.append(dependencies)
+                for line in dependencies:
+                    sbo_dependencies_pkg(line)
+                return dep_results
+    except KeyboardInterrupt:
+        print # new line at exit
+        sys.exit()
 
 def pkg_tracking(name):
     '''
     Print tree of dependencies
     '''
+    print ('\nSearch dependencies for package {0} from slackbuilds.org:\n'.format(name))
     dependencies = sbo_dependencies_pkg(name)
     if dependencies is None:
         pass

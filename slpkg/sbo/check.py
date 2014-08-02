@@ -27,10 +27,11 @@ def sbo_check(name):
         bol, eol = "\n", "\n"
         pkg_not_found(bol, name, message, eol)
     else:
+        print ("\nSearch for package {0} from slackbuilds.org:\n".format(name))
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
             message = "From slackbuilds.org"
-            bol, eol = "\n", "\n"
+            bol, eol = "", "\n"
             pkg_not_found(bol, name, message, eol)
         else:
             sbo_version = sbo_version_pkg(sbo_url, name)

@@ -22,6 +22,7 @@ def sbo_network(name):
     View SlackBuild package, read or install them 
     from slackbuilds.org
     '''
+    print ('\nSearch for package {0} from slackbuilds.org:\n'.format(name))
     sbo_url = sbo_search_pkg(name)
     if sbo_url is None:
         message = "From slackbuilds.org"
@@ -37,7 +38,11 @@ def sbo_network(name):
                  ', '.join([get_file(extra_dwn, '/') for extra_dwn in extra_dwn.split()]),
                  sbo_req)
         while True:
-            read = raw_input("_ ")
+            try:
+                read = raw_input("_ ")
+            except KeyboardInterrupt:
+                print # new line at exit
+                break
             if read == "D" or read == "d":
                 print ("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
                 os.system("wget -N {0} {1}".format(sbo_dwn, source_dwn))

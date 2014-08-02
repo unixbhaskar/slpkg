@@ -14,3 +14,6 @@ def url_read(link):
     except urllib2.URLError:
         print ("\nError: connection refused\n")
         sys.exit()
+    except KeyboardInterrupt:
+        print # new line at exit
+        sys.exit()

@@ -83,7 +83,12 @@ def pkg_remove(binary):
     if removed == []:
         print # new line at end
         sys.exit()
-    remove_pkg = raw_input("\nAre you sure to remove " + str(len(removed)) + " package(s) [Y/y] ")
+    try:
+        remove_pkg = raw_input("\nAre you sure to remove " + str(len(removed)) + \
+                               " package(s) [Y/y] ")
+    except KeyboardInterrupt:
+        print # new line at exit
+        sys.exit()
     if remove_pkg == "y" or remove_pkg == "Y":
         for rmv in removed:
             print subprocess.check_output('removepkg {0}'.format(rmv), shell=True)
@@ -132,48 +137,52 @@ def pkg_list(binary):
     '''
     List with the installed packages
     '''
-    print # new line at start
-    index, stop = 0, 50
-    if "all" in binary:
-        for pkg in os.listdir(pkg_path):
-            index += 1
-            print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-            if index == stop:
-                key = raw_input('\nPress [ Enter ] >> Next page ')
-                stop += 50
-    if "sbo" in binary:
-        for pkg in os.listdir(pkg_path):
-            if 'SBo' in pkg:
+    try:
+        print # new line at start
+        index, stop = 0, 50
+        if "all" in binary:
+            for pkg in os.listdir(pkg_path):
                 index += 1
                 print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
                 if index == stop:
                     key = raw_input('\nPress [ Enter ] >> Next page ')
                     stop += 50
-    if "slack" in binary:
-        for pkg in os.listdir(pkg_path):
-            if 'slack' in pkg:
-                index += 1
-                print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                if index == stop:
-                    key = raw_input('\nPress [ Enter ] >> Next page ')
-                    stop += 50
-    if "noarch" in binary:
-        for pkg in os.listdir(pkg_path):
-            if 'noarch' in pkg:
-                index += 1
-                print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                if index == stop:
-                    key = raw_input('\nPress [ Enter ] >> Next page ')
-                    stop += 50
-    if "other" in binary:
-        for pkg in os.listdir(pkg_path):
-            if 'SBo' in pkg or 'slack' in pkg or 'noarch' in pkg:
-                pass
-            else:
-                index += 1
-                print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                if index == stop:
-                    key = raw_input('\nPress [ Enter ] >> Next page ')
-                    stop += 50
-    print # new line at end
+        if "sbo" in binary:
+            for pkg in os.listdir(pkg_path):
+                if 'SBo' in pkg:
+                    index += 1
+                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
+                    if index == stop:
+                        key = raw_input('\nPress [ Enter ] >> Next page ')
+                        stop += 50
+        if "slack" in binary:
+            for pkg in os.listdir(pkg_path):
+                if 'slack' in pkg:
+                    index += 1
+                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
+                    if index == stop:
+                        key = raw_input('\nPress [ Enter ] >> Next page ')
+                        stop += 50
+        if "noarch" in binary:
+            for pkg in os.listdir(pkg_path):
+                if 'noarch' in pkg:
+                    index += 1
+                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
+                    if index == stop:
+                        key = raw_input('\nPress [ Enter ] >> Next page ')
+                        stop += 50
+        if "other" in binary:
+            for pkg in os.listdir(pkg_path):
+                if 'SBo' in pkg or 'slack' in pkg or 'noarch' in pkg:
+                    pass
+                else:
+                    index += 1
+                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
+                    if index == stop:
+                        key = raw_input('\nPress [ Enter ] >> Next page ')
+                        stop += 50
+        print # new line at end
+    except KeyboardInterrupt:
+        print # new line at exit
+        sys.exit()
 

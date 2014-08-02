@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import shutil
 import getpass
 import tarfile
@@ -30,4 +31,7 @@ def build_package(script, source, extra):
         message = "Wrong file"
         bol, eol, pkg = "\n", "\n", ""
         pkg_not_found(bol, pkg, message, eol)
-
+    except KeyboardInterrupt:
+        print # new line at exit
+        sys.exit()
+        

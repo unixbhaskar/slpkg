@@ -1,3 +1,10 @@
+01-08-2014
+Version 1.6.8
+
+[Updated] - Fix grap http extra sources with space in line start like
+            package EMBASSY
+            Fix KeyboardInterrupt
+
 31-07-2014
 Version 1.6.7
 
