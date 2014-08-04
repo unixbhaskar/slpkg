@@ -34,12 +34,12 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB-s sbo, slack [sbo, slack ...]\fP
   \fB                      download, build & install packages\fP
   \fB                      list of installed packages\fP
-  \fB-t                    tracking dependencies\fP
+  \fB-t                    packages tracking dependencies from SBo\fP
   \fB-n                    view packages from SBo repositority\fP
   \fB-i  [ ...]            install binary packages\fP
   \fB-u  [ ...]            upgrade binary packages\fP
   \fB-o  [ ...]            reinstall binary packages\fP
-  \fB-r  [ ...]            remove packages\fP
+  \fB-r  [ ...]            remove binary packages\fP
   \fB-f  [ ...]            view installed packages\fP
   \fB-d  [ ...]            display the contents of the packages\fP
 
@@ -75,13 +75,13 @@ the network. (www.slackbuilds.org)
 .PP
 Check your packages from Slackware official mirrors or from 
 slackbuilds.org is up to date.
-.SS -s , sbo, slack [sbo, slack ...] find, download, build and install
-package with all dependencies
+.SS -s , sbo, slack [sbo, slack ...] find, download, build and install package with all dependencies
 \fBslpkg\fP \fB-s\fP <\fIsbo\fP> <\fIslack\fP> <\fIname of package\fP>
 .PP
 Find package from slackbuild.org with all dependencies,
-download, build and install them. Even download and install official
-packages from Slackware official mirrors and install.
+download, build and install them if not installed or new version is 
+available. Even download and install official packages from Slackware
+official mirrors and install.
 .SS -i , install binary package
 \fBslpkg\fP \fB-i\fP <\fIpackages.t?z\fP>
 .PP
@@ -131,16 +131,20 @@ $ \fBslpkg -t brasero\fP
   +=========================
   | brasero dependencies :
   +=========================
-  \ 
+  \\ 
    +---[ Tree of dependencies ]
    |
-   -- 1 orc
+   --1: orc
    |
-   -- 1 gstreamer1
+   --2: gstreamer1
    |
-   -- 1 gst1-plugins-base
+   --3: gst1-plugins-base
    |
-   -- 2 libunique gst1-plugins-bad
+   --4: gst1-plugins-bad
+   |
+   --5: libunique
+
+   NOTE: green installed, red not installed
 
 $ \fBslpkg -s sbo brasero\fP
   

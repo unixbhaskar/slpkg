@@ -1,11 +1,12 @@
 Metadata-Version: 1.1
 Name: slpkg
-Version: 1.6.8
+Version: 1.6.9
 Author: dslackw
 Author-email: d zlatanidis at gmail com
 Maintainer: dslackw
 Maintainer-email: d zlatanidis at gmail com
 Home-page: https://github.com/dslackw/slpkg
+Download-url: http://sourceforge.net/projects/slpkg
 Summary: Utility for easy management packages in Slackware
 Description: .. image:: https://badge.fury.io/py/slpkg.png
             :target: http://badge.fury.io/py/slpkg
@@ -13,14 +14,20 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             :target: https://pypi.python.org/pypi/slpkg
         .. image:: https://pypip.in/license/slpkg/badge.png
             :target: https://pypi.python.org/pypi/slpkg
+        .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
+            :target: https://github.com/dslackw/slpkg 
         
-        Slpkg is a terminal multitool in order to easy use Slackware packages.
+        Slpkg is a terminal multitool in order to easy use `Slackware 
+<http://www.slackware.com/>`_ packages.
         
         Features
         ========
         
-        - Build packages from source with all dependencies
-        - Find and Download packages from slackbuilds.org
+        - Build third party packages from source with all dependencies
+        - Install packages through from official `Slackware <http://www.slackware.com/>`_ 
+mirrors
+        - Find and Download packages from `slackbuilds.org <http://slackbuilds.org/>`_
+        - Grabs packages from slackbuilds.org in real time
         - Automatic tool build and install packages
         - Check if your distribution is up to date
         - Display the contents of the packages
@@ -34,7 +41,8 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         - Remove packages
         - No dependencies
         
-        It's a quick and easy way to manage your packages in slackware
+        It's a quick and easy way to manage your packages in `Slackware 
+<http://www.slackware.com/>`_
         to a command.
         
         `[CHANGELOG] <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
@@ -44,22 +52,12 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         
         .. image:: 
 https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-            :target: https://asciinema.org/a/11059
+            :target: https://asciinema.org/a/11183
         
         Installation
         ------------
         
-        Using slackware command:
-        
-        .. code-block:: bash
-            
-            Download from SlackBuilds http://slackbuilds.org
-        
-            or
-        
-            using sbopkg tool SBOPKG http://www.sbopkg.org
-        
-        Using pip:
+        Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last updates):
         
         .. code-block:: bash
         
@@ -69,14 +67,28 @@ https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
         
             $ pip uninstall slpkg
         
+        Using Slackware command:
+        
+        .. code-block:: bash
+        
+            Download http://slackbuilds.org/repository/14.1/system/slpkg from 
+slackbuilds.org
+        
+            using SBOPKG http://www.sbopkg.org
+        
+        Download binary package from SourceForge:
+        
+        .. code-block:: bash
+        
+            Download https://sourceforge.net/projects/slpkg
+            
         Command Line Tool Usage
-        -----------------------
+        =======================
         
         .. code-block:: bash
         
             usage: slpkg   [-h] [-v] [-a script [source ...]]
-                           [-l all, sbo, slack, noarch, other [all, sbo, slack, noarch, 
-other ...]]
+                           [-l all, sbo, slack, noarch, other]
                            [-c sbo, slack [sbo, slack ...]]
                            [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
                            [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
@@ -88,19 +100,19 @@ other ...]]
               -v, --verbose         print version and exit
               -a script [source ...]
                                     auto build package
-              -l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]
+              -l all, sbo, slack, noarch, other
                                     list of installed packages
               -c sbo, slack [sbo, slack ...]
                                     check if your packages is up to date
               -s sbo, slack [sbo, slack ...]
                                     download, build & install packages
               -t                    tracking dependencies
-              -n                    find packages from SBo repository
+              -n                    view packages from SBo repository
               -i  [ ...]            install binary packages
               -u  [ ...]            upgrade binary packages
               -o  [ ...]            reinstall binary packages
               -r  [ ...]            remove packages
-              -f  [ ...]            find if packages installed
+              -f  [ ...]            view installed packages
               -d  [ ...]            display the contents of the packages
         
         
@@ -115,20 +127,22 @@ other ...]]
             $ slpkg -s sbo brasero
             
             +==============================================================================
-            | Build dependecies tree for package brasero
+            | Build dependencies tree for package brasero:
             +==============================================================================
-            Searching [ brasero ] from slackbuilds.org ...
-            Searching [ libunique ] from slackbuilds.org ...
-            Searching [ gst1-plugins-bad ] from slackbuilds.org ...
-            Searching [ gst1-plugins-base ] from slackbuilds.org ...
-            Searching [ gstreamer1 ] from slackbuilds.org ...
-            Searching [ orc ] from slackbuilds.org ...
+            [ found ] --> brasero
+            [ found ] --> libunique
+            [ found ] --> gst1-plugins-bad
+            [ found ] --> gst1-plugins-base
+            [ found ] --> gstreamer1
+            [ found ] --> orc
         
             +==============================================================================
             | Start download, build and install packages
             +==============================================================================
-            Searching [ orc ] from slackbuilds.org ...
-            
+            [ found ] --> orc
+            .
+            .
+            .
             +==============================================================================
             | Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
             +==============================================================================
@@ -147,15 +161,6 @@ other ...]]
             Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
             Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
             
-            +==============================================================================
-            | Package orc installed
-            | Package gstreamer1 installed
-            | Package gst1-plugins-base installed
-            | Package gst1-plugins-bad installed
-            | Package libunique installed
-            | Package brasero installed
-            +==============================================================================
-        
         Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
         download and install:
         
@@ -177,11 +182,20 @@ other ...]]
         
             $ slpkg -t brasero
         
+            Search dependencies for package brasero from slackbuilds.org:
+        
+            [ found ] -->  brasero
+            [ found ] -->  libunique
+            [ found ] -->  gst1-plugins-bad
+            [ found ] -->  gst1-plugins-base
+            [ found ] -->  gstreamer1
+            [ found ] -->  orc
+        
             +=========================
             | brasero dependencies   :
             +=========================
             \ 
-             +---[ Tree of dependecies ]
+             +---[ Tree of dependencies ]
              |
              +-- 1 orc
              |
@@ -196,7 +210,10 @@ other ...]]
         .. code-block:: bash
         
             $ slpkg -c sbo flashplayer-plugin
-            Searching [ flashplayer-plugin ] from slackbuilds.org ...
+            
+            Search for package flashplayer-plugin from slackbuilds.org:
+            
+            [ found ] --> flashplayer-plugin
         
             New version is available:
             +==============================================================================
@@ -206,29 +223,41 @@ other ...]]
             Would you like to install ? [Y/y]
         
             $ slpkg -c sbo ranger
-            Searching [ ranger ] from slackbuilds.org ...
+            
+            Search for package ranger from slackbuilds.org:
         
-            Package ranger is up to date
+            [ found ] --> ranger
+        
+            Package ranger-1.6.1-x86_64-1_SBo is up to date
         
             $ slpkg -c sbo termcolor
         
-            No such package termcolor: Can't find
+            No such package termcolor: Not installed
         
         Check if your distribution is up to date from `Slackware official mirrors 
-<http://mirrors.slackware.com/>`_
+        <http://mirrors.slackware.com/>`_
         
         .. code-block:: bash
         
             $ slpkg -c slack upgrade
         
-            Your system is up to date
+            These packages need upgrading:
+        
+            [ upgrade ] --> dhcpcd-6.0.5-x86_64-3_slack14.1.txz
+            [ upgrade ] --> samba-4.1.11-x86_64-1_slack14.1.txz
+            [ upgrade ] --> xscreensaver-5.29-x86_64-1_slack14.1.txz
+        
+            Would you like to upgrade ? [Y/y]
         
         Find slackbuild from slackbuilds.org:
         
         .. code-block:: bash
         
             $ slpkg -n bitfighter
-            Searching [ bitfighter ] from slackbuilds.org ...
+            
+            Search for package bitfighter from slackbuilds.org:
+            
+            [ found ] --> bitfighter
         
             +===============================================================================
             | Package bitfighter --> 
@@ -281,11 +310,13 @@ http://slackbuilds.org/repository/14.1/games/bitfighter/
             creating /tmp/SBo/package-termcolor/usr/lib64/python2.7
             creating /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
             copying build/lib/termcolor.py -> 
-/tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
+            /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages
             byte-compiling 
-/tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor.py to termcolor.pyc
+/tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor.py 
+            to termcolor.pyc
             running install_egg_info
             Writing 
+            
 /tmp/SBo/package-termcolor/usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
         
             Slackware package maker, version 3.14159.
@@ -361,6 +392,9 @@ http://slackbuilds.org/repository/14.1/games/bitfighter/
         .. code-block:: bash
         
             $ slpkg -f termcolor lua yetris you-get rar pip
+            
+            Packages with name matching [ termcolor, lua, yetris, you-get, rar, pip ]
+        
             [ installed ] - termcolor-1.1.0-x86_64-1_SBo
             No such package lua: Cant find
             [ installed ] - yetris-2.0.1-x86_64-1_SBo
@@ -421,7 +455,9 @@ http://slackbuilds.org/repository/14.1/games/bitfighter/
         .. code-block:: bash
         
             $ slpkg -r termcolor
-        
+            
+            Packages with name matching [ termcolor ]
+            
             [ delete ] --> termcolor-1.1.0-x86_64-1_SBo
         
             Are you sure to remove 1 package(s) [Y/y] y
@@ -454,6 +490,8 @@ http://slackbuilds.org/repository/14.1/games/bitfighter/
         
             $ slpkg -f termcolor lua rar
         
+            Packages with name matching [ termcolor, lua, rar ] 
+            
             No such package termcolor: Cant find
             No such package lua: Cant find
             [ installed ] - rar-5.0.1-x86_64-1_SBo

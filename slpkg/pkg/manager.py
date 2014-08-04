@@ -139,48 +139,48 @@ def pkg_list(binary):
     '''
     try:
         print # new line at start
-        index, stop = 0, 50
+        index, page = 0, 50
         if "all" in binary:
             for pkg in os.listdir(pkg_path):
                 index += 1
-                print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                if index == stop:
+                print ("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
+                if index == page:
                     key = raw_input('\nPress [ Enter ] >> Next page ')
-                    stop += 50
+                    page += 50
         if "sbo" in binary:
             for pkg in os.listdir(pkg_path):
                 if 'SBo' in pkg:
                     index += 1
-                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                    if index == stop:
+                    print ("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
+                    if index == page:
                         key = raw_input('\nPress [ Enter ] >> Next page ')
-                        stop += 50
+                        page += 50
         if "slack" in binary:
             for pkg in os.listdir(pkg_path):
                 if 'slack' in pkg:
                     index += 1
-                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                    if index == stop:
+                    print ("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
+                    if index == page:
                         key = raw_input('\nPress [ Enter ] >> Next page ')
-                        stop += 50
+                        page += 50
         if "noarch" in binary:
             for pkg in os.listdir(pkg_path):
                 if 'noarch' in pkg:
                     index += 1
-                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                    if index == stop:
+                    print ("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
+                    if index == page:
                         key = raw_input('\nPress [ Enter ] >> Next page ')
-                        stop += 50
+                        page += 50
         if "other" in binary:
             for pkg in os.listdir(pkg_path):
                 if 'SBo' in pkg or 'slack' in pkg or 'noarch' in pkg:
                     pass
                 else:
                     index += 1
-                    print ("[{0}{1}{2}] {3}".format(colors.WHEAT, index, colors.ENDC, pkg))
-                    if index == stop:
+                    print ("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
+                    if index == page:
                         key = raw_input('\nPress [ Enter ] >> Next page ')
-                        stop += 50
+                        page += 50
         print # new line at end
     except KeyboardInterrupt:
         print # new line at exit

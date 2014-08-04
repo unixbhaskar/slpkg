@@ -7,7 +7,7 @@ import getpass
 from slpkg.colors import colors
 from slpkg.messages import s_user
 from slpkg.url_read import url_read
-from slpkg.__metadata__ import pkg_path, slpkg_path
+from slpkg.__metadata__ import pkg_path, slpkg_path, arch
 
 from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade
@@ -66,7 +66,12 @@ def patches():
                 print ("\nThere are packages in directory {0}{1}\n".format(
                         slpkg_path, 'patches/'))
         else:
-            print ("\nSlackware {0} distribution is up to date\n".format(slack_ver()))
+            if arch == "x86_64":
+                slack_arch = 64
+            else:
+                slack_arch = ""
+            print ("\nSlackware{0} v{1} distribution is up to date\n".format(
+                    slack_arch, slack_ver()))
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

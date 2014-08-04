@@ -1,3 +1,15 @@
+
+04-08-2014
+Version 1.6.9
+
+[Updated] - Remove non-useful code
+            Fix /tmp/slpkg/readme/ path create
+
+[Feature] - Added build path, drop all packages in Slpkg_Build directory
+            Added build and install packages only if new version available and
+            package not installed (slpkg -s sbo)
+            Added display installed packages in tracking dependencies
+
 01-08-2014
 Version 1.6.8
 

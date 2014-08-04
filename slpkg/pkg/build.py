@@ -6,17 +6,15 @@ import sys
 import shutil
 import getpass
 import tarfile
-import subprocess
 
 from slpkg.messages import pkg_not_found, s_user
 
-def build_package(script, source, extra):
+def build_package(script, source, extra, path):
     '''
     Build package with source
     '''
     s_user(getpass.getuser())
     pkg_name = script.replace(".tar.gz", "")
-    path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
     try:
         tar = tarfile.open(script)
         tar.extractall()
@@ -25,7 +23,7 @@ def build_package(script, source, extra):
         for src in extra:
             shutil.copy2(src, pkg_name)
         os.chdir(path + pkg_name)
-        os.system("sh {0}{1}{2}".format(path, pkg_name + "/", pkg_name + ".SlackBuild"))
+        os.system("sh {0}.SlackBuild".format(pkg_name))
         os.chdir(path)
     except (OSError, IOError):
         message = "Wrong file"
@@ -34,4 +32,3 @@ def build_package(script, source, extra):
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
-        

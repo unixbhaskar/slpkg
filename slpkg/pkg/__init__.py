@@ -1,1 +1,1 @@
-# [ pkg ] directory
+# [ packages ] directory

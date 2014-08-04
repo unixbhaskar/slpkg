@@ -1,6 +1,6 @@
 PRGNAM="slpkg"
 VERSION="1.x.x"
-HOMEPAGE="http://dslackw.github.io/slpkg"
+HOMEPAGE="https://github.com/dslackw/slpkg"
 DOWNLOAD="https://github.com/dslackw/slpkg/archive/v1.x.x.tar.gz"
 MD5SUM="9676ce788fc030ac83362aa3e183ec42"
 DOWNLOAD_x86_64=""

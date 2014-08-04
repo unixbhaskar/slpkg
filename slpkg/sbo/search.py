@@ -23,7 +23,7 @@ def sbo_search_pkg(name):
                 sbo_location.append(line.replace('SLACKBUILD LOCATION: ./', ''))
         for loc in sbo_location:
             if get_file(loc, '/') == name:
-                print ('{0}[ found ] --> {1} {2}'.format(colors.CYAN, colors.ENDC, name))
+                print ('{0}[ found ] --> {1}{2}'.format(colors.CYAN, colors.ENDC, name))
                 return sbo_url + loc.replace(name, '') + name + "/"
     except KeyboardInterrupt:
         print # new line at exit

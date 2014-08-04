@@ -2,29 +2,13 @@
 # -*- coding: utf-8 -*-
 
 '''
-                     SSSSSSS                    SSSSSSSS
-                     SSSSSSS                    SSSSSSSS
-                     SSSSSSS                    SSSSSSSS
-                     SSSSSSS                    SSSSSSSS
-        SSSSSSSSSS    SSSSSSSSSSS   SSSSSSSSS    SSSSSSS    SSSSSSSSSSSSSSSS   SSSSS
-      SSSSSSSSSSSSS   SSSSSSSSSSSSSSSSSSSSSSSS   SSSSSSS   SSSSSSSSSSSSSSSSSSSSSSSSS
-    SSSSSSSSSSSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSS  SSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSSS
-    SSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSS SSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSSS
-     SSSSSSS  SSSSSS  SSSSSS SSSSSSS     SSSSSSS SSSSSSSSSSSSSS SSSSSSS     SSSSSSS
-       SSSSSSSS       SSSSSS SSSSSSS     SSSSSSS SSSSSSSSSSSSS  SSSSSSS     SSSSSSS
-          SSSSSSSS    SSSSSS SSSSSSS     SSSSSSS SSSSSSSSSSSSS  SSSSSSS     SSSSSSS
-    SSSSSS   SSSSSSS  SSSSSS SSSSSSS    SSSSSSSS SSSSSSSSSSSSSS SSSSSSSS    SSSSSSS
-    SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSS
-    SSSSSSSSSSSSSSSS SSSSSSSSSSSSSSSSSSSSSSSSSS SSSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSS
-     SSSSSSSSSSSSSS  SSSSSSSSSSSSSSSSSSSSSSSSS  SSSSSSSS   SSSSSSSSSSSSSSSSSSSSSSSS
-      SSSSSSSSSSS    SSSSSSSSSSSSSSSSSSSSSSS    SSSSSSSS    SSSSSSS SSSSSSSSSSSSSSS
-                             SSSSSSS                                        SSSSSSS
-                             SSSSSSS                            SSSSSS      SSSSSSS
-                            SSSSSSSSS                           SSSSSSSS   SSSSSSSS
-                            SSSSSSSSS                            SSSSSSSSSSSSSSSSSS
-                            SSSSSSSSS                             SSSSSSSSSSSSSSSS
-                            SSSSSSSSS                              SSSSSSSSSSSS
-                                                                      SSSSSS
+     _       _         
+ ___| |_ __ | | ____ _ 
+/ __| | '_ \| |/ / _` |
+\__ \ | |_) |   < (_| |
+|___/_| .__/|_|\_\__, |
+      |_|        |___/
+
 
 usage: slpkg   [-h] [-v] [-a script [source ...]]
                [-l all, sbo, slack, noarch, other]
@@ -45,7 +29,7 @@ optional arguments:
                         check if your packages is up to date
   -s sbo, slack [sbo, slack ...]
                         download, build & install packages
-  -t                    tracking dependencies
+  -t                    packages tracking dependencies from SBo
   -n                    view packages from SBo repository
   -i  [ ...]            install binary packages
   -u  [ ...]            upgrade binary packages
@@ -53,12 +37,14 @@ optional arguments:
   -r  [ ...]            remove packages
   -f  [ ...]            view packages installed
   -d  [ ...]            display the contents of the packages
+
 '''
 
 import argparse
 from version import *
 from functions import *
 from colors import colors
+from __metadata__ import path
 from messages import ext_err_args
 from messages import err1_args, err2_args
 
@@ -87,7 +73,7 @@ def main():
                         type=str, nargs="+", metavar=('sbo, slack'))
     parser.add_argument("-s", help="download, build & install packages",
                         type=str, nargs="+", metavar=('sbo, slack'))
-    parser.add_argument("-t", help="tracking dependencies",
+    parser.add_argument("-t", help="packages tracking dependencies from SBo",
                         type=str, metavar=(''))
     parser.add_argument("-n", help="view packages from SBo repository",
                         type=str, metavar=(''))
@@ -97,7 +83,7 @@ def main():
                         type=str, nargs="+", metavar=(''))
     parser.add_argument("-o", help="reinstall binary packages",
                         type=str, nargs="+", metavar=(''))
-    parser.add_argument("-r", help="remove packages",
+    parser.add_argument("-r", help="remove binary packages",
                         type=str, nargs="+", metavar=(''))
     parser.add_argument("-f", help="view installed packages",
                         type=str, nargs="+", metavar=(''))
@@ -107,7 +93,7 @@ def main():
     if args.verbose:
         prog_version()
     if args.a:
-        build_package(args.a[0], args.a[1], args.a[2:])
+        build_package(args.a[0], args.a[1], args.a[2:], path)
     if args.l:
         pkg_list(args.l)
     if args.t:

@@ -1,1 +1,1 @@
-# [ sbo ] directory
+# [ slackbuilds ] directory

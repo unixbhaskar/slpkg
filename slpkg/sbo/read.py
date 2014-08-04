@@ -8,7 +8,7 @@ from slpkg.url_read import url_read
 from slpkg.__metadata__ import slpkg_path
 
 # create tmp directory if not exist
-os.system("mkdir -p /tmp/readme/")
+os.system("mkdir -p {0}readme/".format(slpkg_path))
 
 def read_readme(sbo_url, name, site):
     '''

@@ -56,15 +56,11 @@ Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last updates):
 
 Using Slackware command:
     
-`[Download] <http://slackbuilds.org/repository/14.1/system/slpkg/>`_ from slackbuilds.org
+Download http://slackbuilds.org/repository/14.1/system/slpkg from slackbuilds.org
 
-or
-
-using `SBOPKG <http://www.sbopkg.org>`_ tool
+Using SBOPKG http://www.sbopkg.org
 
 Download binary package from SourceForge:
-
-`[Download] <https://sourceforge.net/projects/slpkg>`_ slpkg
     
 Command Line Tool Usage
 -----------------------
@@ -90,12 +86,12 @@ Command Line Tool Usage
                             check if your packages is up to date
       -s sbo, slack [sbo, slack ...]
                             download, build & install packages
-      -t                    tracking dependencies
+      -t                    packages tracking dependencies from SBo
       -n                    view packages from SBo repository
       -i  [ ...]            install binary packages
       -u  [ ...]            upgrade binary packages
       -o  [ ...]            reinstall binary packages
-      -r  [ ...]            remove packages
+      -r  [ ...]            remove binary packages
       -f  [ ...]            view installed packages
       -d  [ ...]            display the contents of the packages
 
@@ -181,13 +177,17 @@ Tracking all dependencies of packages:
     \ 
      +---[ Tree of dependencies ]
      |
-     +-- 1 orc
+     +--1 orc
      |
-     +-- 1 gstreamer1
+     +--2 gstreamer1
      |
-     +-- 1 gst1-plugins-base
+     +--3 gst1-plugins-base
      |
-     +-- 2 libunique, gst1-plugins-bad
+     +--4 gst1-plugins-bad
+     |
+     +--5 libunique
+
+     NOTE: green installed, red not installed
 
 Check if your packages is up to date from slackbuilds.org:
 
