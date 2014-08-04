@@ -39,7 +39,7 @@ Video Tutorial
 ==============
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/11183
+    :target: https://asciinema.org/a/11265
 
 Installation
 ------------
