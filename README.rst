@@ -19,6 +19,7 @@ Features
 - Grabs packages from slackbuilds.org in real time
 - Automatic tool build and install packages
 - Check if your distribution is up to date
+- Remove packages with all dependencies
 - Display the contents of the packages
 - Install-upgrade Slackware packages
 - Build and install all in a command
@@ -27,7 +28,6 @@ Features
 - Find installed package
 - Read SlackBuilds files
 - Τracking dependencies
-- Remove packages
 - No dependencies
 
 It's a quick and easy way to manage your packages in `Slackware <http://www.slackware.com/>`_
@@ -233,7 +233,7 @@ Check if your distribution is up to date from `Slackware official mirrors
 
     Would you like to upgrade ? [Y/y]
 
-Find slackbuild from slackbuilds.org:
+Find packages from slackbuilds.org:
 
 .. code-block:: bash
 
@@ -337,7 +337,7 @@ Auto tool to build package:
 
     Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
 
-Upgrade install package:
+Upgrade, install package:
 
 .. code-block:: bash
 
@@ -358,7 +358,7 @@ Upgrade install package:
     #
     Package termcolor-1.1.0-x86_64-1_SBo.tgz installed.
 
-Of course you can install mass-packages:
+Install mass-packages:
 
 .. code-block:: bash
 
@@ -368,7 +368,7 @@ Of course you can install mass-packages:
 
     $ slpkg -i *.t?z
 
-Find if your packages installed:
+Find installed packages:
 
 .. code-block:: bash
 
@@ -383,7 +383,7 @@ Find if your packages installed:
     [ installed ] - rar-5.0.1-x86_64-1_SBo
     [ installed ] - pip-1.5.4-x86_64-1_SBo
 
-Display the contents of the package:
+Display the contents of the packages:
 
 .. code-block:: bash
 
@@ -431,7 +431,7 @@ Display the contents of the package:
     
     No such package lua: Cant find
 
-Remove package:
+Remove packages:
 
 .. code-block:: bash
 
@@ -476,10 +476,42 @@ Remove package:
     No such package lua: Cant find
     [ installed ] - rar-5.0.1-x86_64-1_SBo
 
-    $ slpkg -v
-    Version: x.x.x
-    Licence: GNU General Public License v3 (GPLv3)
-    Email:   d.zlatanidis@gmail.com
+Remove packages with all dependencies:
+(presupposes facility with the option 'slpkg -s sbo <package>)
+
+.. code-block:: bash
+
+    $ slpkg -r Flask
+
+    Packages with name matching [ Flask ]
+
+    [ delete ] --> Flask-0.10.1-x86_64-1_SBo
+
+    Are you sure to remove 1 package [Y/y]
+
+    +==============================================================================
+    | Found dependencies for package Flask:
+    +==============================================================================
+    | pysetuptools
+    | MarkupSafe
+    | itsdangerous
+    | Jinja2
+    | werkzeug
+    +==============================================================================
+
+    Remove dependencies [Y/y]
+
+    .
+    .
+    .
+    +==============================================================================
+    | Package Flask removed
+    | Package pysetuptools removed
+    | Package MarkupSafe removed
+    | Package itsdangerous removed
+    | Package Jinja2 removed
+    | Package werkzeug removed
+    +==============================================================================
 
 Man page it is available for full support:
 

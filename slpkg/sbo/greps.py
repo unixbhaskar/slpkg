@@ -7,10 +7,9 @@ from slpkg.__metadata__ import uname, arch
 
 def sbo_source_dwn(sbo_url, name):
     '''
-    Grep source code download link
+    Grep source downloads links
     '''
-    read_info = url_read((sbo_url + name + ".info").replace(
-                          "repository", "slackbuilds"))
+    read_info = url_read(sbo_url + name + ".info")
     if arch == "x86_64":
         for line in read_info.splitlines():
             if line.startswith('DOWNLOAD_x86_64='):
@@ -22,10 +21,9 @@ def sbo_source_dwn(sbo_url, name):
 
 def sbo_extra_dwn(sbo_url, name):
     '''
-    Grep extra source code download link
+    Grep extra source downloads links
     '''
-    read_info = url_read((sbo_url + name + ".info").replace(
-                          "repository", "slackbuilds"))
+    read_info = url_read(sbo_url + name + ".info")
     extra = []
     for line in read_info.split():
         if line.endswith('"'):
@@ -40,8 +38,7 @@ def sbo_requires_pkg(sbo_url, name):
     '''
     Grep package requirements
     '''
-    read_info = url_read((sbo_url + name + ".info").replace(
-                          "repository", "slackbuilds"))
+    read_info = url_read(sbo_url + name + ".info")
     for line in read_info.splitlines():
         if line.startswith('REQUIRES="'):
             return line[10:-1]
@@ -50,8 +47,7 @@ def sbo_prgnam_pkg(sbo_url, name):
     '''
     Grep program name
     '''
-    read_info = url_read((sbo_url + name + ".info").replace(
-                          "repository", "slackbuilds"))
+    read_info = url_read(sbo_url + name + ".info")
     for line in read_info.splitlines():
         if line.startswith('PRGNAM="'):
             return line[8:-1]
@@ -60,8 +56,7 @@ def sbo_version_pkg(sbo_url, name):
     '''
     Grep package version
     '''
-    read_info = url_read((sbo_url + name + ".info").replace(
-                          "repository", "slackbuilds"))
+    read_info = url_read(sbo_url + name + ".info")
     for line in read_info.splitlines():
         if line.startswith('VERSION="'):
             return line[9:-1]

@@ -15,7 +15,7 @@ def sbo_search_pkg(name):
     '''
     try:
         sbo_location = []
-        sbo_url = ("http://slackbuilds.org/repository/{0}/".format(slack_ver()))
+        sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
         SLACKBUILDS_TXT = url_read((
         "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
         for line in SLACKBUILDS_TXT.splitlines():

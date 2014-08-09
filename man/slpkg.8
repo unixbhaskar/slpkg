@@ -107,7 +107,10 @@ slackware command upgradepkg --reinstall)
 Removes a previously installed Slackware package, while writing
 a progress report to the standard output. A package may be 
 specified either by the full package name (as you'd see listed in
-/var/log/packages/), or by the base package name. 'Requires root
+/var/log/packages/), or by the base package name. If installed
+packages with command 'slpkg -s sbo <package>' then write a file
+in /var/log/slpkg/dep/ with all dependencies and it allows you  
+can remove them all together. 'Requires root
 privileges' (like slackware command removepkg)
 .SS -f find packages
 \fBslpkg\fP \fB-f\fP <\fIname of packages\fP>

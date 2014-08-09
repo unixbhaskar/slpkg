@@ -7,8 +7,8 @@ import getpass
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.__metadata__ import tmp, pkg_path, build_path, sp
-from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch
 from slpkg.messages import pkg_not_found, pkg_found, template, s_user
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch, log_path
 
 from slpkg.pkg.find import find_package 
 from slpkg.pkg.build import build_package
@@ -37,7 +37,7 @@ def sbo_build(name):
         try:
             os.system("mkdir -p {0}".format(build_path))
             os.chdir(build_path)
-            requires, dependencies, extra = [], [], []
+            requires, dependencies, extra, = [], [], []
             requires.append(name)
             for pkg in dependencies_list:
                 requires += pkg
@@ -75,6 +75,17 @@ def sbo_build(name):
                     template(78)
                     pkg_found(pkg)
                     template(78)
+            '''
+            Write dependencies in a log file into directory '/var/log/slpkg/dep/'
+            '''
+            os.system("mkdir -p {0}dep/".format(log_path))
+            if find_package(name, log_path + "dep/"):
+                os.remove("{0}dep/{1}".format(log_path, name))
+            if len(dependencies) > 1:
+                f = open("{0}dep/{1}".format(log_path, name), "w")
+                for dep in dependencies:
+                    f.write(dep + "\n")
+                f.close()
             print # new line at end
         except KeyboardInterrupt:
             print # new line at exit

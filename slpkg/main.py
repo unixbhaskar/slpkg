@@ -34,8 +34,8 @@ optional arguments:
   -i  [ ...]            install binary packages
   -u  [ ...]            upgrade binary packages
   -o  [ ...]            reinstall binary packages
-  -r  [ ...]            remove packages
-  -f  [ ...]            view packages installed
+  -r  [ ...]            remove binary packages
+  -f  [ ...]            view installed packages
   -d  [ ...]            display the contents of the packages
 
 '''

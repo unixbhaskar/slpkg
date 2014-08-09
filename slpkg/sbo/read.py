@@ -15,17 +15,17 @@ def read_readme(sbo_url, name, site):
     Read SlackBuild README file
     '''
     s_user(getpass.getuser())
-    readme = url_read((sbo_url + site).replace("repository", "slackbuilds"))
-    file = open("{0}readme/{1}.{2}".format(slpkg_path, name, site), "w")
-    file.write(readme)
-    file.close()
+    readme = url_read(sbo_url + site)
+    f = open("{0}readme/{1}.{2}".format(slpkg_path, name, site), "w")
+    f.write(readme)
+    f.close()
 
 def read_info_slackbuild(sbo_url, name, site):
     '''
     Read info SlackBuild file
     '''
     s_user(getpass.getuser())
-    info = url_read((sbo_url + name + site).replace("repository", "slackbuilds"))
-    file = open("{0}readme/{1}{2}".format(slpkg_path, name, site), "w")
-    file.write(info)
-    file.close()
+    info = url_read(sbo_url + name + site)
+    f = open("{0}readme/{1}{2}".format(slpkg_path, name, site), "w")
+    f.write(info)
+    f.close()

@@ -7,4 +7,4 @@ def sbo_slackbuild_dwn(sbo_url, name):
     slackbuild download link
     '''
     sbo_url = sbo_url.replace(name + "/", name + ".tar.gz")
-    return sbo_url.replace("repository", "slackbuilds")
+    return sbo_url

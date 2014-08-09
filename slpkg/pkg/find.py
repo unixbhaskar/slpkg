@@ -5,8 +5,7 @@ import os
 
 def find_package(find_pkg, directory):
     '''
-    Find installed packages from
-    /var/log/packages/
+    Find packages
     '''
     pkgs = []
     for pkg in os.listdir(directory):

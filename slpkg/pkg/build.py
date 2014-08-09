@@ -11,7 +11,7 @@ from slpkg.messages import pkg_not_found, s_user
 
 def build_package(script, source, extra, path):
     '''
-    Build package with source
+    Build package from source
     '''
     s_user(getpass.getuser())
     pkg_name = script.replace(".tar.gz", "")
