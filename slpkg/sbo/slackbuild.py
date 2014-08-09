@@ -37,7 +37,7 @@ def sbo_build(name):
         try:
             os.system("mkdir -p {0}".format(build_path))
             os.chdir(build_path)
-            requires, dependencies, extra, = [], [], []
+            requires, dependencies, extra = [], [], []
             requires.append(name)
             for pkg in dependencies_list:
                 requires += pkg
