@@ -487,7 +487,7 @@ Remove packages with all dependencies:
 
     [ delete ] --> Flask-0.10.1-x86_64-1_SBo
 
-    Are you sure to remove 1 package [Y/y]
+    Are you sure to remove 1 package [Y/y] y
 
     +==============================================================================
     | Found dependencies for package Flask:
@@ -499,7 +499,7 @@ Remove packages with all dependencies:
     | werkzeug
     +==============================================================================
 
-    Remove dependencies [Y/y]
+    Remove dependencies [Y/y] y
 
     .
     .
