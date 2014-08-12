@@ -32,6 +32,8 @@ def sbo_dependencies_pkg(name):
                 if dependencies:
                     dep_results.append(dependencies)
                 for line in dependencies:
+                    sys.stdout.write(".")
+                    sys.stdout.flush()
                     sbo_dependencies_pkg(line)
                 return dep_results
     except KeyboardInterrupt:
@@ -42,8 +44,9 @@ def pkg_tracking(name):
     '''
     Print tree of dependencies
     '''
-    print ('\nSearch dependencies for package {0} from slackbuilds.org:\n'.format(name))
+    sys.stdout.write ('Reading package lists.')
     dependencies_list = sbo_dependencies_pkg(name)
+    sys.stdout.write(' Done\n')
     if dependencies_list is None:
         pass
     elif dependencies_list == []:

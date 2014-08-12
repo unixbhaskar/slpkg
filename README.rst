@@ -105,21 +105,12 @@ build and install with all dependencies :
 .. code-block:: bash
     
     $ slpkg -s sbo brasero
-    
-    +==============================================================================
-    | Build dependencies tree for package brasero:
-    +==============================================================================
-    [ found ] --> brasero
-    [ found ] --> libunique
-    [ found ] --> gst1-plugins-bad
-    [ found ] --> gst1-plugins-base
-    [ found ] --> gstreamer1
-    [ found ] --> orc
+    Building dependency tree...... Done
+    The following packages will be automatically installed or upgraded with new version:
 
-    +==============================================================================
-    | Start download, build and install packages
-    +==============================================================================
-    [ found ] --> orc
+      orc gstreamer1 gst1-plugins-base gst1-plugins-bad libunique brasero
+
+    Do you want to continue [Y/n]? y
     .
     .
     .
@@ -149,27 +140,22 @@ download and install:
     $ slpkg -s slack mozilla
 
     Packages with name matching [ mozilla ]
+    
+    Reading package lists.............................. Done    
 
     [ install ] --> mozilla-firefox-24.1.0esr-x86_64-1
     [ install ] --> mozilla-nss-3.15.2-x86_64-2
     [ install ] --> mozilla-thunderbird-24.1.0-x86_64-1
 
-    Would you like to install [Y/y]
+    Would you like to install [Y/n]?
 
-Tracking all dependencies of packages:
+Tracking all dependencies of packages,
+and also displays installed packages:
 
 .. code-block:: bash
 
     $ slpkg -t brasero
-
-    Search dependencies for package brasero from slackbuilds.org:
-
-    [ found ] -->  brasero
-    [ found ] -->  libunique
-    [ found ] -->  gst1-plugins-bad
-    [ found ] -->  gst1-plugins-base
-    [ found ] -->  gstreamer1
-    [ found ] -->  orc
+    Reading package lists...... Done
 
     +=========================
     | brasero dependencies   :
@@ -194,27 +180,22 @@ Check if your packages is up to date from slackbuilds.org:
 .. code-block:: bash
 
     $ slpkg -c sbo flashplayer-plugin
-    
-    Search for package flashplayer-plugin from slackbuilds.org:
-    
-    [ found ] --> flashplayer-plugin
+    Reading package lists. Done
 
     New version is available:
     +==============================================================================
     | Package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
     +==============================================================================
 
-    Would you like to install ? [Y/y]
+    Would you like to install [Y/n]?
 
     $ slpkg -c sbo ranger
-    
-    Search for package ranger from slackbuilds.org:
+    Reading package lists. Done    
 
-    [ found ] --> ranger
-
-    Package ranger-1.6.1-x86_64-1_SBo is up to date
+    Package 'ranger-1.6.1' is up to date
 
     $ slpkg -c sbo termcolor
+    Reading package lists. Done
 
     No such package termcolor: Not installed
 
@@ -224,6 +205,7 @@ Check if your distribution is up to date from `Slackware official mirrors
 .. code-block:: bash
 
     $ slpkg -c slack upgrade
+    Reading package lists....... Done
 
     These packages need upgrading:
 
@@ -231,18 +213,15 @@ Check if your distribution is up to date from `Slackware official mirrors
     [ upgrade ] --> samba-4.1.11-x86_64-1_slack14.1.txz
     [ upgrade ] --> xscreensaver-5.29-x86_64-1_slack14.1.txz
 
-    Would you like to upgrade ? [Y/y]
+    Would you like to upgrade [Y/y]?
 
 Find packages from slackbuilds.org:
 
 .. code-block:: bash
 
     $ slpkg -n bitfighter
+    Reading package lists. Done
     
-    Search for package bitfighter from slackbuilds.org:
-    
-    [ found ] --> bitfighter
-
     +===============================================================================
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
@@ -266,6 +245,7 @@ Auto tool to build package:
 
     Two files termcolor.tar.gz and termcolor-1.1.0.tar.gz
     must be in the same directory.
+    (slackbuild script & source code or extra sources if needed)
 
     $ slpkg -a termcolor.tar.gz termcolor-1.1.0.tar.gz
 
@@ -441,7 +421,7 @@ Remove packages:
     
     [ delete ] --> termcolor-1.1.0-x86_64-1_SBo
 
-    Are you sure to remove 1 package(s) [Y/y] y
+    Are you sure to remove 1 package(s) [Y/n]? y
 
     Package: termcolor-1.1.0-x86_64-1_SBo
         Removing... 
@@ -487,7 +467,7 @@ Remove packages with all dependencies:
 
     [ delete ] --> Flask-0.10.1-x86_64-1_SBo
 
-    Are you sure to remove 1 package [Y/y] y
+    Are you sure to remove 1 package [Y/n]? y
 
     +==============================================================================
     | Found dependencies for package Flask:
@@ -499,7 +479,7 @@ Remove packages with all dependencies:
     | werkzeug
     +==============================================================================
 
-    Remove dependencies [Y/y] y
+    Remove dependencies [Y/n]? y
 
     .
     .

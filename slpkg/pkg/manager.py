@@ -89,7 +89,7 @@ def pkg_remove(binary):
         if len(removed) > 1:
             msg = msg + "s"
         try:
-            remove_pkg = raw_input("\nAre you sure to remove {0} {1} [Y/y] ".format(
+            remove_pkg = raw_input("\nAre you sure to remove {0} {1} [Y/n]? ".format(
                                     str(len(removed)), msg))
         except KeyboardInterrupt:
             print # new line at exit
@@ -116,7 +116,7 @@ def pkg_remove(binary):
                         print ("| " + dep)
                     template(78)
                     try:
-                        remove_dep = raw_input("\nRemove dependencies [Y/y] ")
+                        remove_dep = raw_input("\nRemove dependencies (maybe used by other packages) [Y/n]? ")
                     except KeyboardInterrupt:
                         print # new line at exit
                         sys.exit()

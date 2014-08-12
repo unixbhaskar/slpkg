@@ -1,3 +1,10 @@
+11-08-2014
+Version 1.7.1
+
+[Updated] - Bugfix OSError: [Errno 2] No such file or directory: '/tmp/slpkg/patches/
+[Feature] - Change the way to search packages from slackbuilds.org.
+            The route search package eventually becomes found after ChangeLog.txt change.
+
 09-08-2014
 Version 1.7.0
 

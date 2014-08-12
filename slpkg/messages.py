@@ -11,11 +11,11 @@ def pkg_not_found(bol, pkg, message, eol):
     '''
     print ("{0}No such package {1}: {2}{3}".format(bol, pkg, message, eol))
 
-def pkg_found(pkg):
+def pkg_found(pkg, version):
     '''
     Print message when package found
     '''
-    print ("| Package {0} is already installed".format(pkg))
+    print ("| Package {0}-{1} is already installed".format(pkg, version))
 
 def pkg_installed(pkg):
     '''

@@ -3,7 +3,9 @@
 
 import os
 import sys
+import time
 import getpass
+
 from slpkg.colors import colors
 from slpkg.url_read import url_read
 from slpkg.messages import pkg_not_found, s_user
@@ -25,14 +27,24 @@ def install(slack_pkg):
         os.system("mkdir -p {0}{1}".format(slpkg_path, 'packages/'))
         print ("\nPackages with name matching [ {0}{1}{2} ]\n".format(
                 colors.CYAN, slack_pkg, colors.ENDC)) 
+        sys.stdout.write ("Reading package lists.")
+        sys.stdout.flush()
         PACKAGE_TXT = url_read(mirrors(name='PACKAGES.TXT', location=''))
+        index, toolbar_width = 0, 600
         for line in PACKAGE_TXT.splitlines():
+            index += 1
+            if index == toolbar_width:
+                sys.stdout.write('.')
+                sys.stdout.flush()
+                toolbar_width += 600
+                time.sleep(0.05)
             if line.startswith('PACKAGE NAME'):
                 package_name.append(line.replace('PACKAGE NAME:  ', ''))
             if line.startswith('PACKAGE LOCATION'):
                 package_location.append(line.replace('PACKAGE LOCATION:  ./', ''))
         for loc, name in zip(package_location, package_name):
             dwn_list.append('{0}{1}/{2}'.format(mirrors('',''), loc, name))
+        sys.stdout.write(" Done\n\n")
         for pkg in package_name:
             if slack_pkg in pkg:
                 if pkg.endswith('.txz'):
@@ -48,7 +60,7 @@ def install(slack_pkg):
             message = "No matching"
             pkg_not_found(bol, slack_pkg, message, eol)
         else:
-            read = raw_input("\nWould you like to install [Y/y] ")
+            read = raw_input ("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for install in install_all:
                     for dwn in dwn_list:
@@ -59,7 +71,7 @@ def install(slack_pkg):
                     print ("{0}[ installing ] --> {1}{2}".format(
                             colors.GREEN, colors.ENDC, install))
                     pkg_upgrade((slpkg_path + 'packages/' + install).split())
-                read = raw_input("Remove the packages downloaded ? [Y/y] ")
+                read = raw_input ("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:
                         os.remove("{0}{1}{2}".format(slpkg_path, 'packages/', remove))

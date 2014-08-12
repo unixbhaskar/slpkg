@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
+
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.__metadata__ import tmp, pkg_path, slpkg_path, sp
@@ -22,13 +24,15 @@ def sbo_network(name):
     View SlackBuild package, read or install them 
     from slackbuilds.org
     '''
-    print ('\nSearch for package {0} from slackbuilds.org:\n'.format(name))
+    sys.stdout.write ("Reading package lists.")
     sbo_url = sbo_search_pkg(name)
     if sbo_url is None:
+        sys.stdout.write (' Done\n')
         message = "From slackbuilds.org"
         bol, eol = "\n", "\n"
         pkg_not_found(bol, name, message, eol)
     else:
+        sys.stdout.write (' Done\n')
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
         sbo_version = sbo_version_pkg(sbo_url, name)

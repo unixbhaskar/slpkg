@@ -3,6 +3,7 @@
 
 import os
 import getpass
+
 from slpkg.pkg.build import *
 from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade
@@ -21,19 +22,23 @@ def sbo_check(name):
     '''
     Check for new package updates
     '''
+    sys.stdout.write ("Reading package lists.")
     sbo_file = "".join(find_package(name + sp, pkg_path))
     if sbo_file == "":
+        sys.stdout.write (' Done\n')
         message = "Not installed"
         bol, eol = "\n", "\n"
         pkg_not_found(bol, name, message, eol)
     else:
-        print ("\nSearch for package {0} from slackbuilds.org:\n".format(name))
+        sys.stdout.flush()
         sbo_url = sbo_search_pkg(name)
         if sbo_url is None:
+            sys.stdout.write (' Done\n')
             message = "From slackbuilds.org"
-            bol, eol = "", "\n"
+            bol, eol = "\n", "\n"
             pkg_not_found(bol, name, message, eol)
         else:
+            sys.stdout.write (' Done\n')
             sbo_version = sbo_version_pkg(sbo_url, name)
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
             source_dwn = sbo_source_dwn(sbo_url, name)
@@ -47,7 +52,11 @@ def sbo_check(name):
                         name, sbo_file_version,  name, sbo_version))
                 template(78)
                 print # new line at start
-                read = raw_input("Would you like to install ? [Y/y] ")
+                try:
+                    read = raw_input("Would you like to install [Y/n]? ")
+                except KeyboardInterrupt:
+                    print # new line at exit
+                    sys.exit()
                 if read == "Y" or read == "y":
                     s_user(getpass.getuser())
                     os.system("mkdir -p {0}".format(build_path))
@@ -68,5 +77,4 @@ def sbo_check(name):
                                tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
                     pkg_upgrade(binary)                     
             else:
-                print ("\nPackage {0} is up to date\n".format(
-                       "".join(find_package(name + sp, pkg_path))))
+                print ("\nPackage '{0}-{1}' is up to date\n".format(name, sbo_file_version))

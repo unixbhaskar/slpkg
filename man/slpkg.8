@@ -130,7 +130,8 @@ For example:
 
 
 $ \fBslpkg -t brasero\fP
-
+  Reading package lists...... Done
+  
   +=========================
   | brasero dependencies :
   +=========================
@@ -150,16 +151,12 @@ $ \fBslpkg -t brasero\fP
    NOTE: green installed, red not installed
 
 $ \fBslpkg -s sbo brasero\fP
-  
-  +==============================================================================
-  | Build dependencies tree for package brasero
-  +==============================================================================
-  [ found ] --> brasero
-  [ found ] --> libunique
-  [ found ] --> gst1-plugins-bad
-  [ found ] --> gst1-plugins-base
-  [ found ] --> gstreamer1
-  [ found ] --> orc
+  Building dependency tree...... Done
+  The following packages will be automatically installed or upgraded with new version:
+
+    orc gstreamer1 gst1-plugins-base gst1-plugins-bad libunique brasero
+
+  Do you want to continue [Y/n]? y
   .
   .
   .
@@ -183,25 +180,22 @@ $ \fBslpkg -s sbo brasero\fP
 
 
 $ \fBslpkg -c sbo flashplayer-plugin\fP
-  
-  Search for package flashplayer-plugin from slackbuilds.org:
-  
-  [ found ] --> flashplayer-plugin ]
+  Reading package lists. Done
 
   New version is available:
   +==============================================================================
   | Package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
   +==============================================================================
  
-  Would you like to install ? [Y/y]
+  Would you like to install [Y/n]?
 
 $ \fBslpkg -c slack upgrade\fp
+  Reading package lists....... Done
 
-  Your system is up to date
+  Slackware64 v14.1 distribution is up to date
 
 $ \fBslpkg -n termcolor\fP
-
-  [ found ] --> termcolor
+  Reading package lists. Done
 
   +==============================================================================
   | Package termcolor --> http://slackbuilds.org/repository/14.1/python/termcolor/
