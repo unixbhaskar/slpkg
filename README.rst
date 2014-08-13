@@ -479,7 +479,7 @@ Remove packages with all dependencies:
     | werkzeug
     +==============================================================================
 
-    Remove dependencies (maybe used by other packages) [Y/n]?
+    Remove dependencies (maybe used by other packages) [Y/n]? y
     .
     .
     .
