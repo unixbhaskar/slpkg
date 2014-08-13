@@ -23,8 +23,9 @@ def sbo_dependencies_pkg(name):
         if name is not "%README%":
             sbo_url = sbo_search_pkg(name)
             if sbo_url is None:
+                sys.stdout.write(' Done\n')
                 message = "From slackbuilds.org"
-                bol, eol = "", "\n"
+                bol, eol = "\n", "\n"
                 pkg_not_found(bol, name, message, eol)
             else:
                 sbo_req = sbo_requires_pkg(sbo_url, name)
@@ -46,12 +47,13 @@ def pkg_tracking(name):
     '''
     sys.stdout.write ('Reading package lists.')
     dependencies_list = sbo_dependencies_pkg(name)
-    sys.stdout.write(' Done\n')
     if dependencies_list is None:
         pass
     elif dependencies_list == []:
+        sys.stdout.write(' Done\n')
         print ("\nPackage {0} no dependencies\n".format(name))
     else:
+        sys.stdout.write(' Done\n')
         print # new line at start
         requires, dependencies = [], []
         for pkg in dependencies_list:

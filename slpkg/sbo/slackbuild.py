@@ -30,7 +30,6 @@ def sbo_build(name):
     s_user(getpass.getuser())
     sys.stdout.write ('Building dependency tree.')
     dependencies_list = sbo_dependencies_pkg(name)
-    sys.stdout.write(' Done')
     if dependencies_list == None:
         pass
     else:
@@ -45,6 +44,7 @@ def sbo_build(name):
             for duplicate in requires:
                 if duplicate not in dependencies:
                     dependencies.append(duplicate)
+            sys.stdout.write(' Done')
             print # new lines at start
             print ('The following packages will be automatically installed or upgraded with new version:\n')
             print ('  ' + ' '.join(dependencies))
