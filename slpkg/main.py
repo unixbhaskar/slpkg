@@ -85,30 +85,30 @@ def main():
     parser.add_argument("-v", "--verbose", help="print version and exit",
                         action="store_true")
     parser.add_argument("-a", help="auto build packages",
-                        type=str, nargs="+", metavar=('script', 'source'))
+                        type=str, nargs="+", metavar=("script", "source"))
     parser.add_argument("-l", help="list of installed packages",  
                         choices="all sbo slack noarch other".split(),
-			            metavar=('all, sbo, slack, noarch, other'))
+			            metavar=("all, sbo, slack, noarch, other"))
     parser.add_argument("-c", help="check if your packages is up to date",
-                        type=str, nargs="+", metavar=('sbo, slack'))
+                        type=str, nargs="+", metavar=("sbo, slack"))
     parser.add_argument("-s", help="download, build & install packages",
-                        type=str, nargs="+", metavar=('sbo, slack'))
+                        type=str, nargs="+", metavar=("sbo, slack"))
     parser.add_argument("-t", help="packages tracking dependencies from SBo",
-                        type=str, metavar=(''))
+                        type=str, metavar=(""))
     parser.add_argument("-n", help="view packages from SBo repository",
-                        type=str, metavar=(''))
+                        type=str, metavar=(""))
     parser.add_argument("-i", help="install binary packages",
-                        type=str, nargs="+", metavar=(''))
+                        type=str, nargs="+", metavar=(""))
     parser.add_argument("-u", help="upgrade binary packages",
-                        type=str, nargs="+", metavar=(''))
+                        type=str, nargs="+", metavar=(""))
     parser.add_argument("-o", help="reinstall binary packages",
-                        type=str, nargs="+", metavar=(''))
+                        type=str, nargs="+", metavar=(""))
     parser.add_argument("-r", help="remove binary packages",
-                        type=str, nargs="+", metavar=(''))
+                        type=str, nargs="+", metavar=(""))
     parser.add_argument("-f", help="view installed packages",
-                        type=str, nargs="+", metavar=(''))
+                        type=str, nargs="+", metavar=(""))
     parser.add_argument("-d", help="display the contents of the packages",
-                        type=str, nargs="+", metavar=(''))
+                        type=str, nargs="+", metavar=(""))
     args = parser.parse_args()
     if args.verbose:
         prog_version()
@@ -123,47 +123,47 @@ def main():
     if args.c:
         if len(args.c) == 2:
             if "sbo" in args.c:
-                sbo_check(''.join(args.c[1]))
+                sbo_check("".join(args.c[1]))
             elif "slack" in args.c:
                 if args.c[1] == "upgrade":
                     patches()
                 else:
-                    choices = ['upgrade']
+                    choices = ["upgrade"]
                     ext_err_args()
-                    err1_args(''.join(args.c), choices)
+                    err1_args("".join(args.c), choices)
             else:
-                choices = ['sbo', 'slack']
+                choices = ["sbo", "slack"]
                 ext_err_args()
-                err1_args(''.join(args.c[0]), choices)
+                err1_args("".join(args.c[0]), choices)
         elif len(args.c) < 2:
             if "sbo" in args.c or "slack" in args.c:
                 ext_err_args()
                 err2_args()
             else:
-                choices = ['sbo', 'slack']
+                choices = ["sbo", "slack"]
                 ext_err_args()
-                err1_args(''.join(args.c), choices)
+                err1_args("".join(args.c), choices)
         else:
             ext_err_args()
             err2_args()    
     if args.s:
         if len(args.s) == 2:
             if "sbo" in args.s:
-                sbo_build(''.join(args.s[1]))
+                sbo_build("".join(args.s[1]))
             elif "slack" in args.s:
-                install(''.join(args.s[1]))
+                install("".join(args.s[1]))
             else:
-                choices = ['sbo', 'slack']
+                choices = ["sbo", "slack"]
                 ext_err_args()
-                err1_args(''.join(args.s), choices)
+                err1_args("".join(args.s), choices)
         elif len(args.s) < 2:
             if "sbo" in args.s or "slack" in args.s:
                 ext_err_args()
                 err2_args()
             else:
-                choices = ['sbo', 'slack']
+                choices = ["sbo", "slack"]
                 ext_err_args()
-                err1_args(''.join(args.s), choices)
+                err1_args("".join(args.s), choices)
         else:
             ext_err_args()
             err2_args()

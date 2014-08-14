@@ -22,12 +22,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import getpass
 
-from slpkg.colors import colors
-from slpkg.__metadata__ import pkg_path, sp
-from slpkg.messages import pkg_not_found, template
+from colors import colors
+from __metadata__ import pkg_path, sp
+from messages import pkg_not_found, template, s_user
 
-from slpkg.pkg.find import find_package
+from pkg.find import find_package
 
 from greps import *
 from search import sbo_search_pkg
@@ -43,7 +44,7 @@ def sbo_dependencies_pkg(name):
         if name is not "%README%":
             sbo_url = sbo_search_pkg(name)
             if sbo_url is None:
-                sys.stdout.write(' Done\n')
+                sys.stdout.write("Done\n")
                 message = "From slackbuilds.org"
                 bol, eol = "\n", "\n"
                 pkg_not_found(bol, name, message, eol)
@@ -65,15 +66,16 @@ def pkg_tracking(name):
     '''
     Print tree of dependencies
     '''
-    sys.stdout.write ('Reading package lists.')
+    s_user(getpass.getuser()) 
+    sys.stdout.write("Reading package lists ...")
     dependencies_list = sbo_dependencies_pkg(name)
     if dependencies_list is None:
         pass
     elif dependencies_list == []:
-        sys.stdout.write(' Done\n')
-        print ("\nPackage {0} no dependencies\n".format(name))
+        sys.stdout.write("Done\n")
+        print("\nPackage {0} no dependencies\n".format(name))
     else:
-        sys.stdout.write(' Done\n')
+        sys.stdout.write("Done\n")
         print # new line at start
         requires, dependencies = [], []
         for pkg in dependencies_list:
@@ -84,18 +86,18 @@ def pkg_tracking(name):
                 dependencies.append(duplicate)
         pkg_len = len(name) + 24
         template(pkg_len)
-        print ("| Package {0}{1}{2} dependencies :".format(colors.CYAN, name,
+        print("| Package {0}{1}{2} dependencies :".format(colors.CYAN, name,
                                                            colors.ENDC))
         template(pkg_len)
-        print ("\\")
-        print (" +---{0}[ Tree of dependencies ]{1}".format(colors.YELLOW, colors.ENDC))
+        print("\\")
+        print(" +---{0}[ Tree of dependencies ]{1}".format(colors.YELLOW, colors.ENDC))
         index = 0
         for pkg in dependencies:
             index += 1
             if find_package(pkg + sp, pkg_path):
-                print (" |")
-                print (" {0}{1}: {2}{3}{4}".format("+--", index, colors.GREEN, pkg, colors.ENDC))
+                print(" |")
+                print(" {0}{1}: {2}{3}{4}".format("+--", index, colors.GREEN, pkg, colors.ENDC))
             else:
-                print (" |")
-                print (" {0}{1}: {2}{3}{4}".format("+--", index, colors.RED, pkg, colors.ENDC))
-        print ("\n NOTE: green installed, red not installed\n")
+                print(" |")
+                print(" {0}{1}: {2}{3}{4}".format("+--", index, colors.RED, pkg, colors.ENDC))
+        print("\n NOTE: green installed, red not installed\n")

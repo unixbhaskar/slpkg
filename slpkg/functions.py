@@ -34,4 +34,4 @@ def get_file(link, char):
         results.append(link[i])
         if link[i] == char:
             break
-    return ''.join(results[::-1]).replace('/', '').strip(' ')
+    return "".join(results[::-1]).replace("/", "").strip(" ")

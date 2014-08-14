@@ -26,7 +26,7 @@ import subprocess
 
 __all__ = "slpkg"
 __author__ = "dslackw"
-__version_info__ = (1, 7, 2)
+__version_info__ = (1, 7, 3)
 __version__ = "{0}.{1}.{2}".format(*__version_info__)
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
@@ -40,12 +40,15 @@ path = subprocess.check_output(["pwd"], shell=True).replace("\n", "/")
 ''' build path '''
 build_path = path + "slpkg_Build/"
 
+''' library path '''
+lib_path = "/var/lib/slpkg/"
+
 ''' log path '''
 log_path = "/var/log/slpkg/"
 
 ''' temponary path '''
 tmp = "/tmp/"
-slpkg_path = tmp + "slpkg/"
+slpkg_tmp = tmp + "slpkg/"
 
 ''' packages log files path '''
 pkg_path = "/var/log/packages/"
