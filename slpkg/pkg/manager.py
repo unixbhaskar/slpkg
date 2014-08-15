@@ -209,7 +209,7 @@ def pkg_list(binary):
         print # new line at start
         index, page = 0, 50
         if "all" in binary:
-            for pkg in os.listdir(pkg_path):
+            for pkg in sorted(os.listdir(pkg_path)):
                 index += 1
                 print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                 if index == page:
