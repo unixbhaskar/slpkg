@@ -23,9 +23,9 @@
 
 import os
 
-from messages import s_user
-from url_read import url_read
-from __metadata__ import slpkg_tmp
+from slpkg.messages import s_user
+from slpkg.url_read import url_read
+from slpkg.__metadata__ import slpkg_tmp
 
 # create tmp directory if not exist
 rdm_path = slpkg_tmp + "readme/"

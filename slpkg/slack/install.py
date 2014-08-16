@@ -26,13 +26,13 @@ import sys
 import time
 import subprocess
 
-from colors import colors
-from url_read import url_read
-from messages import pkg_not_found, s_user
-from __metadata__ import slpkg_tmp, pkg_path
+from slpkg.colors import colors
+from slpkg.url_read import url_read
+from slpkg.messages import pkg_not_found, s_user
+from slpkg.__metadata__ import slpkg_tmp, pkg_path
 
-from pkg.find import find_package
-from pkg.manager import pkg_upgrade, pkg_reinstall
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
 

@@ -23,11 +23,11 @@
 
 import sys
 
-from colors import colors
-from __metadata__ import pkg_path, sp
-from messages import pkg_not_found, template, s_user
+from slpkg.colors import colors
+from slpkg.__metadata__ import pkg_path, sp
+from slpkg.messages import pkg_not_found, template, s_user
 
-from pkg.find import find_package
+from slpkg.pkg.find import find_package
 
 from greps import *
 from search import sbo_search_pkg

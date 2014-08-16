@@ -1,6 +1,14 @@
-14-08-2014
-Version 1.7.3
+16-8-2014
+Verion 1.7.3
 
+[Updated] - Sort the packets in the list view. We thank Dave for help
+            https://github.com/wvragga.
+[Updated] - Bugfix reinstall lilo after upgrading kernel.
+[Updated] - Removed some code system and replaced with Python code.
+[Updated] - Reinstall if packages exist and upgrading if not in options
+            slpkg -s slack <packages>
+[Updated] - New paths created, ChangeLog.txt saved in /var/log/slpkg
+            and SLACKBUILDS.TXT in /var/lib/slpkg/sbo_repo
 [Updated] - Upgrade initilazation method
             Replace mkdir -p with os.mkdir and create directories only if not exists
 

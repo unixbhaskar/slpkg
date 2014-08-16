@@ -26,13 +26,13 @@ import sys
 import time
 import subprocess
 
-from colors import colors
-from messages import s_user
-from url_read import url_read
-from __metadata__ import pkg_path, slpkg_tmp, arch
+from slpkg.colors import colors
+from slpkg.messages import s_user
+from slpkg.url_read import url_read
+from slpkg.__metadata__ import pkg_path, slpkg_tmp, arch
 
-from pkg.find import find_package
-from pkg.manager import pkg_upgrade
+from slpkg.pkg.find import find_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from mirrors import mirrors
 from slack_version import slack_ver
@@ -90,7 +90,7 @@ def patches():
                     pkg_upgrade((pch_path + pkg).split())
                 for kernel in upgrade_all:
                     if "kernel" in kernel:
-                        print("kernel updating run automatacaly lilo as recomanded")
+                        print("The kernel has been upgraded, reinstall `lilo` ...")
                         subprocess.call("lilo", shell=True)
                         break
                 read = raw_input("Removal downloaded packages [Y/n]? ")

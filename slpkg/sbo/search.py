@@ -25,10 +25,10 @@ import os
 import re
 import sys
 
-from functions import get_file
-from __metadata__ import lib_path
+from slpkg.functions import get_file
+from slpkg.__metadata__ import lib_path
 
-from slack.slack_version import slack_ver
+from slpkg.slack.slack_version import slack_ver
 
 from init import initialization
 

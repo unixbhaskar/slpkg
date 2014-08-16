@@ -25,15 +25,15 @@ import os
 import sys
 import subprocess
 
-from colors import colors
-from functions import get_file
-from __metadata__ import tmp, pkg_path, build_path, sp
-from messages import pkg_not_found, pkg_found, template, s_user
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch, log_path
+from slpkg.colors import colors
+from slpkg.functions import get_file
+from slpkg.__metadata__ import tmp, pkg_path, build_path, sp
+from slpkg.messages import pkg_not_found, pkg_found, template, s_user
+from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch, log_path
 
-from pkg.find import find_package 
-from pkg.build import build_package
-from pkg.manager import pkg_upgrade
+from slpkg.pkg.find import find_package 
+from slpkg.pkg.build import build_package
+from slpkg.pkg.manager import pkg_upgrade
 
 from search import sbo_search_pkg
 from file_size import server_file_size

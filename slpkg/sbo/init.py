@@ -24,10 +24,10 @@
 import os
 import sys
 
-from url_read import url_read
-from __metadata__ import log_path, lib_path
+from slpkg.url_read import url_read
+from slpkg.__metadata__ import log_path, lib_path
 
-from slack.slack_version import slack_ver
+from slpkg.slack.slack_version import slack_ver
 
 from file_size import server_file_size, local_file_size
 
