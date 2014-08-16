@@ -24,7 +24,6 @@
 import os
 import sys
 import shutil
-import getpass
 import tarfile
 import subprocess
 
@@ -34,7 +33,6 @@ def build_package(script, source, extra, path):
     '''
     Build package from source
     '''
-    s_user(getpass.getuser())
     pkg_name = script.replace(".tar.gz", "")
     try:
         tar = tarfile.open(script)

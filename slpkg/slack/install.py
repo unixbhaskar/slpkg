@@ -24,7 +24,6 @@
 import os
 import sys
 import time
-import getpass
 import subprocess
 
 from colors import colors
@@ -42,7 +41,6 @@ def install(slack_pkg):
     Install packages from official Slackware distribution
     '''
     try:
-        s_user(getpass.getuser())
         dwn_list, dwn_packages = [], []
         install_all, package_name, package_location = [], [], []
         pkg_path = slpkg_tmp + "packages/"

@@ -22,7 +22,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import getpass
 
 from messages import s_user
 from url_read import url_read
@@ -39,7 +38,6 @@ def read_readme(sbo_url, name, site):
     '''
     Read SlackBuild README file
     '''
-    s_user(getpass.getuser())
     readme = url_read(sbo_url + site)
     f = open("{0}{1}.{2}".format(rdm_path, name, site), "w")
     f.write(readme)
@@ -49,7 +47,6 @@ def read_info_slackbuild(sbo_url, name, site):
     '''
     Read info SlackBuild file
     '''
-    s_user(getpass.getuser())
     info = url_read(sbo_url + name + site)
     f = open("{0}{1}{2}".format(rdm_path, name, site), "w")
     f.write(info)

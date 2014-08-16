@@ -23,7 +23,6 @@
 
 import os
 import sys
-import getpass
 import subprocess
 
 from colors import colors
@@ -47,7 +46,6 @@ def sbo_build(name):
     Download, build and upgrade packages with all
     dependencies
     '''
-    s_user(getpass.getuser())
     sys.stdout.write("Building dependency tree ...")
     dependencies_list = sbo_dependencies_pkg(name)
     if dependencies_list == None:

@@ -24,7 +24,6 @@
 import os
 import sys
 import time
-import getpass
 import subprocess
 
 from colors import colors
@@ -43,7 +42,6 @@ def patches():
     Install new patches from official Slackware mirrors
     '''
     try:
-        s_user(getpass.getuser())
         dwn_list, dwn_patches = [], []
         upgrade_all, package_name, package_location = [], [], []
         pch_path = slpkg_tmp + "patches/"
@@ -90,6 +88,11 @@ def patches():
                     print("{0}[ upgrading ] --> {1}{2}".format(
                             colors.GREEN, colors.ENDC, pkg))
                     pkg_upgrade((pch_path + pkg).split())
+                for kernel in upgrade_all:
+                    if "kernel" in kernel:
+                        print("kernel updating run automatacaly lilo as recomanded")
+                        subprocess.call("lilo", shell=True)
+                        break
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for pkg in upgrade_all:

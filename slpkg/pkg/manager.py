@@ -23,7 +23,6 @@
 
 import os
 import sys
-import getpass
 import subprocess
 
 from collections import OrderedDict
@@ -38,7 +37,6 @@ def pkg_install(binary):
     '''
     Install Slackware binary packages
     '''
-    s_user(getpass.getuser())
     for pkg in binary:
         try:
             print subprocess.check_output('installpkg {0}'.format(pkg), shell=True)
@@ -54,7 +52,6 @@ def pkg_upgrade(binary):
     '''
     Upgrade Slackware binary packages
     '''
-    s_user(getpass.getuser())
     for pkg in binary:
         try:
             print subprocess.check_output('upgradepkg --install-new {0}'.format(pkg),
@@ -71,7 +68,6 @@ def pkg_reinstall(binary):
     '''
     Reinstall Slackware binary packages
     '''
-    s_user(getpass.getuser())
     for pkg in binary:
         try:
             print subprocess.check_output('upgradepkg --reinstall {0}'.format(pkg),
@@ -88,7 +84,6 @@ def pkg_remove(binary):
     '''
     Remove Slackware binary packages
     '''
-    s_user(getpass.getuser())
     dep_path = log_path + "dep/"
     removed, not_found, dependencies, rmv_dependencies = [], [], [], []
     print("\nPackages with name matching [ {0}{1}{2} ]\n".format(

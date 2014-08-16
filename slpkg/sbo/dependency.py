@@ -22,7 +22,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import getpass
 
 from colors import colors
 from __metadata__ import pkg_path, sp
@@ -66,7 +65,6 @@ def pkg_tracking(name):
     '''
     Print tree of dependencies
     '''
-    s_user(getpass.getuser()) 
     sys.stdout.write("Reading package lists ...")
     dependencies_list = sbo_dependencies_pkg(name)
     if dependencies_list is None:

@@ -61,6 +61,8 @@ optional arguments:
 '''
 
 import argparse
+import getpass
+
 from version import *
 from functions import *
 from colors import colors
@@ -113,14 +115,17 @@ def main():
     if args.verbose:
         prog_version()
     if args.a:
+	s_user(getpass.getuser())
         build_package(args.a[0], args.a[1], args.a[2:], path)
     if args.l:
         pkg_list(args.l)
     if args.t:
         pkg_tracking(args.t)
     if args.n:
+	s_user(getpass.getuser())
         sbo_network(args.n)
     if args.c:
+	s_user(getpass.getuser())
         if len(args.c) == 2:
             if "sbo" in args.c:
                 sbo_check("".join(args.c[1]))
@@ -147,6 +152,7 @@ def main():
             ext_err_args()
             err2_args()    
     if args.s:
+	s_user(getpass.getuser())
         if len(args.s) == 2:
             if "sbo" in args.s:
                 sbo_build("".join(args.s[1]))
@@ -168,12 +174,16 @@ def main():
             ext_err_args()
             err2_args()
     if args.i:
+	s_user(getpass.getuser())
         pkg_install(args.i)
     if args.u:
+	s_user(getpass.getuser())
         pkg_upgrade(args.u)
     if args.o:
+	s_user(getpass.getuser())
         pkg_reinstall(args.o)
     if args.r:
+	s_user(getpass.getuser())
         pkg_remove(args.r)
     if args.f:
         pkg_find(args.f)
