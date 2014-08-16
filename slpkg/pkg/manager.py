@@ -204,7 +204,7 @@ def pkg_list(binary):
         print # new line at start
         index, page = 0, 50
         if "all" in binary:
-            for pkg in os.listdir(pkg_path):
+            for pkg in sorted(os.listdir(pkg_path)):
                 index += 1
                 print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                 if index == page:
@@ -212,7 +212,7 @@ def pkg_list(binary):
                                      colors.CYAN, colors.ENDC))
                     page += 50
         if "sbo" in binary:
-            for pkg in os.listdir(pkg_path):
+            for pkg in sorted(os.listdir(pkg_path)):
                 if 'SBo' in pkg:
                     index += 1
                     print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
@@ -221,7 +221,7 @@ def pkg_list(binary):
                                          colors.CYAN, colors.ENDC))
                         page += 50
         if "slack" in binary:
-            for pkg in os.listdir(pkg_path):
+            for pkg in sorted(os.listdir(pkg_path)):
                 if 'slack' in pkg:
                     index += 1
                     print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
@@ -230,7 +230,7 @@ def pkg_list(binary):
                                          colors.CYAN, colors.ENDC))
                         page += 50
         if "noarch" in binary:
-            for pkg in os.listdir(pkg_path):
+            for pkg in sorted(os.listdir(pkg_path)):
                 if 'noarch' in pkg:
                     index += 1
                     print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
@@ -239,7 +239,7 @@ def pkg_list(binary):
                                          colors.CYAN, colors.ENDC))
                         page += 50
         if "other" in binary:
-            for pkg in os.listdir(pkg_path):
+            for pkg in sorted(os.listdir(pkg_path)):
                 if 'SBo' in pkg or 'slack' in pkg or 'noarch' in pkg:
                     pass
                 else:
