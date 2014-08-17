@@ -123,8 +123,8 @@ def install(slack_pkg):
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
-            print("\nNeed to get {0} {1} of archives".format(compressed, comp_unit))
-            print("After this process, {0} {1} of additional disk space will be used".format(
+            print("\nNeed to get {0} {1} of archives.".format(compressed, comp_unit))
+            print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":

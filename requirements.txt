@@ -1,10 +1,5 @@
 # Python 2.7.5
-# Slackware current (not support installing & upgrading via Slackware mirror
-                     because slpkg look /etc/slackware-version file to grep
-                     version and select mirror. 
-                     Please don't use slpkg -s slackpkg <package> 
-                     & slpkg -c slack upgrade. Expected a solution in a short
-                     time)
+# Slackware current (not supported yet)
 # Slackware
 # Slackware 64
 # No other Python packages needed

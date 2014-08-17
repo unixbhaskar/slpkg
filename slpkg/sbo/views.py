@@ -94,7 +94,6 @@ def sbo_network(name):
                 subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
                 os.remove("{0}{1}{2}".format(rdm_path, name, site))
             elif read == "B" or read == "b":
-                s_user(getpass.getuser())
                 os.chdir(build_path)
                 script = get_file(sbo_dwn, "/")
                 source = get_file(source_dwn, "/")
@@ -108,7 +107,6 @@ def sbo_network(name):
                 build_package(script, source, extra, build_path)
                 break
             elif read == "I" or read == "i":
-                s_user(getpass.getuser())
                 os.chdir(build_path)
                 pkg_for_install = ("{0}-{1}".format(name, sbo_version))
                 if find_package(name + sp, pkg_path) == []:

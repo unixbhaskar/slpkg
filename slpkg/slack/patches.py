@@ -44,7 +44,7 @@ def patches():
     try:
         dwn_list, dwn_patches, comp_size, uncomp_size = [], [], [], []
         upgrade_all, package_name, package_location = [], [], []
-	comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
+        comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
         pch_path = slpkg_tmp + "patches/"
         if not os.path.exists(pch_path):
             if not os.path.exists(slpkg_tmp):
@@ -119,8 +119,8 @@ def patches():
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
-            print("\nNeed to get {0} {1} of archives".format(compressed, comp_unit))
-            print("After this process, {0} {1} of additional disk space will be used".format(
+            print("\nNeed to get {0} {1} of archives.".format(compressed, comp_unit))
+            print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":

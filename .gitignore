@@ -4,3 +4,4 @@
 __pycache__
 .pipy
 *.egg-info/
+/slpkg_Build

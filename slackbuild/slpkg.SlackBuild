@@ -23,11 +23,18 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=slpkg
-VERSION=${VERSION:-1.7.3}
+VERSION=${VERSION:-1.7.4}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_dsw}
 
-ARCH="noarch"
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) ARCH=i486 ;;
+    arm*) ARCH=arm ;;
+       *) ARCH=$( uname -m ) ;;
+  esac
+fi
+
 
 CWD=$(pwd)
 TMP=${TMP:-/tmp/SBo}

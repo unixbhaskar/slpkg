@@ -1,0 +1,45 @@
+Installation
+============
+
+
+Python & OS Support
+-------------------
+
+slpkg works with Python versions 2.7.5+
+slpkg works on Slackware stable distribution.
+
+Slackware current not support yet.
+
+Install slpkg
+-------------
+
+There are mainly four ways:
+
+1) Using the SlackBuild script in the directory slpkg-?.?.?/slackbuild.
+
+   Untar the archive `tar xvf slpkg-?.?.?.tar.gz`
+
+   Copy the source tar archive `cp slpkg-?.?.?.tar.gz slpkg-?.?.?/slackbuild`, 
+   change directory `cd slpkg-?.?.?/slackbuild`, fix the version if need in 
+   SlackBuild.slpkg give execution permissions to script `chmod +x SlackBuild.slpkg`
+   and run as root ./SlackBuild.slpkg.
+
+   SlackBuild package created so install package with `upgradepkg --install-new
+   /tmp/slpkg-?.?.?-x86_64-1_dsw.tgz` (x86_64 for Slackware64).
+
+2) Using pip:
+
+   `pip install slpkg` or upgrade `pip install --upgrade slpkg`
+
+3) Download slpkg package from slackbuilds.org and run the first procedure described above.
+
+4) Download binary package from sourceforge:
+ 
+   https://sourceforge.net/projects/slpkg/
+
+
+Proposed mode if you want to have installed the most updated version is 1 and 2
+process.
+
+
+

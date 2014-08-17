@@ -1,0 +1,12 @@
+Contributions are very much appreciated !!!
+
+Pull requests should be based on and submitted to the "develop" branch
+
+It would be preferable to have a basic knowledge about the distribution Slackware,
+as important how a package is build.
+
+Small changes in the code each time more appreciated.
+Keep the style code applicable items.
+
+Please ensure your changes work in Python 2.7.5+
+Python3 not support yet.

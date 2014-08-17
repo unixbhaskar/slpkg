@@ -1,11 +1,12 @@
 17-08-2014
 Version 1.7.4
 
-[Feature] - Added downloaded .asc files with packages to upgrade from 
-            Slackware patches directory.
+[Updated] - Bugfix NameError: global name 'getpass' is not defined
+
+[Feature] - Added downloaded .asc files to upgrade or install 
+            packages from Slackware tree.
             Added calculate file sizes in the process of installing 
             packages or upgrading from Slackware mirrors
-
 
 16-8-2014
 Verion 1.7.3

@@ -143,6 +143,9 @@ download and install:
     
     Reading package lists.............................. Done    
 
+    Need to get 6.02 Mb of archives.
+    After this process, 15.72 Mb of additional disk space will be used.
+    
     [ install ] --> mozilla-firefox-24.1.0esr-x86_64-1
     [ install ] --> mozilla-nss-3.15.2-x86_64-2
     [ install ] --> mozilla-thunderbird-24.1.0-x86_64-1
@@ -192,7 +195,7 @@ Check if your packages is up to date from slackbuilds.org:
     $ slpkg -c sbo ranger
     Reading package lists. Done    
 
-    Package 'ranger-1.6.1' is up to date
+    Package ranger-1.6.1 is up to date
 
     $ slpkg -c sbo termcolor
     Reading package lists. Done
@@ -213,6 +216,9 @@ Check if your distribution is up to date from `Slackware official mirrors
     [ upgrade ] --> samba-4.1.11-x86_64-1_slack14.1.txz
     [ upgrade ] --> xscreensaver-5.29-x86_64-1_slack14.1.txz
 
+    Need to get 1.70 Mb of archives.
+    After this process, 9.51 Mb of additional disk space will be used.
+    
     Would you like to upgrade [Y/y]?
 
 Find packages from slackbuilds.org:
