@@ -42,8 +42,9 @@ def patches():
     Install new patches from official Slackware mirrors
     '''
     try:
-        dwn_list, dwn_patches = [], []
+        dwn_list, dwn_patches, comp_size, uncomp_size = [], [], [], []
         upgrade_all, package_name, package_location = [], [], []
+	comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
         pch_path = slpkg_tmp + "patches/"
         if not os.path.exists(pch_path):
             if not os.path.exists(slpkg_tmp):
@@ -64,8 +65,25 @@ def patches():
                 package_name.append(line.replace("PACKAGE NAME:  ", ""))
             if line.startswith("PACKAGE LOCATION"):
                 package_location.append(line.replace("PACKAGE LOCATION:  ./", ""))
+            if line.startswith("PACKAGE SIZE (compressed):  "):
+                comp_size.append(line[:-2].replace("PACKAGE SIZE (compressed):  ", ""))
+            if line.startswith("PACKAGE SIZE (uncompressed):  "):
+                uncomp_size.append(line[:-2].replace("PACKAGE SIZE (uncompressed):  ", ""))
+        '''
+        Create list with location and package name
+        '''
         for loc, name in zip(package_location, package_name):
             dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
+        '''
+        Create list with package name and compressed size
+        '''
+        for name, size in zip(package_name, comp_size):
+            comp_list.append("{0}{1}".format(name, size))
+        '''
+        Create list with package name and uncompressed size
+        '''
+        for name, size in zip(package_name, uncomp_size):
+            uncomp_list.append("{0}{1}".format(name, size))
         for pkg in package_name:
             installed_pkg = "".join(find_package(pkg.replace(".txz", ""), pkg_path))
             if installed_pkg == "":
@@ -79,6 +97,31 @@ def patches():
                 for dwn in dwn_list:
                     if upgrade in dwn:
                         dwn_patches.append(dwn)
+	        '''
+            Grep sizes from list and saved
+            '''
+            for install in upgrade_all:
+                for comp in comp_list:
+                    if install == comp[:-(len(comp)-len(install))]:
+                        comp_sum.append(comp.replace(install, ""))
+                for uncomp in uncomp_list:
+                    if install == uncomp[:-(len(uncomp)-len(install))]:
+                        uncomp_sum.append(uncomp.replace(install, ""))
+	        '''
+            Calculate sizes and print
+            '''
+            comp_unit, uncomp_unit = "Mb", "Mb"
+            compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
+            uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
+            if compressed < 1:
+                compressed = sum(map(int, comp_sum))
+                comp_unit = "Kb"
+            if uncompressed < 1:
+                uncompressed = sum(map(int, uncomp_sum))
+                uncomp_unit = "Kb"
+            print("\nNeed to get {0} {1} of archives".format(compressed, comp_unit))
+            print("After this process, {0} {1} of additional disk space will be used".format(
+                   uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:

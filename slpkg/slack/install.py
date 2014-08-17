@@ -64,12 +64,12 @@ def install(slack_pkg):
                 time.sleep(0.05)
             if line.startswith("PACKAGE NAME"):
                 package_name.append(line.replace("PACKAGE NAME:  ", ""))
+            if line.startswith("PACKAGE LOCATION"):
+                package_location.append(line.replace("PACKAGE LOCATION:  ./", ""))
             if line.startswith("PACKAGE SIZE (compressed):  "):
                 comp_size.append(line[:-2].replace("PACKAGE SIZE (compressed):  ", ""))
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[:-2].replace("PACKAGE SIZE (uncompressed):  ", ""))
-            if line.startswith("PACKAGE LOCATION"):
-                package_location.append(line.replace("PACKAGE LOCATION:  ./", ""))
         '''
         Create list with location and package name
         '''

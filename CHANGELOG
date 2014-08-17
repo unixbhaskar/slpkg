@@ -1,9 +1,10 @@
 17-08-2014
 Version 1.7.4
 
-[Updated] - Added downloaded .asc files with packages to upgrade from 
+[Feature] - Added downloaded .asc files with packages to upgrade from 
             Slackware patches directory.
-
+            Added calculate file sizes in the process of installing 
+            packages or upgrading from Slackware mirrors
 
 
 16-8-2014
