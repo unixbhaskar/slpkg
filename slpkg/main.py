@@ -120,6 +120,7 @@ def main():
     if args.l:
         pkg_list(args.l)
     if args.t:
+        s_user(getpass.getuser())
         pkg_tracking(args.t)
     if args.n:
 	s_user(getpass.getuser())
