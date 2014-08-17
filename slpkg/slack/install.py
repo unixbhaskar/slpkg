@@ -41,8 +41,9 @@ def install(slack_pkg):
     Install packages from official Slackware distribution
     '''
     try:
-        dwn_list, dwn_packages = [], []
+        dwn_list, dwn_packages, comp_size, uncomp_size = [], [], [], []
         install_all, package_name, package_location = [], [], []
+        comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
         pkg_path = slpkg_tmp + "packages/"
         if not os.path.exists(pkg_path):
             if not os.path.exists(slpkg_tmp):
@@ -63,10 +64,27 @@ def install(slack_pkg):
                 time.sleep(0.05)
             if line.startswith("PACKAGE NAME"):
                 package_name.append(line.replace("PACKAGE NAME:  ", ""))
+            if line.startswith("PACKAGE SIZE (compressed):  "):
+                comp_size.append(line[:-2].replace("PACKAGE SIZE (compressed):  ", ""))
+            if line.startswith("PACKAGE SIZE (uncompressed):  "):
+                uncomp_size.append(line[:-2].replace("PACKAGE SIZE (uncompressed):  ", ""))
             if line.startswith("PACKAGE LOCATION"):
                 package_location.append(line.replace("PACKAGE LOCATION:  ./", ""))
+        '''
+        Create list with location and package name
+        '''
         for loc, name in zip(package_location, package_name):
             dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
+        '''
+        Create list with package name and compressed size
+        '''
+        for name, size in zip(package_name, comp_size):
+            comp_list.append("{0}{1}".format(name, size))
+        '''
+        Create list with package name and uncompressed size
+        '''
+        for name, size in zip(package_name, uncomp_size):
+            uncomp_list.append("{0}{1}".format(name, size))
         sys.stdout.write("Done\n\n")
         for pkg in package_name:
             if slack_pkg in pkg:
@@ -83,12 +101,39 @@ def install(slack_pkg):
             message = "No matching"
             pkg_not_found(bol, slack_pkg, message, eol)
         else:
+            '''
+            Grep sizes from list and saved
+            '''
+            for install in install_all:
+                for comp in comp_list:
+                    if install == comp[:-(len(comp)-len(install))]:
+                        comp_sum.append(comp.replace(install, ""))
+                for uncomp in uncomp_list:
+                    if install == uncomp[:-(len(uncomp)-len(install))]:
+                        uncomp_sum.append(uncomp.replace(install, ""))
+            '''
+            Calculate sizes and print
+            '''
+            comp_unit, uncomp_unit = "Mb", "Mb"
+            compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
+            uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
+            if compressed < 1:
+                compressed = sum(map(int, comp_sum))
+                comp_unit = "Kb"
+            if uncompressed < 1:
+                uncompressed = sum(map(int, uncomp_sum))
+                uncomp_unit = "Kb"
+            print("\nNeed to get {0} {1} of archives".format(compressed, comp_unit))
+            print("After this process, {0} {1} of additional disk space will be used".format(
+                   uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for install in install_all:
                     for dwn in dwn_list:
                         if install in dwn:
-                            subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(pkg_path, dwn, dwn), shell=True)
+                            subprocess.call(
+                                    "wget -N --directory-prefix={0} {1} {2}.asc".format(
+                                        pkg_path, dwn, dwn), shell=True)
                 for install in install_all:
                     if not os.path.isfile(pkg_path + install):
                         print("{0}[ installing ] --> {1}{2}".format(
@@ -98,7 +143,6 @@ def install(slack_pkg):
                         print("{0}[ reinstalling ] --> {1}{2}".format(
                                 colors.GREEN, colors.ENDC, install))
                         pkg_reinstall((pkg_path + install).split())
-
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:
