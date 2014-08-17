@@ -82,8 +82,8 @@ def patches():
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:
-                    subprocess.call("wget -N --directory-prefix={0} {1} {2}".format(
-                               pch_path, dwn, dwn + ".asc"), shell=True)
+                    subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
+                               pch_path, dwn, dwn), shell=True)
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(
                             colors.GREEN, colors.ENDC, pkg))
@@ -101,10 +101,9 @@ def patches():
                     if os.listdir(pch_path) == []:
                         print("Packages removed")
                     else:
-                        print("\nThere are packages in direcrory {0}\n".format(
-                                pch_path))
+                        print("\nThere are packages in direcrory {0}\n".format(pch_path))
                 else:
-                    print("\nThere are packages in directory {0}\n".format(                                                   pch_path))
+                    print("\nThere are packages in directory {0}\n".format(pch_path))
         else:
             if arch == "x86_64":
                 slack_arch = 64

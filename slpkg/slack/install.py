@@ -63,7 +63,7 @@ def install(slack_pkg):
                 time.sleep(0.05)
             if line.startswith("PACKAGE NAME"):
                 package_name.append(line.replace("PACKAGE NAME:  ", ""))
-            if line.startswith('PACKAGE LOCATION'):
+            if line.startswith("PACKAGE LOCATION"):
                 package_location.append(line.replace("PACKAGE LOCATION:  ./", ""))
         for loc, name in zip(package_location, package_name):
             dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
@@ -88,8 +88,7 @@ def install(slack_pkg):
                 for install in install_all:
                     for dwn in dwn_list:
                         if install in dwn:
-                            subprocess.call("wget -N --directory-prefix={0} {1}".format(
-                                       pkg_path, dwn), shell=True)
+                            subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(pkg_path, dwn, dwn), shell=True)
                 for install in install_all:
                     if not os.path.isfile(pkg_path + install):
                         print("{0}[ installing ] --> {1}{2}".format(
@@ -104,13 +103,14 @@ def install(slack_pkg):
                 if read == "Y" or read == "y":
                     for remove in install_all:
                         os.remove(pkg_path + remove)
+                        os.remove(pkg_path + remove + ".asc")
                     if os.listdir(pkg_path) == []:
                         print("Packages removed")
                     else:
                         print("\nThere are packages in directory {0}\n".format(
                                 pkg_path))
                 else:
-                    print("\nThere are packages in directory {0}{1}\n".format(
+                    print("\nThere are packages in directory {0}\n".format(
                             pkg_path))
     except KeyboardInterrupt:
         print # new line at exit
