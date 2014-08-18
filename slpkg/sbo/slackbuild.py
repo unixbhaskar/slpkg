@@ -25,18 +25,17 @@ import os
 import sys
 import subprocess
 
-from slpkg.colors import colors
-from slpkg.functions import get_file
-from slpkg.__metadata__ import tmp, pkg_path, build_path, sp
-from slpkg.messages import pkg_not_found, pkg_found, template, s_user
-from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch, log_path
+from colors import colors
+from functions import get_file
+from __metadata__ import tmp, pkg_path, build_path, sp
+from messages import pkg_not_found, pkg_found, template, s_user
+from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch, log_path
 
-from slpkg.pkg.find import find_package 
-from slpkg.pkg.build import build_package
-from slpkg.pkg.manager import pkg_upgrade
+from pkg.find import find_package 
+from pkg.build import build_package
+from pkg.manager import pkg_upgrade
 
 from search import sbo_search_pkg
-from file_size import server_file_size
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 from greps import sbo_source_dwn, sbo_extra_dwn, sbo_version_pkg
@@ -63,10 +62,21 @@ def sbo_build(name):
             for duplicate in requires:
                 if duplicate not in dependencies:
                     dependencies.append(duplicate)
+            pkg_sum = 0 
+            dep_report = []
+            for dep in dependencies:
+                if find_package(dep, pkg_path):
+                    dep_report.append(colors.GREEN + dep + colors.ENDC)
+                    pkg_sum += 1 
+                else:
+                    dep_report.append(colors.RED + dep + colors.ENDC)
             sys.stdout.write("Done")
             print # new lines at start
             print("The following packages will be automatically installed or upgraded with new version:\n")
-            print("  " + " ".join(dependencies))
+            print("  " + " ".join(dep_report) + "\n")
+            print("Total {0} packages.".format(len(dependencies)))
+            print("{0} packages will be installed, {1} allready installed.".format(
+                 (len(dependencies) - pkg_sum), pkg_sum))
             read = raw_input("\nDo you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
                 for pkg in dependencies:

@@ -27,7 +27,7 @@ import shutil
 import tarfile
 import subprocess
 
-from slpkg.messages import pkg_not_found, s_user
+from messages import pkg_not_found, s_user
 
 def build_package(script, source, extra, path):
     '''

@@ -1,3 +1,11 @@
+18-08-2014
+Version 1.7.5.dev
+
+[Feature] - Added report of packages will be installed with options
+            `slpkg -s sbo <package>`
+            `slpkg -s slack <package>`
+            `slpkg -c slack upgrade`
+
 17-08-2014
 Version 1.7.4
 

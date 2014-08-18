@@ -26,13 +26,13 @@ import sys
 import time
 import subprocess
 
-from slpkg.colors import colors
-from slpkg.url_read import url_read
-from slpkg.messages import pkg_not_found, s_user
-from slpkg.__metadata__ import slpkg_tmp, pkg_path
+from colors import colors
+from url_read import url_read
+from messages import pkg_not_found, s_user
+from __metadata__ import slpkg_tmp, pkg_path
 
-from slpkg.pkg.find import find_package
-from slpkg.pkg.manager import pkg_upgrade, pkg_reinstall
+from pkg.find import find_package
+from pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
 
@@ -44,11 +44,12 @@ def install(slack_pkg):
         dwn_list, dwn_packages, comp_size, uncomp_size = [], [], [], []
         install_all, package_name, package_location = [], [], []
         comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
-        pkg_path = slpkg_tmp + "packages/"
-        if not os.path.exists(pkg_path):
+        tmp_path = slpkg_tmp + "packages/"
+        pkg_sum = 0
+        if not os.path.exists(tmp_path):
             if not os.path.exists(slpkg_tmp):
                 os.mkdir(slpkg_tmp)
-                os.mkdir(pkg_path)
+                os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
                 colors.CYAN, slack_pkg, colors.ENDC)) 
         sys.stdout.write ("Reading package lists ...")
@@ -90,11 +91,11 @@ def install(slack_pkg):
             if slack_pkg in pkg:
                 if pkg.endswith(".txz"):
                     print("{0}[ install ] --> {1}{2}".format(
-                            colors.GREEN, colors.ENDC, pkg.replace(".txz", "")))
+                        colors.GREEN, colors.ENDC, pkg[:-4]))
                     install_all.append(pkg)
                 elif pkg.endswith(".tgz"):
                     print("{0}[ install ] --> {1}{2}".format(
-                            colors.GREEN, colors.ENDC, pkg.replace(".tgz", "")))
+                        colors.GREEN, colors.ENDC, pkg[:-4]))
                     install_all.append(pkg)
         if install_all == []:
             bol, eol = "", "\n"
@@ -111,6 +112,8 @@ def install(slack_pkg):
                 for uncomp in uncomp_list:
                     if install == uncomp[:-(len(uncomp)-len(install))]:
                         uncomp_sum.append(uncomp.replace(install, ""))
+                if os.path.isfile(pkg_path + install[:-4]):
+                    pkg_sum += 1
             '''
             Calculate sizes and print
             '''
@@ -123,7 +126,10 @@ def install(slack_pkg):
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
-            print("\nNeed to get {0} {1} of archives.".format(compressed, comp_unit))
+            print("\nTotal {0} packages.".format(len(install_all)))
+            print("{0} packages will be installed, {1} allready installed.".format(
+                  (len(install_all) - pkg_sum), pkg_sum))
+            print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to install [Y/n]? ")
@@ -133,12 +139,12 @@ def install(slack_pkg):
                         if install in dwn:
                             subprocess.call(
                                     "wget -N --directory-prefix={0} {1} {2}.asc".format(
-                                        pkg_path, dwn, dwn), shell=True)
+                                        tmp_path, dwn, dwn), shell=True)
                 for install in install_all:
                     if not os.path.isfile(pkg_path + install):
                         print("{0}[ installing ] --> {1}{2}".format(
                                 colors.GREEN, colors.ENDC, install))
-                        pkg_upgrade((pkg_path + install).split())
+                        pkg_upgrade((tmp_path + install).split())
                     else:
                         print("{0}[ reinstalling ] --> {1}{2}".format(
                                 colors.GREEN, colors.ENDC, install))
@@ -146,16 +152,16 @@ def install(slack_pkg):
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:
-                        os.remove(pkg_path + remove)
-                        os.remove(pkg_path + remove + ".asc")
-                    if os.listdir(pkg_path) == []:
+                        os.remove(tmp_path + remove)
+                        os.remove(tmp_path + remove + ".asc")
+                    if os.listdir(tmp_path) == []:
                         print("Packages removed")
                     else:
                         print("\nThere are packages in directory {0}\n".format(
-                                pkg_path))
+                                tmp_path))
                 else:
                     print("\nThere are packages in directory {0}\n".format(
-                            pkg_path))
+                            tmp_path))
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

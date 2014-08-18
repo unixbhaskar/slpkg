@@ -26,13 +26,13 @@ import sys
 import time
 import subprocess
 
-from slpkg.colors import colors
-from slpkg.messages import s_user
-from slpkg.url_read import url_read
-from slpkg.__metadata__ import pkg_path, slpkg_tmp, arch
+from colors import colors
+from messages import s_user
+from url_read import url_read
+from __metadata__ import pkg_path, slpkg_tmp, arch
 
-from slpkg.pkg.find import find_package
-from slpkg.pkg.manager import pkg_upgrade
+from pkg.find import find_package
+from pkg.manager import pkg_upgrade
 
 from mirrors import mirrors
 from slack_version import slack_ver
@@ -85,8 +85,7 @@ def patches():
         for name, size in zip(package_name, uncomp_size):
             uncomp_list.append("{0}{1}".format(name, size))
         for pkg in package_name:
-            installed_pkg = "".join(find_package(pkg.replace(".txz", ""), pkg_path))
-            if installed_pkg == "":
+            if not os.path.isfile(pkg_path + pkg[:-4]):
                 upgrade_all.append(pkg)
         sys.stdout.write("Done\n")
         if upgrade_all:
@@ -95,7 +94,7 @@ def patches():
                 print("{0}[ upgrade ] --> {1}{2}".format(
                         colors.GREEN, colors.ENDC, upgrade))
                 for dwn in dwn_list:
-                    if upgrade in dwn:
+                    if "/" + upgrade in dwn:
                         dwn_patches.append(dwn)
 	        '''
             Grep sizes from list and saved
@@ -119,7 +118,8 @@ def patches():
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
-            print("\nNeed to get {0} {1} of archives.".format(compressed, comp_unit))
+            print("\nTotal {0} packages will be upgrading.".format(len(upgrade_all)))
+            print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
