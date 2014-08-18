@@ -178,7 +178,6 @@ and also displays installed packages:
 
      NOTE: green installed, red not installed
 
-
 Check if your packages is up to date from slackbuilds.org:
 
 .. code-block:: bash
