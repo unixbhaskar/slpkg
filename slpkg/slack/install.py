@@ -28,10 +28,9 @@ import subprocess
 
 from colors import colors
 from url_read import url_read
-from messages import pkg_not_found, s_user
+from messages import pkg_not_found
 from __metadata__ import slpkg_tmp, pkg_path
 
-from pkg.find import find_package
 from pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
@@ -41,9 +40,9 @@ def install(slack_pkg):
     Install packages from official Slackware distribution
     '''
     try:
-        dwn_list, dwn_packages, comp_size, uncomp_size = [], [], [], []
         install_all, package_name, package_location = [], [], []
         comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
+        dwn_list, dwn_packages, comp_size, uncomp_size = [], [], [], []
         tmp_path = slpkg_tmp + "packages/"
         pkg_sum = 0
         if not os.path.exists(tmp_path):
@@ -64,26 +63,17 @@ def install(slack_pkg):
                 toolbar_width += 600
                 time.sleep(0.05)
             if line.startswith("PACKAGE NAME"):
-                package_name.append(line.replace("PACKAGE NAME:  ", ""))
+                package_name.append(line[15:].strip())
             if line.startswith("PACKAGE LOCATION"):
-                package_location.append(line.replace("PACKAGE LOCATION:  ./", ""))
+                package_location.append(line[21:].strip())
             if line.startswith("PACKAGE SIZE (compressed):  "):
-                comp_size.append(line[:-2].replace("PACKAGE SIZE (compressed):  ", ""))
+                comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
-                uncomp_size.append(line[:-2].replace("PACKAGE SIZE (uncompressed):  ", ""))
-        '''
-        Create list with location and package name
-        '''
+                uncomp_size.append(line[30:-2].strip())
         for loc, name in zip(package_location, package_name):
             dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
-        '''
-        Create list with package name and compressed size
-        '''
         for name, size in zip(package_name, comp_size):
             comp_list.append("{0}{1}".format(name, size))
-        '''
-        Create list with package name and uncompressed size
-        '''
         for name, size in zip(package_name, uncomp_size):
             uncomp_list.append("{0}{1}".format(name, size))
         sys.stdout.write("Done\n\n")
@@ -102,9 +92,6 @@ def install(slack_pkg):
             message = "No matching"
             pkg_not_found(bol, slack_pkg, message, eol)
         else:
-            '''
-            Grep sizes from list and saved
-            '''
             for install in install_all:
                 for comp in comp_list:
                     if install == comp[:-(len(comp)-len(install))]:
@@ -114,9 +101,6 @@ def install(slack_pkg):
                         uncomp_sum.append(uncomp.replace(install, ""))
                 if os.path.isfile(pkg_path + install[:-4]):
                     pkg_sum += 1
-            '''
-            Calculate sizes and print
-            '''
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -136,7 +120,7 @@ def install(slack_pkg):
             if read == "Y" or read == "y":
                 for install in install_all:
                     for dwn in dwn_list:
-                        if install in dwn:
+                        if "/" + install in dwn:
                             subprocess.call(
                                     "wget -N --directory-prefix={0} {1} {2}.asc".format(
                                         tmp_path, dwn, dwn), shell=True)
