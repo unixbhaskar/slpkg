@@ -24,7 +24,7 @@
 import os
 
 from url_read import url_read
-from __metadata__ import uname, arch
+from __metadata__ import arch
 
 def sbo_source_dwn(sbo_url, name):
     '''
@@ -35,10 +35,10 @@ def sbo_source_dwn(sbo_url, name):
         for line in read_info.splitlines():
             if line.startswith("DOWNLOAD_x86_64="):
                 if len(line) > 18:
-                    return line[17:-1]
+                    return line[17:-1].strip()
     for line in read_info.splitlines():
         if line.startswith("DOWNLOAD="):
-            return line[10:-1]
+            return line[10:-1].strip()
 
 def sbo_extra_dwn(sbo_url, name):
     '''
@@ -48,11 +48,11 @@ def sbo_extra_dwn(sbo_url, name):
     extra = []
     for line in read_info.split():
         if line.endswith("\""):
-            line = line[:-1].replace("\"", "")
+            line = line[:-1].strip()
         if line.startswith("http"):
-            extra.append(line)
+            extra.append(line.strip())
         if line.startswith("ftp"):
-            extra.append(line)
+            extra.append(line.strip())
     return extra
 
 def sbo_requires_pkg(sbo_url, name):
@@ -62,7 +62,7 @@ def sbo_requires_pkg(sbo_url, name):
     read_info = url_read(sbo_url + name + ".info")
     for line in read_info.splitlines():
         if line.startswith("REQUIRES=\""):
-            return line[10:-1]
+            return line[10:-1].strip()
 
 def sbo_version_pkg(sbo_url, name):
     '''
@@ -71,4 +71,4 @@ def sbo_version_pkg(sbo_url, name):
     read_info = url_read(sbo_url + name + ".info")
     for line in read_info.splitlines():
         if line.startswith("VERSION=\""):
-            return line[9:-1]
+            return line[9:-1].strip()

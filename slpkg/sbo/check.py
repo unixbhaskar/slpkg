@@ -22,17 +22,17 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import getpass
+import sys
 import subprocess
 
-from pkg.build import *
 from pkg.find import find_package
+from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
 from colors import colors
 from functions import get_file
-from messages import pkg_not_found, s_user, template
-from __metadata__ import tmp, pkg_path, uname, arch, sp
+from messages import pkg_not_found, template
+from __metadata__ import tmp, pkg_path, arch, sp
 from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
 
 from search import sbo_search_pkg
@@ -79,7 +79,6 @@ def sbo_check(name):
                     print # new line at exit
                     sys.exit()
                 if read == "Y" or read == "y":
-                    s_user(getpass.getuser())
                     if not os.path.exists(build_path):
                         os.mkdir(build_path)
                     os.chdir(build_path)

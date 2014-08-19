@@ -25,11 +25,11 @@ import sys
 
 from colors import colors
 from __metadata__ import pkg_path, sp
-from messages import pkg_not_found, template, s_user
+from messages import pkg_not_found, template
 
 from pkg.find import find_package
 
-from greps import *
+from greps import sbo_requires_pkg
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 

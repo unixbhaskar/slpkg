@@ -27,15 +27,16 @@ import subprocess
 
 from colors import colors
 from functions import get_file
-from __metadata__ import tmp, pkg_path, build_path, sp
-from messages import pkg_not_found, pkg_found, template, s_user
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch, log_path
+from messages import pkg_not_found, pkg_found, template
+from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, arch
+from __metadata__ import tmp, pkg_path, build_path, log_path, sp
 
 from pkg.find import find_package 
 from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
 from search import sbo_search_pkg
+from file_size import server_file_size
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 from greps import sbo_source_dwn, sbo_extra_dwn, sbo_version_pkg
@@ -65,15 +66,30 @@ def sbo_build(name):
             pkg_sum = 0 
             dep_report = []
             for dep in dependencies:
-                if find_package(dep, pkg_path):
+                if find_package(dep + sp, pkg_path):
                     dep_report.append(colors.GREEN + dep + colors.ENDC)
                     pkg_sum += 1 
                 else:
                     dep_report.append(colors.RED + dep + colors.ENDC)
+            inst = "".join(dependencies[-1:])
+            sbo_url = sbo_search_pkg(inst)
+            sbo_ver = sbo_version_pkg(sbo_url, inst)
+            print len(sbo_ver)
             sys.stdout.write("Done")
             print # new lines at start
             print("The following packages will be automatically installed or upgraded with new version:\n")
-            print("  " + " ".join(dep_report) + "\n")
+            template(78)
+            print "| Package",  " "*15, "Arch",  " "*5, "Version", " "*7, "Repository", " "*4, "Size", " "*5
+            template(78)
+            inst_size = round((int("".join(server_file_size(sbo_slackbuild_dwn(sbo_url, inst)))) + int(
+                "".join(server_file_size(sbo_source_dwn(sbo_url, inst))))) * 9.5367431640625e-07, 2)
+            print("Installing:")
+            print " ",  "".join(dep_report[-1:]), " "*(22-len(inst)), arch, " "*3, sbo_ver, " "*(14-len(
+                    sbo_ver)), "SBo", " "*11, inst_size, "Mb"
+            print("Installing for dependencies:")
+            print("  " + " ".join(dep_report[:-1]) + "\n")
+            print("Installing summary")
+            print("="*79)
             print("Total {0} packages.".format(len(dependencies)))
             print("{0} packages will be installed, {1} allready installed.".format(
                  (len(dependencies) - pkg_sum), pkg_sum))
