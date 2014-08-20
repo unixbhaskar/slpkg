@@ -77,33 +77,35 @@ def install(slack_pkg):
         for name, size in zip(package_name, uncomp_size):
             uncomp_list.append("{0}{1}".format(name, size))
         sys.stdout.write("Done\n\n")
-        template(78)
-        print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
-        template(78)
-        print("Installing:")
-        for pkg in package_name:
-            if slack_pkg in pkg:
-                for size in comp_list:
-                    if pkg in size:
-                        Kb = size.replace(pkg, "")
-                        if "noarch" in pkg:
-                            arch = "noarch"
-                        else:
-                            arch = os.uname()[4]
-                        if os.path.isfile(pkg_path + pkg[:-4]):
-                            pkg_sum += 1
-                            SC, EC = colors.GREEN, colors.ENDC
-                        else:
-                            SC, EC = colors.RED, colors.ENDC
-                        print " ", SC + pkg[:-5].replace("-"+arch+"-", "") + EC, " "*(
-                              48-len(pkg[:-5])), arch, " ", pkg[-5:-4].replace(
-                              "-"+arch+"-", ""), " "*5, "Slack", " ", Kb, " "*(3-len(Kb)), "K"
-                        install_all.append(pkg)
+        for search in package_name:
+            if slack_pkg in search:
+                install_all.append(search)
         if install_all == []:
             bol, eol = "", "\n"
             message = "No matching"
             pkg_not_found(bol, slack_pkg, message, eol)
         else:
+            template(78)
+            print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
+            template(78)
+            print("Installing:")
+            for pkg in package_name:
+                if slack_pkg in pkg:
+                    for size in comp_list:
+                        if pkg in size:
+                            Kb = size.replace(pkg, "")
+                            if "noarch" in pkg:
+                                arch = "noarch"
+                            else:
+                                arch = os.uname()[4]
+                            if os.path.isfile(pkg_path + pkg[:-4]):
+                                pkg_sum += 1
+                                SC, EC = colors.GREEN, colors.ENDC
+                            else:
+                                SC, EC = colors.RED, colors.ENDC
+                            print " ", SC + pkg[:-5].replace("-"+arch+"-", "") + EC, " "*(
+                                  48-len(pkg[:-5])), arch, " ", pkg[-5:-4].replace(
+                                  "-"+arch+"-", ""), " "*5, "Slack", " ", Kb, " "*(3-len(Kb)), "K"
             for install in install_all:
                 for comp in comp_list:
                     if install == comp[:-(len(comp)-len(install))]:
