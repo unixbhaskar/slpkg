@@ -28,8 +28,8 @@ import subprocess
 
 from colors import colors
 from url_read import url_read
-from messages import pkg_not_found
-from __metadata__ import slpkg_tmp, pkg_path
+from messages import pkg_not_found, template
+from __metadata__ import slpkg_tmp, pkg_path, arch
 
 from pkg.manager import pkg_upgrade, pkg_reinstall
 
@@ -77,16 +77,28 @@ def install(slack_pkg):
         for name, size in zip(package_name, uncomp_size):
             uncomp_list.append("{0}{1}".format(name, size))
         sys.stdout.write("Done\n\n")
+        template(78)
+        print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
+        template(78)
+        print("Installing:")
         for pkg in package_name:
             if slack_pkg in pkg:
-                if pkg.endswith(".txz"):
-                    print("{0}[ install ] --> {1}{2}".format(
-                        colors.GREEN, colors.ENDC, pkg[:-4]))
-                    install_all.append(pkg)
-                elif pkg.endswith(".tgz"):
-                    print("{0}[ install ] --> {1}{2}".format(
-                        colors.GREEN, colors.ENDC, pkg[:-4]))
-                    install_all.append(pkg)
+                for size in comp_list:
+                    if pkg in size:
+                        Kb = size.replace(pkg, "")
+                        if "noarch" in pkg:
+                            arch = "noarch"
+                        else:
+                            arch = os.uname()[4]
+                        if os.path.isfile(pkg_path + pkg[:-4]):
+                            pkg_sum += 1
+                            SC, EC = colors.GREEN, colors.ENDC
+                        else:
+                            SC, EC = colors.RED, colors.ENDC
+                        print " ", SC + pkg[:-5].replace("-"+arch+"-", "") + EC, " "*(
+                              48-len(pkg[:-5])), arch, " ", pkg[-5:-4].replace(
+                              "-"+arch+"-", ""), " "*5, "Slack", " ", Kb, " "*(3-len(Kb)), "K"
+                        install_all.append(pkg)
         if install_all == []:
             bol, eol = "", "\n"
             message = "No matching"
@@ -99,8 +111,6 @@ def install(slack_pkg):
                 for uncomp in uncomp_list:
                     if install == uncomp[:-(len(uncomp)-len(install))]:
                         uncomp_sum.append(uncomp.replace(install, ""))
-                if os.path.isfile(pkg_path + install[:-4]):
-                    pkg_sum += 1
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -110,7 +120,9 @@ def install(slack_pkg):
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
-            print("\nTotal {0} packages.".format(len(install_all)))
+            print("\nInstalling summary")
+            print("="*79)
+            print("Total {0} packages.".format(len(install_all)))
             print("{0} packages will be installed, {1} allready installed.".format(
                   (len(install_all) - pkg_sum), pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
