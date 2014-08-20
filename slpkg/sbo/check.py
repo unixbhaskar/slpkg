@@ -60,7 +60,7 @@ def sbo_check(name):
             pkg_not_found(bol, name, message, eol)
         else:
             sys.stdout.write("Done\n")
-            sbo_version = sbo_version_pkg(sbo_url, name)
+            sbo_version = sbo_version_pkg(name)
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
             source_dwn = sbo_source_dwn(sbo_url, name)
             extra_dwn = sbo_extra_dwn(sbo_url, name)

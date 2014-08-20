@@ -24,7 +24,7 @@
 import os
 
 from url_read import url_read
-from __metadata__ import arch
+from __metadata__ import arch, lib_path
 
 def sbo_source_dwn(sbo_url, name):
     '''
@@ -64,11 +64,13 @@ def sbo_requires_pkg(sbo_url, name):
         if line.startswith("REQUIRES=\""):
             return line[10:-1].strip()
 
-def sbo_version_pkg(sbo_url, name):
-    '''
-    Grep package version
-    '''
-    read_info = url_read(sbo_url + name + ".info")
-    for line in read_info.splitlines():
-        if line.startswith("VERSION=\""):
-            return line[9:-1].strip()
+def sbo_version_pkg(name):
+    sbo_name, sbo_ver = [], []
+    for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
+        if line.startswith("SLACKBUILD NAME: "):
+            sbo_name.append(line[17:].strip())
+        if line.startswith("SLACKBUILD VERSION: "):
+            sbo_ver.append(line[20:].strip())
+    for nam, ver in zip(sbo_name, sbo_ver):
+        if nam == name:
+            return ver

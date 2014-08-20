@@ -64,31 +64,34 @@ def sbo_build(name):
                 if duplicate not in dependencies:
                     dependencies.append(duplicate)
             pkg_sum = 0 
-            dep_report = []
-            for dep in dependencies:
-                if find_package(dep + sp, pkg_path):
-                    dep_report.append(colors.GREEN + dep + colors.ENDC)
-                    pkg_sum += 1 
-                else:
-                    dep_report.append(colors.RED + dep + colors.ENDC)
-            inst = "".join(dependencies[-1:])
-            sbo_url = sbo_search_pkg(inst)
-            sbo_ver = sbo_version_pkg(sbo_url, inst)
-            print len(sbo_ver)
-            sys.stdout.write("Done")
-            print # new lines at start
+            pkg_for_install = []
+            if find_package(name + sp, pkg_path):
+                pkg_for_install.append(colors.GREEN + name + colors.ENDC)
+                pkg_sum = 1
+            else:
+                pkg_for_install.append(colors.RED + name + colors.ENDC)
+            sbo_url = sbo_search_pkg(name)
+            sbo_ver = sbo_version_pkg(name)
+            sys.stdout.write("Done\n")
             print("The following packages will be automatically installed or upgraded with new version:\n")
             template(78)
-            print "| Package",  " "*15, "Arch",  " "*5, "Version", " "*7, "Repository", " "*4, "Size", " "*5
+            print "| Package",  " "*15, "Version",  " "*5, "Arch", " "*7, "Repository"
             template(78)
-            inst_size = round((int("".join(server_file_size(sbo_slackbuild_dwn(sbo_url, inst)))) + int(
-                "".join(server_file_size(sbo_source_dwn(sbo_url, inst))))) * 9.5367431640625e-07, 2)
             print("Installing:")
-            print " ",  "".join(dep_report[-1:]), " "*(22-len(inst)), arch, " "*3, sbo_ver, " "*(14-len(
-                    sbo_ver)), "SBo", " "*11, inst_size, "Mb"
+            print " ",  "".join(pkg_for_install), " "*(22-len(name)), sbo_ver, " "*(
+                    12-len(sbo_ver)), arch, " "*5, "SBo"
             print("Installing for dependencies:")
-            print("  " + " ".join(dep_report[:-1]) + "\n")
-            print("Installing summary")
+            for dep in dependencies[:-1]:
+                sbo_url = sbo_search_pkg(dep)
+                sbo_ver = sbo_version_pkg(dep)
+                if find_package(dep + sp, pkg_path):
+                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(22-len(dep)), sbo_ver, " "*(
+                            12-len(sbo_ver)), arch, " "*5, "SBo"
+                    pkg_sum += 1
+                else:
+                    print " ",  colors.RED + dep + colors.ENDC, " "*(22-len(dep)), sbo_ver, " "*(
+                            12-len(sbo_ver)), arch, " "*5, "SBo"
+            print("\nInstalling summary")
             print("="*79)
             print("Total {0} packages.".format(len(dependencies)))
             print("{0} packages will be installed, {1} allready installed.".format(
@@ -97,11 +100,11 @@ def sbo_build(name):
             if read == "Y" or read == "y":
                 for pkg in dependencies:
                     sbo_url = sbo_search_pkg(pkg)
-                    sbo_version = sbo_version_pkg(sbo_url, pkg)
+                    sbo_version = sbo_version_pkg(pkg)
                     sbo_file = "".join(find_package(pkg + sp, pkg_path))
                     sbo_file_version = sbo_file[len(pkg) + 1:-len(arch) - 7]
                     if sbo_version > sbo_file_version:
-                        prgnam = ("{0}-{1}".format(pkg, sbo_version_pkg(sbo_url, pkg)))
+                        prgnam = ("{0}-{1}".format(pkg, sbo_version_pkg(pkg)))
                         sbo_link = sbo_slackbuild_dwn(sbo_url, pkg)
                         src_link = sbo_source_dwn(sbo_url, pkg) 
                         ext_link = sbo_extra_dwn(sbo_url, pkg)
@@ -121,7 +124,8 @@ def sbo_build(name):
                         pkg_found(pkg, sbo_file_version)
                         template(78)
             '''
-            Write dependencies in a log file into directory `/var/log/slpkg/dep/`
+            Write dependencies in a log file 
+            into directory `/var/log/slpkg/dep/`
             '''
             dep_path = log_path + "dep/"
             if not os.path.exists(dep_path):
