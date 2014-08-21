@@ -94,10 +94,16 @@ def install(slack_pkg):
                     for size in comp_list:
                         if pkg in size:
                             Kb = size.replace(pkg, "")
-                            if "noarch" in pkg:
+                            if "-noarch-" in pkg:
                                 arch = "noarch"
-                            else:
+                            elif "-"+os.uname()[4]+"-" in pkg:
                                 arch = os.uname()[4]
+                            elif "-x86-" in pkg:
+                                arch = "x86"
+                            elif "-fw-" in pkg:
+                                arch = "fw"
+                            else:
+                                arch = ""
                             if os.path.isfile(pkg_path + pkg[:-4]):
                                 pkg_sum += 1
                                 SC, EC = colors.GREEN, colors.ENDC
@@ -122,11 +128,17 @@ def install(slack_pkg):
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
+            msg_pkg = "package"
+            msg_2_pkg = msg_pkg
+            if len(install_all) > 1:
+                msg_pkg = msg_pkg + "s"
+            if len(install_all) - pkg_sum > 1:
+                msg_2_pkg = msg_2_pkg + "s"
             print("\nInstalling summary")
             print("="*79)
-            print("Total {0} packages.".format(len(install_all)))
-            print("{0} packages will be installed, {1} allready installed.".format(
-                  (len(install_all) - pkg_sum), pkg_sum))
+            print("Total {0} {1}.".format(len(install_all), msg_pkg))
+            print("{0} {1} will be installed, {2} allready installed.".format(
+                  (len(install_all) - pkg_sum), msg_2_pkg, pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
@@ -139,14 +151,15 @@ def install(slack_pkg):
                                     "wget -N --directory-prefix={0} {1} {2}.asc".format(
                                         tmp_path, dwn, dwn), shell=True)
                 for install in install_all:
-                    if not os.path.isfile(pkg_path + install):
+                    print install
+                    if not os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ installing ] --> {1}{2}".format(
-                                colors.GREEN, colors.ENDC, install))
+                            colors.GREEN, colors.ENDC, install))
                         pkg_upgrade((tmp_path + install).split())
                     else:
                         print("{0}[ reinstalling ] --> {1}{2}".format(
                                 colors.GREEN, colors.ENDC, install))
-                        pkg_reinstall((pkg_path + install).split())
+                        pkg_reinstall((tmp_path + install).split())
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:

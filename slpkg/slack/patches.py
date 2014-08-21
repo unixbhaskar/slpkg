@@ -28,7 +28,8 @@ import subprocess
 
 from colors import colors
 from url_read import url_read
-from __metadata__ import pkg_path, slpkg_tmp, arch
+from messages import template
+from __metadata__ import pkg_path, slpkg_tmp
 
 from pkg.manager import pkg_upgrade
 
@@ -80,9 +81,31 @@ def patches():
         sys.stdout.write("Done\n")
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
+            template(78)
+            print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
+            template(78)
             for upgrade in upgrade_all:
-                print("{0}[ upgrade ] --> {1}{2}".format(
-                    colors.GREEN, colors.ENDC, upgrade[:-4]))
+                for size in comp_list:
+                    if upgrade in size:
+                        Kb = size.replace(upgrade, "")
+                        if "-noarch-" in upgrade:
+                            arch = "noarch"
+                        elif "-"+os.uname()[4]+"-" in upgrade:
+                            arch = os.uname()[4]
+                        elif "-x86-" in upgrade:
+                            arch = "x86"
+                        elif "-fw-" in upgrade:
+                            arch = "fw"
+                        else:
+                            arch = ""
+                        if "_slack" in upgrade:
+                            slack = "_slack" + slack_ver()
+                        else:
+                            slack = ""
+                        print " ", upgrade[:-(5+len(slack))].replace(
+                              "-"+arch+"-", ""), " "*(48-len(upgrade[:-(
+                              5+len(slack))])), arch, " ", upgrade[-15:-14].replace(
+                              "-"+arch+"-", ""), " "*5, "Slack", " ", Kb, " "*(3-len(Kb)), "K"
                 for dwn in dwn_list:
                     if "/" + upgrade in dwn:
                         dwn_patches.append(dwn)
@@ -102,7 +125,12 @@ def patches():
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
-            print("\nTotal {0} packages will be upgrading.".format(len(upgrade_all)))
+            msg_pkg = "package"
+            if len(upgrade_all) > 1:
+                msg_pkg = msg_pkg + "s"
+            print("\nInstalling summary")
+            print("="*79)
+            print("Total {0} {1} will be upgrading.".format(len(upgrade_all), msg_pkg))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
@@ -132,7 +160,7 @@ def patches():
                 else:
                     print("\nThere are packages in directory {0}\n".format(pch_path))
         else:
-            if arch == "x86_64":
+            if os.uname()[4] == "x86_64":
                 slack_arch = 64
             print("\nSlackware{0} v{1} distribution is up to date\n".format(
                     slack_arch, slack_ver()))
