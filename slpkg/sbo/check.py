@@ -22,17 +22,17 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import getpass
+import sys
 import subprocess
 
-from slpkg.pkg.build import *
 from slpkg.pkg.find import find_package
+from slpkg.pkg.build import build_package
 from slpkg.pkg.manager import pkg_upgrade
 
 from slpkg.colors import colors
 from slpkg.functions import get_file
-from slpkg.messages import pkg_not_found, s_user, template
-from slpkg.__metadata__ import tmp, pkg_path, uname, arch, sp
+from slpkg.messages import pkg_not_found, template
+from slpkg.__metadata__ import tmp, pkg_path, arch, sp
 from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
 
 from search import sbo_search_pkg
@@ -60,7 +60,7 @@ def sbo_check(name):
             pkg_not_found(bol, name, message, eol)
         else:
             sys.stdout.write("Done\n")
-            sbo_version = sbo_version_pkg(sbo_url, name)
+            sbo_version = sbo_version_pkg(name)
             sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
             source_dwn = sbo_source_dwn(sbo_url, name)
             extra_dwn = sbo_extra_dwn(sbo_url, name)
@@ -79,7 +79,6 @@ def sbo_check(name):
                     print # new line at exit
                     sys.exit()
                 if read == "Y" or read == "y":
-                    s_user(getpass.getuser())
                     if not os.path.exists(build_path):
                         os.mkdir(build_path)
                     os.chdir(build_path)

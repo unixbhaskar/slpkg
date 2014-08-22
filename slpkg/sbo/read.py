@@ -23,7 +23,6 @@
 
 import os
 
-from slpkg.messages import s_user
 from slpkg.url_read import url_read
 from slpkg.__metadata__ import slpkg_tmp
 

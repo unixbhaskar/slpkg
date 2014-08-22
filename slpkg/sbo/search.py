@@ -41,12 +41,12 @@ def sbo_search_pkg(name):
         sbo_location = []
         sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
         for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
-            if line.startswith('SLACKBUILD LOCATION'):
-                sbo_location.append(line.replace('SLACKBUILD LOCATION: ./', ''))
+            if line.startswith("SLACKBUILD LOCATION"):
+                sbo_location.append(line.replace("SLACKBUILD LOCATION: ./", ""))
         for location in sbo_location:
-            location = location.replace('\n', '')
-            if get_file(location, '/') == name:
-                return sbo_url + location.replace(name, '') + name + "/"
+            location = location.replace("\n", "")
+            if get_file(location, "/") == name:
+                return sbo_url + location.replace(name, "") + name + "/"
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

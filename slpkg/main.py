@@ -136,7 +136,7 @@ def main():
                 else:
                     choices = ["upgrade"]
                     ext_err_args()
-                    err1_args("".join(args.c), choices)
+                    err1_args("".join(args.c[1]), choices)
             else:
                 choices = ["sbo", "slack"]
                 ext_err_args()
@@ -162,7 +162,7 @@ def main():
             else:
                 choices = ["sbo", "slack"]
                 ext_err_args()
-                err1_args("".join(args.s), choices)
+                err1_args("".join(args.s[0]), choices)
         elif len(args.s) < 2:
             if "sbo" in args.s or "slack" in args.s:
                 ext_err_args()

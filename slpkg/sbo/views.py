@@ -59,7 +59,7 @@ def sbo_network(name):
         sys.stdout.write ("Done\n")
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
-        sbo_version = sbo_version_pkg(sbo_url, name)
+        sbo_version = sbo_version_pkg(name)
         source_dwn = sbo_source_dwn(sbo_url, name)
         extra_dwn = " ".join(sbo_extra_dwn(sbo_url, name))
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), get_file(source_dwn, "/"),

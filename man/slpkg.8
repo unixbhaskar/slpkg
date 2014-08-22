@@ -81,7 +81,7 @@ slackbuilds.org is up to date.
 Find package from slackbuild.org with all dependencies,
 download, build and install them if not installed or new version is 
 available. Even download and install official packages from Slackware
-official mirrors and install.
+official mirrors and install or reinstall if already installed.
 .SS -i , install binary package
 \fBslpkg\fP \fB-i\fP <\fIpackages.t?z\fP>
 .PP
@@ -148,13 +148,25 @@ $ \fBslpkg -t brasero\fP
    |
    --5: libunique
 
-   NOTE: green installed, red not installed
-
 $ \fBslpkg -s sbo brasero\fP
   Building dependency tree...... Done
   The following packages will be automatically installed or upgraded with new version:
+  +==============================================================================
+  | Package                 Version       Arch         Repository
+  +==============================================================================
+  Installing:
+    brasero                 3.11.3        x86_64       SBo
+  Installing for dependencies:
+    orc                     0.4.19        x86_64       SBo
+    gstreamer1              1.2.2         x86_64       SBo
+    gst1-plugins-base       1.2.2         x86_64       SBo
+    gst1-plugins-bad        1.2.2         x86_64       SBo
+    libunique               1.1.6         x86_64       SBo
 
-    orc gstreamer1 gst1-plugins-base gst1-plugins-bad libunique brasero
+  Installing summary
+  ===============================================================================
+  Total 6 packages.
+  0 packages will be installed, 6 allready installed.
 
   Do you want to continue [Y/n]? y
   .

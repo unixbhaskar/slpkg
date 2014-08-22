@@ -25,11 +25,11 @@ import sys
 
 from slpkg.colors import colors
 from slpkg.__metadata__ import pkg_path, sp
-from slpkg.messages import pkg_not_found, template, s_user
+from slpkg.messages import pkg_not_found, template
 
 from slpkg.pkg.find import find_package
 
-from greps import *
+from greps import sbo_requires_pkg
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 
@@ -98,4 +98,4 @@ def pkg_tracking(name):
             else:
                 print(" |")
                 print(" {0}{1}: {2}{3}{4}".format("+--", index, colors.RED, pkg, colors.ENDC))
-        print("\n NOTE: green installed, red not installed\n")
+        print # new line at end

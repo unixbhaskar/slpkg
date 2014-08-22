@@ -27,11 +27,10 @@ import time
 import subprocess
 
 from slpkg.colors import colors
-from slpkg.messages import s_user
 from slpkg.url_read import url_read
-from slpkg.__metadata__ import pkg_path, slpkg_tmp, arch
+from slpkg.messages import template
+from slpkg.__metadata__ import pkg_path, slpkg_tmp, sp
 
-from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade
 
 from mirrors import mirrors
@@ -42,10 +41,11 @@ def patches():
     Install new patches from official Slackware mirrors
     '''
     try:
-        dwn_list, dwn_patches, comp_size, uncomp_size = [], [], [], []
         upgrade_all, package_name, package_location = [], [], []
         comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
+        dwn_list, dwn_patches, comp_size, uncomp_size = [], [], [], []
         pch_path = slpkg_tmp + "patches/"
+        slack_arch = ""
         if not os.path.exists(pch_path):
             if not os.path.exists(slpkg_tmp):
                 os.mkdir(slpkg_tmp)
@@ -62,44 +62,60 @@ def patches():
                 toolbar_width += 100
                 time.sleep(0.05)
             if line.startswith("PACKAGE NAME"):
-                package_name.append(line.replace("PACKAGE NAME:  ", ""))
+		        package_name.append(line[15:].strip())
             if line.startswith("PACKAGE LOCATION"):
-                package_location.append(line.replace("PACKAGE LOCATION:  ./", ""))
+		        package_location.append(line[21:].strip())
             if line.startswith("PACKAGE SIZE (compressed):  "):
-                comp_size.append(line[:-2].replace("PACKAGE SIZE (compressed):  ", ""))
+                comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
-                uncomp_size.append(line[:-2].replace("PACKAGE SIZE (uncompressed):  ", ""))
-        '''
-        Create list with location and package name
-        '''
+                uncomp_size.append(line[30:-2].strip())
         for loc, name in zip(package_location, package_name):
             dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
-        '''
-        Create list with package name and compressed size
-        '''
         for name, size in zip(package_name, comp_size):
             comp_list.append("{0}{1}".format(name, size))
-        '''
-        Create list with package name and uncompressed size
-        '''
         for name, size in zip(package_name, uncomp_size):
             uncomp_list.append("{0}{1}".format(name, size))
         for pkg in package_name:
-            installed_pkg = "".join(find_package(pkg.replace(".txz", ""), pkg_path))
-            if installed_pkg == "":
+            if not os.path.isfile(pkg_path + pkg[:-4]):
                 upgrade_all.append(pkg)
         sys.stdout.write("Done\n")
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
+            template(78)
+            print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
+            template(78)
+            print("Upgrading:")
             for upgrade in upgrade_all:
-                print("{0}[ upgrade ] --> {1}{2}".format(
-                        colors.GREEN, colors.ENDC, upgrade))
+                for size in comp_list:
+                    if upgrade in size:
+                        Kb = size.replace(upgrade, "")
+                        if "-noarch-" in upgrade:
+                            arch = "noarch"
+                        elif sp+os.uname()[4]+sp in upgrade:
+                            arch = os.uname()[4]
+                        elif "-i486-" in upgrade:
+                            arch = "i486"
+                        elif "-i686-" in upgrade:
+                            arch = "i686"
+                        elif "-x86-" in upgrade:
+                            arch = "x86"
+                        elif "-fw-" in upgrade:
+                            arch = "fw"
+                        else:
+                            arch = ""
+                        if "_slack" in upgrade:
+                            slack = "_slack" + slack_ver()
+                        else:
+                            slack = ""
+                        print " ", upgrade[:-(5+len(slack))].replace(
+                              sp+arch+sp, ""), " "*(40-len(upgrade[:-(
+                              5+len(slack))].replace(sp+arch+sp, ""))), arch, " "*(
+                              7-len(arch)), upgrade[-15:-14].replace(sp+arch+sp, ""), " "*(
+                              6-len(upgrade[-15:-14].replace(sp+arch+sp, ""))), "Slack", " ", Kb, " "*(
+                              3-len(Kb)), "K"
                 for dwn in dwn_list:
-                    if upgrade in dwn:
+                    if "/" + upgrade in dwn:
                         dwn_patches.append(dwn)
-	        '''
-            Grep sizes from list and saved
-            '''
             for install in upgrade_all:
                 for comp in comp_list:
                     if install == comp[:-(len(comp)-len(install))]:
@@ -107,9 +123,6 @@ def patches():
                 for uncomp in uncomp_list:
                     if install == uncomp[:-(len(uncomp)-len(install))]:
                         uncomp_sum.append(uncomp.replace(install, ""))
-	        '''
-            Calculate sizes and print
-            '''
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -119,7 +132,13 @@ def patches():
             if uncompressed < 1:
                 uncompressed = sum(map(int, uncomp_sum))
                 uncomp_unit = "Kb"
-            print("\nNeed to get {0} {1} of archives.".format(compressed, comp_unit))
+            msg_pkg = "package"
+            if len(upgrade_all) > 1:
+                msg_pkg = msg_pkg + "s"
+            print("\nInstalling summary")
+            print("="*79)
+            print("Total {0} {1} will be upgrading.".format(len(upgrade_all), msg_pkg))
+            print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
@@ -129,7 +148,7 @@ def patches():
                                pch_path, dwn, dwn), shell=True)
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(
-                            colors.GREEN, colors.ENDC, pkg))
+                        colors.GREEN, colors.ENDC, pkg[:-4]))
                     pkg_upgrade((pch_path + pkg).split())
                 for kernel in upgrade_all:
                     if "kernel" in kernel:
@@ -148,10 +167,8 @@ def patches():
                 else:
                     print("\nThere are packages in directory {0}\n".format(pch_path))
         else:
-            if arch == "x86_64":
+            if os.uname()[4] == "x86_64":
                 slack_arch = 64
-            else:
-                slack_arch = ""
             print("\nSlackware{0} v{1} distribution is up to date\n".format(
                     slack_arch, slack_ver()))
     except KeyboardInterrupt:
