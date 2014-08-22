@@ -1,10 +1,11 @@
-18-08-2014
+22-08-2014
 Version 1.7.5.dev
 
-[Feature] - Added report of packages will be installed with options
+[Feature] - Added report of packages will be installed the options
             `slpkg -s sbo <package>`
             `slpkg -s slack <package>`
             `slpkg -c slack upgrade`
+[Updated] - Fix mirrors for Slackware x86
 
 17-08-2014
 Version 1.7.4

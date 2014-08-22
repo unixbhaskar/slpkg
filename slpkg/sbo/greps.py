@@ -71,6 +71,6 @@ def sbo_version_pkg(name):
             sbo_name.append(line[17:].strip())
         if line.startswith("SLACKBUILD VERSION: "):
             sbo_ver.append(line[20:].strip())
-    for nam, ver in zip(sbo_name, sbo_ver):
-        if nam == name:
+    for sbo, ver in zip(sbo_name, sbo_ver):
+        if sbo == name:
             return ver

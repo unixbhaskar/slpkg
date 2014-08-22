@@ -107,8 +107,22 @@ build and install with all dependencies :
     $ slpkg -s sbo brasero
     Building dependency tree...... Done
     The following packages will be automatically installed or upgraded with new version:
+    +==============================================================================
+    | Package                 Version       Arch         Repository
+    +==============================================================================
+    Installing:
+      brasero                 3.11.3        x86_64       SBo
+    Installing for dependencies:
+      orc                     0.4.19        x86_64       SBo
+      gstreamer1              1.2.2         x86_64       SBo
+      gst1-plugins-base       1.2.2         x86_64       SBo
+      gst1-plugins-bad        1.2.2         x86_64       SBo
+      libunique               1.1.6         x86_64       SBo
 
-      orc gstreamer1 gst1-plugins-base gst1-plugins-bad libunique brasero
+    Installing summary
+    ===============================================================================
+    Total 6 packages.
+    0 packages will be installed, 6 allready installed.
 
     Do you want to continue [Y/n]? y
     .
@@ -143,10 +157,19 @@ download and install:
     
     Reading package lists.............................. Done    
 
-    [ install ] --> mozilla-firefox-24.1.0esr-x86_64-1
-    [ install ] --> mozilla-nss-3.15.2-x86_64-2
-    [ install ] --> mozilla-thunderbird-24.1.0-x86_64-1
+    +==============================================================================
+    | Package                                   Arch     Build   Repos   Size
+    +==============================================================================
+    Installing:
+      mozilla-firefox-24.1.0esr                 x86_64   1       Slack   23524  K
+      mozilla-nss-3.15.2                        x86_64   2       Slack   1592  K
+      mozilla-thunderbird-24.1.0                x86_64   1       Slack   24208  K
 
+    Installing summary
+    ===============================================================================
+
+    Total 3 packages.
+    3 packages will be installed, 0 allready installed.
     Need to get 6.02 Mb of archives.
     After this process, 15.72 Mb of additional disk space will be used.
 
@@ -175,9 +198,6 @@ and also displays installed packages:
      +--4 gst1-plugins-bad
      |
      +--5 libunique
-
-     NOTE: green installed, red not installed
-
 
 Check if your packages is up to date from slackbuilds.org:
 
@@ -213,10 +233,17 @@ Check if your distribution is up to date from `Slackware official mirrors
 
     These packages need upgrading:
 
-    [ upgrade ] --> dhcpcd-6.0.5-x86_64-3_slack14.1.txz
-    [ upgrade ] --> samba-4.1.11-x86_64-1_slack14.1.txz
-    [ upgrade ] --> xscreensaver-5.29-x86_64-1_slack14.1.txz
+    +==============================================================================
+    | Package                                   Arch     Build   Repos   Size
+    +==============================================================================
+    Upgrading:
+      dhcpcd-6.0.5                             x86_64    3       Slack   92  K
+      samba-4.1.11                             x86_64    1       Slack   9928 K
+      xscreensaver-5.29                        x86_64    1       Slack   3896 K
 
+    Installing summary
+    ===============================================================================
+    Total 3 package will be upgrading.
     Need to get 1.70 Mb of archives.
     After this process, 9.51 Mb of additional disk space will be used.
     
@@ -243,7 +270,7 @@ Find packages from slackbuilds.org:
      Download             Download this package
      Build                Download and build this package
      Install              Download/Build/Install
-
+     Quit                 Quit
     _
 
 Auto tool to build package:

@@ -98,4 +98,4 @@ def pkg_tracking(name):
             else:
                 print(" |")
                 print(" {0}{1}: {2}{3}{4}".format("+--", index, colors.RED, pkg, colors.ENDC))
-        print("\n NOTE: green installed, red not installed\n")
+        print # new line at end

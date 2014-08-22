@@ -79,18 +79,18 @@ def sbo_build(name):
             template(78)
             print("Installing:")
             print " ",  "".join(pkg_for_install), " "*(22-len(name)), sbo_ver, " "*(
-                    12-len(sbo_ver)), arch, " "*5, "SBo"
+                    12-len(sbo_ver)), arch, " "*(11-len(arch)), "SBo"
             print("Installing for dependencies:")
             for dep in dependencies[:-1]:
                 sbo_url = sbo_search_pkg(dep)
                 sbo_ver = sbo_version_pkg(dep)
                 if find_package(dep + sp, pkg_path):
                     print " ",  colors.GREEN + dep + colors.ENDC, " "*(22-len(dep)), sbo_ver, " "*(
-                            12-len(sbo_ver)), arch, " "*5, "SBo"
+                            12-len(sbo_ver)), arch, " "*(11-len(arch)), "SBo"
                     pkg_sum += 1
                 else:
                     print " ",  colors.RED + dep + colors.ENDC, " "*(22-len(dep)), sbo_ver, " "*(
-                            12-len(sbo_ver)), arch, " "*5, "SBo"
+                            12-len(sbo_ver)), arch, " "*(11-len(arch)), "SBo"
             print("\nInstalling summary")
             print("="*79)
             print("Total {0} packages.".format(len(dependencies)))
@@ -123,20 +123,20 @@ def sbo_build(name):
                         template(78)
                         pkg_found(pkg, sbo_file_version)
                         template(78)
-            '''
-            Write dependencies in a log file 
-            into directory `/var/log/slpkg/dep/`
-            '''
-            dep_path = log_path + "dep/"
-            if not os.path.exists(dep_path):
-                os.mkdir(dep_path)
-            if os.path.isfile(dep_path + name): 
-                os.remove(dep_path + name)
-            if len(dependencies) > 1:
-                f = open(dep_path + name, "w")
-                for dep in dependencies:
-                    f.write(dep + "\n")
-                f.close()
+                '''
+                Write dependencies in a log file 
+                into directory `/var/log/slpkg/dep/`
+                '''
+                dep_path = log_path + "dep/"
+                if not os.path.exists(dep_path):
+                    os.mkdir(dep_path)
+                if os.path.isfile(dep_path + name): 
+                    os.remove(dep_path + name)
+                if len(dependencies) > 1:
+                    f = open(dep_path + name, "w")
+                    for dep in dependencies:
+                        f.write(dep + "\n")
+                    f.close()
         except KeyboardInterrupt:
             print # new line at exit
             sys.exit()

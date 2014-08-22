@@ -29,7 +29,7 @@ import subprocess
 from colors import colors
 from url_read import url_read
 from messages import pkg_not_found, template
-from __metadata__ import slpkg_tmp, pkg_path, arch
+from __metadata__ import slpkg_tmp, pkg_path, arch, sp
 
 from pkg.manager import pkg_upgrade, pkg_reinstall
 
@@ -96,8 +96,12 @@ def install(slack_pkg):
                             Kb = size.replace(pkg, "")
                             if "-noarch-" in pkg:
                                 arch = "noarch"
-                            elif "-"+os.uname()[4]+"-" in pkg:
+                            elif sp+os.uname()[4]+sp in pkg:
                                 arch = os.uname()[4]
+                            elif "-i486-" in pkg:
+                                arch = "i486"
+                            elif "-i686-" in pkg:
+                                arch = "i686"
                             elif "-x86-" in pkg:
                                 arch = "x86"
                             elif "-fw-" in pkg:
@@ -109,9 +113,11 @@ def install(slack_pkg):
                                 SC, EC = colors.GREEN, colors.ENDC
                             else:
                                 SC, EC = colors.RED, colors.ENDC
-                            print " ", SC + pkg[:-5].replace("-"+arch+"-", "") + EC, " "*(
-                                  48-len(pkg[:-5])), arch, " ", pkg[-5:-4].replace(
-                                  "-"+arch+"-", ""), " "*5, "Slack", " ", Kb, " "*(3-len(Kb)), "K"
+                            print " ", SC + pkg[:-5].replace(sp+arch+sp, "") + EC, " "*(
+                                  40-len(pkg[:-5].replace(sp+arch+sp, ""))), arch, " "*(
+                                  7-len(arch)), pkg[-5:-4].replace(sp+arch+sp, ""), " "*(
+                                  6-len(pkg[-5:-4].replace(sp+arch+sp, ""))), "Slack", " ", Kb, " "*(
+                                  3-len(Kb)), "K"
             for install in install_all:
                 for comp in comp_list:
                     if install == comp[:-(len(comp)-len(install))]:

@@ -29,7 +29,7 @@ import subprocess
 from colors import colors
 from url_read import url_read
 from messages import template
-from __metadata__ import pkg_path, slpkg_tmp
+from __metadata__ import pkg_path, slpkg_tmp, sp
 
 from pkg.manager import pkg_upgrade
 
@@ -84,14 +84,19 @@ def patches():
             template(78)
             print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
             template(78)
+            print("Upgrading:")
             for upgrade in upgrade_all:
                 for size in comp_list:
                     if upgrade in size:
                         Kb = size.replace(upgrade, "")
                         if "-noarch-" in upgrade:
                             arch = "noarch"
-                        elif "-"+os.uname()[4]+"-" in upgrade:
+                        elif sp+os.uname()[4]+sp in upgrade:
                             arch = os.uname()[4]
+                        elif "-i486-" in upgrade:
+                            arch = "i486"
+                        elif "-i686-" in upgrade:
+                            arch = "i686"
                         elif "-x86-" in upgrade:
                             arch = "x86"
                         elif "-fw-" in upgrade:
@@ -103,9 +108,11 @@ def patches():
                         else:
                             slack = ""
                         print " ", upgrade[:-(5+len(slack))].replace(
-                              "-"+arch+"-", ""), " "*(48-len(upgrade[:-(
-                              5+len(slack))])), arch, " ", upgrade[-15:-14].replace(
-                              "-"+arch+"-", ""), " "*5, "Slack", " ", Kb, " "*(3-len(Kb)), "K"
+                              sp+arch+sp, ""), " "*(40-len(upgrade[:-(
+                              5+len(slack))].replace(sp+arch+sp, ""))), arch, " "*(
+                              7-len(arch)), upgrade[-15:-14].replace(sp+arch+sp, ""), " "*(
+                              6-len(upgrade[-15:-14].replace(sp+arch+sp, ""))), "Slack", " ", Kb, " "*(
+                              3-len(Kb)), "K"
                 for dwn in dwn_list:
                     if "/" + upgrade in dwn:
                         dwn_patches.append(dwn)
