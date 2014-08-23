@@ -81,7 +81,7 @@ def template(max):
     '''
     print ("+" + "=" * max)
 
-def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, extra_dwn, sbo_req):
+def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, sbo_req):
     print # new line at start
     template(78)
     print("| {0}Package {1}{2}{3} --> {4}".format(colors.GREEN,
@@ -89,7 +89,6 @@ def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, extra_dwn, sbo_req):
     template(78)
     print("| {0}SlackBuild : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_dwn))
     print("| {0}Source : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
-    print("| {0}Extra : {1}{2}".format(colors.GREEN, colors.ENDC, extra_dwn))
     print("| {0}Requirements : {1}{2}".format(colors.YELLOW, colors.ENDC,
                                                ", ".join(sbo_req.split())))
     template(78)

@@ -122,7 +122,7 @@ build and install with all dependencies :
     Installing summary
     ===============================================================================
     Total 6 packages.
-    0 packages will be installed, 6 allready installed.
+    6 packages will be installed, 0 allready installed.
 
     Do you want to continue [Y/n]? y
     .

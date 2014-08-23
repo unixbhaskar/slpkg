@@ -39,7 +39,7 @@ from search import sbo_search_pkg
 from file_size import server_file_size
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
-from greps import sbo_source_dwn, sbo_extra_dwn, sbo_version_pkg
+from greps import sbo_source_dwn, sbo_version_pkg
 
 def sbo_build(name):
     '''

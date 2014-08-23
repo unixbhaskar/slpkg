@@ -26,35 +26,26 @@ import os
 from url_read import url_read
 from __metadata__ import arch, lib_path
 
-def sbo_source_dwn(sbo_url, name):
+def sbo_source_dwn(name):
     '''
-    Grep source downloads links
+    Grep sources downloads links
     '''
-    read_info = url_read(sbo_url + name + ".info")
     if arch == "x86_64":
-        for line in read_info.splitlines():
-            if line.startswith("DOWNLOAD_x86_64="):
-                if len(line) > 18:
-                    return line[17:-1].strip()
-    for line in read_info.splitlines():
-        if line.startswith("DOWNLOAD="):
-            return line[10:-1].strip()
-
-def sbo_extra_dwn(sbo_url, name):
-    '''
-    Grep extra source downloads links
-    '''
-    read_info = url_read(sbo_url + name + ".info")
-    extra = []
-    for line in read_info.split():
-        if line.endswith("\""):
-            line = line[:-1].strip()
-        if line.startswith("http"):
-            extra.append(line.strip())
-        if line.startswith("ftp"):
-            extra.append(line.strip())
-    return extra
-
+        for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
+            if arch == "x86_64":
+                if line.startswith("SLACKBUILD NAME: "):
+                    sbo_name = line[17:].strip()
+                if line.startswith("SLACKBUILD DOWNLOAD_x86_64: "):
+                    if sbo_name == name:
+                        if line[28:].strip() != "":
+                            return line[28:].strip()
+    for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
+        if line.startswith("SLACKBUILD NAME: "):
+            sbo_name = line[17:].strip()
+        if line.startswith("SLACKBUILD DOWNLOAD: "):
+            if sbo_name == name:
+                return line[21:].strip()
+        
 def sbo_requires_pkg(sbo_url, name):
     '''
     Grep package requirements
@@ -65,12 +56,12 @@ def sbo_requires_pkg(sbo_url, name):
             return line[10:-1].strip()
 
 def sbo_version_pkg(name):
-    sbo_name, sbo_ver = [], []
+    '''
+    Grep package verion
+    '''
     for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
         if line.startswith("SLACKBUILD NAME: "):
-            sbo_name.append(line[17:].strip())
+            sbo_name = line[17:].strip()
         if line.startswith("SLACKBUILD VERSION: "):
-            sbo_ver.append(line[20:].strip())
-    for sbo, ver in zip(sbo_name, sbo_ver):
-        if sbo == name:
-            return ver
+            if sbo_name == name:
+                return line[20:].strip()

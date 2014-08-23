@@ -37,7 +37,7 @@ from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
 
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
-from greps import sbo_source_dwn, sbo_extra_dwn, sbo_version_pkg
+from greps import sbo_source_dwn, sbo_version_pkg
 
 def sbo_check(name):
     '''

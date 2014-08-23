@@ -1,5 +1,11 @@
+Version 1.7.6.dev
+
+[Updated] - Bugfix IndexError '-aa' in cli options.
+
+
+
 22-08-2014
-Version 1.7.5.dev
+Version 1.7.5
 
 [Feature] - Added report of packages will be installed the options
             `slpkg -s sbo <package>`
