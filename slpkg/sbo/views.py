@@ -28,8 +28,8 @@ import subprocess
 from colors import colors
 from functions import get_file
 from __metadata__ import tmp, pkg_path, slpkg_tmp, sp
+from messages import pkg_not_found, pkg_found, view_sbo, template
 from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
-from messages import s_user, pkg_not_found, pkg_found, view_sbo, template
 
 from pkg.build import build_package
 from pkg.find import find_package
@@ -60,9 +60,9 @@ def sbo_network(name):
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
         sbo_version = sbo_version_pkg(name)
-        source_dwn = sbo_source_dwn(name)
+        source_dwn = sbo_source_dwn(name).split()
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"),
-                ", ".join([get_file(source_dwn, "/") for source_dwn in source_dwn.split()]), sbo_req)
+                ", ".join([get_file(src, "/") for src in source_dwn]), sbo_req)
         while True:
             try:
                 read = raw_input("_ ")
@@ -71,10 +71,9 @@ def sbo_network(name):
                 break
             if read == "D" or read == "d":
                 print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                #subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
-                for src in source_dwn.split():
-                    print src
-                    #subprocess.call("wget -N {0}".format(src), shell=True)
+                subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                for src in source_dwn:
+                    subprocess.call("wget -N {0}".format(src), shell=True)
                 break
             elif read == "R" or read == "r":
                 site = "README"
@@ -95,10 +94,9 @@ def sbo_network(name):
                 sources = []
                 os.chdir(build_path)
                 script = get_file(sbo_dwn, "/")
-                print sbo_dwn
                 subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                 print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                for src in source_dwn.split():
+                for src in source_dwn:
                     subprocess.call("wget -N {0}".format(src), shell=True)
                     sources.append(get_file(src, "/"))
                 build_package(script, sources, build_path)
@@ -110,7 +108,7 @@ def sbo_network(name):
                 subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                 if find_package(name + sp, pkg_path) == []:
                     script = get_file(sbo_dwn, "/")
-                    for src in source_dwn.split():
+                    for src in source_dwn:
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
