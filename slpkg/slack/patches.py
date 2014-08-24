@@ -85,44 +85,40 @@ def patches():
             print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Upgrading:")
-            for upgrade in upgrade_all:
-                for size in comp_list:
-                    if upgrade in size:
-                        Kb = size.replace(upgrade, "")
-                        if "-noarch-" in upgrade:
-                            arch = "noarch"
-                        elif "-x86_64-" in upgrade:
-                            arch = "x86_64"
-                        elif "-i486-" in upgrade:
-                            arch = "i486"
-                        elif "-i686-" in upgrade:
-                            arch = "i686"
-                        elif "-x86-" in upgrade:
-                            arch = "x86"
-                        elif "-fw-" in upgrade:
-                            arch = "fw"
-                        else:
-                            arch = ""
-                        if "_slack" in upgrade:
-                            slack = "_slack" + slack_ver()
-                        else:
-                            slack = ""
-                        print " ", upgrade[:-(5+len(slack))].replace(
-                              sp+arch+sp, ""), " "*(40-len(upgrade[:-(
-                              5+len(slack))].replace(sp+arch+sp, ""))), arch, " "*(
-                              7-len(arch)), upgrade[-15:-14].replace(sp+arch+sp, ""), " "*(
-                              6-len(upgrade[-15:-14].replace(sp+arch+sp, ""))), "Slack", " ", Kb, " "*(
-                              3-len(Kb)), "K"
+            for upgrade, size in zip(upgrade_all, comp_list):
+                Kb = size.replace(upgrade, "")
+                if "-noarch-" in upgrade:
+                    arch = "noarch"
+                elif "-x86_64-" in upgrade:
+                    arch = "x86_64"
+                elif "-i486-" in upgrade:
+                    arch = "i486"
+                elif "-i686-" in upgrade:
+                    arch = "i686"
+                elif "-x86-" in upgrade:
+                    arch = "x86"
+                elif "-fw-" in upgrade:
+                    arch = "fw"
+                else:
+                    arch = ""
+                if "_slack" in upgrade:
+                    slack = "_slack" + slack_ver()
+                else:
+                    slack = ""
+                print " ", upgrade[:-(5+len(slack))].replace(
+                      sp+arch+sp, ""), " "*(40-len(upgrade[:-(
+                      5+len(slack))].replace(sp+arch+sp, ""))), arch, " "*(
+                      7-len(arch)), upgrade[-15:-14].replace(sp+arch+sp, ""), " "*(
+                      6-len(upgrade[-15:-14].replace(sp+arch+sp, ""))), "Slack", " ", Kb, " "*(
+                      3-len(Kb)), "K"
                 for dwn in dwn_list:
                     if "/" + upgrade in dwn:
                         dwn_patches.append(dwn)
-            for install in upgrade_all:
-                for comp in comp_list:
-                    if install == comp[:-(len(comp)-len(install))]:
-                        comp_sum.append(comp.replace(install, ""))
-                for uncomp in uncomp_list:
-                    if install == uncomp[:-(len(uncomp)-len(install))]:
-                        uncomp_sum.append(uncomp.replace(install, ""))
+            for install, comp, uncomp in zip(upgrade_all, comp_list, uncomp_list):
+                if install == comp[:-(len(comp)-len(install))]:
+                    comp_sum.append(comp.replace(install, ""))
+                if install == uncomp[:-(len(uncomp)-len(install))]:
+                    uncomp_sum.append(uncomp.replace(install, ""))
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
