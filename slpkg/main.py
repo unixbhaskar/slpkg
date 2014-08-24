@@ -117,7 +117,7 @@ def main():
             prog_version()
         if args.a:
     	    s_user(getpass.getuser())
-            build_package(args.a[0], args.a[1], args.a[2:], path)
+            build_package(args.a[0], args.a[1:], path)
         if args.l:
             pkg_list(args.l)
         if args.t:
@@ -130,12 +130,17 @@ def main():
             s_user(getpass.getuser())
             if len(args.c) == 2:
                 if "sbo" in args.c:
-                    sbo_check("".join(args.c[1]))
+                    if args.c[1] == "upgrade":
+                        sbo_check()
+                    else:
+                        choices = ["upgrade"]
+                        ext_err_args()
+                        err1_args("".join(args.c[1]), choices)
                 elif "slack" in args.c:
-                    if args.c[1] == "upgrade-all":
+                    if args.c[1] == "upgrade":
                         patches()
                     else:
-                        choices = ["upgrade-all"]
+                        choices = ["upgrade"]
                         ext_err_args()
                         err1_args("".join(args.c[1]), choices)
                 else:
