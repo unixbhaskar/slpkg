@@ -32,69 +32,88 @@ from pkg.manager import pkg_upgrade
 from colors import colors
 from functions import get_file
 from messages import pkg_not_found, template
-from __metadata__ import tmp, pkg_path, arch, sp
+from __metadata__ import tmp, pkg_path, sp
 from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
 
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from greps import sbo_source_dwn, sbo_version_pkg
 
-def sbo_check(name):
+def sbo_check():
     '''
-    Check for new package updates
+    Upgrade all slackbuilds packages from slackbuilds.org
+    repository
     '''
     sys.stdout.write("Reading package lists ...")
-    sbo_file = "".join(find_package(name + sp, pkg_path))
-    if sbo_file == "":
-        sys.stdout.write("Done\n")
-        message = "Not installed"
-        bol, eol = "\n", "\n"
-        pkg_not_found(bol, name, message, eol)
-    else:
-        sys.stdout.flush()
-        sbo_url = sbo_search_pkg(name)
-        if sbo_url is None:
-            sys.stdout.write("Done\n")
-            message = "From slackbuilds.org"
-            bol, eol = "\n", "\n"
-            pkg_not_found(bol, name, message, eol)
+    sys.stdout.flush()
+    index, toolbar_width = 0, 3
+    sbo_list, pkg_name, sbo_ver, pkg_for_upg = [], [], [], []
+    for pkg in os.listdir(pkg_path):
+        if "_SBo" in pkg:
+            sbo_list.append(pkg)
+    for pkg in sbo_list:
+        index += 1
+        if index == toolbar_width:
+            sys.stdout.write(".")
+            sys.stdout.flush()
+            toolbar_width += 3
+        if "-x86_64-" in pkg:
+            arch = "x86_64"
+        elif "-i486-" in pkg:
+            arch = "i486"
+        elif "-arm-" in pkg:
+            arch = "i686"
+        elif "-noarch-" in pkg:
+            arch = "noarch"
         else:
-            sys.stdout.write("Done\n")
-            sbo_version = sbo_version_pkg(name)
-            sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
-            source_dwn = sbo_source_dwn(sbo_url, name)
-            extra_dwn = sbo_extra_dwn(sbo_url, name)
-            sbo_file_version = sbo_file[len(name) + 1:-len(arch) - 7]
-            if sbo_version > sbo_file_version:
-                print("\n{0}New version is available:{1}".format(
-                        colors.YELLOW, colors.ENDC))
-                template(78)
-                print("| Package {0} {1} --> {2} {3}".format(
-                        name, sbo_file_version,  name, sbo_version))
-                template(78)
-                print # new line at start
-                try:
-                    read = raw_input("Would you like to install [Y/n]? ")
-                except KeyboardInterrupt:
-                    print # new line at exit
-                    sys.exit()
-                if read == "Y" or read == "y":
-                    if not os.path.exists(build_path):
-                        os.mkdir(build_path)
-                    os.chdir(build_path)
-                    pkg_for_install = ("{0}-{1}".format(name, sbo_version))
-                    script = get_file(sbo_dwn, "/")
-                    source = get_file(source_dwn, "/")
-                    print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                    subprocess.call("wget -N {0} {1}".format(sbo_dwn, source_dwn), shell=True)
-                    extra = []
-                    if extra_dwn:
-                        for src in extra_dwn.split():
-                            subprocess.call("wget -N {0}".format(src), shell=True)
-                            extra.append(get_file(src, "/"))
-                    build_package(script, source, extra, build_path)
-                    binary = ("{0}{1}{2}{3}{4}".format(
-                               tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
-                    pkg_upgrade(binary)                     
-            else:
-                print("\nPackage {0}-{1} is up to date\n".format(name, sbo_file_version))
+            arch = os.uname()[4]
+        name = pkg[:-(len(arch) + len("_SBo") + 3)]
+        pkg_version = get_file(name, "-")
+        pkg_version = pkg_version[1:]
+        name = name[:-(len(pkg_version) + 1)]
+        sbo_url = sbo_search_pkg(name)
+        sbo_version = sbo_version_pkg(name)
+        if sbo_version > pkg_version:
+            pkg_name.append(name)
+            pkg_for_upg.append(name + "-" + pkg_version)
+            sbo_ver.append(sbo_version)
+    sys.stdout.write("Done\n")
+    if pkg_for_upg:
+        print("\nThese packages need upgrading:\n")
+        template(78)
+        print "| Package",  " "*15, "New version",  " "*5, "Arch", " "*7, "Repository"
+        template(78)
+        print("Upgrading:")
+        for upg, ver in zip(pkg_for_upg, sbo_ver):
+            print " ",  upg, " "*(22-len(upg)), ver, " "*(
+                  16-len(ver)), arch, " "*(11-len(arch)), "SBo"
+        msg_pkg = "package"
+        if len(pkg_for_upg) > 1:
+            msg_pkg = msg_pkg + "s"
+        print("\nInstalling summary")
+        print("=" * 79)
+        print("Total {0} {1} will be upgrading.\n".format(len(pkg_for_upg), msg_pkg))
+        read = raw_input("Would you like to upgrade [Y/n]? ")
+        if read == "Y" or read == "y":
+            if not os.path.exists(build_path):
+                os.mkdir(build_path)
+            os.chdir(build_path)
+            for name, version in zip(pkg_name, sbo_ver):
+                pkg_for_install = ("{0}-{1}".format(name, version))
+                sbo_url = sbo_search_pkg(name)
+                sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
+                src_dwn = sbo_source_dwn(name).split()
+                script = get_file(sbo_dwn, "/")
+                print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                sources = []
+                for src in src_dwn:
+                    subprocess.call("wget -N {0}".format(src), shell=True)
+                    sources.append(get_file(src, "/"))
+                build_package(script, sources, build_path)
+                binary = ("{0}{1}{2}{3}{4}".format(
+                    tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
+                pkg_upgrade(binary)
+        print("Completed!\n")
+    else:
+        print("\nAll packages are up to date\n")
