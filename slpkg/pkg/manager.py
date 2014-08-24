@@ -213,7 +213,7 @@ def pkg_list(binary):
                     page += 50
         if "sbo" in binary:
             for pkg in sorted(os.listdir(pkg_path)):
-                if 'SBo' in pkg:
+                if "_SBo" in pkg:
                     index += 1
                     print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                     if index == page:
@@ -222,7 +222,7 @@ def pkg_list(binary):
                         page += 50
         if "slack" in binary:
             for pkg in sorted(os.listdir(pkg_path)):
-                if 'slack' in pkg:
+                if "_slack" in pkg:
                     index += 1
                     print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                     if index == page:
@@ -231,7 +231,7 @@ def pkg_list(binary):
                         page += 50
         if "noarch" in binary:
             for pkg in sorted(os.listdir(pkg_path)):
-                if 'noarch' in pkg:
+                if "noarch" in pkg:
                     index += 1
                     print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                     if index == page:
@@ -240,7 +240,7 @@ def pkg_list(binary):
                         page += 50
         if "other" in binary:
             for pkg in sorted(os.listdir(pkg_path)):
-                if 'SBo' in pkg or 'slack' in pkg or 'noarch' in pkg:
+                if "_SBo" in pkg or "_slack" in pkg or "noarch" in pkg:
                     pass
                 else:
                     index += 1
