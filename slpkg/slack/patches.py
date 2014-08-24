@@ -91,8 +91,8 @@ def patches():
                         Kb = size.replace(upgrade, "")
                         if "-noarch-" in upgrade:
                             arch = "noarch"
-                        elif sp+os.uname()[4]+sp in upgrade:
-                            arch = os.uname()[4]
+                        elif "-x86_64-" in upgrade:
+                            arch = "x86_64"
                         elif "-i486-" in upgrade:
                             arch = "i486"
                         elif "-i686-" in upgrade:
@@ -155,6 +155,7 @@ def patches():
                         print("The kernel has been upgraded, reinstall `lilo` ...")
                         subprocess.call("lilo", shell=True)
                         break
+                print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for pkg in upgrade_all:

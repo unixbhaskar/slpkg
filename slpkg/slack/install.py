@@ -96,8 +96,8 @@ def install(slack_pkg):
                             Kb = size.replace(pkg, "")
                             if "-noarch-" in pkg:
                                 arch = "noarch"
-                            elif sp+os.uname()[4]+sp in pkg:
-                                arch = os.uname()[4]
+                            elif "-x86_64-" in pkg:
+                                arch = "x86_64"
                             elif "-i486-" in pkg:
                                 arch = "i486"
                             elif "-i686-" in pkg:
@@ -157,7 +157,6 @@ def install(slack_pkg):
                                     "wget -N --directory-prefix={0} {1} {2}.asc".format(
                                         tmp_path, dwn, dwn), shell=True)
                 for install in install_all:
-                    print install
                     if not os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ installing ] --> {1}{2}".format(
                             colors.GREEN, colors.ENDC, install))
@@ -166,6 +165,7 @@ def install(slack_pkg):
                         print("{0}[ reinstalling ] --> {1}{2}".format(
                                 colors.GREEN, colors.ENDC, install))
                         pkg_reinstall((tmp_path + install).split())
+                print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:
