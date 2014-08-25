@@ -41,8 +41,8 @@ def install(slack_pkg):
     '''
     try:
         comp_sum, uncomp_sum = [], []
-        install_all, package_name, package_location = [], [], []
         dwn_list, comp_size, uncomp_size = [], [], []
+        install_all, package_name, package_location = [], [], []
         tmp_path = slpkg_tmp + "packages/"
         pkg_sum = 0
         if not os.path.exists(tmp_path):
@@ -77,11 +77,7 @@ def install(slack_pkg):
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
         sys.stdout.write("Done\n\n")
-        if install_all == []:
-            bol, eol = "", "\n"
-            message = "No matching"
-            pkg_not_found(bol, slack_pkg, message, eol)
-        else:
+        if install_all:
             template(78)
             print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
             template(78)
@@ -162,6 +158,10 @@ def install(slack_pkg):
                 else:
                     print("\nThere are packages in directory {0}\n".format(
                             tmp_path))
+        else:
+            bol, eol = "", "\n"
+            message = "No matching"
+            pkg_not_found(bol, slack_pkg, message, eol)
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
