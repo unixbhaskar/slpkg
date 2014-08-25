@@ -35,6 +35,7 @@ from pkg.find import find_package
 from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
+from init import initialization
 from search import sbo_search_pkg
 from file_size import server_file_size
 from download import sbo_slackbuild_dwn
@@ -47,6 +48,7 @@ def sbo_build(name):
     dependencies
     '''
     sys.stdout.write("Building dependency tree ...")
+    initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     if dependencies_list == None:
         pass

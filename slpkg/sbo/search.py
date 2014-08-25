@@ -30,13 +30,10 @@ from __metadata__ import lib_path
 
 from slack.slack_version import slack_ver
 
-from init import initialization
-
 def sbo_search_pkg(name):
     '''
     Search for package path from SLACKBUILDS.TXT file
     '''
-    initialization()
     try:
         sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
         for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):

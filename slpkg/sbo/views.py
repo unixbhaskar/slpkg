@@ -37,6 +37,7 @@ from pkg.manager import pkg_upgrade
 
 from read import *
 from greps import *
+from init import initialization
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 
@@ -47,6 +48,7 @@ def sbo_network(name):
     '''
     rdm_path = slpkg_tmp + "readme/"
     sys.stdout.write("Reading package lists ...")
+    initialization()
     sbo_url = sbo_search_pkg(name)
     if sbo_url is None:
         sys.stdout.write ("Done\n")
