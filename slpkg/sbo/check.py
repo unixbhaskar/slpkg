@@ -25,14 +25,13 @@ import os
 import sys
 import subprocess
 
-from pkg.find import find_package
 from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
 from colors import colors
 from functions import get_file
-from messages import pkg_not_found, template
-from __metadata__ import tmp, pkg_path, sp
+from messages import template
+from __metadata__ import tmp, pkg_path
 from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
 
 from search import sbo_search_pkg
@@ -48,9 +47,12 @@ def sbo_check():
         sys.stdout.write("Reading package lists ...")
         sys.stdout.flush()
         index, toolbar_width = 0, 3
-        pkg_name, sbo_ver, pkg_for_upg = [], [], []
+        pkg_name, sbo_ver, pkg_for_upg, sbo_list = [], [], [], []
         for pkg in os.listdir(pkg_path):
             if "_SBo" in pkg:
+                sbo_list.append(pkg)
+        if sbo_list: 
+            for pkg in sbo_list:
                 index += 1
                 if index == toolbar_width:
                     sys.stdout.write(".")
@@ -74,48 +76,51 @@ def sbo_check():
                     pkg_name.append(name)
                     pkg_for_upg.append(name + "-" + pkg_version)
                     sbo_ver.append(sbo_version)
-        sys.stdout.write("Done\n")
-        if pkg_for_upg:
-            print("\nThese packages need upgrading:\n")
-            template(78)
-            print "| Package",  " "*27, "New version",  " "*5, "Arch", " "*7, "Repository"
-            template(78)
-            print("Upgrading:")
-            for upg, ver in zip(pkg_for_upg, sbo_ver):
-                print " ",  upg, " "*(34-len(upg)), ver, " "*(
-                      16-len(ver)), arch, " "*(11-len(arch)), "SBo"
-            msg_pkg = "package"
-            if len(pkg_for_upg) > 1:
-                msg_pkg = msg_pkg + "s"
-            print("\nInstalling summary")
-            print("=" * 79)
-            print("Total {0} {1} will be upgraded.\n".format(len(pkg_for_upg), msg_pkg))
-            read = raw_input("Would you like to upgrade [Y/n]? ")
-            if read == "Y" or read == "y":
-                if not os.path.exists(build_path):
-                    os.mkdir(build_path)
-                os.chdir(build_path)
-                for name, version in zip(pkg_name, sbo_ver):
-                    pkg_for_install = ("{0}-{1}".format(name, version))
-                    sbo_url = sbo_search_pkg(name)
-                    sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
-                    src_dwn = sbo_source_dwn(name).split()
-                    script = get_file(sbo_dwn, "/")
-                    print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
-                    subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
-                    sources = []
-                    for src in src_dwn:
-                        subprocess.call("wget -N {0}".format(src), shell=True)
-                        sources.append(get_file(src, "/"))
-                    build_package(script, sources, build_path)
-                    binary = ("{0}{1}{2}{3}{4}".format(
-                        tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
-                    print("{0}[ Upgrading ] --> {1}{2}".format(
-                        colors.GREEN, colors.ENDC, name))
-                    pkg_upgrade(binary)
-                print("Completed!\n")
+            sys.stdout.write("Done\n")
+            if pkg_for_upg:
+                print("\nThese packages need upgrading:\n")
+                template(78)
+                print "| Package",  " "*27, "New version",  " "*5, "Arch", " "*7, "Repository"
+                template(78)
+                print("Upgrading:")
+                for upg, ver in zip(pkg_for_upg, sbo_ver):
+                    print " ",  upg, " "*(34-len(upg)), ver, " "*(
+                          16-len(ver)), arch, " "*(11-len(arch)), "SBo"
+                msg_pkg = "package"
+                if len(pkg_for_upg) > 1:
+                    msg_pkg = msg_pkg + "s"
+                print("\nInstalling summary")
+                print("=" * 79)
+                print("Total {0} {1} will be upgraded.\n".format(len(pkg_for_upg), msg_pkg))
+                read = raw_input("Would you like to upgrade [Y/n]? ")
+                if read == "Y" or read == "y":
+                    if not os.path.exists(build_path):
+                        os.mkdir(build_path)
+                    os.chdir(build_path)
+                    for name, version in zip(pkg_name, sbo_ver):
+                        pkg_for_install = ("{0}-{1}".format(name, version))
+                        sbo_url = sbo_search_pkg(name)
+                        sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
+                        src_dwn = sbo_source_dwn(name).split()
+                        script = get_file(sbo_dwn, "/")
+                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                        subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                        sources = []
+                        for src in src_dwn:
+                            subprocess.call("wget -N {0}".format(src), shell=True)
+                            sources.append(get_file(src, "/"))
+                        build_package(script, sources, build_path)
+                        binary = ("{0}{1}{2}{3}{4}".format(
+                            tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
+                        print("{0}[ Upgrading ] --> {1}{2}".format(
+                            colors.GREEN, colors.ENDC, name))
+                        pkg_upgrade(binary)
+                    print("Completed!\n")
+            else:
+                print("\nAll SBo packages are up to date\n")
         else:
-            print("\nAll packages are up to date\n")
+            print("\nNo SBo packages found\n")
+
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
