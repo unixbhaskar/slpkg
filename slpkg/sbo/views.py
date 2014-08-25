@@ -59,7 +59,6 @@ def sbo_network(name):
         sys.stdout.write ("Done\n")
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
-        sbo_version = sbo_version_pkg(name)
         source_dwn = sbo_source_dwn(name).split()
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"),
                 ", ".join([get_file(src, "/") for src in source_dwn]), sbo_req)
@@ -70,10 +69,11 @@ def sbo_network(name):
                 print # new line at exit
                 break
             if read == "D" or read == "d":
-                print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
+                print("\n{0}Start --> {1}{2}\n".format(colors.GREEN, colors.ENDC, name))
                 subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                 for src in source_dwn:
                     subprocess.call("wget -N {0}".format(src), shell=True)
+                print("Complete!\n")
                 break
             elif read == "R" or read == "r":
                 site = "README"
@@ -94,19 +94,22 @@ def sbo_network(name):
                 sources = []
                 os.chdir(build_path)
                 script = get_file(sbo_dwn, "/")
+                print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
                 subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
-                print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
                 for src in source_dwn:
                     subprocess.call("wget -N {0}".format(src), shell=True)
                     sources.append(get_file(src, "/"))
                 build_package(script, sources, build_path)
+                print("Complete!\n")
                 break
             elif read == "I" or read == "i":
-                sources = []
-                os.chdir(build_path)
-                pkg_for_install = ("{0}-{1}".format(name, sbo_version))
-                subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                sbo_version = sbo_version_pkg(name)
                 if find_package(name + sp, pkg_path) == []:
+                    sources = []
+                    os.chdir(build_path)
+                    pkg_for_install = ("{0}-{1}".format(name, sbo_version))
+                    print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                    subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                     script = get_file(sbo_dwn, "/")
                     for src in source_dwn:
                             subprocess.call("wget -N {0}".format(src), shell=True)
@@ -114,13 +117,18 @@ def sbo_network(name):
                     build_package(script, sources, build_path)
                     binary = ("{0}{1}{2}{3}{4}".format(
                                tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
+                    print("{0}[ Installing ] --> {1}{2}".format(
+                           colors.GREEN, colors.ENDC, name))
                     pkg_upgrade(binary)
+                    if find_package(name + sp, pkg_path):
+                        print("Complete!\n")
+                    else:
+                        print("The package {0} may not install successfully".format(name))
                     break
                 else:
                     template(78)
                     pkg_found(name, sbo_version)
                     template(78)
-                    print # new line at end
                     break
             else:
                 break
