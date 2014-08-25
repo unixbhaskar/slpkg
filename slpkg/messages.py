@@ -90,7 +90,7 @@ def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, sbo_req):
     print("| {0}SlackBuild : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_dwn))
     print("| {0}Source : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
     print("| {0}Requirements : {1}{2}".format(colors.YELLOW, colors.ENDC,
-                                               ", ".join(sbo_req.split())))
+                                               ", ".join(sbo_req)))
     template(78)
     print(" {0}R{1}EADME               View the README file".format(colors.RED, colors.ENDC))
     print(" {0}S{1}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))
