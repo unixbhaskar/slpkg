@@ -171,13 +171,13 @@ def pkg_find(binary):
     print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
             colors.CYAN, ', '.join(binary), colors.ENDC))
     for pkg in binary:
-        if find_package(pkg + sp, pkg_path) == []:
+        if find_package(pkg + sp, pkg_path):
+            print(colors.GREEN + "[ installed ] - " + colors.ENDC + "\n                ".join(
+                   find_package(pkg + sp, pkg_path)))
+        else:
             message = "Can't find"
             bol, eol = "", ""
             pkg_not_found(bol, pkg, message, eol)
-        else:
-            print(colors.GREEN + "[ installed ] - " + colors.ENDC + "\n                ".join(
-                   find_package(pkg + sp, pkg_path)))
     print # new line at end
 
 def pkg_display(binary):
@@ -185,16 +185,16 @@ def pkg_display(binary):
     Print the Slackware packages contents
     '''
     for pkg in binary:
-        if find_package(pkg + sp, pkg_path) == []:
+        if find_package(pkg + sp, pkg_path):
+            print subprocess.check_output("cat {0}{1}".format(pkg_path,
+                " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True)
+        else:
             message = "Can't dislpay"
             if len(binary) > 1:
                 bol, eol = "", ""
             else:
                 bol, eol = "\n", "\n"
             pkg_not_found(bol, pkg, message, eol)
-        else:
-            print subprocess.check_output("cat {0}{1}".format(pkg_path,
-                  " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True)
 
 def pkg_list(pattern):
     '''
