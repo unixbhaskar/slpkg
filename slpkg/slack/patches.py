@@ -121,7 +121,7 @@ def patches():
                 msg_pkg = msg_pkg + "s"
             print("\nInstalling summary")
             print("="*79)
-            print("Total {0} {1} will be upgrading.".format(len(upgrade_all), msg_pkg))
+            print("Total {0} {1} will be upgraded.".format(len(upgrade_all), msg_pkg))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
