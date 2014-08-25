@@ -29,10 +29,10 @@ from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
 from colors import colors
-from functions import get_file
 from messages import template
-from __metadata__ import tmp, pkg_path
-from __metadata__ import sbo_arch, build, sbo_tag, sbo_filetype, build_path
+from functions import get_file
+from __metadata__ import tmp, pkg_path, build_path
+from __metadata__ import sbo_arch, build, sbo_tag, sbo_filetype
 
 from init import initialization
 from search import sbo_search_pkg
@@ -65,11 +65,11 @@ def sbo_check():
                 elif "-i486-" in pkg:
                     arch = "i486"
                 elif "-arm-" in pkg:
-                    arch = "i686"
+                    arch = "arm"
                 elif "-noarch-" in pkg:
                     arch = "noarch"
                 else:
-                    arch = os.uname()[4]
+                    arch = "" 
                 name = pkg[:-(len(arch) + len("_SBo") + 3)]
                 pkg_version = get_file(name, "-")[1:]
                 name = name[:-(len(pkg_version) + 1)]
@@ -121,8 +121,8 @@ def sbo_check():
             else:
                 print("\nAll SBo packages are up to date\n")
         else:
+            sys.stdout.write("Done\n")
             print("\nNo SBo packages found\n")
-
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

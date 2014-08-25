@@ -29,7 +29,7 @@ import subprocess
 from colors import colors
 from url_read import url_read
 from messages import pkg_not_found, template
-from __metadata__ import slpkg_tmp, pkg_path, arch, sp
+from __metadata__ import slpkg_tmp, pkg_path, sp
 
 from pkg.manager import pkg_upgrade, pkg_reinstall
 

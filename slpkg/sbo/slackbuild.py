@@ -82,6 +82,8 @@ def sbo_build(name):
                 arch = "i486"
             elif "arm" in arch:
                 arch = "arm"
+            else:
+                arch = ""
             if "UNSUPPORTED" in src:
                 arch = "UNSUPPORTED"
             elif "UNTESTED" in src:
