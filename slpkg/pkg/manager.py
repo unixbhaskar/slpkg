@@ -196,59 +196,28 @@ def pkg_display(binary):
             print subprocess.check_output("cat {0}{1}".format(pkg_path,
                   " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True)
 
-def pkg_list(binary):
+def pkg_list(pattern):
     '''
     List with the installed packages
     '''
     try:
-        print # new line at start
+        if "sbo" in pattern:
+            search = "_SBo"
+        elif "slack" in pattern:
+            search = "_slack"
+        elif "noarch" in pattern:
+            search = "-noarch-"
+        elif "all" in pattern:
+            search = ""
         index, page = 0, 50
-        if "all" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
+        for pkg in sorted(os.listdir(pkg_path)):
+            if search in pkg:
                 index += 1
                 print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                 if index == page:
                     key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                     colors.CYAN, colors.ENDC))
+                                         colors.CYAN, colors.ENDC))
                     page += 50
-        if "sbo" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if "_SBo" in pkg:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
-        if "slack" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if "_slack" in pkg:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
-        if "noarch" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if "noarch" in pkg:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
-        if "other" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if "_SBo" in pkg or "_slack" in pkg or "noarch" in pkg:
-                    pass
-                else:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
         print # new line at end
     except KeyboardInterrupt:
         print # new line at exit
