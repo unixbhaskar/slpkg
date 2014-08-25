@@ -41,6 +41,7 @@ def build_package(script, sources, path):
         for src in sources:
             shutil.copy2(src, pkg_name)
         os.chdir(path + pkg_name)
+        subprocess.call("chmod +x {0}.SlackBuild".format(pkg_name), shell=True)
         subprocess.call("./{0}.SlackBuild".format(pkg_name), shell=True)
         os.chdir(path)
     except (OSError, IOError):
