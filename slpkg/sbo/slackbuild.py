@@ -81,21 +81,21 @@ def sbo_build(name):
                 arch = os.uname()[4]
             print("The following packages will be automatically installed or upgraded with new version:\n")
             template(78)
-            print "| Package",  " "*15, "Version",  " "*5, "Arch", " "*7, "Repository"
+            print "| Package",  " "*31, "Version",  " "*7, "Arch", " "*5, "Repository"
             template(78)
             print("Installing:")
-            print " ",  "".join(pkg_for_install), " "*(22-len(name)), sbo_ver, " "*(
-                    12-len(sbo_ver)), arch, " "*(11-len(arch)), "SBo"
+            print " ",  "".join(pkg_for_install), " "*(38-len(name)), sbo_ver, " "*(
+                    14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
             print("Installing for dependencies:")
             for dep in dependencies[:-1]:
                 sbo_ver = sbo_version_pkg(dep)
                 if find_package(dep + sp, pkg_path):
-                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(22-len(dep)), sbo_ver, " "*(
-                            12-len(sbo_ver)), arch, " "*(11-len(arch)), "SBo"
+                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(38-len(dep)), sbo_ver, " "*(
+                            14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
                     pkg_sum += 1
                 else:
-                    print " ",  colors.RED + dep + colors.ENDC, " "*(22-len(dep)), sbo_ver, " "*(
-                            12-len(sbo_ver)), arch, " "*(11-len(arch)), "SBo"
+                    print " ",  colors.RED + dep + colors.ENDC, " "*(38-len(dep)), sbo_ver, " "*(
+                            14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(dependencies) > 1:
@@ -119,6 +119,7 @@ def sbo_build(name):
                         sbo_link = sbo_slackbuild_dwn(sbo_url, pkg)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = get_file(sbo_link, "/")
+                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, pkg))
                         subprocess.call("wget -N {0}".format(sbo_link), shell=True)
                         sources = []
                         for src in src_link:
@@ -127,6 +128,8 @@ def sbo_build(name):
                         build_package(script, sources, build_path)
                         binary = ("{0}{1}{2}{3}{4}".format(
                                    tmp, prgnam, sbo_arch, sbo_tag, sbo_filetype).split())
+                        print("{0}[ Installing ] --> {1}{2}".format(
+                               colors.GREEN, colors.ENDC, pkg))
                         pkg_upgrade(binary)
                     else:
                         template(78)
@@ -136,16 +139,17 @@ def sbo_build(name):
                 Write dependencies in a log file 
                 into directory `/var/log/slpkg/dep/`
                 '''
-                dep_path = log_path + "dep/"
-                if not os.path.exists(dep_path):
-                    os.mkdir(dep_path)
-                if os.path.isfile(dep_path + name): 
-                    os.remove(dep_path + name)
-                if len(dependencies) > 1:
-                    f = open(dep_path + name, "w")
-                    for dep in dependencies:
-                        f.write(dep + "\n")
-                    f.close()
+                if find_package(name + sp, pkg_path):
+                    dep_path = log_path + "dep/"
+                    if not os.path.exists(dep_path):
+                        os.mkdir(dep_path)
+                    if os.path.isfile(dep_path + name): 
+                        os.remove(dep_path + name)
+                    if len(dependencies) > 1:
+                        f = open(dep_path + name, "w")
+                        for dep in dependencies:
+                            f.write(dep + "\n")
+                        f.close()
         except KeyboardInterrupt:
             print # new line at exit
             sys.exit()
