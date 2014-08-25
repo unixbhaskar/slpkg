@@ -28,7 +28,7 @@ import subprocess
 from colors import colors
 from functions import get_file
 from messages import pkg_not_found, pkg_found, template
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype
+from __metadata__ import sbo_arch, build, sbo_tag, sbo_filetype
 from __metadata__ import tmp, pkg_path, build_path, log_path, sp
 
 from pkg.find import find_package 
@@ -75,12 +75,17 @@ def sbo_build(name):
             sbo_ver = sbo_version_pkg(name)
             sys.stdout.write("Done\n")
             src = sbo_source_dwn(name)
+            arch = os.uname()[4]
+            if arch == "x86_64":
+                arch = "x86_64"
+            elif arch.startswith("i") and arch.endswith("86"):
+                arch = "i486"
+            elif "arm" in arch:
+                arch = "arm"
             if "UNSUPPORTED" in src:
                 arch = "UNSUPPORTED"
             elif "UNTESTED" in src:
                 arch = "UNTESTED"
-            else:
-                arch = os.uname()[4]
             print("The following packages will be automatically installed or upgraded with new version:\n")
             template(78)
             print "| Package",  " "*31, "Version",  " "*7, "Arch", " "*5, "Repository"
@@ -128,8 +133,8 @@ def sbo_build(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        binary = ("{0}{1}{2}{3}{4}".format(
-                                   tmp, prgnam, sbo_arch, sbo_tag, sbo_filetype).split())
+                        binary = ("{0}{1}{2}{3}{4}{5}".format(
+                                   tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Installing ] --> {1}{2}".format(
                                colors.GREEN, colors.ENDC, pkg))
                         pkg_upgrade(binary)

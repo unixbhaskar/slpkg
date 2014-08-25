@@ -29,7 +29,7 @@ from colors import colors
 from functions import get_file
 from __metadata__ import tmp, pkg_path, slpkg_tmp, sp
 from messages import pkg_not_found, pkg_found, view_sbo, template
-from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
+from __metadata__ import sbo_arch, build, sbo_tag, sbo_filetype, build_path
 
 from pkg.build import build_package
 from pkg.find import find_package
@@ -117,8 +117,8 @@ def sbo_network(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
-                    binary = ("{0}{1}{2}{3}{4}".format(
-                               tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
+                    binary = ("{0}{1}{2}{3}{4}{5}".format(
+                               tmp, pkg_for_install, sbo_arch, build, sbo_tag, sbo_filetype).split())
                     print("{0}[ Installing ] --> {1}{2}".format(
                            colors.GREEN, colors.ENDC, name))
                     pkg_upgrade(binary)

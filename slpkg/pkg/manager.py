@@ -28,8 +28,8 @@ import subprocess
 from collections import OrderedDict
 
 from colors import colors
+from __metadata__ import pkg_path, sp, log_path
 from messages import pkg_not_found, s_user, template
-from __metadata__ import pkg_path, uname, arch, sp, log_path
 
 from find import find_package
 

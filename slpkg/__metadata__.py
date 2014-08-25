@@ -54,10 +54,16 @@ slpkg_tmp = tmp + "slpkg/"
 pkg_path = "/var/log/packages/"
 
 ''' computer architecture '''
-uname = os.uname()
-arch = (uname[4])
+arch = os.uname()[4]
 
 ''' slackbuild fietype binary packages '''
-sbo_arch = "*"
-sbo_tag = "?_SBo"
+if arch == "x86_64":
+    sbo_arch = "-x86_64-"
+elif arch.startswith("i") and arch.endswith("86"):
+    sbo_arch = "-i486-"
+elif "arm" in arch:
+    sbo_arch = "-arm-"
+
+build = "*"
+sbo_tag = "_SBo"
 sbo_filetype = ".tgz"
