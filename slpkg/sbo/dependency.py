@@ -48,14 +48,13 @@ def sbo_dependencies_pkg(name):
                 bol, eol = "\n", "\n"
                 pkg_not_found(bol, name, message, eol)
             else:
-                sbo_req = sbo_requires_pkg(sbo_url, name)
-                dependencies = sbo_req.split()
+                dependencies = sbo_requires_pkg(sbo_url, name)
                 if dependencies:
                     dep_results.append(dependencies)
-                for line in dependencies:
-                    sys.stdout.write(".")
-                    sys.stdout.flush()
-                    sbo_dependencies_pkg(line)
+                for dep in dependencies:
+                        sys.stdout.write(".")
+                        sys.stdout.flush()
+                        sbo_dependencies_pkg(dep)
                 return dep_results
     except KeyboardInterrupt:
         print # new line at exit
