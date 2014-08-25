@@ -89,8 +89,8 @@ def main():
     parser.add_argument("-a", help="auto build packages",
                         type=str, nargs="+", metavar=("script", "source"))
     parser.add_argument("-l", help="list of installed packages",  
-                        choices="all sbo slack noarch other".split(),
-			            metavar=("all, sbo, slack, noarch, other"))
+                        choices="all sbo slack noarch".split(),
+			            metavar=("all, sbo, slack, noarch"))
     parser.add_argument("-c", help="check if your packages is up to date",
                         type=str, nargs="+", metavar=("sbo, slack"))
     parser.add_argument("-s", help="download, build & install packages",
