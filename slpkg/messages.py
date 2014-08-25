@@ -47,11 +47,10 @@ def ext_err_args():
     '''
     Extended error arguments view
     '''
-    print ("usage: {0} [-h] [-v] [-a script [source ...]]".format(__all__))
-    print ("           [-l all, sbo, slack, noarch, other]")
-    print ("           [-c sbo, slack [sbo, slack ...]] [-t] [-n]")
-    print ("           [-s sbo, slack [sbo, slack ...]] [-i  [...]] [-u  [...]]")
-    print ("           [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]")
+    print ("usage: {0} [-h] [-v] [-a script [source ...]] [-l all, sbo, slack, noarch]".format(__all__))
+    print ("           [-c sbo, slack [sbo, slack ...]]")
+    print ("           [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]")
+    print ("           [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]")
 
 def err1_args(invalid, choices):
     '''
