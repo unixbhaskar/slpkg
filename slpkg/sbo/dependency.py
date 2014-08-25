@@ -29,8 +29,9 @@ from messages import pkg_not_found, template
 
 from pkg.find import find_package
 
-from greps import sbo_requires_pkg
+from init import initialization
 from search import sbo_search_pkg
+from greps import sbo_requires_pkg
 from download import sbo_slackbuild_dwn
 
 dep_results = []
@@ -65,6 +66,7 @@ def pkg_tracking(name):
     Print tree of dependencies
     '''
     sys.stdout.write("Reading package lists ...")
+    initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     if dependencies_list is None:
         pass
