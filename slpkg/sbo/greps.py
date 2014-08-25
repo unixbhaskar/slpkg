@@ -53,7 +53,7 @@ def sbo_requires_pkg(sbo_url, name):
     read_info = url_read(sbo_url + name + ".info")
     for line in read_info.splitlines():
         if line.startswith("REQUIRES=\""):
-            return line[10:-1].strip()
+            return line[10:-1].strip().split()
 
 def sbo_version_pkg(name):
     '''
