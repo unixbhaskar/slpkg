@@ -34,6 +34,7 @@ from messages import template
 from __metadata__ import tmp, pkg_path
 from __metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
 
+from init import initialization
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from greps import sbo_source_dwn, sbo_version_pkg
@@ -46,6 +47,7 @@ def sbo_check():
     try:
         sys.stdout.write("Reading package lists ...")
         sys.stdout.flush()
+        initialization()
         index, toolbar_width = 0, 3
         pkg_name, sbo_ver, pkg_for_upg, sbo_list = [], [], [], []
         for pkg in os.listdir(pkg_path):
