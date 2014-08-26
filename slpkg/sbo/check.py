@@ -69,7 +69,7 @@ def sbo_check():
                 elif "-noarch-" in pkg:
                     arch = "noarch"
                 else:
-                    arch = "" 
+                    arch = os.uname()[4]
                 name = pkg[:-(len(arch) + len("_SBo") + 3)]
                 pkg_version = get_file(name, "-")[1:]
                 name = name[:-(len(pkg_version) + 1)]

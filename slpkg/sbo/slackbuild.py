@@ -83,7 +83,7 @@ def sbo_build(name):
             elif "arm" in arch:
                 arch = "arm"
             else:
-                arch = ""
+                arch = os.uname()[4]
             if "UNSUPPORTED" in src:
                 arch = "UNSUPPORTED"
             elif "UNTESTED" in src:
