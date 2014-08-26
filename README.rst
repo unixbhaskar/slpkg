@@ -105,7 +105,9 @@ build and install with all dependencies :
     
     $ slpkg -s sbo brasero
     Building dependency tree...... Done
+    
     The following packages will be automatically installed or upgraded with new version:
+    
     +==============================================================================
     | Package                                 Version         Arch       Repository
     +==============================================================================
@@ -205,7 +207,7 @@ Check if your packages is up to date from slackbuilds.org:
     $ slpkg -c sbo upgrade
     Reading package lists. Done
 
-    Thece packages need upgrading:
+    These packages need upgrading:
 
     +==============================================================================
     | Package                             New version       Arch         Repository
