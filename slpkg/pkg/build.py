@@ -27,9 +27,9 @@ import shutil
 import tarfile
 import subprocess
 
-from slpkg.messages import pkg_not_found, s_user
+from slpkg.messages import pkg_not_found
 
-def build_package(script, source, extra, path):
+def build_package(script, sources, path):
     '''
     Build package from source
     '''
@@ -38,10 +38,10 @@ def build_package(script, source, extra, path):
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
-        shutil.copy2(source, pkg_name)
-        for src in extra:
+        for src in sources:
             shutil.copy2(src, pkg_name)
         os.chdir(path + pkg_name)
+        subprocess.call("chmod +x {0}.SlackBuild".format(pkg_name), shell=True)
         subprocess.call("./{0}.SlackBuild".format(pkg_name), shell=True)
         os.chdir(path)
     except (OSError, IOError):

@@ -47,11 +47,10 @@ def ext_err_args():
     '''
     Extended error arguments view
     '''
-    print ("usage: {0} [-h] [-v] [-a script [source ...]]".format(__all__))
-    print ("           [-l all, sbo, slack, noarch, other]")
-    print ("           [-c sbo, slack [sbo, slack ...]] [-t] [-n]")
-    print ("           [-s sbo, slack [sbo, slack ...]] [-i  [...]] [-u  [...]]")
-    print ("           [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]")
+    print ("usage: {0} [-h] [-v] [-a script [source ...]] [-l all, sbo, slack, noarch]".format(__all__))
+    print ("           [-c sbo, slack [sbo, slack ...]]")
+    print ("           [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]")
+    print ("           [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]")
 
 def err1_args(invalid, choices):
     '''
@@ -60,12 +59,12 @@ def err1_args(invalid, choices):
     print ("{0}: error: invalid choice: '{1}' choose from {2}".format(
             __all__, invalid, choices))
 
-def err2_args():
+def err2_args(choices):
     '''
     Print error message arguments
     '''
-    print ("{0}: error: must enter at least two arguments".format(
-            __all__))
+    print ("{0}: error: must enter at least two arguments: choose {1}".format(
+            __all__, choices))
 
 def s_user(user):
     '''
@@ -81,7 +80,7 @@ def template(max):
     '''
     print ("+" + "=" * max)
 
-def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, extra_dwn, sbo_req):
+def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, sbo_req):
     print # new line at start
     template(78)
     print("| {0}Package {1}{2}{3} --> {4}".format(colors.GREEN,
@@ -89,9 +88,8 @@ def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, extra_dwn, sbo_req):
     template(78)
     print("| {0}SlackBuild : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_dwn))
     print("| {0}Source : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
-    print("| {0}Extra : {1}{2}".format(colors.GREEN, colors.ENDC, extra_dwn))
     print("| {0}Requirements : {1}{2}".format(colors.YELLOW, colors.ENDC,
-                                               ", ".join(sbo_req.split())))
+                                               ", ".join(sbo_req)))
     template(78)
     print(" {0}R{1}EADME               View the README file".format(colors.RED, colors.ENDC))
     print(" {0}S{1}lackBuild           View the SlackBuild file".format(colors.RED, colors.ENDC))

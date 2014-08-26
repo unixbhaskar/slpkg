@@ -29,8 +29,9 @@ from slpkg.messages import pkg_not_found, template
 
 from slpkg.pkg.find import find_package
 
-from greps import sbo_requires_pkg
+from init import initialization
 from search import sbo_search_pkg
+from greps import sbo_requires_pkg
 from download import sbo_slackbuild_dwn
 
 dep_results = []
@@ -48,14 +49,13 @@ def sbo_dependencies_pkg(name):
                 bol, eol = "\n", "\n"
                 pkg_not_found(bol, name, message, eol)
             else:
-                sbo_req = sbo_requires_pkg(sbo_url, name)
-                dependencies = sbo_req.split()
+                dependencies = sbo_requires_pkg(sbo_url, name)
                 if dependencies:
                     dep_results.append(dependencies)
-                for line in dependencies:
-                    sys.stdout.write(".")
-                    sys.stdout.flush()
-                    sbo_dependencies_pkg(line)
+                for dep in dependencies:
+                        sys.stdout.write(".")
+                        sys.stdout.flush()
+                        sbo_dependencies_pkg(dep)
                 return dep_results
     except KeyboardInterrupt:
         print # new line at exit
@@ -66,6 +66,7 @@ def pkg_tracking(name):
     Print tree of dependencies
     '''
     sys.stdout.write("Reading package lists ...")
+    initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     if dependencies_list is None:
         pass

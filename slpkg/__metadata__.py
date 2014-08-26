@@ -26,7 +26,7 @@ import subprocess
 
 __all__ = "slpkg"
 __author__ = "dslackw"
-__version_info__ = (1, 7, 5)
+__version_info__ = (1, 7, 6)
 __version__ = "{0}.{1}.{2}".format(*__version_info__)
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
@@ -54,10 +54,16 @@ slpkg_tmp = tmp + "slpkg/"
 pkg_path = "/var/log/packages/"
 
 ''' computer architecture '''
-uname = os.uname()
-arch = (uname[4])
+arch = os.uname()[4]
 
 ''' slackbuild fietype binary packages '''
-sbo_arch = "*"
-sbo_tag = "?_SBo"
+if arch == "x86_64":
+    sbo_arch = "-x86_64-"
+elif arch.startswith("i") and arch.endswith("86"):
+    sbo_arch = "-i486-"
+elif "arm" in arch:
+    sbo_arch = "-arm-"
+
+build = "*"
+sbo_tag = "_SBo"
 sbo_filetype = ".tgz"

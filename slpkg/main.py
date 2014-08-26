@@ -60,14 +60,14 @@ optional arguments:
 
 '''
 
-import argparse
 import getpass
+import argparse
 
 from version import *
 from functions import *
 from colors import colors
 from __metadata__ import path
-from messages import ext_err_args
+from messages import ext_err_args, s_user
 from messages import err1_args, err2_args
 
 from pkg.build import build_package
@@ -89,8 +89,8 @@ def main():
     parser.add_argument("-a", help="auto build packages",
                         type=str, nargs="+", metavar=("script", "source"))
     parser.add_argument("-l", help="list of installed packages",  
-                        choices="all sbo slack noarch other".split(),
-			            metavar=("all, sbo, slack, noarch, other"))
+                        choices="all sbo slack noarch".split(),
+			            metavar=("all, sbo, slack, noarch"))
     parser.add_argument("-c", help="check if your packages is up to date",
                         type=str, nargs="+", metavar=("sbo, slack"))
     parser.add_argument("-s", help="download, build & install packages",
@@ -112,98 +112,109 @@ def main():
     parser.add_argument("-d", help="display the contents of the packages",
                         type=str, nargs="+", metavar=(""))
     args = parser.parse_args()
-    if args.verbose:
-        prog_version()
-    if args.a:
-	s_user(getpass.getuser())
-        build_package(args.a[0], args.a[1], args.a[2:], path)
-    if args.l:
-        pkg_list(args.l)
-    if args.t:
-        s_user(getpass.getuser())
-        pkg_tracking(args.t)
-    if args.n:
-	s_user(getpass.getuser())
-        sbo_network(args.n)
-    if args.c:
-	s_user(getpass.getuser())
-        if len(args.c) == 2:
-            if "sbo" in args.c:
-                sbo_check("".join(args.c[1]))
-            elif "slack" in args.c:
-                if args.c[1] == "upgrade":
-                    patches()
+    try:
+        if args.verbose:
+            prog_version()
+        if args.a:
+    	    s_user(getpass.getuser())
+            build_package(args.a[0], args.a[1:], path)
+        if args.l:
+            pkg_list(args.l)
+        if args.t:
+            s_user(getpass.getuser())
+            pkg_tracking(args.t)
+        if args.n:
+            s_user(getpass.getuser())
+            sbo_network(args.n)
+        if args.c:
+            s_user(getpass.getuser())
+            if len(args.c) == 2:
+                if "sbo" in args.c:
+                    if args.c[1] == "upgrade":
+                        sbo_check()
+                    else:
+                        choices = ["upgrade"]
+                        ext_err_args()
+                        err1_args("".join(args.c[1]), choices)
+                elif "slack" in args.c:
+                    if args.c[1] == "upgrade":
+                        patches()
+                    else:
+                        choices = ["upgrade"]
+                        ext_err_args()
+                        err1_args("".join(args.c[1]), choices)
                 else:
+                    choices = ["sbo", "slack"]
+                    ext_err_args()
+                    err1_args("".join(args.c[0]), choices)
+            elif len(args.c) < 2:
+                if "sbo" in args.c or "slack" in args.c:
+                    choices = ['upgrade']
+                    ext_err_args()
+                    err2_args(choices)
+                else:
+                    choices = ["sbo", "slack"]
+                    ext_err_args()
+                    err1_args("".join(args.c), choices)
+            else:
+                ext_err_args()
+                err2_args()    
+        if args.s:
+            s_user(getpass.getuser())
+            if len(args.s) == 2:
+                if "sbo" in args.s:
+                    sbo_build("".join(args.s[1]))
+                elif "slack" in args.s:
+                    install("".join(args.s[1]))
+                else:
+                    choices = ["sbo", "slack"]
+                    ext_err_args()
+                    err1_args("".join(args.s[0]), choices)
+            elif len(args.s) < 2:
+                if "sbo" in args.s or "slack" in args.s:
                     choices = ["upgrade"]
                     ext_err_args()
-                    err1_args("".join(args.c[1]), choices)
+                    err2_args(choices)
+                else:
+                    choices = ["sbo", "slack"]
+                    ext_err_args()
+                    err1_args("".join(args.s), choices)
             else:
-                choices = ["sbo", "slack"]
-                ext_err_args()
-                err1_args("".join(args.c[0]), choices)
-        elif len(args.c) < 2:
-            if "sbo" in args.c or "slack" in args.c:
                 ext_err_args()
                 err2_args()
-            else:
-                choices = ["sbo", "slack"]
-                ext_err_args()
-                err1_args("".join(args.c), choices)
-        else:
-            ext_err_args()
-            err2_args()    
-    if args.s:
-	s_user(getpass.getuser())
-        if len(args.s) == 2:
-            if "sbo" in args.s:
-                sbo_build("".join(args.s[1]))
-            elif "slack" in args.s:
-                install("".join(args.s[1]))
-            else:
-                choices = ["sbo", "slack"]
-                ext_err_args()
-                err1_args("".join(args.s[0]), choices)
-        elif len(args.s) < 2:
-            if "sbo" in args.s or "slack" in args.s:
-                ext_err_args()
-                err2_args()
-            else:
-                choices = ["sbo", "slack"]
-                ext_err_args()
-                err1_args("".join(args.s), choices)
-        else:
-            ext_err_args()
-            err2_args()
-    if args.i:
-	s_user(getpass.getuser())
-        pkg_install(args.i)
-    if args.u:
-	s_user(getpass.getuser())
-        pkg_upgrade(args.u)
-    if args.o:
-	s_user(getpass.getuser())
-        pkg_reinstall(args.o)
-    if args.r:
-	s_user(getpass.getuser())
-        pkg_remove(args.r)
-    if args.f:
-        pkg_find(args.f)
-    if args.d:
-        pkg_display(args.d)
-    if not any([args.verbose,
-                args.s,
-                args.t,
-                args.c,
-                args.n,
-                args.o,
-                args.i,
-                args.u,
-                args.a,
-                args.r,
-                args.l,
-                args.f,
-                args.d]):
-        os.system("slpkg -h")
+        if args.i:
+            s_user(getpass.getuser())
+            pkg_install(args.i)
+        if args.u:
+            s_user(getpass.getuser())
+            pkg_upgrade(args.u)
+        if args.o:
+    	    s_user(getpass.getuser())
+            pkg_reinstall(args.o)
+        if args.r:
+            s_user(getpass.getuser())
+            pkg_remove(args.r)
+        if args.f:
+            pkg_find(args.f)
+        if args.d:
+            pkg_display(args.d)
+        if not any([args.verbose,
+                    args.s,
+                    args.t,
+                    args.c,
+                    args.n,
+                    args.o,
+                    args.i,
+                    args.u,
+                    args.a,
+                    args.r,
+                    args.l,
+                    args.f,
+                    args.d]):
+            os.system("slpkg -h")
+    except IndexError:
+        ext_err_args()
+        err2_args("")
 
 if __name__ == "__main__":
     main()

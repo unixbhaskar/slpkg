@@ -30,23 +30,16 @@ from slpkg.__metadata__ import lib_path
 
 from slpkg.slack.slack_version import slack_ver
 
-from init import initialization
-
 def sbo_search_pkg(name):
     '''
     Search for package path from SLACKBUILDS.TXT file
     '''
-    initialization()
     try:
-        sbo_location = []
         sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
         for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
             if line.startswith("SLACKBUILD LOCATION"):
-                sbo_location.append(line.replace("SLACKBUILD LOCATION: ./", ""))
-        for location in sbo_location:
-            location = location.replace("\n", "")
-            if get_file(location, "/") == name:
-                return sbo_url + location.replace(name, "") + name + "/"
+                if name == get_file(line[23:].strip(), "/").replace("\n", ""):
+                    return sbo_url + line[23:].strip() + "/"
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

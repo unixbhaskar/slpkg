@@ -39,7 +39,7 @@ Video Tutorial
 ==============
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/11649
+    :target: https://asciinema.org/a/11457
 
 Installation
 ------------
@@ -67,8 +67,7 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-    usage: slpkg   [-h] [-v] [-a script [source ...]]
-                   [-l all, sbo, slack, noarch, other]
+    usage: slpkg   [-h] [-v] [-a script [source ...]] [-l all, sbo, slack, noarch]
                    [-c sbo, slack [sbo, slack ...]]
                    [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
                    [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
@@ -80,7 +79,7 @@ Command Line Tool Usage
       -v, --verbose         print version and exit
       -a script [source ...]
                             auto build package
-      -l all, sbo, slack, noarch, other
+      -l all, sbo, slack, noarch
                             list of installed packages
       -c sbo, slack [sbo, slack ...]
                             check if your packages is up to date
@@ -108,16 +107,16 @@ build and install with all dependencies :
     Building dependency tree...... Done
     The following packages will be automatically installed or upgraded with new version:
     +==============================================================================
-    | Package                 Version       Arch         Repository
+    | Package                                 Version         Arch       Repository
     +==============================================================================
     Installing:
-      brasero                 3.11.3        x86_64       SBo
+      brasero                                 3.11.3          x86_64     SBo
     Installing for dependencies:
-      orc                     0.4.19        x86_64       SBo
-      gstreamer1              1.2.2         x86_64       SBo
-      gst1-plugins-base       1.2.2         x86_64       SBo
-      gst1-plugins-bad        1.2.2         x86_64       SBo
-      libunique               1.1.6         x86_64       SBo
+      orc                                     0.4.19          x86_64     SBo
+      gstreamer1                              1.2.2           x86_64     SBo
+      gst1-plugins-base                       1.2.2           x86_64     SBo
+      gst1-plugins-bad                        1.2.2           x86_64     SBo
+      libunique                               1.1.6           x86_64     SBo
 
     Installing summary
     ===============================================================================
@@ -203,27 +202,31 @@ Check if your packages is up to date from slackbuilds.org:
 
 .. code-block:: bash
 
-    $ slpkg -c sbo flashplayer-plugin
+    $ slpkg -c sbo upgrade
     Reading package lists. Done
 
-    New version is available:
+    Thece packages need upgrading:
+
     +==============================================================================
-    | Package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
+    | Package                             New version       Arch         Repository
     +==============================================================================
+    Upgrading:
+      six-1.7.1                           1.7.3             x86_64       SBo
+      pysetuptools-3.4                    3.6               x86_64       SBo
+      Jinja2-2.7.0                        2.7.2             x86_64       SBo
+      pysed-0.3.0                         0.3.1             x86_64       SBo
+      Pafy-0.3.56                         0.3.58            x86_64       SBo
+      MarkupSafe-0.21                     0.23              x86_64       SBo
+      pip-1.5.3                           1.5.6             x86_64       SBo
+      colored-1.1.1                       1.1.4             x86_64       SBo
+                
+    Installing summary
+    ===============================================================================
+    Total 8 packages will be upgraded.
+                
+    Would you like to upgrade [Y/n]?
 
-    Would you like to install [Y/n]?
-
-    $ slpkg -c sbo ranger
-    Reading package lists. Done    
-
-    Package ranger-1.6.1 is up to date
-
-    $ slpkg -c sbo termcolor
-    Reading package lists. Done
-
-    No such package termcolor: Not installed
-
-Check if your distribution is up to date from `Slackware official mirrors 
+if your distribution is up to date from `Slackware official mirrors 
 <http://mirrors.slackware.com/>`_
 
 .. code-block:: bash

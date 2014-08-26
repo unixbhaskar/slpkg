@@ -41,9 +41,9 @@ def patches():
     Install new patches from official Slackware mirrors
     '''
     try:
+        comp_sum, uncomp_sum = [], []
+        dwn_patches, comp_size, uncomp_size = [], [], []
         upgrade_all, package_name, package_location = [], [], []
-        comp_list, uncomp_list, comp_sum, uncomp_sum = [], [], [], []
-        dwn_list, dwn_patches, comp_size, uncomp_size = [], [], [], []
         pch_path = slpkg_tmp + "patches/"
         slack_arch = ""
         if not os.path.exists(pch_path):
@@ -69,15 +69,12 @@ def patches():
                 comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
-        for loc, name in zip(package_location, package_name):
-            dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
-        for name, size in zip(package_name, comp_size):
-            comp_list.append("{0}{1}".format(name, size))
-        for name, size in zip(package_name, uncomp_size):
-            uncomp_list.append("{0}{1}".format(name, size))
-        for pkg in package_name:
-            if not os.path.isfile(pkg_path + pkg[:-4]):
-                upgrade_all.append(pkg)
+        for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
+            if not os.path.isfile(pkg_path + name[:-4]):
+                dwn_patches.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
+                comp_sum.append(comp)
+                uncomp_sum.append(uncomp)
+                upgrade_all.append(name)
         sys.stdout.write("Done\n")
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
@@ -85,44 +82,33 @@ def patches():
             print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Upgrading:")
-            for upgrade in upgrade_all:
-                for size in comp_list:
-                    if upgrade in size:
-                        Kb = size.replace(upgrade, "")
-                        if "-noarch-" in upgrade:
-                            arch = "noarch"
-                        elif sp+os.uname()[4]+sp in upgrade:
-                            arch = os.uname()[4]
-                        elif "-i486-" in upgrade:
-                            arch = "i486"
-                        elif "-i686-" in upgrade:
-                            arch = "i686"
-                        elif "-x86-" in upgrade:
-                            arch = "x86"
-                        elif "-fw-" in upgrade:
-                            arch = "fw"
-                        else:
-                            arch = ""
-                        if "_slack" in upgrade:
-                            slack = "_slack" + slack_ver()
-                        else:
-                            slack = ""
-                        print " ", upgrade[:-(5+len(slack))].replace(
-                              sp+arch+sp, ""), " "*(40-len(upgrade[:-(
-                              5+len(slack))].replace(sp+arch+sp, ""))), arch, " "*(
-                              7-len(arch)), upgrade[-15:-14].replace(sp+arch+sp, ""), " "*(
-                              6-len(upgrade[-15:-14].replace(sp+arch+sp, ""))), "Slack", " ", Kb, " "*(
-                              3-len(Kb)), "K"
-                for dwn in dwn_list:
-                    if "/" + upgrade in dwn:
-                        dwn_patches.append(dwn)
-            for install in upgrade_all:
-                for comp in comp_list:
-                    if install == comp[:-(len(comp)-len(install))]:
-                        comp_sum.append(comp.replace(install, ""))
-                for uncomp in uncomp_list:
-                    if install == uncomp[:-(len(uncomp)-len(install))]:
-                        uncomp_sum.append(uncomp.replace(install, ""))
+            for upgrade, size in zip(upgrade_all, comp_sum):
+                if "-noarch-" in upgrade:
+                    arch = "noarch"
+                elif "-x86_64-" in upgrade:
+                    arch = "x86_64"
+                elif "-i386-" in upgrade:
+                    arch = "i386"
+                elif "-i486-" in upgrade:
+                    arch = "i486"
+                elif "-i686-" in upgrade:
+                    arch = "i686"
+                elif "-x86-" in upgrade:
+                    arch = "x86"
+                elif "-fw-" in upgrade:
+                    arch = "fw"
+                else:
+                    arch = ""
+                if "_slack" in upgrade:
+                    slack = "_slack" + slack_ver()
+                else:
+                    slack = ""
+                print " ", upgrade[:-(5+len(slack))].replace(
+                      sp+arch+sp, ""), " "*(40-len(upgrade[:-(
+                      5+len(slack))].replace(sp+arch+sp, ""))), arch, " "*(
+                      7-len(arch)), upgrade[-15:-14].replace(sp+arch+sp, ""), " "*(
+                      6-len(upgrade[-15:-14].replace(sp+arch+sp, ""))), "Slack", " ", size, " "*(
+                      3-len(size)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -137,7 +123,7 @@ def patches():
                 msg_pkg = msg_pkg + "s"
             print("\nInstalling summary")
             print("="*79)
-            print("Total {0} {1} will be upgrading.".format(len(upgrade_all), msg_pkg))
+            print("Total {0} {1} will be upgraded.".format(len(upgrade_all), msg_pkg))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
@@ -155,6 +141,7 @@ def patches():
                         print("The kernel has been upgraded, reinstall `lilo` ...")
                         subprocess.call("lilo", shell=True)
                         break
+                print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for pkg in upgrade_all:

@@ -28,8 +28,8 @@ import subprocess
 from collections import OrderedDict
 
 from slpkg.colors import colors
-from slpkg.messages import pkg_not_found, s_user, template
-from slpkg.__metadata__ import pkg_path, uname, arch, sp, log_path
+from slpkg.messages import pkg_not_found, template
+from slpkg.__metadata__ import pkg_path, sp, log_path
 
 from find import find_package
 
@@ -39,7 +39,7 @@ def pkg_install(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output('installpkg {0}'.format(pkg), shell=True)
+            print subprocess.check_output("installpkg {0}".format(pkg), shell=True)
         except subprocess.CalledProcessError:
             message = "Can't install"
             if len(binary) > 1:
@@ -54,7 +54,7 @@ def pkg_upgrade(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output('upgradepkg --install-new {0}'.format(pkg),
+            print subprocess.check_output("upgradepkg --install-new {0}".format(pkg),
                                            shell=True)
         except subprocess.CalledProcessError:
             message = "Can't upgrade"
@@ -70,7 +70,7 @@ def pkg_reinstall(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output('upgradepkg --reinstall {0}'.format(pkg),
+            print subprocess.check_output("upgradepkg --reinstall {0}".format(pkg),
                                            shell=True)
         except subprocess.CalledProcessError:
             message = "Can't reinstall"
@@ -140,17 +140,17 @@ def pkg_remove(binary):
                     if remove_dep == "y" or remove_dep == "Y":
                         for dep in dependencies:
                             if find_package(dep + sp, pkg_path):
-                                print subprocess.check_output('removepkg {0}'.format(dep), shell=True)
+                                print subprocess.check_output("removepkg {0}".format(dep), shell=True)
                         os.remove(dep_path + rmv)
                         rmv_dependencies += dependencies[:-1]
                     else:
                         if find_package(rmv + sp, pkg_path):
-                            print subprocess.check_output('removepkg {0}'.format(rmv), shell=True)
+                            print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
                         f.close()
                         os.remove(dep_path + rmv)
                 else:
                     if find_package(rmv + sp, pkg_path):
-                        print subprocess.check_output('removepkg {0}'.format(rmv), shell=True)
+                        print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
             '''
             Prints all removed packages
             '''
@@ -171,13 +171,13 @@ def pkg_find(binary):
     print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
             colors.CYAN, ', '.join(binary), colors.ENDC))
     for pkg in binary:
-        if find_package(pkg + sp, pkg_path) == []:
+        if find_package(pkg + sp, pkg_path):
+            print(colors.GREEN + "[ installed ] - " + colors.ENDC + "\n                ".join(
+                   find_package(pkg + sp, pkg_path)))
+        else:
             message = "Can't find"
             bol, eol = "", ""
             pkg_not_found(bol, pkg, message, eol)
-        else:
-            print(colors.GREEN + "[ installed ] - " + colors.ENDC + "\n                ".join(
-                   find_package(pkg + sp, pkg_path)))
     print # new line at end
 
 def pkg_display(binary):
@@ -185,70 +185,39 @@ def pkg_display(binary):
     Print the Slackware packages contents
     '''
     for pkg in binary:
-        if find_package(pkg + sp, pkg_path) == []:
+        if find_package(pkg + sp, pkg_path):
+            print subprocess.check_output("cat {0}{1}".format(pkg_path,
+                " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True)
+        else:
             message = "Can't dislpay"
             if len(binary) > 1:
                 bol, eol = "", ""
             else:
                 bol, eol = "\n", "\n"
             pkg_not_found(bol, pkg, message, eol)
-        else:
-            print subprocess.check_output("cat {0}{1}".format(pkg_path,
-                  " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True)
 
-def pkg_list(binary):
+def pkg_list(pattern):
     '''
     List with the installed packages
     '''
     try:
-        print # new line at start
+        if "sbo" in pattern:
+            search = "_SBo"
+        elif "slack" in pattern:
+            search = "_slack"
+        elif "noarch" in pattern:
+            search = "-noarch-"
+        elif "all" in pattern:
+            search = ""
         index, page = 0, 50
-        if "all" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
+        for pkg in sorted(os.listdir(pkg_path)):
+            if search in pkg:
                 index += 1
                 print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                 if index == page:
-                    key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                     colors.CYAN, colors.ENDC))
+                    key = raw_input("\nPress [ {0}Enter{1} ] >> Next page ".format(
+                                         colors.CYAN, colors.ENDC))
                     page += 50
-        if "sbo" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if 'SBo' in pkg:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
-        if "slack" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if 'slack' in pkg:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
-        if "noarch" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if 'noarch' in pkg:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
-        if "other" in binary:
-            for pkg in sorted(os.listdir(pkg_path)):
-                if 'SBo' in pkg or 'slack' in pkg or 'noarch' in pkg:
-                    pass
-                else:
-                    index += 1
-                    print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
-                    if index == page:
-                        key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
-                                         colors.CYAN, colors.ENDC))
-                        page += 50
         print # new line at end
     except KeyboardInterrupt:
         print # new line at exit

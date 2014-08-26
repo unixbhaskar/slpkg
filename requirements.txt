@@ -1,4 +1,4 @@
-# Python 2.7.5
+# Python 2.7.5+
 # Slackware current (not supported yet)
 # Slackware
 # Slackware 64

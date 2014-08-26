@@ -28,8 +28,8 @@ import subprocess
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.__metadata__ import tmp, pkg_path, slpkg_tmp, sp
-from slpkg.__metadata__ import sbo_arch, sbo_tag, sbo_filetype, build_path
-from slpkg.messages import s_user, pkg_not_found, pkg_found, view_sbo, template
+from slpkg.messages import pkg_not_found, pkg_found, view_sbo, template
+from slpkg.__metadata__ import sbo_arch, build, sbo_tag, sbo_filetype, build_path
 
 from slpkg.pkg.build import build_package
 from slpkg.pkg.find import find_package
@@ -37,6 +37,7 @@ from slpkg.pkg.manager import pkg_upgrade
 
 from read import *
 from greps import *
+from init import initialization
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 
@@ -47,6 +48,7 @@ def sbo_network(name):
     '''
     rdm_path = slpkg_tmp + "readme/"
     sys.stdout.write("Reading package lists ...")
+    initialization()
     sbo_url = sbo_search_pkg(name)
     if sbo_url is None:
         sys.stdout.write ("Done\n")
@@ -59,12 +61,9 @@ def sbo_network(name):
         sys.stdout.write ("Done\n")
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
-        sbo_version = sbo_version_pkg(name)
-        source_dwn = sbo_source_dwn(sbo_url, name)
-        extra_dwn = " ".join(sbo_extra_dwn(sbo_url, name))
-        view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), get_file(source_dwn, "/"),
-                 ", ".join([get_file(extra_dwn, "/") for extra_dwn in extra_dwn.split()]),
-                 sbo_req)
+        source_dwn = sbo_source_dwn(name).split()
+        view_sbo(name, sbo_url, get_file(sbo_dwn, "/"),
+                ", ".join([get_file(src, "/") for src in source_dwn]), sbo_req)
         while True:
             try:
                 read = raw_input("_ ")
@@ -72,11 +71,11 @@ def sbo_network(name):
                 print # new line at exit
                 break
             if read == "D" or read == "d":
-                print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                subprocess.call("wget -N {0} {1}".format(sbo_dwn, source_dwn), shell=True)
-                if extra_dwn:
-                    for src in extra_dwn.split():
-                        subprocess.call("wget -N {0}".format(src), shell=True)
+                print("\n{0}Start --> {1}{2}\n".format(colors.GREEN, colors.ENDC, name))
+                subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                for src in source_dwn:
+                    subprocess.call("wget -N {0}".format(src), shell=True)
+                print("Complete!\n")
                 break
             elif read == "R" or read == "r":
                 site = "README"
@@ -94,41 +93,44 @@ def sbo_network(name):
                 subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
                 os.remove("{0}{1}{2}".format(rdm_path, name, site))
             elif read == "B" or read == "b":
+                sources = []
                 os.chdir(build_path)
                 script = get_file(sbo_dwn, "/")
-                source = get_file(source_dwn, "/")
-                print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                subprocess.call("wget -N {0} {1}".format(sbo_dwn, source_dwn), shell=True)
-                extra = []
-                if extra_dwn:
-                    for src in extra_dwn.split():
-                        subprocess.call("wget -N {0}".format(src), shell=True)
-                        extra.append(get_file(src, "/"))
-                build_package(script, source, extra, build_path)
+                print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                for src in source_dwn:
+                    subprocess.call("wget -N {0}".format(src), shell=True)
+                    sources.append(get_file(src, "/"))
+                build_package(script, sources, build_path)
+                print("Complete!\n")
                 break
             elif read == "I" or read == "i":
-                os.chdir(build_path)
-                pkg_for_install = ("{0}-{1}".format(name, sbo_version))
+                sbo_version = sbo_version_pkg(name)
                 if find_package(name + sp, pkg_path) == []:
+                    sources = []
+                    os.chdir(build_path)
+                    pkg_for_install = ("{0}-{1}".format(name, sbo_version))
+                    print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                    subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                     script = get_file(sbo_dwn, "/")
-                    source = get_file(source_dwn, "/")
-                    print("\n{0}Start -->{1}\n".format(colors.GREEN, colors.ENDC))
-                    subprocess.call("wget -N {0} {1}".format(sbo_dwn, source_dwn), shell=True)
-                    extra = []
-                    if extra_dwn:
-                        for src in extra_dwn.split():
+                    for src in source_dwn:
                             subprocess.call("wget -N {0}".format(src), shell=True)
-                            extra.append(get_file(src, "/"))
-                    build_package(script, source, extra, build_path)
-                    binary = ("{0}{1}{2}{3}{4}".format(
-                               tmp, pkg_for_install, sbo_arch, sbo_tag, sbo_filetype).split())
+                            sources.append(get_file(src, "/"))
+                    build_package(script, sources, build_path)
+                    binary = ("{0}{1}{2}{3}{4}{5}".format(
+                               tmp, pkg_for_install, sbo_arch, build, sbo_tag, sbo_filetype).split())
+                    print("{0}[ Installing ] --> {1}{2}".format(
+                           colors.GREEN, colors.ENDC, name))
                     pkg_upgrade(binary)
+                    if find_package(name + sp, pkg_path):
+                        print("Complete!\n")
+                    else:
+                        print("The package {0} may not install successfully".format(name))
                     break
                 else:
                     template(78)
                     pkg_found(name, sbo_version)
                     template(78)
-                    print # new line at end
                     break
             else:
                 break
