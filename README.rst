@@ -187,7 +187,7 @@ and also displays installed packages:
     +=========================
     | brasero dependencies   :
     +=========================
-    \\ 
+    \ 
      +---[ Tree of dependencies ]
      |
      +--1 orc
