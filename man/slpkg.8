@@ -15,9 +15,11 @@
 .SH NAME
 slpkg - Utility for easy management packages in Slackware
 .SH SYNOPSIS
- \fBslpkg\fP \fB-h\fP \fB-v\fP \fB-a script [source ...]\fP \fB-l all, sbo, slack, noarch, other\fP
- \fB-t\fP \fB-n\fP \fB-c sbo, slack [sbo, slack ...]\fP \fB-s\ slack [sbo, slack ...] fP\fB-i [...]\fP
- \fB-u [...]\fP \fB-o [...]\fP \fB-r [...]\fP \fB-f [...]\fP \fB-d [...]\fP
+  \fBusage: slpkg [-h] [-v] [-a script [source ...]] [-l all, sbo, slack, noarch]
+               [-c sbo, slack [sbo, slack ...]]
+               [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
+               [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]\fP
+
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal multitool in order to easy use Slackware packages.
 .PP
@@ -27,7 +29,7 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB-v, --verbose         print version and exit\fP
   \fB-a script [source ...]\fP
   \fB			           auto build packages\fP
-  \fB-l all, sbo, slack, noarch, other\fP
+  \fB-l all, sbo, slack, noarch\fP
   \fB                      list of installed packages\fP
   \fB-c sbo, slack [sbo, slack ...]\fp
   \fB                      check if your packages is up to date\fP
@@ -55,11 +57,11 @@ The following commands are available.
 .PP
 With this argument, build slackware package from source quickly and easy.
 Support .tar.gz and .tar.bz2 slackbuilds archives.
-.SS -l all, sbo, slack, noarch, other
+.SS -l all, sbo, slack, noarch
 \fBslpkg\fP \fB-l\fP <\fIall\fP> <\fIsbo\fP>
 .PP
-Two display options list, one for all packages and another
-only for packages SBo.
+Four display options list, sbo, slack, noarch and all packages
+items that are installed on the system.
 .SS -t , tracking dependencies
 \fBslpkg\fP \fB-t\fP <\fIname of package\fP>
 .PP
@@ -70,8 +72,8 @@ The sequence shown is that you must follow to correctly install package.
 .PP
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
-.SS -c , sbo, slack [sbo, slack ...] check if your package is up to date
-\fBslpkg\fP \fB-c\fP <\fIsbo\fP> <\fIslack\fP> <\fIname of package\fP>
+.SS -c , sbo, slack [sbo, slack ...] check if your packages is up to date
+\fBslpkg\fP \fB-c\fP <\fIsbo\fP> <\fIslack\fP> <\fIupgrade\fP>
 .PP
 Check your packages from Slackware official mirrors or from 
 slackbuilds.org is up to date.
@@ -94,14 +96,14 @@ Normally upgrade only upgrades packages that are already
 installed on the system, and will skip any packages that do not
 already have a version installed. 'Requires root privileges'
 (like slackware command upgradepkg --install-new)
-.SS -o reinstall binary package
+.SS -o , reinstall binary package
 \fBslpkg\fP \fB-o\fP <\fIpackages.t?z\fP>
 .PP
 Upgradepkg usually skips packages if the exact same package
 (matching name, version, arch, and build number) is already
 installed on the system.'Requires root privileges' (like 
 slackware command upgradepkg --reinstall)
-.SS -r , remove package
+.SS -r , remove packages
 \fBslpkg\fP \fB-r\fP <\fIname of packages\fP>
 .PP
 Removes a previously installed Slackware package, while writing
@@ -116,7 +118,7 @@ privileges' (like slackware command removepkg)
 \fBslpkg\fP \fB-f\fP <\fIname of packages\fP>
 .PP
 Find if package allready installed or not.
-.SS -d display contents
+.SS -d , display contents
 \fBslpkg\fP \fB-d\fP <\fIname of packages\fP>
 .PP
 Display the contents of the package with all descriptions.
@@ -191,15 +193,29 @@ $ \fBslpkg -s sbo brasero\fP
   Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
 
 
-$ \fBslpkg -c sbo flashplayer-plugin\fP
+$ \fBslpkg -c sbo upgrade\fP
   Reading package lists. Done
 
-  New version is available:
+  These packages need upgrading:
+
   +==============================================================================
-  | Package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
+  | Package                             New version       Arch         Repository
   +==============================================================================
- 
-  Would you like to install [Y/n]?
+  Upgrading:
+    six-1.7.1                           1.7.3             x86_64       SBo
+    pysetuptools-3.4                    3.6               x86_64       SBo
+    Jinja2-2.7.0                        2.7.2             x86_64       SBo
+    pysed-0.3.0                         0.3.1             x86_64       SBo
+    Pafy-0.3.56                         0.3.58            x86_64       SBo
+    MarkupSafe-0.21                     0.23              x86_64       SBo
+    pip-1.5.3                           1.5.6             x86_64       SBo
+    colored-1.1.1                       1.1.4             x86_64       SBo
+
+  Installing summary
+  ===============================================================================
+  Total 8 packages will be upgraded.
+
+  Would you like to upgrade [Y/n]?
 
 $ \fBslpkg -c slack upgrade\fp
   Reading package lists....... Done
