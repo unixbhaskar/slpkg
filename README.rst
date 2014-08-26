@@ -228,7 +228,7 @@ Check if your packages is up to date from slackbuilds.org:
                 
     Would you like to upgrade [Y/n]?
 
-if your distribution is up to date from `Slackware official mirrors 
+Check if your distribution is up to date from `Slackware official mirrors 
 <http://mirrors.slackware.com/>`_
 
 .. code-block:: bash
