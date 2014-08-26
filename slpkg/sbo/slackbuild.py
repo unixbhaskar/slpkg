@@ -28,7 +28,7 @@ import subprocess
 from colors import colors
 from functions import get_file
 from messages import pkg_not_found, pkg_found, template
-from __metadata__ import sbo_arch, build, sbo_tag, sbo_filetype
+from __metadata__ import build, sbo_tag, sbo_filetype
 from __metadata__ import tmp, pkg_path, build_path, log_path, sp
 
 from pkg.find import find_package 
@@ -135,6 +135,14 @@ def sbo_build(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
+                        '''
+                        Before installing new binary package look if arch is noarch.
+                        This is because some maintainers changes arch manualy.
+                        '''
+                        if "-noarch-" in "".join(find_package(prgnam, tmp)):
+                            sbo_arch = "-noarch-"
+                        else:
+                            from __metadata__ import sbo_arch            
                         binary = ("{0}{1}{2}{3}{4}{5}".format(
                                    tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Installing ] --> {1}{2}".format(

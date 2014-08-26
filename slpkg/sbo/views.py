@@ -109,7 +109,7 @@ def sbo_network(name):
                 if find_package(name + sp, pkg_path) == []:
                     sources = []
                     os.chdir(build_path)
-                    pkg_for_install = ("{0}-{1}".format(name, sbo_version))
+                    prgnam = ("{0}-{1}".format(name, sbo_version))
                     print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
                     subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                     script = get_file(sbo_dwn, "/")
@@ -117,8 +117,17 @@ def sbo_network(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
+                    '''
+                    Before installing new binary package look if arch is noarch.
+                    This is because some maintainers changes arch manualy.
+                    
+                    '''
+                    if "-noarch-" in "".join(find_package(prgnam, tmp)):
+                        sbo_arch = "-noarch-"
+                    else:
+                        from __metadata__ import sbo_arch
                     binary = ("{0}{1}{2}{3}{4}{5}".format(
-                               tmp, pkg_for_install, sbo_arch, build, sbo_tag, sbo_filetype).split())
+                               tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                     print("{0}[ Installing ] --> {1}{2}".format(
                            colors.GREEN, colors.ENDC, name))
                     pkg_upgrade(binary)

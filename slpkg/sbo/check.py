@@ -25,6 +25,7 @@ import os
 import sys
 import subprocess
 
+from pkg.find import find_package
 from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
@@ -100,7 +101,7 @@ def sbo_check():
                         os.mkdir(build_path)
                     os.chdir(build_path)
                     for name, version in zip(pkg_name, sbo_ver):
-                        pkg_for_install = ("{0}-{1}".format(name, version))
+                        prgnam = ("{0}-{1}".format(name, version))
                         sbo_url = sbo_search_pkg(name)
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
                         src_dwn = sbo_source_dwn(name).split()
@@ -112,8 +113,16 @@ def sbo_check():
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
+                        '''
+                        Before installing new binary package look if arch is noarch.
+                        This is because some maintainers changes arch manualy.
+                        '''
+                        if "-noarch-" in "".join(find_package(prgnam, tmp)):
+                            sbo_arch = "-noarch-"
+                        else:
+                            from __metadata__ import sbo_arch 
                         binary = ("{0}{1}{2}{3}{4}{5}".format(
-                            tmp, pkg_for_install, sbo_arch, build, sbo_tag, sbo_filetype).split())
+                            tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Upgrading ] --> {1}{2}".format(
                             colors.GREEN, colors.ENDC, name))
                         pkg_upgrade(binary)
