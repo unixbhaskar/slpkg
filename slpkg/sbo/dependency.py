@@ -43,12 +43,7 @@ def sbo_dependencies_pkg(name):
     try:
         if name is not "%README%":
             sbo_url = sbo_search_pkg(name)
-            if sbo_url is None:
-                sys.stdout.write("Done\n")
-                message = "From slackbuilds.org"
-                bol, eol = "\n", "\n"
-                pkg_not_found(bol, name, message, eol)
-            else:
+            if sbo_url:
                 dependencies = sbo_requires_pkg(sbo_url, name)
                 if dependencies:
                     dep_results.append(dependencies)
@@ -57,6 +52,11 @@ def sbo_dependencies_pkg(name):
                         sys.stdout.flush()
                         sbo_dependencies_pkg(dep)
                 return dep_results
+            else:
+                sys.stdout.write("Done\n")
+                message = "From slackbuilds.org"
+                bol, eol = "\n", "\n"
+                pkg_not_found(bol, name, message, eol)
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
