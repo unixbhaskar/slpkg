@@ -59,12 +59,12 @@ def err1_args(invalid, choices):
     print ("{0}: error: invalid choice: '{1}' choose from {2}".format(
             __all__, invalid, choices))
 
-def err2_args():
+def err2_args(choices):
     '''
     Print error message arguments
     '''
-    print ("{0}: error: must enter at least two arguments".format(
-            __all__))
+    print ("{0}: error: must enter at least two arguments: choose {1}".format(
+            __all__, choices))
 
 def s_user(user):
     '''

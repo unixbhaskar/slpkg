@@ -60,14 +60,14 @@ optional arguments:
 
 '''
 
-import argparse
 import getpass
+import argparse
 
 from version import *
 from functions import *
 from colors import colors
 from __metadata__ import path
-from messages import ext_err_args
+from messages import ext_err_args, s_user
 from messages import err1_args, err2_args
 
 from pkg.build import build_package
@@ -149,8 +149,9 @@ def main():
                     err1_args("".join(args.c[0]), choices)
             elif len(args.c) < 2:
                 if "sbo" in args.c or "slack" in args.c:
+                    choices = ['upgrade']
                     ext_err_args()
-                    err2_args()
+                    err2_args(choices)
                 else:
                     choices = ["sbo", "slack"]
                     ext_err_args()
@@ -171,8 +172,9 @@ def main():
                     err1_args("".join(args.s[0]), choices)
             elif len(args.s) < 2:
                 if "sbo" in args.s or "slack" in args.s:
+                    choices = ["upgrade"]
                     ext_err_args()
-                    err2_args()
+                    err2_args(choices)
                 else:
                     choices = ["sbo", "slack"]
                     ext_err_args()
@@ -212,7 +214,7 @@ def main():
             os.system("slpkg -h")
     except IndexError:
         ext_err_args()
-        err2_args()
+        err2_args("")
 
 if __name__ == "__main__":
     main()
