@@ -56,11 +56,9 @@ Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last updates):
 
 Using Slackware command:
     
-Download http://slackbuilds.org/repository/14.1/system/slpkg from slackbuilds.org
+Download `SBo package <http://slackbuilds.org/repository/14.1/system/slpkg/>`_
 
-Using SBOPKG http://www.sbopkg.org
-
-Download binary package from SourceForge:
+Download binary package from `SourceForge <https://sourceforge.net/projects/slpkg/>`_
     
 Command Line Tool Usage
 -----------------------
@@ -105,7 +103,9 @@ build and install with all dependencies :
     
     $ slpkg -s sbo brasero
     Building dependency tree...... Done
+    
     The following packages will be automatically installed or upgraded with new version:
+    
     +==============================================================================
     | Package                                 Version         Arch       Repository
     +==============================================================================
@@ -205,7 +205,7 @@ Check if your packages is up to date from slackbuilds.org:
     $ slpkg -c sbo upgrade
     Reading package lists. Done
 
-    Thece packages need upgrading:
+    These packages need upgrading:
 
     +==============================================================================
     | Package                             New version       Arch         Repository
@@ -226,7 +226,7 @@ Check if your packages is up to date from slackbuilds.org:
                 
     Would you like to upgrade [Y/n]?
 
-if your distribution is up to date from `Slackware official mirrors 
+Check if your distribution is up to date from `Slackware official mirrors 
 <http://mirrors.slackware.com/>`_
 
 .. code-block:: bash
@@ -240,9 +240,9 @@ if your distribution is up to date from `Slackware official mirrors
     | Package                                   Arch     Build   Repos   Size
     +==============================================================================
     Upgrading:
-      dhcpcd-6.0.5                             x86_64    3       Slack   92  K
-      samba-4.1.11                             x86_64    1       Slack   9928 K
-      xscreensaver-5.29                        x86_64    1       Slack   3896 K
+      dhcpcd-6.0.5                              x86_64   3       Slack   92  K
+      samba-4.1.11                              x86_64   1       Slack   9928 K
+      xscreensaver-5.29                         x86_64   1       Slack   3896 K
 
     Installing summary
     ===============================================================================

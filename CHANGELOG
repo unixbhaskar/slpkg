@@ -1,8 +1,9 @@
-Version 1.7.6.dev
+Version 1.7.6
 
 [Updated] - Bugfix IndexError '-aa' in cli argparseoptions.
+            Fix arch's
 
-
+[Feature] - Added upgrade all SBo packages
 
 22-08-2014
 Version 1.7.5
