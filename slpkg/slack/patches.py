@@ -87,6 +87,8 @@ def patches():
                     arch = "noarch"
                 elif "-x86_64-" in upgrade:
                     arch = "x86_64"
+                elif "-i386-" in upgrade:
+                    arch = "i386"
                 elif "-i486-" in upgrade:
                     arch = "i486"
                 elif "-i686-" in upgrade:

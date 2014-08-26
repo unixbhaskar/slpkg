@@ -87,6 +87,8 @@ def install(slack_pkg):
                     arch = "noarch"
                 elif "-x86_64-" in pkg:
                     arch = "x86_64"
+                elif "-i386-" in pkg:
+                    arch = "i386"
                 elif "-i486-" in pkg:
                     arch = "i486"
                 elif "-i686-" in pkg:
