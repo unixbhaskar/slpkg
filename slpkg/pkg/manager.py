@@ -28,8 +28,8 @@ import subprocess
 from collections import OrderedDict
 
 from colors import colors
-from __metadata__ import pkg_path, sp, log_path
 from messages import pkg_not_found, template
+from __metadata__ import pkg_path, sp, log_path
 
 from find import find_package
 
@@ -39,7 +39,7 @@ def pkg_install(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output('installpkg {0}'.format(pkg), shell=True)
+            print subprocess.check_output("installpkg {0}".format(pkg), shell=True)
         except subprocess.CalledProcessError:
             message = "Can't install"
             if len(binary) > 1:
@@ -54,7 +54,7 @@ def pkg_upgrade(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output('upgradepkg --install-new {0}'.format(pkg),
+            print subprocess.check_output("upgradepkg --install-new {0}".format(pkg),
                                            shell=True)
         except subprocess.CalledProcessError:
             message = "Can't upgrade"
@@ -70,7 +70,7 @@ def pkg_reinstall(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output('upgradepkg --reinstall {0}'.format(pkg),
+            print subprocess.check_output("upgradepkg --reinstall {0}".format(pkg),
                                            shell=True)
         except subprocess.CalledProcessError:
             message = "Can't reinstall"
@@ -140,17 +140,17 @@ def pkg_remove(binary):
                     if remove_dep == "y" or remove_dep == "Y":
                         for dep in dependencies:
                             if find_package(dep + sp, pkg_path):
-                                print subprocess.check_output('removepkg {0}'.format(dep), shell=True)
+                                print subprocess.check_output("removepkg {0}".format(dep), shell=True)
                         os.remove(dep_path + rmv)
                         rmv_dependencies += dependencies[:-1]
                     else:
                         if find_package(rmv + sp, pkg_path):
-                            print subprocess.check_output('removepkg {0}'.format(rmv), shell=True)
+                            print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
                         f.close()
                         os.remove(dep_path + rmv)
                 else:
                     if find_package(rmv + sp, pkg_path):
-                        print subprocess.check_output('removepkg {0}'.format(rmv), shell=True)
+                        print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
             '''
             Prints all removed packages
             '''
@@ -215,7 +215,7 @@ def pkg_list(pattern):
                 index += 1
                 print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                 if index == page:
-                    key = raw_input('\nPress [ {0}Enter{1} ] >> Next page '.format(
+                    key = raw_input("\nPress [ {0}Enter{1} ] >> Next page ".format(
                                          colors.CYAN, colors.ENDC))
                     page += 50
         print # new line at end
