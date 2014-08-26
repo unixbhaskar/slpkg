@@ -1,4 +1,11 @@
+Version 1.7.7
+26-08-2014
+
+[Updated] - Fix install noarch packages from SBo repository
+            Fix arguments
+
 Version 1.7.6
+25-08-2014
 
 [Updated] - Bugfix IndexError '-aa' in cli argparseoptions.
             Fix arch's
