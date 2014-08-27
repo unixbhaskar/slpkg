@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# build.py
+# build.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -33,21 +33,20 @@ def build_package(script, sources, path):
     '''
     Build package from source
     '''
-    pkg_name = script.replace(".tar.gz", "")
+    prgnam = script.replace(".tar.gz", "")
     try:
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
         for src in sources:
-            shutil.copy2(src, pkg_name)
-        os.chdir(path + pkg_name)
-        subprocess.call("chmod +x {0}.SlackBuild".format(pkg_name), shell=True)
-        subprocess.call("./{0}.SlackBuild".format(pkg_name), shell=True)
+            shutil.copy2(src, prgnam)
+        os.chdir(path + prgnam)
+        subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
+        subprocess.call("./{0}.SlackBuild".format(prgnam), shell=True)
         os.chdir(path)
     except (OSError, IOError):
         message = "Wrong file"
-        bol, eol, pkg = "\n", "\n", ""
-        pkg_not_found(bol, pkg, message, eol)
+        pkg_not_found("\n", prgnam, message, "\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
