@@ -38,7 +38,7 @@ dep_results = []
 
 def sbo_dependencies_pkg(name):
     '''
-    Build tree of dependencies
+    Build all dependencies of a package
     '''
     try:
         dependencies = []
