@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: slpkg
-Version: 1.7.6
+Version: 1.7.7
 Author: dslackw
 Author-email: d zlatanidis at gmail com
 Maintainer: dslackw
@@ -25,8 +25,7 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         ========
         
         - Build third party packages from source with all dependencies
-        - Install packages through from official `Slackware <http://www.slackware.com/>`_ 
-mirrors
+        - Install packages through from official `Slackware <http://www.slackware.com/>`_ mirrors
         - Find and Download packages from `slackbuilds.org <http://slackbuilds.org/>`_
         - Grabs packages from slackbuilds.org in real time
         - Automatic tool build and install packages
@@ -51,9 +50,8 @@ mirrors
         Video Tutorial
         ==============
         
-        .. image:: 
-https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-            :target: https://asciinema.org/a/11265
+        .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
+            :target: https://asciinema.org/a/11457
         
         Installation
         ------------
@@ -68,21 +66,20 @@ https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
         
             $ pip uninstall slpkg
         
+        
         Using Slackware command:
-            
-        Download http://slackbuilds.org/repository/14.1/system/slpkg from slackbuilds.org
         
-        Using SBOPKG http://www.sbopkg.org
+        Download `SBo package <http://slackbuilds.org/repository/14.1/system/slpkg/>`_
         
-        Download binary package from SourceForge:
+        Download binary package from `SourceForge <https://sourceforge.net/projects/slpkg/>`_
+        
             
         Command Line Tool Usage
         -----------------------
         
         .. code-block:: bash
         
-            usage: slpkg   [-h] [-v] [-a script [source ...]]
-                           [-l all, sbo, slack, noarch, other]
+            usage: slpkg   [-h] [-v] [-a script [source ...]] [-l all, sbo, slack, noarch]
                            [-c sbo, slack [sbo, slack ...]]
                            [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
                            [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
@@ -94,7 +91,7 @@ https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
               -v, --verbose         print version and exit
               -a script [source ...]
                                     auto build package
-              -l all, sbo, slack, noarch, other
+              -l all, sbo, slack, noarch
                                     list of installed packages
               -c sbo, slack [sbo, slack ...]
                                     check if your packages is up to date
@@ -120,10 +117,25 @@ https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
             
             $ slpkg -s sbo brasero
             Building dependency tree...... Done
-            The following packages will be automatically installed or upgraded with new 
-version:
+            
+            The following packages will be automatically installed or upgraded with new version:
         
-              orc gstreamer1 gst1-plugins-base gst1-plugins-bad libunique brasero
+            +==============================================================================
+            | Package                                 Version         Arch       Repository
+            +==============================================================================
+            Installing:
+              brasero                                 3.11.3          x86_64     SBo
+            Installing for dependencies:
+              orc                                     0.4.19          x86_64     SBo
+              gstreamer1                              1.2.2           x86_64     SBo
+              gst1-plugins-base                       1.2.2           x86_64     SBo
+              gst1-plugins-bad                        1.2.2           x86_64     SBo
+              libunique                               1.1.6           x86_64     SBo
+        
+            Installing summary
+            ===============================================================================
+            Total 6 packages.
+            6 packages will be installed, 0 allready installed.
         
             Do you want to continue [Y/n]? y
             .
@@ -158,9 +170,21 @@ version:
             
             Reading package lists.............................. Done    
         
-            [ install ] --> mozilla-firefox-24.1.0esr-x86_64-1
-            [ install ] --> mozilla-nss-3.15.2-x86_64-2
-            [ install ] --> mozilla-thunderbird-24.1.0-x86_64-1
+            +==============================================================================
+            | Package                                   Arch     Build   Repos   Size
+            +==============================================================================
+            Installing:
+              mozilla-firefox-24.1.0esr                 x86_64   1       Slack   23524  K
+              mozilla-nss-3.15.2                        x86_64   2       Slack   1592  K
+              mozilla-thunderbird-24.1.0                x86_64   1       Slack   24208  K
+        
+            Installing summary
+            ===============================================================================
+        
+            Total 3 packages.
+            3 packages will be installed, 0 allready installed.
+            Need to get 6.02 Mb of archives.
+            After this process, 15.72 Mb of additional disk space will be used.
         
             Would you like to install [Y/n]?
         
@@ -188,31 +212,33 @@ version:
              |
              +--5 libunique
         
-             NOTE: green installed, red not installed
-        
         Check if your packages is up to date from slackbuilds.org:
         
         .. code-block:: bash
         
-            $ slpkg -c sbo flashplayer-plugin
+            $ slpkg -c sbo upgrade
             Reading package lists. Done
         
-            New version is available:
+            These packages need upgrading:
+        
             +==============================================================================
-            | Package: flashplayer-plugin 11.2.202.356 --> flashplayer-plugin 11.2.202.394
+            | Package                             New version       Arch         Repository
             +==============================================================================
-        
-            Would you like to install [Y/n]?
-        
-            $ slpkg -c sbo ranger
-            Reading package lists. Done    
-        
-            Package 'ranger-1.6.1' is up to date
-        
-            $ slpkg -c sbo termcolor
-            Reading package lists. Done
-        
-            No such package termcolor: Not installed
+            Upgrading:
+              six-1.7.1                           1.7.3             x86_64       SBo
+              pysetuptools-3.4                    3.6               x86_64       SBo
+              Jinja2-2.7.0                        2.7.2             x86_64       SBo
+              pysed-0.3.0                         0.3.1             x86_64       SBo
+              Pafy-0.3.56                         0.3.58            x86_64       SBo
+              MarkupSafe-0.21                     0.23              x86_64       SBo
+              pip-1.5.3                           1.5.6             x86_64       SBo
+              colored-1.1.1                       1.1.4             x86_64       SBo
+                        
+            Installing summary
+            ===============================================================================
+            Total 8 packages will be upgraded.
+                        
+            Would you like to upgrade [Y/n]?
         
         Check if your distribution is up to date from `Slackware official mirrors 
         <http://mirrors.slackware.com/>`_
@@ -224,10 +250,20 @@ version:
         
             These packages need upgrading:
         
-            [ upgrade ] --> dhcpcd-6.0.5-x86_64-3_slack14.1.txz
-            [ upgrade ] --> samba-4.1.11-x86_64-1_slack14.1.txz
-            [ upgrade ] --> xscreensaver-5.29-x86_64-1_slack14.1.txz
+            +==============================================================================
+            | Package                                   Arch     Build   Repos   Size
+            +==============================================================================
+            Upgrading:
+              dhcpcd-6.0.5                              x86_64   3       Slack   92  K
+              samba-4.1.11                              x86_64   1       Slack   9928 K
+              xscreensaver-5.29                         x86_64   1       Slack   3896 K
         
+            Installing summary
+            ===============================================================================
+            Total 3 package will be upgrading.
+            Need to get 1.70 Mb of archives.
+            After this process, 9.51 Mb of additional disk space will be used.
+            
             Would you like to upgrade [Y/y]?
         
         Find packages from slackbuilds.org:
@@ -251,7 +287,7 @@ version:
              Download             Download this package
              Build                Download and build this package
              Install              Download/Build/Install
-        
+             Quit                 Quit
             _
         
         Auto tool to build package:
@@ -453,8 +489,7 @@ version:
             --> Deleting /usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
             --> Deleting /usr/lib64/python2.7/site-packages/termcolor.py
             --> Deleting /usr/lib64/python2.7/site-packages/termcolor.pyc
-            --> Deleting 
-/usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
+            --> Deleting /usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
             --> Deleting /usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
             --> Deleting /usr/lib64/python3.3/site-packages/termcolor.py
             --> Deleting empty directory /usr/lib64/python3.3/site-packages/__pycache__/
@@ -497,8 +532,7 @@ version:
             | werkzeug
             +==============================================================================
         
-            Remove dependencies [Y/n]? y
-        
+            Remove dependencies (maybe used by other packages) [Y/n]? y
             .
             .
             .
@@ -516,6 +550,7 @@ version:
         .. code-block:: bash
         
             $ man slpkg
+Keywords: slackware, slpkg, slackpkg, sbopkg, package, build, install, yum, apt-get, linux, unix
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# slackbuild.py
+# slackbuild.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -28,8 +28,8 @@ import subprocess
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.messages import pkg_not_found, pkg_found, template
-from slpkg.__metadata__ import sbo_arch, build, sbo_tag, sbo_filetype
-from slpkg.__metadata__ import tmp, pkg_path, build_path, log_path, sp
+from slpkg.__metadata__ import (tmp, pkg_path, build_path, log_path, 
+                            sp, build, sbo_tag, sbo_filetype)
 
 from slpkg.pkg.find import find_package 
 from slpkg.pkg.build import build_package
@@ -50,14 +50,10 @@ def sbo_build(name):
     sys.stdout.write("Building dependency tree ...")
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
-    if dependencies_list == None:
-        pass
-    else:
-        try:
-            if not os.path.exists(build_path):
-                os.mkdir(build_path)
-            os.chdir(build_path)
-            requires, dependencies = [], []
+    try:
+        if dependencies_list is not None:
+            pkg_sum, SC, EC = 0, "", ""
+            requires, dependencies, pkg_for_install = [], [], []
             requires.append(name)
             for pkg in dependencies_list:
                 requires += pkg
@@ -65,8 +61,6 @@ def sbo_build(name):
             for duplicate in requires:
                 if duplicate not in dependencies:
                     dependencies.append(duplicate)
-            pkg_sum = 0 
-            pkg_for_install = []
             if find_package(name + sp, pkg_path):
                 pkg_for_install.append(colors.GREEN + name + colors.ENDC)
                 pkg_sum = 1
@@ -82,29 +76,30 @@ def sbo_build(name):
                 arch = "i486"
             elif "arm" in arch:
                 arch = "arm"
-            else:
-                arch = os.uname()[4]
             if "UNSUPPORTED" in src:
                 arch = "UNSUPPORTED"
+                SC, EC = colors.RED, colors.ENDC
             elif "UNTESTED" in src:
                 arch = "UNTESTED"
-            print("The following packages will be automatically installed or upgraded with new version:\n")
+                SC, EC = colors.YELLOW, colors.ENDC
+            print("\nThe following packages will be automatically installed or upgraded")
+            print("with new version:\n")
             template(78)
             print "| Package",  " "*31, "Version",  " "*7, "Arch", " "*5, "Repository"
             template(78)
             print("Installing:")
-            print " ",  "".join(pkg_for_install), " "*(38-len(name)), sbo_ver, " "*(
-                    14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
+            print " ", "".join(pkg_for_install), " "*(38-len(name)), sbo_ver, " "*(
+                  14-len(sbo_ver)), SC + arch + EC, " "*(9-len(arch)), "SBo"
             print("Installing for dependencies:")
             for dep in dependencies[:-1]:
                 sbo_ver = sbo_version_pkg(dep)
                 if find_package(dep + sp, pkg_path):
-                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(38-len(dep)), sbo_ver, " "*(
-                            14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
+                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(38-len(
+                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(arch)), "SBo"
                     pkg_sum += 1
                 else:
-                    print " ",  colors.RED + dep + colors.ENDC, " "*(38-len(dep)), sbo_ver, " "*(
-                            14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
+                    print " ",  colors.RED + dep + colors.ENDC, " "*(38-len(
+                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(arch)), "SBo"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(dependencies) > 1:
@@ -118,6 +113,9 @@ def sbo_build(name):
                  (len(dependencies) - pkg_sum), msg_2_pkg, pkg_sum))
             read = raw_input("\nDo you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
+                if not os.path.exists(build_path):
+                    os.mkdir(build_path)
+                os.chdir(build_path)
                 for pkg in dependencies:
                     sbo_version = sbo_version_pkg(pkg)
                     sbo_file = "".join(find_package(pkg + sp, pkg_path))
@@ -125,7 +123,7 @@ def sbo_build(name):
                     if sbo_version > sbo_file_version:
                         prgnam = ("{0}-{1}".format(pkg, sbo_version_pkg(pkg)))
                         sbo_url = sbo_search_pkg(pkg)
-                        sbo_link = sbo_slackbuild_dwn(sbo_url, pkg)
+                        sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = get_file(sbo_link, "/")
                         print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, pkg))
@@ -135,6 +133,14 @@ def sbo_build(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
+                        '''
+                        Before installing new binary package look if arch is noarch.
+                        This is because some maintainers changes arch manualy.
+                        '''
+                        if "-noarch-" in "".join(find_package(prgnam, tmp)):
+                            sbo_arch = "-noarch-"
+                        else:
+                            from slpkg.__metadata__ import sbo_arch
                         binary = ("{0}{1}{2}{3}{4}{5}".format(
                                    tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Installing ] --> {1}{2}".format(
@@ -159,6 +165,10 @@ def sbo_build(name):
                         for dep in dependencies:
                             f.write(dep + "\n")
                         f.close()
-        except KeyboardInterrupt:
-            print # new line at exit
-            sys.exit()
+        else:
+            sys.stdout.write("Done\n")
+            message = "From slackbuilds.org"
+            pkg_not_found("\n", name, message, "\n")
+    except KeyboardInterrupt:
+        print # new line at exit
+        sys.exit()

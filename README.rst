@@ -65,9 +65,9 @@ Command Line Tool Usage
 
 .. code-block:: bash
 
-    usage: slpkg   [-h] [-v] [-a script [source ...]] [-l all, sbo, slack, noarch]
-                   [-c sbo, slack [sbo, slack ...]]
-                   [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
+    usage: slpkg   [-h] [-v] [-a script [source ...]] 
+                   [-l all, sbo, slack, noarch] [-c sbo, slack [<upgrade> ...]]
+                   [-s sbo, slack [<package> ...]] [-t] [-n] [-i  [...]]
                    [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
 
     Utility for easy management packages in Slackware
@@ -79,9 +79,9 @@ Command Line Tool Usage
                             auto build package
       -l all, sbo, slack, noarch
                             list of installed packages
-      -c sbo, slack [sbo, slack ...]
+      -c sbo, slack [<upgrade> ...]
                             check if your packages is up to date
-      -s sbo, slack [sbo, slack ...]
+      -s sbo, slack [<package> ...]
                             download, build & install packages
       -t                    packages tracking dependencies from SBo
       -n                    view packages from SBo repository
@@ -263,8 +263,7 @@ Find packages from slackbuilds.org:
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
     | SlackBuild : bitfighter.tar.gz
-    | Source : bitfighter-019c.tar.gz 
-    | Extra : classic_level_pack.zip
+    | Sources : bitfighter-019c.tar.gz 
     | Requirements : OpenAL, SDL2, speex, libmodplug
     +===============================================================================
      README               View the README file

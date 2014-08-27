@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# patches.py
+# patches.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -29,7 +29,8 @@ import subprocess
 from slpkg.colors import colors
 from slpkg.url_read import url_read
 from slpkg.messages import template
-from slpkg.__metadata__ import pkg_path, slpkg_tmp, sp
+from slpkg.__metadata__ import (pkg_path, slpkg_tmp, 
+                            slack_archs)
 
 from slpkg.pkg.manager import pkg_upgrade
 
@@ -83,31 +84,17 @@ def patches():
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
-                if "-noarch-" in upgrade:
-                    arch = "noarch"
-                elif "-x86_64-" in upgrade:
-                    arch = "x86_64"
-                elif "-i386-" in upgrade:
-                    arch = "i386"
-                elif "-i486-" in upgrade:
-                    arch = "i486"
-                elif "-i686-" in upgrade:
-                    arch = "i686"
-                elif "-x86-" in upgrade:
-                    arch = "x86"
-                elif "-fw-" in upgrade:
-                    arch = "fw"
-                else:
-                    arch = ""
+                for archs in slack_archs:
+                    if archs in upgrade:
+                        upg = upgrade.replace(archs, "")
+                        arch = archs[1:-1]
                 if "_slack" in upgrade:
                     slack = "_slack" + slack_ver()
                 else:
                     slack = ""
-                print " ", upgrade[:-(5+len(slack))].replace(
-                      sp+arch+sp, ""), " "*(40-len(upgrade[:-(
-                      5+len(slack))].replace(sp+arch+sp, ""))), arch, " "*(
-                      7-len(arch)), upgrade[-15:-14].replace(sp+arch+sp, ""), " "*(
-                      6-len(upgrade[-15:-14].replace(sp+arch+sp, ""))), "Slack", " ", size, " "*(
+                print " ", upg[:-(5+len(slack))], " "*(40-len(upg[:-(
+                      5+len(slack))])), arch, " "*(7-len(arch)), upg[-15:-14], " "*(
+                      6-len(upgrade[-15:-14])), "Slack", " ", size, " "*(
                       3-len(size)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)

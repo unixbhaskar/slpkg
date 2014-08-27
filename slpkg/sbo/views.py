@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# views.py
+# views.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -27,9 +27,9 @@ import subprocess
 
 from slpkg.colors import colors
 from slpkg.functions import get_file
-from slpkg.__metadata__ import tmp, pkg_path, slpkg_tmp, sp
 from slpkg.messages import pkg_not_found, pkg_found, view_sbo, template
-from slpkg.__metadata__ import sbo_arch, build, sbo_tag, sbo_filetype, build_path
+from slpkg.__metadata__ import (tmp, build, sbo_tag, sbo_filetype, build_path,
+                            pkg_path, slpkg_tmp, sp)
 
 from slpkg.pkg.build import build_package
 from slpkg.pkg.find import find_package
@@ -48,20 +48,14 @@ def sbo_network(name):
     '''
     rdm_path = slpkg_tmp + "readme/"
     sys.stdout.write("Reading package lists ...")
+    sys.stdout.flush()
     initialization()
     sbo_url = sbo_search_pkg(name)
-    if sbo_url is None:
-        sys.stdout.write ("Done\n")
-        message = "From slackbuilds.org"
-        bol, eol = "\n", "\n"
-        pkg_not_found(bol, name, message, eol)
-    else:
-        if not os.path.exists(build_path):
-            os.mkdir(build_path)
-        sys.stdout.write ("Done\n")
+    if sbo_url:
         sbo_req = sbo_requires_pkg(sbo_url, name)
-        sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
+        sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
+        sys.stdout.write ("Done\n")
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"),
                 ", ".join([get_file(src, "/") for src in source_dwn]), sbo_req)
         while True:
@@ -93,6 +87,8 @@ def sbo_network(name):
                 subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
                 os.remove("{0}{1}{2}".format(rdm_path, name, site))
             elif read == "B" or read == "b":
+                if not os.path.exists(build_path):
+                    os.mkdir(build_path)
                 sources = []
                 os.chdir(build_path)
                 script = get_file(sbo_dwn, "/")
@@ -105,11 +101,13 @@ def sbo_network(name):
                 print("Complete!\n")
                 break
             elif read == "I" or read == "i":
+                if not os.path.exists(build_path):
+                    os.mkdir(build_path)
                 sbo_version = sbo_version_pkg(name)
                 if find_package(name + sp, pkg_path) == []:
                     sources = []
                     os.chdir(build_path)
-                    pkg_for_install = ("{0}-{1}".format(name, sbo_version))
+                    prgnam = ("{0}-{1}".format(name, sbo_version))
                     print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
                     subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                     script = get_file(sbo_dwn, "/")
@@ -117,8 +115,17 @@ def sbo_network(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
+                    '''
+                    Before installing new binary package look if arch is noarch.
+                    This is because some maintainers changes arch manualy.
+                    
+                    '''
+                    if "-noarch-" in "".join(find_package(prgnam, tmp)):
+                        sbo_arch = "-noarch-"
+                    else:
+                        from __metadata__ import sbo_arch
                     binary = ("{0}{1}{2}{3}{4}{5}".format(
-                               tmp, pkg_for_install, sbo_arch, build, sbo_tag, sbo_filetype).split())
+                               tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                     print("{0}[ Installing ] --> {1}{2}".format(
                            colors.GREEN, colors.ENDC, name))
                     pkg_upgrade(binary)
@@ -134,3 +141,8 @@ def sbo_network(name):
                     break
             else:
                 break
+    else:
+        sys.stdout.write ("Done\n")
+        message = "From slackbuilds.org"
+        pkg_not_found("\n", name, message, "\n")
+

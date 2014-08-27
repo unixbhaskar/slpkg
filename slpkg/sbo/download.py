@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# download.py
+# download.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -21,9 +21,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-def sbo_slackbuild_dwn(sbo_url, name):
+def sbo_slackbuild_dwn(sbo_url):
     '''
-    Convert http repository link to 
-    slackbuild download link
+    Create download slackbuild tar.gz script 
     '''
-    return sbo_url.replace(name + "/", name + ".tar.gz")
+    return sbo_url[:-1] + ".tar.gz"

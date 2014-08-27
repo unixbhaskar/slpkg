@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# main.py
+# main.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -87,14 +87,14 @@ def main():
     parser.add_argument("-v", "--verbose", help="print version and exit",
                         action="store_true")
     parser.add_argument("-a", help="auto build packages",
-                        type=str, nargs="+", metavar=("script", "source"))
+                        type=str, nargs="+", metavar=("script", "sources"))
     parser.add_argument("-l", help="list of installed packages",  
                         choices="all sbo slack noarch".split(),
 			            metavar=("all, sbo, slack, noarch"))
     parser.add_argument("-c", help="check if your packages is up to date",
-                        type=str, nargs="+", metavar=("sbo, slack"))
+                        type=str, nargs="+", metavar=("sbo, slack", "<upgrade>"))
     parser.add_argument("-s", help="download, build & install packages",
-                        type=str, nargs="+", metavar=("sbo, slack"))
+                        type=str, nargs="+", metavar=("sbo, slack","<package>"))
     parser.add_argument("-t", help="packages tracking dependencies from SBo",
                         type=str, metavar=(""))
     parser.add_argument("-n", help="view packages from SBo repository",
@@ -172,7 +172,7 @@ def main():
                     err1_args("".join(args.s[0]), choices)
             elif len(args.s) < 2:
                 if "sbo" in args.s or "slack" in args.s:
-                    choices = ["upgrade"]
+                    choices = ["package"]
                     ext_err_args()
                     err2_args(choices)
                 else:

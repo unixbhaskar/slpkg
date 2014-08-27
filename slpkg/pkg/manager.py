@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# manager.py
+# manager.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -95,9 +95,8 @@ def pkg_remove(binary):
             removed.append(pkg)
         else:
             message = "Can't remove"
-            bol, eol = "", ""
             not_found.append(pkg)
-            pkg_not_found(bol, pkg, message, eol)
+            pkg_not_found("", pkg, message, "")
     if removed == []:
         print # new line at end
     else:
@@ -176,8 +175,7 @@ def pkg_find(binary):
                    find_package(pkg + sp, pkg_path)))
         else:
             message = "Can't find"
-            bol, eol = "", ""
-            pkg_not_found(bol, pkg, message, eol)
+            pkg_not_found("", pkg, message, "")
     print # new line at end
 
 def pkg_display(binary):

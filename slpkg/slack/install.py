@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# install.py
+# install.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -29,7 +29,7 @@ import subprocess
 from slpkg.colors import colors
 from slpkg.url_read import url_read
 from slpkg.messages import pkg_not_found, template
-from slpkg.__metadata__ import slpkg_tmp, pkg_path, sp
+from slpkg.__metadata__ import slpkg_tmp, pkg_path, slack_archs
 
 from slpkg.pkg.manager import pkg_upgrade, pkg_reinstall
 
@@ -44,7 +44,7 @@ def install(slack_pkg):
         dwn_list, comp_size, uncomp_size = [], [], []
         install_all, package_name, package_location = [], [], []
         tmp_path = slpkg_tmp + "packages/"
-        pkg_sum = 0
+        pkg_sum, arch, SC, EC = 0, "", "", ""
         if not os.path.exists(tmp_path):
             if not os.path.exists(slpkg_tmp):
                 os.mkdir(slpkg_tmp)
@@ -83,41 +83,25 @@ def install(slack_pkg):
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
-                if "-noarch-" in pkg:
-                    arch = "noarch"
-                elif "-x86_64-" in pkg:
-                    arch = "x86_64"
-                elif "-i386-" in pkg:
-                    arch = "i386"
-                elif "-i486-" in pkg:
-                    arch = "i486"
-                elif "-i686-" in pkg:
-                    arch = "i686"
-                elif "-x86-" in pkg:
-                    arch = "x86"
-                elif "-fw-" in pkg:
-                    arch = "fw"
-                else:
-                    arch = ""
+                for archs in slack_archs:
+                    if archs in pkg:
+                        pkgs = pkg.replace(archs, "")
+                        arch = archs[1:-1]
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
                     SC, EC = colors.GREEN, colors.ENDC
                 else:
                     SC, EC = colors.RED, colors.ENDC
-                print " ", SC + pkg[:-5].replace(sp+arch+sp, "") + EC, " "*(
-                      40-len(pkg[:-5].replace(sp+arch+sp, ""))), arch, " "*(
-                      7-len(arch)), pkg[-5:-4].replace(sp+arch+sp, ""), " "*(
-                      6-len(pkg[-5:-4].replace(sp+arch+sp, ""))), "Slack", " ", comp, " "*(
+                print " ", SC + pkgs[:-5] + EC, " "*(40-len(pkgs[:-5])), arch, " "*(
+                      7-len(arch)), pkgs[-5:-4], " "*(6-len(pkgs[-5:-4])), "Slack", " ", comp, " "*(
                       3-len(comp)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
             if compressed < 1:
-                compressed = sum(map(int, comp_sum))
-                comp_unit = "Kb"
+                compressed, comp_unit = sum(map(int, comp_sum)), "Kb"
             if uncompressed < 1:
-                uncompressed = sum(map(int, uncomp_sum))
-                uncomp_unit = "Kb"
+                uncompressed, uncomp_unit = sum(map(int, uncomp_sum)), "Kb"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(install_all) > 1:
@@ -128,7 +112,7 @@ def install(slack_pkg):
             print("="*79)
             print("Total {0} {1}.".format(len(install_all), msg_pkg))
             print("{0} {1} will be installed, {2} allready installed.".format(
-                  (len(install_all) - pkg_sum), msg_2_pkg, pkg_sum))
+                 (len(install_all) - pkg_sum), msg_2_pkg, pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                    uncompressed, uncomp_unit))
@@ -161,9 +145,8 @@ def install(slack_pkg):
                     print("\nThere are packages in directory {0}\n".format(
                             tmp_path))
         else:
-            bol, eol = "", "\n"
             message = "No matching"
-            pkg_not_found(bol, slack_pkg, message, eol)
+            pkg_not_found("", slack_pkg, message, "\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
