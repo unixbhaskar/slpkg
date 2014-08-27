@@ -168,8 +168,7 @@ def sbo_build(name):
         else:
             sys.stdout.write("Done\n")
             message = "From slackbuilds.org"
-            bol, eol = "\n", "\n"
-            pkg_not_found(bol, name, message, eol)
+            pkg_not_found("\n", name, message, "\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

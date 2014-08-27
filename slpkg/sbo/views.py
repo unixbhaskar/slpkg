@@ -144,6 +144,5 @@ def sbo_network(name):
     else:
         sys.stdout.write ("Done\n")
         message = "From slackbuilds.org"
-        bol, eol = "\n", "\n"
-        pkg_not_found(bol, name, message, eol)
+        pkg_not_found("\n", name, message, "\n")
 
