@@ -250,7 +250,7 @@ Check if your distribution is up to date from `Slackware official mirrors
     Need to get 1.70 Mb of archives.
     After this process, 9.51 Mb of additional disk space will be used.
     
-    Would you like to upgrade [Y/y]?
+    Would you like to upgrade [Y/n]?
 
 Find packages from slackbuilds.org:
 
