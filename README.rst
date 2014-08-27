@@ -6,7 +6,7 @@
     :target: https://pypi.python.org/pypi/slpkg
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
-.. imahe:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
+.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
     :target: https://github.com/dslackw/slpkg
 
 Slpkg is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
