@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# views.py
+# views.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -48,20 +48,14 @@ def sbo_network(name):
     '''
     rdm_path = slpkg_tmp + "readme/"
     sys.stdout.write("Reading package lists ...")
+    sys.stdout.flush()
     initialization()
     sbo_url = sbo_search_pkg(name)
-    if sbo_url is None:
-        sys.stdout.write ("Done\n")
-        message = "From slackbuilds.org"
-        bol, eol = "\n", "\n"
-        pkg_not_found(bol, name, message, eol)
-    else:
-        if not os.path.exists(build_path):
-            os.mkdir(build_path)
-        sys.stdout.write ("Done\n")
+    if sbo_url:
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url, name)
         source_dwn = sbo_source_dwn(name).split()
+        sys.stdout.write ("Done\n")
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"),
                 ", ".join([get_file(src, "/") for src in source_dwn]), sbo_req)
         while True:
@@ -93,6 +87,8 @@ def sbo_network(name):
                 subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
                 os.remove("{0}{1}{2}".format(rdm_path, name, site))
             elif read == "B" or read == "b":
+                if not os.path.exists(build_path):
+                    os.mkdir(build_path)
                 sources = []
                 os.chdir(build_path)
                 script = get_file(sbo_dwn, "/")
@@ -105,6 +101,8 @@ def sbo_network(name):
                 print("Complete!\n")
                 break
             elif read == "I" or read == "i":
+                if not os.path.exists(build_path):
+                    os.mkdir(build_path)
                 sbo_version = sbo_version_pkg(name)
                 if find_package(name + sp, pkg_path) == []:
                     sources = []
@@ -143,3 +141,9 @@ def sbo_network(name):
                     break
             else:
                 break
+    else:
+        sys.stdout.write ("Done\n")
+        message = "From slackbuilds.org"
+        bol, eol = "\n", "\n"
+        pkg_not_found(bol, name, message, eol)
+
