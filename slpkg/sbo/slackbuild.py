@@ -50,11 +50,10 @@ def sbo_build(name):
     sys.stdout.write("Building dependency tree ...")
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
-    if dependencies_list == None:
-        pass
-    else:
-        try:
-            requires, dependencies = [], []
+    try:
+        if dependencies_list is not None:
+            pkg_sum = 0 
+            requires, dependencies, pkg_for_install = [], [], []
             requires.append(name)
             for pkg in dependencies_list:
                 requires += pkg
@@ -62,8 +61,6 @@ def sbo_build(name):
             for duplicate in requires:
                 if duplicate not in dependencies:
                     dependencies.append(duplicate)
-            pkg_sum = 0 
-            pkg_for_install = []
             if find_package(name + sp, pkg_path):
                 pkg_for_install.append(colors.GREEN + name + colors.ENDC)
                 pkg_sum = 1
@@ -143,7 +140,7 @@ def sbo_build(name):
                         if "-noarch-" in "".join(find_package(prgnam, tmp)):
                             sbo_arch = "-noarch-"
                         else:
-                            from __metadata__ import sbo_arch            
+                            from __metadata__ import sbo_arch
                         binary = ("{0}{1}{2}{3}{4}{5}".format(
                                    tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Installing ] --> {1}{2}".format(
@@ -168,6 +165,11 @@ def sbo_build(name):
                         for dep in dependencies:
                             f.write(dep + "\n")
                         f.close()
-        except KeyboardInterrupt:
-            print # new line at exit
-            sys.exit()
+        else:
+            sys.stdout.write("Done\n")
+            message = "From slackbuilds.org"
+            bol, eol = "\n", "\n"
+            pkg_not_found(bol, name, message, eol)
+    except KeyboardInterrupt:
+        print # new line at exit
+        sys.exit()
