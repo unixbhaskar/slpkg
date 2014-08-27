@@ -123,7 +123,7 @@ def sbo_build(name):
                     if sbo_version > sbo_file_version:
                         prgnam = ("{0}-{1}".format(pkg, sbo_version_pkg(pkg)))
                         sbo_url = sbo_search_pkg(pkg)
-                        sbo_link = sbo_slackbuild_dwn(sbo_url, pkg)
+                        sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = get_file(sbo_link, "/")
                         print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, pkg))

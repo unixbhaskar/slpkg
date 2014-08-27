@@ -32,7 +32,6 @@ from pkg.find import find_package
 from init import initialization
 from search import sbo_search_pkg
 from greps import sbo_requires_pkg
-from download import sbo_slackbuild_dwn
 
 dep_results = []
 
@@ -82,7 +81,7 @@ def pkg_tracking(name):
             dependencies = ["No dependencies"]
         template(pkg_len)
         print("| Package {0}{1}{2} dependencies :".format(colors.CYAN, name,
-                                                           colors.ENDC))
+                                                          colors.ENDC))
         template(pkg_len)
         print("\\")
         print(" +---{0}[ Tree of dependencies ]{1}".format(colors.YELLOW, colors.ENDC))
