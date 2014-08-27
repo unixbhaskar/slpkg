@@ -27,9 +27,9 @@ import subprocess
 
 from colors import colors
 from functions import get_file
-from __metadata__ import tmp, pkg_path, slpkg_tmp, sp
 from messages import pkg_not_found, pkg_found, view_sbo, template
-from __metadata__ import build, sbo_tag, sbo_filetype, build_path
+from __metadata__ import (tmp, build, sbo_tag, sbo_filetype, build_path,
+                            pkg_path, slpkg_tmp, sp)
 
 from pkg.build import build_package
 from pkg.find import find_package

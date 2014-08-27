@@ -44,7 +44,7 @@ def install(slack_pkg):
         dwn_list, comp_size, uncomp_size = [], [], []
         install_all, package_name, package_location = [], [], []
         tmp_path = slpkg_tmp + "packages/"
-        pkg_sum, arch = 0, ""
+        pkg_sum, arch, SC, EC = 0, "", "", ""
         if not os.path.exists(tmp_path):
             if not os.path.exists(slpkg_tmp):
                 os.mkdir(slpkg_tmp)

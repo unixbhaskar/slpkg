@@ -87,7 +87,7 @@ def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, sbo_req):
             colors.CYAN, pkg, colors.GREEN, colors.ENDC + sbo_url))
     template(78)
     print("| {0}SlackBuild : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_dwn))
-    print("| {0}Source : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
+    print("| {0}Sources : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
     print("| {0}Requirements : {1}{2}".format(colors.YELLOW, colors.ENDC,
                                                ", ".join(sbo_req)))
     template(78)
