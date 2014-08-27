@@ -2,7 +2,9 @@ Version 1.7.7
 26-08-2014
 
 [Updated] - Fix install noarch packages from SBo repository
+            Fix avoid '%README%' as dependency
             Fix arguments
+            Fix messages
 
 Version 1.7.6
 25-08-2014

@@ -263,8 +263,7 @@ Find packages from slackbuilds.org:
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
     | SlackBuild : bitfighter.tar.gz
-    | Source : bitfighter-019c.tar.gz 
-    | Extra : classic_level_pack.zip
+    | Sources : bitfighter-019c.tar.gz 
     | Requirements : OpenAL, SDL2, speex, libmodplug
     +===============================================================================
      README               View the README file
