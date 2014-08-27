@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# dependency.py
+# dependency.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -55,11 +55,6 @@ def sbo_dependencies_pkg(name):
                     sys.stdout.flush()
                     sbo_dependencies_pkg(dep)
             return dep_results
-        else:
-            sys.stdout.write("Done\n")
-            message = "From slackbuilds.org"
-            bol, eol = "\n", "\n"
-            pkg_not_found(bol, name, message, eol)
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
@@ -69,14 +64,10 @@ def pkg_tracking(name):
     Print tree of dependencies
     '''
     sys.stdout.write("Reading package lists ...")
+    sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
-    if dependencies_list is None:
-        pass
-    elif dependencies_list == []:
-        sys.stdout.write("Done\n")
-        print("\nPackage {0} no dependencies\n".format(name))
-    else:
+    if dependencies_list is not None:
         sys.stdout.write("Done\n")
         print # new line at start
         requires, dependencies = [], []
@@ -87,6 +78,8 @@ def pkg_tracking(name):
             if duplicate not in dependencies:
                 dependencies.append(duplicate)
         pkg_len = len(name) + 24
+        if dependencies == []:
+            dependencies = ["No dependencies"]
         template(pkg_len)
         print("| Package {0}{1}{2} dependencies :".format(colors.CYAN, name,
                                                            colors.ENDC))
@@ -103,3 +96,8 @@ def pkg_tracking(name):
                 print(" |")
                 print(" {0}{1}: {2}{3}{4}".format("+--", index, colors.RED, pkg, colors.ENDC))
         print # new line at end
+    else:
+        sys.stdout.write("Done\n")
+        message = "From slackbuilds.org"
+        bol, eol = "\n", "\n"
+        pkg_not_found(bol, name, message, eol)
