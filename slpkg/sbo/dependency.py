@@ -41,22 +41,25 @@ def sbo_dependencies_pkg(name):
     Build tree of dependencies
     '''
     try:
-        if name is not "%README%":
-            sbo_url = sbo_search_pkg(name)
-            if sbo_url:
-                dependencies = sbo_requires_pkg(sbo_url, name)
-                if dependencies:
-                    dep_results.append(dependencies)
+        dependencies = []
+        sbo_url = sbo_search_pkg(name)
+        if sbo_url:
+            requires = sbo_requires_pkg(sbo_url, name)
+            for req in requires:
+                if "%README%" not in req:
+                    dependencies.append(req)
+            if dependencies:
+                dep_results.append(dependencies)
                 for dep in dependencies:
-                        sys.stdout.write(".")
-                        sys.stdout.flush()
-                        sbo_dependencies_pkg(dep)
-                return dep_results
-            else:
-                sys.stdout.write("Done\n")
-                message = "From slackbuilds.org"
-                bol, eol = "\n", "\n"
-                pkg_not_found(bol, name, message, eol)
+                    sys.stdout.write(".")
+                    sys.stdout.flush()
+                    sbo_dependencies_pkg(dep)
+            return dep_results
+        else:
+            sys.stdout.write("Done\n")
+            message = "From slackbuilds.org"
+            bol, eol = "\n", "\n"
+            pkg_not_found(bol, name, message, eol)
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
