@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# slackbuild.py
+# slackbuild.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -10,7 +10,7 @@
 
 # https://github.com/dslackw/slpkg
 
-# This program is free software: you can redistribute it and/or modify
+# Slpkg is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -54,9 +54,6 @@ def sbo_build(name):
         pass
     else:
         try:
-            if not os.path.exists(build_path):
-                os.mkdir(build_path)
-            os.chdir(build_path)
             requires, dependencies = [], []
             requires.append(name)
             for pkg in dependencies_list:
@@ -88,23 +85,24 @@ def sbo_build(name):
                 arch = "UNSUPPORTED"
             elif "UNTESTED" in src:
                 arch = "UNTESTED"
-            print("The following packages will be automatically installed or upgraded with new version:\n")
+            print("\nThe following packages will be automatically installed or upgraded")
+            print("with new version:\n")
             template(78)
             print "| Package",  " "*31, "Version",  " "*7, "Arch", " "*5, "Repository"
             template(78)
             print("Installing:")
             print " ",  "".join(pkg_for_install), " "*(38-len(name)), sbo_ver, " "*(
-                    14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
+                  14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
             print("Installing for dependencies:")
             for dep in dependencies[:-1]:
                 sbo_ver = sbo_version_pkg(dep)
                 if find_package(dep + sp, pkg_path):
-                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(38-len(dep)), sbo_ver, " "*(
-                            14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
+                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(38-len(
+                          dep)), sbo_ver, " "*(14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
                     pkg_sum += 1
                 else:
-                    print " ",  colors.RED + dep + colors.ENDC, " "*(38-len(dep)), sbo_ver, " "*(
-                            14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
+                    print " ",  colors.RED + dep + colors.ENDC, " "*(38-len(
+                          dep)), sbo_ver, " "*(14-len(sbo_ver)), arch, " "*(9-len(arch)), "SBo"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(dependencies) > 1:
@@ -118,6 +116,9 @@ def sbo_build(name):
                  (len(dependencies) - pkg_sum), msg_2_pkg, pkg_sum))
             read = raw_input("\nDo you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
+                if not os.path.exists(build_path):
+                    os.mkdir(build_path)
+                os.chdir(build_path)
                 for pkg in dependencies:
                     sbo_version = sbo_version_pkg(pkg)
                     sbo_file = "".join(find_package(pkg + sp, pkg_path))
