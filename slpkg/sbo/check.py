@@ -32,8 +32,8 @@ from pkg.manager import pkg_upgrade
 from colors import colors
 from messages import template
 from functions import get_file
-from __metadata__ import tmp, pkg_path, build_path
-from __metadata__ import sbo_arch, build, sbo_tag, sbo_filetype
+from __metadata__ import (tmp, sbo_arch, build, sbo_tag,
+                          sbo_filetype, pkg_path, build_path)
 
 from init import initialization
 from search import sbo_search_pkg
@@ -50,9 +50,9 @@ def sbo_check():
         sys.stdout.flush()
         initialization()
         index, toolbar_width = 0, 3
-        pkg_name, sbo_ver, pkg_for_upg, sbo_list = [], [], [], []
+        pkg_name, sbo_ver, pkg_for_upg, sbo_list, pkg_arch = [], [], [], [], []
         for pkg in os.listdir(pkg_path):
-            if "_SBo" in pkg:
+            if pkg.endswith("_SBo"):
                 sbo_list.append(pkg)
         if sbo_list: 
             for pkg in sbo_list:
@@ -71,14 +71,15 @@ def sbo_check():
                     arch = "noarch"
                 else:
                     arch = os.uname()[4]
-                name = pkg[:-(len(arch) + len("_SBo") + 3)]
+                name = pkg[:-(len(arch) + len(sbo_tag) + 3)]
                 pkg_version = get_file(name, "-")[1:]
                 name = name[:-(len(pkg_version) + 1)]
                 sbo_version = sbo_version_pkg(name)
                 if sbo_version > pkg_version:
                     pkg_name.append(name)
-                    pkg_for_upg.append(name + "-" + pkg_version)
+                    pkg_for_upg.append("{0}-{1}".format(name, pkg_version))
                     sbo_ver.append(sbo_version)
+                    pkg_arch.append(arch)
             sys.stdout.write("Done\n")
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
@@ -86,7 +87,7 @@ def sbo_check():
                 print "| Package",  " "*27, "New version",  " "*5, "Arch", " "*7, "Repository"
                 template(78)
                 print("Upgrading:")
-                for upg, ver in zip(pkg_for_upg, sbo_ver):
+                for upg, ver, arch in zip(pkg_for_upg, sbo_ver, pkg_arch):
                     print " ",  upg, " "*(34-len(upg)), ver, " "*(
                           16-len(ver)), arch, " "*(11-len(arch)), "SBo"
                 msg_pkg = "package"
@@ -100,7 +101,7 @@ def sbo_check():
                     if not os.path.exists(build_path):
                         os.mkdir(build_path)
                     os.chdir(build_path)
-                    for name, version in zip(pkg_name, sbo_ver):
+                    for name, version, arch in zip(pkg_name, sbo_ver, pkg_arch):
                         prgnam = ("{0}-{1}".format(name, version))
                         sbo_url = sbo_search_pkg(name)
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
@@ -113,16 +114,8 @@ def sbo_check():
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        '''
-                        Before installing new binary package look if arch is noarch.
-                        This is because some maintainers changes arch manualy.
-                        '''
-                        if "-noarch-" in "".join(find_package(prgnam, tmp)):
-                            sbo_arch = "-noarch-"
-                        else:
-                            from __metadata__ import sbo_arch 
-                        binary = ("{0}{1}{2}{3}{4}{5}".format(
-                            tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
+                        binary = ("{0}{1}-{2}-{3}{4}{5}".format(
+                            tmp, prgnam, arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Upgrading ] --> {1}{2}".format(
                             colors.GREEN, colors.ENDC, name))
                         pkg_upgrade(binary)
