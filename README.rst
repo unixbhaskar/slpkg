@@ -15,8 +15,8 @@ packages.
 The tool focuses on slpkg easy and understandable use.
 Species are adapted to two repositories:
 
-SBo - `slackbuilds.org <http://slackbuilds.org/>`_
-Slack - `slackware.com <http://www.slackware.com/>`_
+- SBo - `slackbuilds.org <http://slackbuilds.org/>`_
+- Slack - `slackware.com <http://www.slackware.com/>`_
 
 The slpkg cooperate in accordance with the standards of the organization slackbuilds.org 
 to build a package,
