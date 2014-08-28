@@ -123,7 +123,7 @@ def sbo_network(name):
                     if "-noarch-" in "".join(find_package(prgnam, tmp)):
                         sbo_arch = "-noarch-"
                     else:
-                        from __metadata__ import sbo_arch
+                        from slpkg.__metadata__ import sbo_arch
                     binary = ("{0}{1}{2}{3}{4}{5}".format(
                                tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                     print("{0}[ Installing ] --> {1}{2}".format(
