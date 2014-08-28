@@ -43,8 +43,7 @@ I should be grateful if you experience the slpkg and share your opinion with me.
 And as we say Slackers, Keep it Simple Stupid!
 
 
-.. image:: 
-https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
+.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
     :target: https://github.com/dslackw/slpkg
 
 
