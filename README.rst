@@ -6,10 +6,8 @@
     :target: https://pypi.python.org/pypi/slpkg
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
-.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
-    :target: https://github.com/dslackw/slpkg
 
-Slpkg is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
+`Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
 
 The tool focuses on slpkg easy and understandable use.
@@ -43,6 +41,12 @@ of Slackware. Even you can check for the official updates and install them.
 I should be grateful if you experience the slpkg and share your opinion with me.
 
 And as we say Slackers, Keep it Simple Stupid!
+
+
+.. image:: 
+https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
+    :target: https://github.com/dslackw/slpkg
+
 
 Features
 ========
