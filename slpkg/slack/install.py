@@ -26,12 +26,12 @@ import sys
 import time
 import subprocess
 
-from slpkg.colors import colors
-from slpkg.url_read import url_read
-from slpkg.messages import pkg_not_found, template
-from slpkg.__metadata__ import slpkg_tmp, pkg_path, slack_archs
+from colors import colors
+from url_read import url_read
+from messages import pkg_not_found, template
+from __metadata__ import slpkg_tmp, pkg_path, slack_archs
 
-from slpkg.pkg.manager import pkg_upgrade, pkg_reinstall
+from pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
 
@@ -53,9 +53,12 @@ def install(slack_pkg):
                 colors.CYAN, slack_pkg, colors.ENDC)) 
         sys.stdout.write ("Reading package lists ...")
         sys.stdout.flush()
-        PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location=""))
+        PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
+        EXTRA = url_read(mirrors(name="PACKAGES.TXT", location="extra/"))
+        PASTURE = url_read(mirrors(name="PACKAGES.TXT", location="pasture/"))
+        PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
         index, toolbar_width = 0, 800
-        for line in PACKAGE_TXT.splitlines():
+        for line in PACKAGES_TXT.splitlines():
             index += 1
             if index == toolbar_width:
                 sys.stdout.write(".")
