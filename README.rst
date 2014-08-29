@@ -7,8 +7,45 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
-Slpkg is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
+`Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
+
+The tool focuses on slpkg easy and understandable use.
+Species are adapted to two repositories:
+
+- SBo - `slackbuilds.org <http://slackbuilds.org/>`_
+- Slack - `slackware.com <http://www.slackware.com/>`_
+
+The slpkg cooperate in accordance with the standards of the organization slackbuilds.org 
+to build a package,
+are also used as the Slackware instructions for installing, upgrading or removing a 
+package. 
+
+What makes slpkg apart from other tools is the friendliness and the use of color for the 
+enhancement packages
+that are not installed on the system or not.
+
+Of course one of the big advantages is resolving dependencies packages from repository 
+slackbuilds.org and
+monitored for upgraded packages.
+
+Of course you wonder how the slpkg is up to date at all times;
+It's simple, every time there is a change in ChangeLog.txt before proceeding to any 
+execution program looksat whether there is a change in file size and downloads and updates
+the SLACKBUILDS.TXT file.
+
+Also you can install official packages of your favorite distribution directly from the 
+official repositories
+of Slackware. Even you can check for the official updates and install them.
+
+I should be grateful if you experience the slpkg and share your opinion with me.
+
+And as we say Slackers, Keep it Simple Stupid!
+
+
+.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
+    :target: https://github.com/dslackw/slpkg
+
 
 Features
 ========
@@ -39,7 +76,7 @@ Video Tutorial
 ==============
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/11457
+    :target: https://asciinema.org/a/11755
 
 Installation
 ------------
@@ -250,7 +287,7 @@ Check if your distribution is up to date from `Slackware official mirrors
     Need to get 1.70 Mb of archives.
     After this process, 9.51 Mb of additional disk space will be used.
     
-    Would you like to upgrade [Y/y]?
+    Would you like to upgrade [Y/n]?
 
 Find packages from slackbuilds.org:
 

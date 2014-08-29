@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: slpkg
-Version: 1.7.7
+Version: 1.7.9
 Author: dslackw
 Author-email: d zlatanidis at gmail com
 Maintainer: dslackw
@@ -14,19 +14,65 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             :target: https://pypi.python.org/pypi/slpkg
         .. image:: https://pypip.in/license/slpkg/badge.png
             :target: https://pypi.python.org/pypi/slpkg
-        .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
+        .. image:: 
+https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
             :target: https://github.com/dslackw/slpkg 
         
-        Slpkg is a terminal multitool in order to easy use `Slackware 
-<http://www.slackware.com/>`_ 
-        packages.
+        `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order 
+to easy use `Slackware <http://www.slackware.com/>`_ packages.
+        
+        The tool focuses on slpkg easy and understandable use.
+        Species are adapted to two repositories:
+        
+        - SBo - `slackbuilds.org <http://slackbuilds.org/>`_
+        - Slack - `slackware.com <http://www.slackware.com/>`_
+        
+        The slpkg cooperate in accordance with the standards of the organization 
+slackbuilds.org 
+        to build a package,
+        are also used as the Slackware instructions for installing, upgrading or 
+removing a 
+        package. 
+        
+        What makes slpkg apart from other tools is the friendliness and the use of 
+color for the 
+        enhancement packages
+        that are not installed on the system or is.
+        
+        Of course one of the big advantages is resolving dependencies packages from 
+repository 
+        slackbuilds.org and
+        monitored for upgraded packages.
+        
+        Of course you wonder how the slpkg is up to date at all times;
+        It's simple, every time there is a change in ChangeLog.txt before proceeding 
+to any 
+        execution program looksat whether there is a change in file size and 
+downloads and updates
+        the SLACKBUILDS.TXT file.
+        
+        Also you can install official packages of your favorite distribution directly 
+from the 
+        official repositories
+        of Slackware. Even you can check for the official updates and install them.
+        
+        I should be grateful if you experience the slpkg and share your opinion with 
+me.
+        
+        And as we say Slackers, Keep it Simple Stupid!
+        
+        .. image:: 
+https://raw.githubusercontent.com/dslackw/images/master/slpkg/slpkg_package.png
+            :target: https://github.com/dslackw/slpkg
         
         Features
         ========
         
         - Build third party packages from source with all dependencies
-        - Install packages through from official `Slackware <http://www.slackware.com/>`_ mirrors
-        - Find and Download packages from `slackbuilds.org <http://slackbuilds.org/>`_
+        - Install packages through from official `Slackware 
+<http://www.slackware.com/>`_ mirrors
+        - Find and Download packages from `slackbuilds.org 
+<http://slackbuilds.org/>`_
         - Grabs packages from slackbuilds.org in real time
         - Automatic tool build and install packages
         - Check if your distribution is up to date
@@ -47,16 +93,11 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         
         `[CHANGELOG] <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
         
-        Video Tutorial
-        ==============
-        
-        .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-            :target: https://asciinema.org/a/11457
-        
         Installation
         ------------
         
-        Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last updates):
+        Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last 
+updates):
         
         .. code-block:: bash
         
@@ -66,23 +107,25 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         
             $ pip uninstall slpkg
         
-        
         Using Slackware command:
+            
+        Download `SBo package 
+<http://slackbuilds.org/repository/14.1/system/slpkg/>`_
         
-        Download `SBo package <http://slackbuilds.org/repository/14.1/system/slpkg/>`_
-        
-        Download binary package from `SourceForge <https://sourceforge.net/projects/slpkg/>`_
-        
+        Download binary package from `SourceForge 
+<https://sourceforge.net/projects/slpkg/>`_
             
         Command Line Tool Usage
         -----------------------
         
         .. code-block:: bash
         
-            usage: slpkg   [-h] [-v] [-a script [source ...]] [-l all, sbo, slack, noarch]
-                           [-c sbo, slack [sbo, slack ...]]
-                           [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
-                           [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
+            usage: slpkg   [-h] [-v] [-a script [source ...]] 
+                           [-l all, sbo, slack, noarch] [-c sbo, slack [<upgrade> 
+...]]
+                           [-s sbo, slack [<package> ...]] [-t] [-n] [-i  [...]]
+                           [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  
+[...]]
         
             Utility for easy management packages in Slackware
         
@@ -93,9 +136,9 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
                                     auto build package
               -l all, sbo, slack, noarch
                                     list of installed packages
-              -c sbo, slack [sbo, slack ...]
+              -c sbo, slack [<upgrade> ...]
                                     check if your packages is up to date
-              -s sbo, slack [sbo, slack ...]
+              -s sbo, slack [<package> ...]
                                     download, build & install packages
               -t                    packages tracking dependencies from SBo
               -n                    view packages from SBo repository
@@ -118,11 +161,15 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             $ slpkg -s sbo brasero
             Building dependency tree...... Done
             
-            The following packages will be automatically installed or upgraded with new version:
-        
-            +==============================================================================
-            | Package                                 Version         Arch       Repository
-            +==============================================================================
+            The following packages will be automatically installed or upgraded with 
+new version:
+            
+            
++==============================================================================
+            | Package                                 Version         Arch       
+Repository
+            
++==============================================================================
             Installing:
               brasero                                 3.11.3          x86_64     SBo
             Installing for dependencies:
@@ -133,7 +180,8 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
               libunique                               1.1.6           x86_64     SBo
         
             Installing summary
-            ===============================================================================
+            
+===============================================================================
             Total 6 packages.
             6 packages will be installed, 0 allready installed.
         
@@ -141,9 +189,11 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             .
             .
             .
-            +==============================================================================
+            
++==============================================================================
             | Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
-            +==============================================================================
+            
++==============================================================================
         
             Verifying package brasero-3.11.3-x86_64-1_SBo.tgz.
             Installing package brasero-3.11.3-x86_64-1_SBo.tgz:
@@ -159,7 +209,8 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
             Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
             
-        Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
+        Find packages from `Slackware official mirrors 
+<http://mirrors.slackware.com/>`_ 
         download and install:
         
         .. code-block:: bash
@@ -170,16 +221,22 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             
             Reading package lists.............................. Done    
         
-            +==============================================================================
+            
++==============================================================================
             | Package                                   Arch     Build   Repos   Size
-            +==============================================================================
+            
++==============================================================================
             Installing:
-              mozilla-firefox-24.1.0esr                 x86_64   1       Slack   23524  K
-              mozilla-nss-3.15.2                        x86_64   2       Slack   1592  K
-              mozilla-thunderbird-24.1.0                x86_64   1       Slack   24208  K
+              mozilla-firefox-24.1.0esr                 x86_64   1       Slack   
+23524  K
+              mozilla-nss-3.15.2                        x86_64   2       Slack   1592  
+K
+              mozilla-thunderbird-24.1.0                x86_64   1       Slack   
+24208  K
         
             Installing summary
-            ===============================================================================
+            
+===============================================================================
         
             Total 3 packages.
             3 packages will be installed, 0 allready installed.
@@ -221,9 +278,12 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         
             These packages need upgrading:
         
-            +==============================================================================
-            | Package                             New version       Arch         Repository
-            +==============================================================================
+            
++==============================================================================
+            | Package                             New version       Arch         
+Repository
+            
++==============================================================================
             Upgrading:
               six-1.7.1                           1.7.3             x86_64       SBo
               pysetuptools-3.4                    3.6               x86_64       SBo
@@ -235,7 +295,8 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
               colored-1.1.1                       1.1.4             x86_64       SBo
                         
             Installing summary
-            ===============================================================================
+            
+===============================================================================
             Total 8 packages will be upgraded.
                         
             Would you like to upgrade [Y/n]?
@@ -250,21 +311,27 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         
             These packages need upgrading:
         
-            +==============================================================================
+            
++==============================================================================
             | Package                                   Arch     Build   Repos   Size
-            +==============================================================================
+            
++==============================================================================
             Upgrading:
-              dhcpcd-6.0.5                              x86_64   3       Slack   92  K
-              samba-4.1.11                              x86_64   1       Slack   9928 K
-              xscreensaver-5.29                         x86_64   1       Slack   3896 K
+              dhcpcd-6.0.5                              x86_64   3       Slack   92  
+K
+              samba-4.1.11                              x86_64   1       Slack   9928 
+K
+              xscreensaver-5.29                         x86_64   1       Slack   3896 
+K
         
             Installing summary
-            ===============================================================================
+            
+===============================================================================
             Total 3 package will be upgrading.
             Need to get 1.70 Mb of archives.
             After this process, 9.51 Mb of additional disk space will be used.
             
-            Would you like to upgrade [Y/y]?
+            Would you like to upgrade [Y/n]?
         
         Find packages from slackbuilds.org:
         
@@ -273,14 +340,17 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             $ slpkg -n bitfighter
             Reading package lists. Done
             
-            +===============================================================================
-            | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
-            +===============================================================================
+            
++===============================================================================
+            | Package bitfighter --> 
+http://slackbuilds.org/repository/14.1/games/bitfighter/
+            
++===============================================================================
             | SlackBuild : bitfighter.tar.gz
-            | Source : bitfighter-019c.tar.gz 
-            | Extra : classic_level_pack.zip
+            | Sources : bitfighter-019c.tar.gz 
             | Requirements : OpenAL, SDL2, speex, libmodplug
-            +===============================================================================
+            
++===============================================================================
              README               View the README file
              SlackBuild           View the SlackBuild file
              Info                 View the Info file
@@ -376,9 +446,11 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         
             $ slpkg -u /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz
         
-            +==============================================================================
+            
++==============================================================================
             | Installing new package ./termcolor-1.1.0-x86_64-1_SBo.tgz
-            +==============================================================================
+            
++==============================================================================
         
             Verifying package termcolor-1.1.0-x86_64-1_SBo.tgz.
             Installing package termcolor-1.1.0-x86_64-1_SBo.tgz:
@@ -486,20 +558,27 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
             --> Deleting /usr/doc/termcolor-1.1.0/PKG-INFO
             --> Deleting /usr/doc/termcolor-1.1.0/README.rst
             --> Deleting /usr/doc/termcolor-1.1.0/termcolor.SlackBuild
-            --> Deleting /usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
+            --> Deleting 
+/usr/lib64/python2.7/site-packages/termcolor-1.1.0-py2.7.egg-info
             --> Deleting /usr/lib64/python2.7/site-packages/termcolor.py
             --> Deleting /usr/lib64/python2.7/site-packages/termcolor.pyc
-            --> Deleting /usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
-            --> Deleting /usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
+            --> Deleting 
+/usr/lib64/python3.3/site-packages/__pycache__/termcolor.cpython-33.pyc
+            --> Deleting 
+/usr/lib64/python3.3/site-packages/termcolor-1.1.0-py3.3.egg-info
             --> Deleting /usr/lib64/python3.3/site-packages/termcolor.py
-            --> Deleting empty directory /usr/lib64/python3.3/site-packages/__pycache__/
-            WARNING: Unique directory /usr/lib64/python3.3/site-packages/ contains new files
+            --> Deleting empty directory 
+/usr/lib64/python3.3/site-packages/__pycache__/
+            WARNING: Unique directory /usr/lib64/python3.3/site-packages/ contains 
+new files
             WARNING: Unique directory /usr/lib64/python3.3/ contains new files
             --> Deleting empty directory /usr/doc/termcolor-1.1.0/
         
-            +==============================================================================
+            
++==============================================================================
             | Package: termcolor removed
-            +==============================================================================
+            
++==============================================================================
         
             $ slpkg -f termcolor lua rar
         
@@ -522,35 +601,41 @@ Description: .. image:: https://badge.fury.io/py/slpkg.png
         
             Are you sure to remove 1 package [Y/n]? y
         
-            +==============================================================================
+            
++==============================================================================
             | Found dependencies for package Flask:
-            +==============================================================================
+            
++==============================================================================
             | pysetuptools
             | MarkupSafe
             | itsdangerous
             | Jinja2
             | werkzeug
-            +==============================================================================
+            
++==============================================================================
         
             Remove dependencies (maybe used by other packages) [Y/n]? y
             .
             .
             .
-            +==============================================================================
+            
++==============================================================================
             | Package Flask removed
             | Package pysetuptools removed
             | Package MarkupSafe removed
             | Package itsdangerous removed
             | Package Jinja2 removed
             | Package werkzeug removed
-            +==============================================================================
+            
++==============================================================================
         
         Man page it is available for full support:
         
         .. code-block:: bash
         
             $ man slpkg
-Keywords: slackware, slpkg, slackpkg, sbopkg, package, build, install, yum, apt-get, linux, unix
+Keywords: slackware, slpkg, slackpkg, sbopkg, package, build, install, yum, apt-get, 
+linux, unix
 Classifier: Development Status :: 5 - Production/Stable
 Classifier: Environment :: Console
 Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)

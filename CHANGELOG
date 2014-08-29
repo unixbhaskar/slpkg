@@ -1,3 +1,15 @@
+Version 1.7.9
+29-08-2014
+
+[Feature] - Added extra and pasture packages from official Slackware
+            tree.
+[Updated] - Remove destination file after copy to sbo script directory.
+
+Version 1.7.8
+28-08-2014
+
+[Updated] - Bugfix - ImportError: No module named __metadata__
+
 Version 1.7.7
 26-08-2014
 
