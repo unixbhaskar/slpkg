@@ -29,7 +29,7 @@ from colors import colors
 from functions import get_file
 from messages import pkg_not_found, pkg_found, template
 from __metadata__ import (tmp, pkg_path, build_path, log_path, 
-                            sp, build, sbo_tag, sbo_filetype)
+                          sp, build, sbo_tag, sbo_filetype)
 
 from pkg.find import find_package 
 from pkg.build import build_package
@@ -95,11 +95,13 @@ def sbo_build(name):
                 sbo_ver = sbo_version_pkg(dep)
                 if find_package(dep + sp, pkg_path):
                     print " ",  colors.GREEN + dep + colors.ENDC, " "*(38-len(
-                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(arch)), "SBo"
+                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(
+                          arch)), "SBo"
                     pkg_sum += 1
                 else:
                     print " ",  colors.RED + dep + colors.ENDC, " "*(38-len(
-                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(arch)), "SBo"
+                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(
+                          arch)), "SBo"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(dependencies) > 1:
@@ -142,9 +144,9 @@ def sbo_build(name):
                         else:
                             from __metadata__ import sbo_arch
                         binary = ("{0}{1}{2}{3}{4}{5}".format(
-                                   tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
+                                  tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Installing ] --> {1}{2}".format(
-                               colors.GREEN, colors.ENDC, pkg))
+                              colors.GREEN, colors.ENDC, pkg))
                         pkg_upgrade(binary)
                     else:
                         template(78)

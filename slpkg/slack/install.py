@@ -53,9 +53,12 @@ def install(slack_pkg):
                 colors.CYAN, slack_pkg, colors.ENDC)) 
         sys.stdout.write ("Reading package lists ...")
         sys.stdout.flush()
-        PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location=""))
+        PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
+        EXTRA = url_read(mirrors(name="PACKAGES.TXT", location="extra/"))
+        PASTURE = url_read(mirrors(name="PACKAGES.TXT", location="pasture/"))
+        PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
         index, toolbar_width = 0, 800
-        for line in PACKAGE_TXT.splitlines():
+        for line in PACKAGES_TXT.splitlines():
             index += 1
             if index == toolbar_width:
                 sys.stdout.write(".")
