@@ -92,10 +92,11 @@ def patches():
                     slack = "_slack" + slack_ver()
                 else:
                     slack = ""
-                print " ", upg[:-(5+len(slack))], " "*(40-len(upg[:-(
-                      5+len(slack))])), arch, " "*(7-len(arch)), upg[-15:-14], " "*(
-                      6-len(upgrade[-15:-14])), "Slack", " ", size, " "*(
-                      3-len(size)), "K"
+                print " ", upg[:-(5+len(slack))], \
+                      " "*(40-len(upg[:-(5+len(slack))])), arch, \
+                      " "*(7-len(arch)), upg[-(5+len(slack)):-(4+len(slack))], \
+                      " "*(6-len(upg[-(5+len(slack)):-(4+len(slack))])), "Slack", \
+                      " ", size, " "*(3-len(size)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)

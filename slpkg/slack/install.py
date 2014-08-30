@@ -95,9 +95,11 @@ def install(slack_pkg):
                     SC, EC = colors.GREEN, colors.ENDC
                 else:
                     SC, EC = colors.RED, colors.ENDC
-                print " ", SC + pkgs[:-5] + EC, " "*(40-len(pkgs[:-5])), arch, " "*(
-                      7-len(arch)), pkgs[-5:-4], " "*(6-len(pkgs[-5:-4])), "Slack", " ", comp, " "*(
-                      3-len(comp)), "K"
+                print " ", SC + pkgs[:-5] + EC, \
+                      " "*(40-len(pkgs[:-5])), arch, \
+                      " "*(7-len(arch)), pkgs[-5:-4], \
+                      " "*(6-len(pkgs[-5:-4])), "Slack", \
+                      " ", comp, " "*(3-len(comp)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)

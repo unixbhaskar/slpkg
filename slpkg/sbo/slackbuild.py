@@ -94,14 +94,16 @@ def sbo_build(name):
             for dep in dependencies[:-1]:
                 sbo_ver = sbo_version_pkg(dep)
                 if find_package(dep + sp, pkg_path):
-                    print " ",  colors.GREEN + dep + colors.ENDC, " "*(38-len(
-                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(
-                          arch)), "SBo"
+                    print " ",  colors.GREEN + dep + colors.ENDC, \
+                          " "*(38-len(dep)), sbo_ver, \
+                          " "*(14-len(sbo_ver)), SC + arch + EC, \
+                          " "*(9-len(arch)), "SBo"
                     pkg_sum += 1
                 else:
-                    print " ",  colors.RED + dep + colors.ENDC, " "*(38-len(
-                          dep)), sbo_ver, " "*(14-len(sbo_ver)), SC + arch + EC, " "*(9-len(
-                          arch)), "SBo"
+                    print " ",  colors.RED + dep + colors.ENDC, \
+                          " "*(38-len(dep)), sbo_ver, \
+                          " "*(14-len(sbo_ver)), SC + arch + EC, \
+                          " "*(9-len(arch)), "SBo"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(dependencies) > 1:

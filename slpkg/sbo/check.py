@@ -50,7 +50,8 @@ def sbo_check():
         sys.stdout.flush()
         initialization()
         index, toolbar_width = 0, 3
-        pkg_name, sbo_ver, pkg_for_upg, sbo_list, pkg_arch = [], [], [], [], []
+        pkg_name, sbo_ver, pkg_for_upg = [], [], []
+        sbo_list, pkg_arch = [], []
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
                 sbo_list.append(pkg)
@@ -88,8 +89,8 @@ def sbo_check():
                 template(78)
                 print("Upgrading:")
                 for upg, ver, arch in zip(pkg_for_upg, sbo_ver, pkg_arch):
-                    print " ",  upg, " "*(34-len(upg)), ver, " "*(
-                          16-len(ver)), arch, " "*(11-len(arch)), "SBo"
+                    print " ",  upg, " "*(34-len(upg)), ver, \
+                          " "*(16-len(ver)), arch, " "*(11-len(arch)), "SBo"
                 msg_pkg = "package"
                 if len(pkg_for_upg) > 1:
                     msg_pkg = msg_pkg + "s"
