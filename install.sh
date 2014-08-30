@@ -26,6 +26,7 @@ TAG=${TAG:-_dsw}
 
 cd ..
 # select archive to copy in slackbuild directory
+# support wget download
 if [ -f $PRGNAM-$VERSION.zip ]; then
     cp $PRGNAM-$VERSION.zip $PRGNAM-$VERSION/slackbuild
     cd $PRGNAM-$VERSION/slackbuild

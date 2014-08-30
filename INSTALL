@@ -13,7 +13,7 @@ Slackware current not support yet.
 Install slpkg
 -------------
 
-There are mainly four ways:
+There are mainly five ways:
 
 1) Download latest slpkg version from https://github.com/dslackw/slpkg/releases
    Untar or unzip the archive, cd in slpkg-?.?.? directory.
