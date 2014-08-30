@@ -69,7 +69,7 @@ sbo_tag = "_SBo"
 sbo_filetype = ".tgz"
 
 ''' Slackware architectures '''
-slack_archs = (
+slack_archs = [
                "-noarch-", 
                "-x86_64-", 
                "-i386-", 
@@ -77,5 +77,5 @@ slack_archs = (
                "-i686-",
                "-x86-",
                "-fw-"
-               )
+               ]
 

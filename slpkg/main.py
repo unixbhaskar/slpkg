@@ -22,32 +22,23 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 '''
-     _       _         
- ___| |_ __ | | ____ _ 
-/ __| | '_ \| |/ / _` |
-\__ \ | |_) |   < (_| |
-|___/_| .__/|_|\_\__, |
-      |_|        |___/
-
-
-usage: slpkg   [-h] [-v] [-a script [source ...]]
-               [-l all, sbo, slack, noarch, other]
-               [-c sbo, slack [sbo, slack ...]]
-               [-s sbo, slack [sbo, slack ...]] [-t] [-n] [-i  [...]]
-               [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
+usage: slpkg [-h] [-v] [-a script [sources ...]]
+             [-l all, sbo, slack, noarch] [-c sbo, slack [<upgrade> ...]]
+             [-s sbo, slack [<package> ...]] [-t] [-n] [-i  [...]]
+             [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
 
 Utility for easy management packages in Slackware
 
 optional arguments:
   -h, --help            show this help message and exit
   -v, --verbose         print version and exit
-  -a script [source ...]
+  -a script [sources ...]
                         auto build packages
-  -l all, sbo, slack, noarch, other [all, sbo, slack, noarch, other ...]
+  -l all, sbo, slack, noarch
                         list of installed packages
-  -c sbo, slack [sbo, slack ...]
+  -c sbo, slack [<upgrade> ...]
                         check if your packages is up to date
-  -s sbo, slack [sbo, slack ...]
+  -s sbo, slack [<package> ...]
                         download, build & install packages
   -t                    packages tracking dependencies from SBo
   -n                    view packages from SBo repository
@@ -63,20 +54,20 @@ optional arguments:
 import getpass
 import argparse
 
-from version import *
-from functions import *
 from colors import colors
 from __metadata__ import path
-from messages import ext_err_args, s_user
-from messages import err1_args, err2_args
+from functions import get_file
+from version import prog_version
+from messages import (ext_err_args, s_user,
+                      err1_args, err2_args)
 
-from pkg.build import build_package
 from pkg.manager import *
+from pkg.build import build_package
 
-from sbo.slackbuild import *
-from sbo.dependency import *
 from sbo.check import sbo_check
 from sbo.views import sbo_network
+from sbo.slackbuild import sbo_build
+from sbo.dependency import pkg_tracking
 
 from slack.patches import patches
 from slack.install import install

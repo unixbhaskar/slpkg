@@ -145,10 +145,10 @@ def install(slack_pkg):
                         print("Packages removed")
                     else:
                         print("\nThere are packages in directory {0}\n".format(
-                                tmp_path))
+                               tmp_path))
                 else:
                     print("\nThere are packages in directory {0}\n".format(
-                            tmp_path))
+                           tmp_path))
         else:
             message = "No matching"
             pkg_not_found("", slack_pkg, message, "\n")

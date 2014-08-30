@@ -45,12 +45,12 @@ def patches():
         comp_sum, uncomp_sum = [], []
         dwn_patches, comp_size, uncomp_size = [], [], []
         upgrade_all, package_name, package_location = [], [], []
-        pch_path = slpkg_tmp + "patches/"
+        patch_path = slpkg_tmp + "patches/"
         slack_arch = ""
-        if not os.path.exists(pch_path):
+        if not os.path.exists(patch_path):
             if not os.path.exists(slpkg_tmp):
                 os.mkdir(slpkg_tmp)
-                os.mkdir(pch_path)
+                os.mkdir(patch_path)
         sys.stdout.write ("Reading package lists ...")
         sys.stdout.flush()
         PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location="patches/"))
@@ -119,11 +119,11 @@ def patches():
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:
                     subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
-                               pch_path, dwn, dwn), shell=True)
+                                     patch_path, dwn, dwn), shell=True)
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(
                         colors.GREEN, colors.ENDC, pkg[:-4]))
-                    pkg_upgrade((pch_path + pkg).split())
+                    pkg_upgrade((patch_path + pkg).split())
                 for kernel in upgrade_all:
                     if "kernel" in kernel:
                         print("The kernel has been upgraded, reinstall `lilo` ...")
@@ -133,14 +133,14 @@ def patches():
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for pkg in upgrade_all:
-                        os.remove(pch_path + pkg)
-                        os.remove(pch_path + pkg + ".asc")
-                    if os.listdir(pch_path) == []:
+                        os.remove(patch_path + pkg)
+                        os.remove(patch_path + pkg + ".asc")
+                    if os.listdir(patch_path) == []:
                         print("Packages removed")
                     else:
-                        print("\nThere are packages in direcrory {0}\n".format(pch_path))
+                        print("\nThere are packages in direcrory {0}\n".format(patch_path))
                 else:
-                    print("\nThere are packages in directory {0}\n".format(pch_path))
+                    print("\nThere are packages in directory {0}\n".format(patch_path))
         else:
             if os.uname()[4] == "x86_64":
                 slack_arch = 64
