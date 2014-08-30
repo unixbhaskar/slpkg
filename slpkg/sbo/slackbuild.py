@@ -88,22 +88,39 @@ def sbo_build(name):
             print "| Package",  " "*31, "Version",  " "*7, "Arch", " "*5, "Repository"
             template(78)
             print("Installing:")
-            print " ", "".join(pkg_for_install), " "*(38-len(name)), sbo_ver, " "*(
-                  14-len(sbo_ver)), SC + arch + EC, " "*(9-len(arch)), "SBo"
+            print " " , "".join(pkg_for_install), \
+                  " " * (38-len(name)), sbo_ver, \
+                  " " * (14-len(sbo_ver)), SC + arch + EC, \
+                  " " * (9-len(arch)), "SBo"
             print("Installing for dependencies:")
             for dep in dependencies[:-1]:
                 sbo_ver = sbo_version_pkg(dep)
+                src_dep = sbo_source_dwn(dep)
+                dep_arch = os.uname()[4]
+                SC, EC = "", ""
+                if dep_arch == "x86_64":
+                    dep_arch = "x86_64"
+                elif arch.startswith("i") and arch.endswith("86"):
+                    dep_arch = "i486"
+                elif "arm" in dep_arch:
+                    dep_arch = "arm"
+                if "UNSUPPORTED" in src_dep:
+                    dep_arch = "UNSUPPORTED"
+                    SC, EC = colors.RED, colors.ENDC
+                elif "UNTESTED" in src_dep:
+                    dep_arch = "UNTESTED"
+                    SC, EC = colors.YELLOW, colors.ENDC     
                 if find_package(dep + sp, pkg_path):
-                    print " ",  colors.GREEN + dep + colors.ENDC, \
-                          " "*(38-len(dep)), sbo_ver, \
-                          " "*(14-len(sbo_ver)), SC + arch + EC, \
-                          " "*(9-len(arch)), "SBo"
+                    print " " , colors.GREEN + dep + colors.ENDC, \
+                          " " * (38-len(dep)), sbo_ver, \
+                          " " * (14-len(sbo_ver)), SC + dep_arch + EC, \
+                          " " * (9-len(dep_arch)), "SBo"
                     pkg_sum += 1
                 else:
-                    print " ",  colors.RED + dep + colors.ENDC, \
-                          " "*(38-len(dep)), sbo_ver, \
-                          " "*(14-len(sbo_ver)), SC + arch + EC, \
-                          " "*(9-len(arch)), "SBo"
+                    print " " , colors.RED + dep + colors.ENDC, \
+                          " " * (38-len(dep)), sbo_ver, \
+                          " " * (14-len(sbo_ver)), SC + dep_arch + EC, \
+                          " " * (9-len(dep_arch)), "SBo"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(dependencies) > 1:
