@@ -26,12 +26,12 @@ import sys
 import time
 import subprocess
 
-from colors import colors
-from url_read import url_read
-from messages import pkg_not_found, template
-from __metadata__ import slpkg_tmp, pkg_path, slack_archs
+from slpkg.colors import colors
+from slpkg.url_read import url_read
+from slpkg.messages import pkg_not_found, template
+from slpkg.__metadata__ import slpkg_tmp, pkg_path, slack_archs
 
-from pkg.manager import pkg_upgrade, pkg_reinstall
+from slpkg.pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
 
@@ -95,9 +95,11 @@ def install(slack_pkg):
                     SC, EC = colors.GREEN, colors.ENDC
                 else:
                     SC, EC = colors.RED, colors.ENDC
-                print " ", SC + pkgs[:-5] + EC, " "*(40-len(pkgs[:-5])), arch, " "*(
-                      7-len(arch)), pkgs[-5:-4], " "*(6-len(pkgs[-5:-4])), "Slack", " ", comp, " "*(
-                      3-len(comp)), "K"
+                print " ", SC + pkgs[:-5] + EC, \
+                      " "*(40-len(pkgs[:-5])), arch, \
+                      " "*(7-len(arch)), pkgs[-5:-4], \
+                      " "*(6-len(pkgs[-5:-4])), "Slack", \
+                      " ", comp, " "*(3-len(comp)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -143,10 +145,10 @@ def install(slack_pkg):
                         print("Packages removed")
                     else:
                         print("\nThere are packages in directory {0}\n".format(
-                                tmp_path))
+                               tmp_path))
                 else:
                     print("\nThere are packages in directory {0}\n".format(
-                            tmp_path))
+                           tmp_path))
         else:
             message = "No matching"
             pkg_not_found("", slack_pkg, message, "\n")

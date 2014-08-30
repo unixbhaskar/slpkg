@@ -23,7 +23,7 @@ package.
 
 What makes slpkg apart from other tools is the friendliness and the use of color for the 
 enhancement packages
-that are not installed on the system or not.
+that are not installed on the system or is.
 
 Of course one of the big advantages is resolving dependencies packages from repository 
 slackbuilds.org and
@@ -81,7 +81,15 @@ Video Tutorial
 Installation
 ------------
 
-Using `pip <https://pip.pypa.io/en/latest/>`_ (best way to have last updates):
+Untar the archive and run install.sh script:
+
+.. code-block:: bash
+    
+    $ tar xvf slpkg-1.7.9.tar.gz
+    $ cd slpkg-1.7.9
+    $ ./install.sh
+
+Using `pip <https://pip.pypa.io/en/latest/>`_ :
 
 .. code-block:: bash
 

@@ -29,7 +29,7 @@ from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.messages import pkg_not_found, pkg_found, view_sbo, template
 from slpkg.__metadata__ import (tmp, build, sbo_tag, sbo_filetype, build_path,
-                            pkg_path, slpkg_tmp, sp)
+                                pkg_path, slpkg_tmp, sp)
 
 from slpkg.pkg.build import build_package
 from slpkg.pkg.find import find_package
@@ -56,8 +56,9 @@ def sbo_network(name):
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
         sys.stdout.write ("Done\n")
-        view_sbo(name, sbo_url, get_file(sbo_dwn, "/"),
-                ", ".join([get_file(src, "/") for src in source_dwn]), sbo_req)
+        view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), \
+                 ", ".join([get_file(src, "/") for src in source_dwn]), \
+                 sbo_req)
         while True:
             try:
                 read = raw_input("_ ")

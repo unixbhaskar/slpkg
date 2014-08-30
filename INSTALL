@@ -13,9 +13,13 @@ Slackware current not support yet.
 Install slpkg
 -------------
 
-There are mainly four ways:
+There are mainly five ways:
 
-1) Using the SlackBuild script in the directory slpkg-?.?.?/slackbuild.
+1) Download latest slpkg version from https://github.com/dslackw/slpkg/releases
+   Untar or unzip the archive, cd in slpkg-?.?.? directory.
+   Run install.sh in this directory `./install.sh` and slpkg auto-installed.
+
+2) Using the SlackBuild script in the directory slpkg-?.?.?/slackbuild.
 
    Untar the archive `tar xvf slpkg-?.?.?.tar.gz`
 
@@ -27,16 +31,16 @@ There are mainly four ways:
    SlackBuild package created so install package with `upgradepkg --install-new
    /tmp/slpkg-?.?.?-x86_64-1_dsw.tgz` (x86_64 for Slackware64).
 
-2) Using pip:
+3) Using pip:
 
    `pip install slpkg` or upgrade `pip install --upgrade slpkg`
 
-3) Download slpkg package from slackbuilds.org and run the first procedure described above.
+4) Download slpkg package from slackbuilds.org and run the first procedure described above.
 
-4) Download binary package from sourceforge:
+5) Download binary package from sourceforge:
  
    https://sourceforge.net/projects/slpkg/
 
 
-Proposed mode if you want to have installed the most updated version is 1 and 2
+Proposed mode if you want to have installed the most updated version is 1 or 2 and 3
 process.
