@@ -45,6 +45,7 @@ def patches():
         comp_sum, uncomp_sum = [], []
         dwn_patches, comp_size, uncomp_size = [], [], []
         upgrade_all, package_name, package_location = [], [], []
+        GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
         patch_path = slpkg_tmp + "patches/"
         slack_arch = ""
         if not os.path.exists(patch_path):
@@ -92,11 +93,11 @@ def patches():
                     slack = "_slack" + slack_ver()
                 else:
                     slack = ""
-                print " ", upg[:-(5+len(slack))], \
-                      " "*(40-len(upg[:-(5+len(slack))])), arch, \
-                      " "*(7-len(arch)), upg[-(5+len(slack)):-(4+len(slack))], \
-                      " "*(6-len(upg[-(5+len(slack)):-(4+len(slack))])), "Slack", \
-                      " ", size, " "*(3-len(size)), "K"
+                print " " , GREEN + upg[:-(5+len(slack))] + ENDC, \
+                      " " * (40-len(upg[:-(5+len(slack))])), arch, \
+                      " " * (7-len(arch)), upg[-(5+len(slack)):-(4+len(slack))], \
+                      " " * (6-len(upg[-(5+len(slack)):-(4+len(slack))])), "Slack", \
+                      " " , size, " "*(3-len(size)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -121,8 +122,7 @@ def patches():
                     subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
                                      patch_path, dwn, dwn), shell=True)
                 for pkg in upgrade_all:
-                    print("{0}[ upgrading ] --> {1}{2}".format(
-                        colors.GREEN, colors.ENDC, pkg[:-4]))
+                    print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC, pkg[:-4]))
                     pkg_upgrade((patch_path + pkg).split())
                 for kernel in upgrade_all:
                     if "kernel" in kernel:

@@ -44,13 +44,13 @@ def install(slack_pkg):
         dwn_list, comp_size, uncomp_size = [], [], []
         install_all, package_name, package_location = [], [], []
         tmp_path = slpkg_tmp + "packages/"
-        pkg_sum, arch, SC, EC = 0, "", "", ""
+        pkg_sum, arch, COLOR, ENDC = 0, "", "", colors.ENDC
         if not os.path.exists(tmp_path):
             if not os.path.exists(slpkg_tmp):
                 os.mkdir(slpkg_tmp)
                 os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-                colors.CYAN, slack_pkg, colors.ENDC)) 
+                colors.CYAN, slack_pkg, ENDC)) 
         sys.stdout.write ("Reading package lists ...")
         sys.stdout.flush()
         PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
@@ -92,14 +92,14 @@ def install(slack_pkg):
                         arch = archs[1:-1]
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
-                    SC, EC = colors.GREEN, colors.ENDC
+                    COLOR = colors.GREEN
                 else:
-                    SC, EC = colors.RED, colors.ENDC
-                print " ", SC + pkgs[:-5] + EC, \
-                      " "*(40-len(pkgs[:-5])), arch, \
-                      " "*(7-len(arch)), pkgs[-5:-4], \
-                      " "*(6-len(pkgs[-5:-4])), "Slack", \
-                      " ", comp, " "*(3-len(comp)), "K"
+                    COLOR = colors.RED
+                print " " , COLOR + pkgs[:-5] + ENDC, \
+                      " " * (40-len(pkgs[:-5])), arch, \
+                      " " * (7-len(arch)), pkgs[-5:-4], \
+                      " " * (6-len(pkgs[-5:-4])), "Slack", \
+                      " " , comp, " "*(3-len(comp)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -129,11 +129,11 @@ def install(slack_pkg):
                 for install in install_all:
                     if not os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ installing ] --> {1}{2}".format(
-                               colors.GREEN, colors.ENDC, install))
+                               colors.GREEN, ENDC, install))
                         pkg_upgrade((tmp_path + install).split())
                     else:
                         print("{0}[ reinstalling ] --> {1}{2}".format(
-                               colors.GREEN, colors.ENDC, install))
+                               colors.GREEN, ENDC, install))
                         pkg_reinstall((tmp_path + install).split())
                 print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
