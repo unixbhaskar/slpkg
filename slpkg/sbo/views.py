@@ -93,7 +93,7 @@ def sbo_network(name):
                 sources = []
                 os.chdir(build_path)
                 script = get_file(sbo_dwn, "/")
-                print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                print("\n{0}Start -->{0} {1}\n".format(colors.GREEN, colors.ENDC, name))
                 subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                 for src in source_dwn:
                     subprocess.call("wget -N {0}".format(src), shell=True)
@@ -105,11 +105,11 @@ def sbo_network(name):
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 sbo_version = sbo_version_pkg(name)
-                if find_package(name + sp, pkg_path) == []:
+                prgnam = ("{0}-{1}".format(name, sbo_version))
+                if find_package(prgnam + sp, pkg_path) == []:
                     sources = []
                     os.chdir(build_path)
-                    prgnam = ("{0}-{1}".format(name, sbo_version))
-                    print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                    print("\n{0}Start -->{0} {1}\n".format(colors.GREEN, colors.ENDC, name))
                     subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                     script = get_file(sbo_dwn, "/")
                     for src in source_dwn:
@@ -119,7 +119,6 @@ def sbo_network(name):
                     '''
                     Before installing new binary package look if arch is noarch.
                     This is because some maintainers changes arch manualy.
-                    
                     '''
                     if "-noarch-" in "".join(find_package(prgnam, tmp)):
                         sbo_arch = "-noarch-"
@@ -127,13 +126,12 @@ def sbo_network(name):
                         from slpkg.__metadata__ import sbo_arch
                     binary = ("{0}{1}{2}{3}{4}{5}".format(
                                tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
-                    print("{0}[ Installing ] --> {1}{2}".format(
-                           colors.GREEN, colors.ENDC, name))
+                    print("{0}[ Installing ] --> {0}{1}".format(colors.GREEN, colors.ENDC, name))
                     pkg_upgrade(binary)
                     if find_package(name + sp, pkg_path):
                         print("Complete!\n")
                     else:
-                        print("The package {0} may not install successfully".format(name))
+                        print("The package {0} not installed successfully".format(name))
                     break
                 else:
                     template(78)
@@ -146,4 +144,3 @@ def sbo_network(name):
         sys.stdout.write ("Done\n")
         message = "From slackbuilds.org"
         pkg_not_found("\n", name, message, "\n")
-

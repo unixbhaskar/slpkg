@@ -25,7 +25,6 @@ import os
 import sys
 import subprocess
 
-from slpkg.pkg.find import find_package
 from slpkg.pkg.build import build_package
 from slpkg.pkg.manager import pkg_upgrade
 
@@ -33,7 +32,7 @@ from slpkg.colors import colors
 from slpkg.messages import template
 from slpkg.functions import get_file
 from slpkg.__metadata__ import (tmp, sbo_arch, build, sbo_tag,
-                          sbo_filetype, pkg_path, build_path)
+                                sbo_filetype, pkg_path, build_path)
 
 from init import initialization
 from search import sbo_search_pkg
@@ -43,15 +42,18 @@ from greps import sbo_source_dwn, sbo_version_pkg
 def sbo_check():
     '''
     Upgrade all slackbuilds packages from slackbuilds.org
-    repository
+    repository.
+    NOTE: This functions check packages by version not by build
+    tag because build tag not reported the SLACKBUILDS.TXT file.
     '''
     try:
         sys.stdout.write("Reading package lists ...")
         sys.stdout.flush()
         initialization()
+        sbo_list = [] 
         index, toolbar_width = 0, 3
-        pkg_name, sbo_ver, pkg_for_upg = [], [], []
-        sbo_list, pkg_arch = [], []
+        GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
+        upg_name, pkg_for_upg, upg_ver, upg_arch = [], [], [], []
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
                 sbo_list.append(pkg)
@@ -77,20 +79,20 @@ def sbo_check():
                 name = name[:-(len(pkg_version) + 1)]
                 sbo_version = sbo_version_pkg(name)
                 if sbo_version > pkg_version:
-                    pkg_name.append(name)
+                    upg_name.append(name)
                     pkg_for_upg.append("{0}-{1}".format(name, pkg_version))
-                    sbo_ver.append(sbo_version)
-                    pkg_arch.append(arch)
+                    upg_ver.append(sbo_version)
+                    upg_arch.append(arch)
             sys.stdout.write("Done\n")
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
                 template(78)
-                print "| Package",  " "*27, "New version",  " "*5, "Arch", " "*7, "Repository"
+                print "| Package",  " " * 27, "New version",  " " * 5, "Arch", " " * 7, "Repository"
                 template(78)
                 print("Upgrading:")
-                for upg, ver, arch in zip(pkg_for_upg, sbo_ver, pkg_arch):
-                    print " ",  upg, " "*(34-len(upg)), ver, \
-                          " "*(16-len(ver)), arch, " "*(11-len(arch)), "SBo"
+                for upg, ver, arch in zip(pkg_for_upg, upg_ver, upg_arch):
+                    print " " , RED + upg + ENDC, " " * (34-len(upg)), GREEN + ver + ENDC, \
+                          " " * (16-len(ver)), arch, " " * (11-len(arch)), "SBo"
                 msg_pkg = "package"
                 if len(pkg_for_upg) > 1:
                     msg_pkg = msg_pkg + "s"
@@ -102,13 +104,13 @@ def sbo_check():
                     if not os.path.exists(build_path):
                         os.mkdir(build_path)
                     os.chdir(build_path)
-                    for name, version, arch in zip(pkg_name, sbo_ver, pkg_arch):
+                    for name, version, arch in zip(upg_name, upg_ver, upg_arch):
                         prgnam = ("{0}-{1}".format(name, version))
                         sbo_url = sbo_search_pkg(name)
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
                         src_dwn = sbo_source_dwn(name).split()
                         script = get_file(sbo_dwn, "/")
-                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                        print("\n{0}Start -->{1} {2}\n".format(GREEN, ENDC, name))
                         subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                         sources = []
                         for src in src_dwn:
@@ -117,12 +119,11 @@ def sbo_check():
                         build_package(script, sources, build_path)
                         binary = ("{0}{1}-{2}-{3}{4}{5}".format(
                             tmp, prgnam, arch, build, sbo_tag, sbo_filetype).split())
-                        print("{0}[ Upgrading ] --> {1}{2}".format(
-                            colors.GREEN, colors.ENDC, name))
+                        print("{0}[ Upgrading ] --> {1}{2}".format(GREEN, ENDC, name))
                         pkg_upgrade(binary)
                     print("Completed!\n")
             else:
-                print("\nAll SBo packages are up to date\n")
+                print("\nTotal {0} SBo packages are up to date:\n".format(len(sbo_list)))
         else:
             sys.stdout.write("Done\n")
             print("\nNo SBo packages found\n")

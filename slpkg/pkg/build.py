@@ -40,7 +40,6 @@ def build_package(script, sources, path):
         tar.close()
         for src in sources:
             shutil.copy2(src, prgnam)
-            os.remove(path + src)
         os.chdir(path + prgnam)
         subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
         subprocess.call("./{0}.SlackBuild".format(prgnam), shell=True)

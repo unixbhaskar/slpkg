@@ -21,12 +21,13 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=slpkg
-VERSION=${VERSION:-1.7.9}
+VERSION=${VERSION:-1.8.0}
 TAG=${TAG:-_dsw}
 
 cd ..
-# select archive to copy in slackbuild directory
-# support wget download
+# Installation script.
+# Select archive to copy in slackbuild directory
+# support wget download.
 if [ -f $PRGNAM-$VERSION.zip ]; then
     cp $PRGNAM-$VERSION.zip $PRGNAM-$VERSION/slackbuild
     cd $PRGNAM-$VERSION/slackbuild

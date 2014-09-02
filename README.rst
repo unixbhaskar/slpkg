@@ -7,6 +7,9 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
+Slpkg 1.8.0
+===========
+ 
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
 
@@ -25,7 +28,8 @@ What makes slpkg apart from other tools is the friendliness and the use of color
 enhancement packages
 that are not installed on the system or is.
 
-The big advantages is resolving dependencies packages from repository slackbuilds.org and
+Of course one of the big advantages is resolving dependencies packages from repository 
+slackbuilds.org and
 monitored for upgraded packages.
 
 Of course you wonder how the slpkg is up to date at all times;

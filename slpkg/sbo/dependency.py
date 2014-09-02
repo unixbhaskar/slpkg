@@ -60,19 +60,30 @@ def sbo_dependencies_pkg(name):
 
 def pkg_tracking(name):
     '''
-    Print tree of dependencies
+    View tree of dependencies and also
+    highlight packages with color green  
+    if allready installed and colore red
+    if not installed.
     '''
     sys.stdout.write("Reading package lists ...")
     sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
+    GREEN, RED = colors.GREEN, colors.RED
+    YELLOW, CYAN, ENDC = colors.YELLOW, colors.CYAN, colors.ENDC
     if dependencies_list is not None:
         sys.stdout.write("Done\n")
         print # new line at start
         requires, dependencies = [], []
+        '''
+        Create one list for all packages
+        '''
         for pkg in dependencies_list:
             requires += pkg
         requires.reverse()
+        '''
+        Remove double dependencies
+        '''
         for duplicate in requires:
             if duplicate not in dependencies:
                 dependencies.append(duplicate)
@@ -80,20 +91,19 @@ def pkg_tracking(name):
         if dependencies == []:
             dependencies = ["No dependencies"]
         template(pkg_len)
-        print("| Package {0}{1}{2} dependencies :".format(colors.CYAN, name,
-                                                          colors.ENDC))
+        print("| Package {0}{1}{2} dependencies :".format(CYAN, name, ENDC))
         template(pkg_len)
         print("\\")
-        print(" +---{0}[ Tree of dependencies ]{1}".format(colors.YELLOW, colors.ENDC))
+        print(" +---{0}[ Tree of dependencies ]{1}".format(YELLOW, ENDC))
         index = 0
         for pkg in dependencies:
             index += 1
             if find_package(pkg + sp, pkg_path):
                 print(" |")
-                print(" {0}{1}: {2}{3}{4}".format("+--", index, colors.GREEN, pkg, colors.ENDC))
+                print(" {0}{1}: {2}{3}{4}".format("+--", index, GREEN, pkg, ENDC))
             else:
                 print(" |")
-                print(" {0}{1}: {2}{3}{4}".format("+--", index, colors.RED, pkg, colors.ENDC))
+                print(" {0}{1}: {2}{3}{4}".format("+--", index, RED, pkg, ENDC))
         print # new line at end
     else:
         sys.stdout.write("Done\n")
