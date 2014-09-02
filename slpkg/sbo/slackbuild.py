@@ -58,7 +58,8 @@ def sbo_build(name):
             requires, dependencies = [], []
             PKG_COLOR, DEP_COLOR, ARCH_COLOR, ENDC = "", "", "", colors.ENDC
             '''
-            Insert master package in list to install it after dependencies
+            Insert master package in list to 
+            install it after dependencies
             '''
             requires.append(name)
             '''
@@ -78,7 +79,8 @@ def sbo_build(name):
             for package arch.
             '''
             for pkg in dependencies:
-                sbo_ver.append(sbo_version_pkg(pkg))
+                version = sbo_version_pkg(pkg)
+                sbo_ver.append(version)
                 src = sbo_source_dwn(pkg)
                 if arch == "x86_64":
                     pkg_arch.append("x86_64")
@@ -93,7 +95,8 @@ def sbo_build(name):
                     pkg_arch.append("UNSUPPORTED")
                 elif "UNTESTED" in src:
                     pkg_arch.append("UNTESTED")
-                if find_package(pkg + sp, pkg_path):
+                sbo_pkg = ("{0}-{1}".format(pkg, version))
+                if find_package(sbo_pkg + sp, pkg_path):
                     pkg_sum += 1
             sys.stdout.write("Done\n")
             '''
@@ -102,7 +105,8 @@ def sbo_build(name):
             arch is UNSUPPORTED tag with color red and if 
             UNTESTED with color yellow.
             '''
-            if find_package(name + sp, pkg_path):
+            master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
+            if find_package(master_pkg + sp, pkg_path):
                 PKG_COLOR = colors.GREEN
             else:
                 PKG_COLOR = colors.RED
@@ -123,7 +127,8 @@ def sbo_build(name):
             print("Installing for dependencies:")
             ARCH_COLOR = "" # reset arch color for dependencies packages
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1], pkg_arch[:-1]):
-                if find_package(dep + sp, pkg_path):
+                dep_pkg = ("{0}-{1}".format(dep, ver))
+                if find_package(dep_pkg + sp, pkg_path):
                     DEP_COLOR = colors.GREEN
                 else:
                     DEP_COLOR = colors.RED
@@ -151,18 +156,17 @@ def sbo_build(name):
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 os.chdir(build_path)
-                for pkg in dependencies:
-                    sbo_version = sbo_version_pkg(pkg)
+                for pkg, ver in zip(dependencies, sbo_ver):
                     sbo_file = "".join(find_package(pkg + sp, pkg_path))
                     sbo_file_version = sbo_file[len(pkg) + 1:-len(arch) - 7]
-                    if sbo_version > sbo_file_version:
-                        prgnam = ("{0}-{1}".format(pkg, sbo_version_pkg(pkg)))
+                    if ver > sbo_file_version:
+                        prgnam = ("{0}-{1}".format(pkg, ver))
                         sbo_url = sbo_search_pkg(pkg)
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = get_file(sbo_link, "/")
                         print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, pkg))
-                        subprocess.call("wget -N {0}".format(sbo_link), shell=True)
+                        subprocess.call("wget -c {0}".format(sbo_link), shell=True)
                         sources = []
                         for src in src_link:
                             subprocess.call("wget -N {0}".format(src), shell=True)
