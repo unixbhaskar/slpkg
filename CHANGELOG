@@ -1,3 +1,11 @@
+Version 1.8.0
+02-09-2014
+
+[Updated] - Fix arch view dependencies in action -s sbo <package>
+            Fix find packages with version in action -s sbo <package>
+            Remove to remove packages after download because not useful
+            if download the some package and wget -N command not working.
+
 Version 1.7.9
 30-08-2014
 
