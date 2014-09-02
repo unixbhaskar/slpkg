@@ -52,7 +52,7 @@ def sbo_build(name):
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None:
-            pkg_sum = 0
+            pkg_sum = 0 
             arch = os.uname()[4]
             sbo_ver, pkg_arch = [], []
             requires, dependencies = [], []
@@ -166,7 +166,7 @@ def sbo_build(name):
                         src_link = sbo_source_dwn(pkg).split() 
                         script = get_file(sbo_link, "/")
                         print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, pkg))
-                        subprocess.call("wget -c {0}".format(sbo_link), shell=True)
+                        subprocess.call("wget -N {0}".format(sbo_link), shell=True)
                         sources = []
                         for src in src_link:
                             subprocess.call("wget -N {0}".format(src), shell=True)

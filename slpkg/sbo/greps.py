@@ -25,10 +25,11 @@ import os
 
 from url_read import url_read
 from __metadata__ import arch, lib_path
+from search import sbo_search_pkg
 
 def sbo_source_dwn(name):
     '''
-    Grep sources downloads links
+    Grab sources downloads links
     '''
     if arch == "x86_64":
         for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
@@ -47,21 +48,35 @@ def sbo_source_dwn(name):
                 return line[21:].strip() 
         
 def sbo_requires_pkg(sbo_url, name):
+ '''
+ Grab package requirements
+ '''
+ read_info = url_read(sbo_url + name + ".info")
+ for line in read_info.splitlines():
+     if line.startswith("REQUIRES=\""):
+         return line[10:-1].strip().split()
+
+def sbo_build_tag(sbo_url, name):
+    # This feature is not yet used
+    # because the program is doing heavy on search.
+    # Looking for the best option to be able to use
+    # the BUILD tag
     '''
-    Grep package requirements
+    Grab .SlackBuild BUILD tag
     '''
-    read_info = url_read(sbo_url + name + ".info")
+    read_info = url_read(sbo_url + name + ".SlackBuild")
     for line in read_info.splitlines():
-        if line.startswith("REQUIRES=\""):
-            return line[10:-1].strip().split()
+        if line.startswith("BUILD=${BUILD:"):
+            return line[15:-1].strip().split()
 
 def sbo_version_pkg(name):
     '''
-    Grep package verion
+    Grab package verion
     '''
     for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
         if line.startswith("SLACKBUILD NAME: "):
             sbo_name = line[17:].strip()
         if line.startswith("SLACKBUILD VERSION: "):
             if sbo_name == name:
+                sbo_url = sbo_search_pkg(name)
                 return line[20:].strip()
