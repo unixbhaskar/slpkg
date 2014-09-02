@@ -75,9 +75,15 @@ def pkg_tracking(name):
         sys.stdout.write("Done\n")
         print # new line at start
         requires, dependencies = [], []
+        '''
+        Create one list for all packages
+        '''
         for pkg in dependencies_list:
             requires += pkg
         requires.reverse()
+        '''
+        Remove double dependencies
+        '''
         for duplicate in requires:
             if duplicate not in dependencies:
                 dependencies.append(duplicate)
