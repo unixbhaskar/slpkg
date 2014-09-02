@@ -44,8 +44,9 @@ from greps import sbo_source_dwn, sbo_version_pkg
 
 def sbo_build(name):
     '''
-    Download, build and upgrade packages with all
-    dependencies
+    Download, build and install or upgrade packages 
+    with all dependencies if version is greater than
+    that established.
     '''
     sys.stdout.write("Building dependency tree ...")
     initialization()
@@ -89,7 +90,8 @@ def sbo_build(name):
                 elif "arm" in arch:
                     pkg_arch.append("arm")
                 '''
-                Looks if sources unsupported or untested from arch
+                Looks if sources unsupported or untested
+                from arch
                 '''
                 if "UNSUPPORTED" in src:
                     pkg_arch.append("UNSUPPORTED")
@@ -117,7 +119,7 @@ def sbo_build(name):
             print("\nThe following packages will be automatically installed or upgraded")
             print("with new version:\n")
             template(78)
-            print "| Package",  " "*31, "Version",  " "*7, "Arch", " "*5, "Repository"
+            print "| Package",  " " * 31, "Version",  " " * 7, "Arch", " " * 5, "Repository"
             template(78)
             print("Installing:")
             print " " , PKG_COLOR + name + ENDC, \
@@ -147,7 +149,7 @@ def sbo_build(name):
             if len(dependencies) - pkg_sum > 1:
                 msg_2_pkg = msg_2_pkg + "s"
             print("\nInstalling summary")
-            print("="*79)
+            print("=" * 79)
             print("Total {0} {1}.".format(len(dependencies), msg_pkg))
             print("{0} {1} will be installed, {2} allready installed.".format(
                  (len(dependencies) - pkg_sum), msg_2_pkg, pkg_sum))

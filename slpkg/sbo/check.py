@@ -42,7 +42,9 @@ from greps import sbo_source_dwn, sbo_version_pkg
 def sbo_check():
     '''
     Upgrade all slackbuilds packages from slackbuilds.org
-    repository
+    repository.
+    NOTE: This functions check packages by version not by build
+    tag because build tag not reported the SLACKBUILDS.TXT file.
     '''
     try:
         sys.stdout.write("Reading package lists ...")
@@ -85,11 +87,11 @@ def sbo_check():
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
                 template(78)
-                print "| Package",  " "*27, "New version",  " "*5, "Arch", " "*7, "Repository"
+                print "| Package",  " " * 27, "New version",  " " * 5, "Arch", " " * 7, "Repository"
                 template(78)
                 print("Upgrading:")
                 for upg, ver, arch in zip(pkg_for_upg, upg_ver, upg_arch):
-                    print " ", RED + upg + ENDC, " " * (34-len(upg)), GREEN + ver + ENDC, \
+                    print " " , RED + upg + ENDC, " " * (34-len(upg)), GREEN + ver + ENDC, \
                           " " * (16-len(ver)), arch, " " * (11-len(arch)), "SBo"
                 msg_pkg = "package"
                 if len(pkg_for_upg) > 1:
@@ -108,7 +110,7 @@ def sbo_check():
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
                         src_dwn = sbo_source_dwn(name).split()
                         script = get_file(sbo_dwn, "/")
-                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, name))
+                        print("\n{0}Start -->{1} {2}\n".format(GREEN, ENDC, name))
                         subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                         sources = []
                         for src in src_dwn:
@@ -117,8 +119,7 @@ def sbo_check():
                         build_package(script, sources, build_path)
                         binary = ("{0}{1}-{2}-{3}{4}{5}".format(
                             tmp, prgnam, arch, build, sbo_tag, sbo_filetype).split())
-                        print("{0}[ Upgrading ] --> {1}{2}".format(
-                            colors.GREEN, colors.ENDC, name))
+                        print("{0}[ Upgrading ] --> {1}{2}".format(GREEN, ENDC, name))
                         pkg_upgrade(binary)
                     print("Completed!\n")
             else:

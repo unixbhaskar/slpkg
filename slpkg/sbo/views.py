@@ -119,7 +119,6 @@ def sbo_network(name):
                     '''
                     Before installing new binary package look if arch is noarch.
                     This is because some maintainers changes arch manualy.
-                    
                     '''
                     if "-noarch-" in "".join(find_package(prgnam, tmp)):
                         sbo_arch = "-noarch-"
@@ -145,4 +144,3 @@ def sbo_network(name):
         sys.stdout.write ("Done\n")
         message = "From slackbuilds.org"
         pkg_not_found("\n", name, message, "\n")
-

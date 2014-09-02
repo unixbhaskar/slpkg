@@ -82,7 +82,7 @@ def install(slack_pkg):
         sys.stdout.write("Done\n\n")
         if install_all:
             template(78)
-            print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
+            print "| Package",  " " * 33, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
@@ -99,7 +99,7 @@ def install(slack_pkg):
                       " " * (40-len(pkgs[:-5])), arch, \
                       " " * (7-len(arch)), pkgs[-5:-4], \
                       " " * (6-len(pkgs[-5:-4])), "Slack", \
-                      " " , comp, " "*(3-len(comp)), "K"
+                      " " , comp, " " * (3-len(comp)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -114,7 +114,7 @@ def install(slack_pkg):
             if len(install_all) - pkg_sum > 1:
                 msg_2_pkg = msg_2_pkg + "s"
             print("\nInstalling summary")
-            print("="*79)
+            print("=" * 79)
             print("Total {0} {1}.".format(len(install_all), msg_pkg))
             print("{0} {1} will be installed, {2} allready installed.".format(
                  (len(install_all) - pkg_sum), msg_2_pkg, pkg_sum))

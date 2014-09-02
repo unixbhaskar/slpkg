@@ -81,7 +81,7 @@ def patches():
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
             template(78)
-            print "| Package",  " "*33, "Arch", " "*3, "Build", " ", "Repos", " ", "Size"
+            print "| Package",  " " * 33, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
@@ -97,7 +97,7 @@ def patches():
                       " " * (40-len(upg[:-(5+len(slack))])), arch, \
                       " " * (7-len(arch)), upg[-(5+len(slack)):-(4+len(slack))], \
                       " " * (6-len(upg[-(5+len(slack)):-(4+len(slack))])), "Slack", \
-                      " " , size, " "*(3-len(size)), "K"
+                      " " , size, " " * (3-len(size)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
@@ -111,7 +111,7 @@ def patches():
             if len(upgrade_all) > 1:
                 msg_pkg = msg_pkg + "s"
             print("\nInstalling summary")
-            print("="*79)
+            print("=" * 79)
             print("Total {0} {1} will be upgraded.".format(len(upgrade_all), msg_pkg))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
