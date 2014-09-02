@@ -7,7 +7,7 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
-Slpkg 1.8.0
+slpkg 1.8.0
 ===========
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
