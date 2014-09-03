@@ -87,8 +87,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.7.9.tar.gz
-    $ cd slpkg-1.7.9
+    $ tar xvf slpkg-1.8.0.tar.gz
+    $ cd slpkg-1.8.0
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
