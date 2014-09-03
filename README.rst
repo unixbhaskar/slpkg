@@ -7,7 +7,7 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
-Slpkg 1.8.0
+slpkg 1.8.0
 ===========
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
@@ -28,8 +28,7 @@ What makes slpkg apart from other tools is the friendliness and the use of color
 enhancement packages
 that are not installed on the system or is.
 
-Of course one of the big advantages is resolving dependencies packages from repository 
-slackbuilds.org and
+The big advantages is resolving dependencies packages from repository slackbuilds.org and
 monitored for upgraded packages.
 
 Of course you wonder how the slpkg is up to date at all times;
@@ -88,8 +87,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.7.9.tar.gz
-    $ cd slpkg-1.7.9
+    $ tar xvf slpkg-1.8.0.tar.gz
+    $ cd slpkg-1.8.0
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
