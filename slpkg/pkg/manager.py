@@ -156,6 +156,9 @@ def pkg_remove(binary):
             '''
             Prints all removed packages
             '''
+            if len(rmv_list) > 1:
+                template(78)
+                print("| Total {0} packages removed".format(len(rmv_list)))
             template(78)
             for pkg in rmv_list:
                 if find_package(pkg + sp, pkg_path) == []:

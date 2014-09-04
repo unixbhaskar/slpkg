@@ -33,7 +33,7 @@ from pkg.manager import pkg_upgrade
 from colors import colors
 from messages import template
 from functions import get_file
-from __metadata__ import tmp, pkg_path, build_path, sp
+from __metadata__ import tmp, pkg_path, build_path
 
 from init import initialization
 from search import sbo_search_pkg
@@ -125,18 +125,21 @@ def sbo_check():
                         2 or 3 will fit most.
                         '''
                         binary_list = []
-                        for search in find_package(prgnam + sp, tmp):
+                        for search in find_package(prgnam, tmp):
                             if "_SBo" in search:
                                 binary_list.append(search)
                         binary = (tmp + max(binary_list)).split()
                         pkg_upgrade(binary)
                         print("Complete!\n")
-                    template(78)
-                    for pkg, upg, ver in zip(pkg_for_upg, upg_name, upg_ver):
-                        upgraded = ("{0}-{1}".format(upg, ver))
-                        if find_package(upgraded + sp, pkg_path):
-                            print("| Package {0} upgraded with new package {1}-{2}".format(pkg, upg, ver))
-                    template(78)
+                    if len(pkg_for_upg) > 1:
+                        template(78)
+                        print("| Total {0} {1} upgraded".format(len(pkg_for_upg), msg_pkg))
+                        template(78)
+                        for pkg, upg, ver in zip(pkg_for_upg, upg_name, upg_ver):
+                            upgraded = ("{0}-{1}".format(upg, ver))
+                            if find_package(upgraded, pkg_path):
+                                print("| Package {0} upgraded with new package {1}-{2}".format(pkg, upg, ver))
+                        template(78)
             else:
                 print("\nTotal {0} SBo packages are up to date:\n".format(len(sbo_list)))
         else:

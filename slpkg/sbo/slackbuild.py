@@ -183,7 +183,7 @@ def sbo_build(name):
                         2 or 3 will fit most.
                         '''
                         binary_list = []
-                        for search in find_package(prgnam + sp, tmp):
+                        for search in find_package(prgnam, tmp):
                             if "_SBo" in search:
                                 binary_list.append(search)
                         binary = (tmp + max(binary_list)).split()
@@ -198,11 +198,13 @@ def sbo_build(name):
                 '''
                 Reference list only packages installed
                 '''
-                if installs:
+                if len(installs) > 1:
+                    template(78)
+                    print("| Total {0} packages installed".format(len(installs)))
                     template(78)
                     for pkg, ver in zip(installs, versions):
                         installed = ("{0}-{1}".format(pkg, ver))
-                        if find_package(installed + sp, pkg_path):
+                        if find_package(installed, pkg_path):
                             print("| Package {0} installed successfully".format(installed))
                         else:
                             print("| Package {0} NOT installed".format(installed))
