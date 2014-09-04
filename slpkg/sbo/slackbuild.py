@@ -99,7 +99,7 @@ def sbo_build(name):
                 elif "UNTESTED" in src:
                     pkg_arch.append("UNTESTED")
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
-                if find_package(sbo_pkg + sp, pkg_path):
+                if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
             sys.stdout.write("Done\n")
             '''
@@ -109,7 +109,7 @@ def sbo_build(name):
             UNTESTED with color yellow.
             '''
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
-            if find_package(master_pkg + sp, pkg_path):
+            if find_package(master_pkg, pkg_path):
                 PKG_COLOR = colors.GREEN
             else:
                 PKG_COLOR = colors.RED
@@ -131,7 +131,7 @@ def sbo_build(name):
             ARCH_COLOR = "" # reset arch color for dependencies packages
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1], pkg_arch[:-1]):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
-                if find_package(dep_pkg + sp, pkg_path):
+                if find_package(dep_pkg, pkg_path):
                     DEP_COLOR = colors.GREEN
                 else:
                     DEP_COLOR = colors.RED
@@ -160,7 +160,7 @@ def sbo_build(name):
                     os.mkdir(build_path)
                 os.chdir(build_path)
                 for pkg, ver in zip(dependencies, sbo_ver):
-                    sbo_file = "".join(find_package(pkg + sp, pkg_path))
+                    sbo_file = "".join(find_package(pkg, pkg_path))
                     sbo_file_version = sbo_file[len(pkg) + 1:-len(arch) - 7]
                     if ver > sbo_file_version:
                         prgnam = ("{0}-{1}".format(pkg, ver))
