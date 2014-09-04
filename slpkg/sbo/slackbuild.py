@@ -28,8 +28,7 @@ import subprocess
 from colors import colors
 from functions import get_file
 from messages import pkg_not_found, pkg_found, template
-from __metadata__ import (tmp, pkg_path, build_path, log_path, 
-                          sp, build, sbo_tag, sbo_filetype)
+from __metadata__ import tmp, pkg_path, build_path, log_path, sp
 
 from pkg.find import find_package 
 from pkg.build import build_package
@@ -53,11 +52,13 @@ def sbo_build(name):
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None:
-            pkg_sum = 0 
+            pkg_sum = 0
             arch = os.uname()[4]
-            sbo_ver, pkg_arch = [], []
+            sbo_ver, pkg_arch  = [], []
+            installs, versions = [], []
             requires, dependencies = [], []
-            PKG_COLOR, DEP_COLOR, ARCH_COLOR, ENDC = "", "", "", colors.ENDC
+            PKG_COLOR, DEP_COLOR, ARCH_COLOR = "", "", ""
+            ENDC = colors.ENDC
             '''
             Insert master package in list to 
             install it after dependencies
@@ -174,23 +175,38 @@ def sbo_build(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        '''
-                        Before installing new binary package look if arch is noarch.
-                        This is because some maintainers changes arch manualy.
-                        '''
-                        if "-noarch-" in "".join(find_package(prgnam, tmp)):
-                            sbo_arch = "-noarch-"
-                        else:
-                            from __metadata__ import sbo_arch
-                        binary = ("{0}{1}{2}{3}{4}{5}".format(
-                                  tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Installing ] --> {1}{2}".format(
                               colors.GREEN, colors.ENDC, pkg))
+                        '''
+                        Searches the package name and version in /tmp to install.
+                        If find two or more packages e.g. to build tag 
+                        2 or 3 will fit most.
+                        '''
+                        binary_list = []
+                        for search in find_package(prgnam + sp, tmp):
+                            if "_SBo" in search:
+                                binary_list.append(search)
+                        binary = (tmp + max(binary_list)).split()
                         pkg_upgrade(binary)
+                        print("Complete!\n")
+                        installs.append(pkg)
+                        versions.append(ver)
                     else:
                         template(78)
                         pkg_found(pkg, sbo_file_version)
                         template(78)
+                '''
+                Reference list only packages installed
+                '''
+                if installs:
+                    template(78)
+                    for pkg, ver in zip(installs, versions):
+                        installed = ("{0}-{1}".format(pkg, ver))
+                        if find_package(installed + sp, pkg_path):
+                            print("| Package {0} installed successfully".format(installed))
+                        else:
+                            print("| Package {0} NOT installed".format(installed))
+                    template(78)
                 '''
                 Write dependencies in a log file 
                 into directory `/var/log/slpkg/dep/`

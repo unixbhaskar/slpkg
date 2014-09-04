@@ -28,8 +28,7 @@ import subprocess
 from colors import colors
 from functions import get_file
 from messages import pkg_not_found, pkg_found, view_sbo, template
-from __metadata__ import (tmp, build, sbo_tag, sbo_filetype, build_path,
-                          pkg_path, slpkg_tmp, sp)
+from __metadata__ import tmp, build_path, pkg_path, slpkg_tmp, sp
 
 from pkg.build import build_package
 from pkg.find import find_package
@@ -116,22 +115,19 @@ def sbo_network(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
+                    print("{0}[ Installing ] --> {1}{2}".format(colors.GREEN, colors.ENDC, name))
                     '''
-                    Before installing new binary package look if arch is noarch.
-                    This is because some maintainers changes arch manualy.
+                    Searches the package name and version in /tmp to install.
+                    If find two or more packages e.g. to build tag 
+                    2 or 3 will fit most.
                     '''
-                    if "-noarch-" in "".join(find_package(prgnam, tmp)):
-                        sbo_arch = "-noarch-"
-                    else:
-                        from __metadata__ import sbo_arch
-                    binary = ("{0}{1}{2}{3}{4}{5}".format(
-                               tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
-                    print("{0}[ Installing ] --> {0}{1}".format(colors.GREEN, colors.ENDC, name))
+                    binary_list = []
+                    for search in find_package(prgnam, tmp):
+                        if "_SBo" in search:
+                            binary_list.append(search)
+                    binary = (tmp + max(binary_list)).split()
                     pkg_upgrade(binary)
-                    if find_package(name + sp, pkg_path):
-                        print("Complete!\n")
-                    else:
-                        print("The package {0} not installed successfully".format(name))
+                    print("Complete!\n")
                     break
                 else:
                     template(78)
