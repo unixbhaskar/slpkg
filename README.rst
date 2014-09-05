@@ -9,10 +9,10 @@
 
 Latest Release:
 
-Version: 1.8.2
-`Package <https://sourceforge.net/projects/slpkg/>`_
-`Source <https://github.com/dslackw/slpkg/archive/v1.8.2.tar.gz>`_
-`CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
+- Version: 1.8.1
+- `Package <https://sourceforge.net/projects/slpkg/>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.1.tar.gz>`_
+- `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
