@@ -212,7 +212,7 @@ def pkg_list(pattern):
             search = ""
         index, page = 0, 50
         for pkg in sorted(os.listdir(pkg_path)):
-            if search in pkg:
+            if pattern in pkg:
                 index += 1
                 print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                 if index == page:
