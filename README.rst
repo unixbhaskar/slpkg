@@ -7,7 +7,7 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
-slpkg 1.8.0
+slpkg 1.8.1
 ===========
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
@@ -87,8 +87,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.0.tar.gz
-    $ cd slpkg-1.8.0
+    $ tar xvf slpkg-1.8.1.tar.gz
+    $ cd slpkg-1.8.1
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :

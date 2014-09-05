@@ -25,8 +25,6 @@ import os
 import sys
 import subprocess
 
-from collections import OrderedDict
-
 from slpkg.colors import colors
 from slpkg.messages import pkg_not_found, template
 from slpkg.__metadata__ import pkg_path, sp, log_path
@@ -85,7 +83,8 @@ def pkg_remove(binary):
     Remove Slackware binary packages
     '''
     dep_path = log_path + "dep/"
-    removed, not_found, dependencies, rmv_dependencies = [], [], [], []
+    removed, dependencies = [], []
+    rmv_list, rmv_dependencies = [], []
     print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
         colors.CYAN, ', '.join(binary), colors.ENDC))
     for pkg in binary:
@@ -95,7 +94,6 @@ def pkg_remove(binary):
             removed.append(pkg)
         else:
             message = "Can't remove"
-            not_found.append(pkg)
             pkg_not_found("", pkg, message, "")
     if removed == []:
         print # new line at end
@@ -140,26 +138,31 @@ def pkg_remove(binary):
                         for dep in dependencies:
                             if find_package(dep + sp, pkg_path):
                                 print subprocess.check_output("removepkg {0}".format(dep), shell=True)
+                                rmv_list.append(dep)
                         os.remove(dep_path + rmv)
                         rmv_dependencies += dependencies[:-1]
                     else:
                         if find_package(rmv + sp, pkg_path):
                             print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
+                            rmv_list.append(rmv)
                         f.close()
                         os.remove(dep_path + rmv)
                 else:
                     if find_package(rmv + sp, pkg_path):
                         print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
+                        rmv_list.append(rmv)
             '''
             Prints all removed packages
             '''
-            removed = removed + rmv_dependencies
+            if len(rmv_list) > 1:
+                template(78)
+                print("| Total {0} packages removed".format(len(rmv_list)))
             template(78)
-            for pkg in list(OrderedDict.fromkeys(removed)):
+            for pkg in rmv_list:
                 if find_package(pkg + sp, pkg_path) == []:
                     print("| Package {0} removed".format(pkg))
-            for pkg in not_found:
-                print("| Package {0} not found".format(pkg))
+                else:
+                    print("| Package {0} not found".format(pkg))
             template(78)
         print # new line at end
 

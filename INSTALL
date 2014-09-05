@@ -35,11 +35,13 @@ There are mainly five ways:
 
    `pip install slpkg` or upgrade `pip install --upgrade slpkg`
 
-4) Download slpkg package from slackbuilds.org and run the first procedure described above.
+4) Download slpkg package from slackbuilds.org and run the second procedure described above.
 
 5) Download binary package from sourceforge:
  
    https://sourceforge.net/projects/slpkg/
+
+   and use Slackware command `upgradepkg --install-new <slpkg binary>`
 
 
 Proposed mode if you want to have installed the most updated version is 1 or 2 and 3

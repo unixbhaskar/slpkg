@@ -28,8 +28,7 @@ import subprocess
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.messages import pkg_not_found, pkg_found, template
-from slpkg.__metadata__ import (tmp, pkg_path, build_path, log_path, 
-                                sp, build, sbo_tag, sbo_filetype)
+from slpkg.__metadata__ import tmp, pkg_path, build_path, log_path, sp
 
 from slpkg.pkg.find import find_package 
 from slpkg.pkg.build import build_package
@@ -53,11 +52,13 @@ def sbo_build(name):
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None:
-            pkg_sum = 0 
+            pkg_sum = 0
             arch = os.uname()[4]
-            sbo_ver, pkg_arch = [], []
+            sbo_ver, pkg_arch  = [], []
+            installs, versions = [], []
             requires, dependencies = [], []
-            PKG_COLOR, DEP_COLOR, ARCH_COLOR, ENDC = "", "", "", colors.ENDC
+            PKG_COLOR, DEP_COLOR, ARCH_COLOR = "", "", ""
+            ENDC = colors.ENDC
             '''
             Insert master package in list to 
             install it after dependencies
@@ -98,8 +99,9 @@ def sbo_build(name):
                 elif "UNTESTED" in src:
                     pkg_arch.append("UNTESTED")
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
-                if find_package(sbo_pkg + sp, pkg_path):
+                if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
+            
             sys.stdout.write("Done\n")
             '''
             Tag with color green if package already installed
@@ -108,7 +110,7 @@ def sbo_build(name):
             UNTESTED with color yellow.
             '''
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
-            if find_package(master_pkg + sp, pkg_path):
+            if find_package(master_pkg, pkg_path):
                 PKG_COLOR = colors.GREEN
             else:
                 PKG_COLOR = colors.RED
@@ -130,7 +132,7 @@ def sbo_build(name):
             ARCH_COLOR = "" # reset arch color for dependencies packages
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1], pkg_arch[:-1]):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
-                if find_package(dep_pkg + sp, pkg_path):
+                if find_package(dep_pkg, pkg_path):
                     DEP_COLOR = colors.GREEN
                 else:
                     DEP_COLOR = colors.RED
@@ -153,13 +155,23 @@ def sbo_build(name):
             print("Total {0} {1}.".format(len(dependencies), msg_pkg))
             print("{0} {1} will be installed, {2} allready installed.".format(
                  (len(dependencies) - pkg_sum), msg_2_pkg, pkg_sum))
+            '''
+            Check if package supported by arch
+            before proceed to install
+            '''
+            UNST = ["UNSUPPORTED", "UNTESTED"]
+            for item in UNST:
+                for un in pkg_arch:
+                    if item == un:
+                        print("\n{0}The package {1}{2}\n".format(colors.RED, item, ENDC))
+                        sys.exit()
             read = raw_input("\nDo you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 os.chdir(build_path)
                 for pkg, ver in zip(dependencies, sbo_ver):
-                    sbo_file = "".join(find_package(pkg + sp, pkg_path))
+                    sbo_file = "".join(find_package(pkg, pkg_path))
                     sbo_file_version = sbo_file[len(pkg) + 1:-len(arch) - 7]
                     if ver > sbo_file_version:
                         prgnam = ("{0}-{1}".format(pkg, ver))
@@ -167,30 +179,47 @@ def sbo_build(name):
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = get_file(sbo_link, "/")
-                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, pkg))
+                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, ENDC, pkg))
                         subprocess.call("wget -N {0}".format(sbo_link), shell=True)
                         sources = []
                         for src in src_link:
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        '''
-                        Before installing new binary package look if arch is noarch.
-                        This is because some maintainers changes arch manualy.
-                        '''
-                        if "-noarch-" in "".join(find_package(prgnam, tmp)):
-                            sbo_arch = "-noarch-"
-                        else:
-                            from slpkg.__metadata__ import sbo_arch
-                        binary = ("{0}{1}{2}{3}{4}{5}".format(
-                                  tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Installing ] --> {1}{2}".format(
-                              colors.GREEN, colors.ENDC, pkg))
+                              colors.GREEN, ENDC, pkg))
+                        '''
+                        Searches the package name and version in /tmp to install.
+                        If find two or more packages e.g. to build tag 
+                        2 or 3 will fit most.
+                        '''
+                        binary_list = []
+                        for search in find_package(prgnam, tmp):
+                            if "_SBo" in search:
+                                binary_list.append(search)
+                        binary = (tmp + max(binary_list)).split()
                         pkg_upgrade(binary)
+                        print("Complete!\n")
+                        installs.append(pkg)
+                        versions.append(ver)
                     else:
                         template(78)
                         pkg_found(pkg, sbo_file_version)
                         template(78)
+                '''
+                Reference list only packages installed
+                '''
+                if len(installs) > 1:
+                    template(78)
+                    print("| Total {0} packages installed".format(len(installs)))
+                    template(78)
+                    for pkg, ver in zip(installs, versions):
+                        installed = ("{0}-{1}".format(pkg, ver))
+                        if find_package(installed, pkg_path):
+                            print("| Package {0} installed successfully".format(installed))
+                        else:
+                            print("| Package {0} NOT installed".format(installed))
+                    template(78)
                 '''
                 Write dependencies in a log file 
                 into directory `/var/log/slpkg/dep/`

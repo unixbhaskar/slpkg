@@ -115,12 +115,12 @@ def patches():
             print("Total {0} {1} will be upgraded.".format(len(upgrade_all), msg_pkg))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
-                   uncompressed, uncomp_unit))
+                  uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:
                     subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
-                                     patch_path, dwn, dwn), shell=True)
+                                    patch_path, dwn, dwn), shell=True)
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC, pkg[:-4]))
                     pkg_upgrade((patch_path + pkg).split())
@@ -145,7 +145,7 @@ def patches():
             if os.uname()[4] == "x86_64":
                 slack_arch = 64
             print("\nSlackware{0} v{1} distribution is up to date\n".format(
-                    slack_arch, slack_ver()))
+                  slack_arch, slack_ver()))
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

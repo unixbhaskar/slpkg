@@ -21,7 +21,7 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=slpkg
-VERSION=${VERSION:-1.8.0}
+VERSION=${VERSION:-1.8.1}
 TAG=${TAG:-_dsw}
 
 cd ..
@@ -33,20 +33,25 @@ if [ -f $PRGNAM-$VERSION.zip ]; then
     cd $PRGNAM-$VERSION/slackbuild
     chmod +x $PRGNAM.SlackBuild
     ./$PRGNAM.SlackBuild
+    rm $PRGNAM-$VERSION.zip 
 elif [ -f v$VERSION.zip ]; then
     cp v$VERSION.zip $PRGNAM-$VERSION/slackbuild
     cd $PRGNAM-$VERSION/slackbuild
     chmod +x $PRGNAM.SlackBuild
     ./$PRGNAM.SlackBuild
+    rm v$VERSION.zip
 elif [ -f $PRGNAM-$VERSION.tar.gz ]; then
     cp $PRGNAM-$VERSION.tar.gz $PRGNAM-$VERSION/slackbuild
     cd $PRGNAM-$VERSION/slackbuild
     chmod +x $PRGNAM.SlackBuild
     ./$PRGNAM.SlackBuild
+    rm $PRGNAM-$VERSION.tar.gz
 else
     cp v$VERSION.tar.gz $PRGNAM-$VERSION/slackbuild
     cd $PRGNAM-$VERSION/slackbuild
     chmod +x $PRGNAM.SlackBuild
+    ./$PRGNAM.SlackBuild
+    rm v$VERSION.tar.gz 
 fi
 # install or upgrade with new version
 upgradepkg --install-new /tmp/$PRGNAM-$VERSION-*$TAG.tgz

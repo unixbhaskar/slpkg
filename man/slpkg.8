@@ -62,6 +62,17 @@ Support .tar.gz and .tar.bz2 slackbuilds archives.
 .PP
 Four display options list, sbo, slack, noarch and all packages
 items that are installed on the system.
+.SS -c , sbo, slack [sbo, slack ...] check if your packages is up to date
+\fBslpkg\fP \fB-c\fP <\fIsbo\fP> <\fIslack\fP> <\fIupgrade\fP>
+.PP
+Check your packages from Slackware official mirrors or from 
+slackbuilds.org is up to date.
+.SS -s , sbo, slack [sbo, slack ...] download, build and install package with all dependencies
+\fBslpkg\fP \fB-s\fP <\fIsbo\fP> <\fIslack\fP> <\fIname of package\fP>
+.PP
+Installs packages from the repository slackbuilds.org automatically resolving all 
+dependencies of the package. Also installs the official distribution Slackware 
+packages.
 .SS -t , tracking dependencies
 \fBslpkg\fP \fB-t\fP <\fIname of package\fP>
 .PP
@@ -72,18 +83,6 @@ The sequence shown is that you must follow to correctly install package.
 .PP
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
-.SS -c , sbo, slack [sbo, slack ...] check if your packages is up to date
-\fBslpkg\fP \fB-c\fP <\fIsbo\fP> <\fIslack\fP> <\fIupgrade\fP>
-.PP
-Check your packages from Slackware official mirrors or from 
-slackbuilds.org is up to date.
-.SS -s , sbo, slack [sbo, slack ...] download, build and install package with all dependencies
-\fBslpkg\fP \fB-s\fP <\fIsbo\fP> <\fIslack\fP> <\fIname of package\fP>
-.PP
-Find package from slackbuild.org with all dependencies,
-download, build and install them if not installed or new version is 
-available. Even download and install official packages from Slackware
-official mirrors and install or reinstall if already installed.
 .SS -i , install binary package
 \fBslpkg\fP \fB-i\fP <\fIpackages.t?z\fP>
 .PP
@@ -152,18 +151,21 @@ $ \fBslpkg -t brasero\fP
 
 $ \fBslpkg -s sbo brasero\fP
   Building dependency tree...... Done
-  The following packages will be automatically installed or upgraded with new version:
+  
+  The following packages will be automatically installed or upgraded 
+  with new version:
+  
   +==============================================================================
-  | Package                 Version       Arch         Repository
+  | Package                                 Version       Arch         Repository
   +==============================================================================
   Installing:
-    brasero                 3.11.3        x86_64       SBo
+    brasero                                 3.11.3        x86_64       SBo
   Installing for dependencies:
-    orc                     0.4.19        x86_64       SBo
-    gstreamer1              1.2.2         x86_64       SBo
-    gst1-plugins-base       1.2.2         x86_64       SBo
-    gst1-plugins-bad        1.2.2         x86_64       SBo
-    libunique               1.1.6         x86_64       SBo
+    orc                                     0.4.19        x86_64       SBo
+    gstreamer1                              1.2.2         x86_64       SBo
+    gst1-plugins-base                       1.2.2         x86_64       SBo
+    gst1-plugins-bad                        1.2.2         x86_64       SBo
+    libunique                               1.1.6         x86_64       SBo
 
   Installing summary
   ===============================================================================

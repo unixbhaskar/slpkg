@@ -120,20 +120,20 @@ def install(slack_pkg):
                  (len(install_all) - pkg_sum), msg_2_pkg, pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
-                   uncompressed, uncomp_unit))
+                  uncompressed, uncomp_unit))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_list:
                     subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
-                                     tmp_path, dwn, dwn), shell=True)
+                                    tmp_path, dwn, dwn), shell=True)
                 for install in install_all:
                     if not os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ installing ] --> {1}{2}".format(
-                               colors.GREEN, ENDC, install))
+                              colors.GREEN, ENDC, install))
                         pkg_upgrade((tmp_path + install).split())
                     else:
                         print("{0}[ reinstalling ] --> {1}{2}".format(
-                               colors.GREEN, ENDC, install))
+                              colors.GREEN, ENDC, install))
                         pkg_reinstall((tmp_path + install).split())
                 print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
@@ -144,11 +144,9 @@ def install(slack_pkg):
                     if os.listdir(tmp_path) == []:
                         print("Packages removed")
                     else:
-                        print("\nThere are packages in directory {0}\n".format(
-                               tmp_path))
+                        print("\nThere are packages in directory {0}\n".format(tmp_path))
                 else:
-                    print("\nThere are packages in directory {0}\n".format(
-                           tmp_path))
+                    print("\nThere are packages in directory {0}\n".format(tmp_path))
         else:
             message = "No matching"
             pkg_not_found("", slack_pkg, message, "\n")

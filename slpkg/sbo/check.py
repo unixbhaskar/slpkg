@@ -25,14 +25,14 @@ import os
 import sys
 import subprocess
 
+from slpkg.pkg.find import find_package
 from slpkg.pkg.build import build_package
 from slpkg.pkg.manager import pkg_upgrade
 
 from slpkg.colors import colors
 from slpkg.messages import template
 from slpkg.functions import get_file
-from slpkg.__metadata__ import (tmp, sbo_arch, build, sbo_tag,
-                                sbo_filetype, pkg_path, build_path)
+from slpkg.__metadata__ import tmp, pkg_path, build_path
 
 from init import initialization
 from search import sbo_search_pkg
@@ -50,7 +50,7 @@ def sbo_check():
         sys.stdout.write("Reading package lists ...")
         sys.stdout.flush()
         initialization()
-        sbo_list = [] 
+        sbo_list = []
         index, toolbar_width = 0, 3
         GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
         upg_name, pkg_for_upg, upg_ver, upg_arch = [], [], [], []
@@ -74,7 +74,7 @@ def sbo_check():
                     arch = "noarch"
                 else:
                     arch = os.uname()[4]
-                name = pkg[:-(len(arch) + len(sbo_tag) + 3)]
+                name = pkg[:-(len(arch) + len("_SBo") + 3)]
                 pkg_version = get_file(name, "-")[1:]
                 name = name[:-(len(pkg_version) + 1)]
                 sbo_version = sbo_version_pkg(name)
@@ -117,11 +117,29 @@ def sbo_check():
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        binary = ("{0}{1}-{2}-{3}{4}{5}".format(
-                            tmp, prgnam, arch, build, sbo_tag, sbo_filetype).split())
                         print("{0}[ Upgrading ] --> {1}{2}".format(GREEN, ENDC, name))
+                        '''
+                        Searches the package name and version in /tmp to install.
+                        If find two or more packages e.g. to build tag 
+                        2 or 3 will fit most.
+                        '''
+                        binary_list = []
+                        for search in find_package(prgnam, tmp):
+                            if "_SBo" in search:
+                                binary_list.append(search)
+                        binary = (tmp + max(binary_list)).split()
                         pkg_upgrade(binary)
-                    print("Completed!\n")
+                        print("Complete!\n")
+                    if len(pkg_for_upg) > 1:
+                        template(78)
+                        print("| Total {0} {1} upgraded".format(len(pkg_for_upg), msg_pkg))
+                        template(78)
+                        for pkg, upg, ver in zip(pkg_for_upg, upg_name, upg_ver):
+                            upgraded = ("{0}-{1}".format(upg, ver))
+                            if find_package(upgraded, pkg_path):
+                                print("| Package {0} upgraded with new package {1}-{2}".format(
+                                      pkg, upg, ver))
+                        template(78)
             else:
                 print("\nTotal {0} SBo packages are up to date:\n".format(len(sbo_list)))
         else:

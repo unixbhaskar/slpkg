@@ -62,7 +62,7 @@ def pkg_tracking(name):
     '''
     View tree of dependencies and also
     highlight packages with color green  
-    if allready installed and colore red
+    if allready installed and color red
     if not installed.
     '''
     sys.stdout.write("Reading package lists ...")
@@ -87,9 +87,9 @@ def pkg_tracking(name):
         for duplicate in requires:
             if duplicate not in dependencies:
                 dependencies.append(duplicate)
-        pkg_len = len(name) + 24
         if dependencies == []:
             dependencies = ["No dependencies"]
+        pkg_len = len(name) + 24
         template(pkg_len)
         print("| Package {0}{1}{2} dependencies :".format(CYAN, name, ENDC))
         template(pkg_len)

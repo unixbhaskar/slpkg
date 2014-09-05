@@ -28,8 +28,7 @@ import subprocess
 from slpkg.colors import colors
 from slpkg.functions import get_file
 from slpkg.messages import pkg_not_found, pkg_found, view_sbo, template
-from slpkg.__metadata__ import (tmp, build, sbo_tag, sbo_filetype, build_path,
-                                pkg_path, slpkg_tmp, sp)
+from slpkg.__metadata__ import tmp, build_path, pkg_path, slpkg_tmp, sp
 
 from slpkg.pkg.build import build_package
 from slpkg.pkg.find import find_package
@@ -59,6 +58,16 @@ def sbo_network(name):
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), \
                  ", ".join([get_file(src, "/") for src in source_dwn]), \
                  sbo_req)
+        '''
+        Check if package supported by arch
+        before proceed to install
+        '''
+        FAULT = ""
+        UNST = ["UNSUPPORTED", "UNTESTED"]
+        for item in UNST:
+            for un in source_dwn:
+                if item == un:
+                    FAULT = item
         while True:
             try:
                 read = raw_input("_ ")
@@ -88,6 +97,9 @@ def sbo_network(name):
                 subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
                 os.remove("{0}{1}{2}".format(rdm_path, name, site))
             elif read == "B" or read == "b":
+                if FAULT:
+                    print("\n{0}The package {1}{2}\n".format(colors.RED, FAULT, colors.ENDC))
+                    sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 sources = []
@@ -102,6 +114,9 @@ def sbo_network(name):
                 print("Complete!\n")
                 break
             elif read == "I" or read == "i":
+                if FAULT:
+                    print("\n{0}The package {1}{2}\n".format(colors.RED, FAULT, colors.ENDC))
+                    sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 sbo_version = sbo_version_pkg(name)
@@ -116,22 +131,19 @@ def sbo_network(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
+                    print("{0}[ Installing ] --> {1}{2}".format(colors.GREEN, colors.ENDC, name))
                     '''
-                    Before installing new binary package look if arch is noarch.
-                    This is because some maintainers changes arch manualy.
+                    Searches the package name and version in /tmp to install.
+                    If find two or more packages e.g. to build tag 
+                    2 or 3 will fit most.
                     '''
-                    if "-noarch-" in "".join(find_package(prgnam, tmp)):
-                        sbo_arch = "-noarch-"
-                    else:
-                        from slpkg.__metadata__ import sbo_arch
-                    binary = ("{0}{1}{2}{3}{4}{5}".format(
-                               tmp, prgnam, sbo_arch, build, sbo_tag, sbo_filetype).split())
-                    print("{0}[ Installing ] --> {0}{1}".format(colors.GREEN, colors.ENDC, name))
+                    binary_list = []
+                    for search in find_package(prgnam, tmp):
+                        if "_SBo" in search:
+                            binary_list.append(search)
+                    binary = (tmp + max(binary_list)).split()
                     pkg_upgrade(binary)
-                    if find_package(name + sp, pkg_path):
-                        print("Complete!\n")
-                    else:
-                        print("The package {0} not installed successfully".format(name))
+                    print("Complete!\n")
                     break
                 else:
                     template(78)
