@@ -1,3 +1,10 @@
+Version 1.8.1
+04-09-2014
+
+[Updated] - Fix install.sh script to install wget download tar.gz 
+            archive file.
+            Fix install packages like adobe-reader
+
 Version 1.8.0
 02-09-2014
 

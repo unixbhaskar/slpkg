@@ -25,8 +25,6 @@ import os
 import sys
 import subprocess
 
-from collections import OrderedDict
-
 from colors import colors
 from messages import pkg_not_found, template
 from __metadata__ import pkg_path, sp, log_path

@@ -101,6 +101,7 @@ def sbo_build(name):
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
+            
             sys.stdout.write("Done\n")
             '''
             Tag with color green if package already installed
@@ -154,6 +155,16 @@ def sbo_build(name):
             print("Total {0} {1}.".format(len(dependencies), msg_pkg))
             print("{0} {1} will be installed, {2} allready installed.".format(
                  (len(dependencies) - pkg_sum), msg_2_pkg, pkg_sum))
+            '''
+            Check if package supported by arch
+            before proceed to install
+            '''
+            UNST = ["UNSUPPORTED", "UNTESTED"]
+            for item in UNST:
+                for un in pkg_arch:
+                    if item == un:
+                        print("\n{0}The package {1}{2}\n".format(colors.RED, item, ENDC))
+                        sys.exit()
             read = raw_input("\nDo you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
                 if not os.path.exists(build_path):
@@ -168,7 +179,7 @@ def sbo_build(name):
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = get_file(sbo_link, "/")
-                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, colors.ENDC, pkg))
+                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, ENDC, pkg))
                         subprocess.call("wget -N {0}".format(sbo_link), shell=True)
                         sources = []
                         for src in src_link:
@@ -176,7 +187,7 @@ def sbo_build(name):
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
                         print("{0}[ Installing ] --> {1}{2}".format(
-                              colors.GREEN, colors.ENDC, pkg))
+                              colors.GREEN, ENDC, pkg))
                         '''
                         Searches the package name and version in /tmp to install.
                         If find two or more packages e.g. to build tag 

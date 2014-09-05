@@ -58,6 +58,16 @@ def sbo_network(name):
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), \
                  ", ".join([get_file(src, "/") for src in source_dwn]), \
                  sbo_req)
+        '''
+        Check if package supported by arch
+        before proceed to install
+        '''
+        FAULT = ""
+        UNST = ["UNSUPPORTED", "UNTESTED"]
+        for item in UNST:
+            for un in source_dwn:
+                if item == un:
+                    FAULT = item
         while True:
             try:
                 read = raw_input("_ ")
@@ -87,6 +97,9 @@ def sbo_network(name):
                 subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
                 os.remove("{0}{1}{2}".format(rdm_path, name, site))
             elif read == "B" or read == "b":
+                if FAULT:
+                    print("\n{0}The package {1}{2}\n".format(colors.RED, FAULT, colors.ENDC))
+                    sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 sources = []
@@ -101,6 +114,9 @@ def sbo_network(name):
                 print("Complete!\n")
                 break
             elif read == "I" or read == "i":
+                if FAULT:
+                    print("\n{0}The package {1}{2}\n".format(colors.RED, FAULT, colors.ENDC))
+                    sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 sbo_version = sbo_version_pkg(name)

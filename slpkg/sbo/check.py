@@ -138,7 +138,8 @@ def sbo_check():
                         for pkg, upg, ver in zip(pkg_for_upg, upg_name, upg_ver):
                             upgraded = ("{0}-{1}".format(upg, ver))
                             if find_package(upgraded, pkg_path):
-                                print("| Package {0} upgraded with new package {1}-{2}".format(pkg, upg, ver))
+                                print("| Package {0} upgraded with new package {1}-{2}".format(
+                                      pkg, upg, ver))
                         template(78)
             else:
                 print("\nTotal {0} SBo packages are up to date:\n".format(len(sbo_list)))
