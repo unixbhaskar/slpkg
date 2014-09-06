@@ -38,7 +38,7 @@ def build_package(script, sources, path):
     log_file = ("build_{0}_log".format(prgnam))
     log_path = ("{0}{1}/".format(path, prgnam))
     log_date = time.strftime("%c")
-    template = ("#" * 78 + "\n\n")
+    template = ("#" * 79 + "\n\n")
     try:
         if os.path.isfile(log_path + log_file):
             os.remove(log_path + log_file)
@@ -60,6 +60,9 @@ def build_package(script, sources, path):
             if build:
                 print build,
                 log.write(str(build,))
+        log.write(template)
+        log.write(" " * 38 + "E N D\n\n")
+        log.write(template)
         log.close()
         os.chdir(path)
     except (OSError, IOError):

@@ -27,7 +27,7 @@ import subprocess
 
 from colors import colors
 from functions import get_file
-from messages import pkg_not_found, pkg_found, view_sbo, template
+from messages import pkg_not_found, pkg_found, view_sbo, template, build_FAILED
 from __metadata__ import tmp, build_path, pkg_path, slpkg_tmp, sp
 
 from pkg.build import build_package
@@ -141,7 +141,11 @@ def sbo_network(name):
                     for search in find_package(prgnam, tmp):
                         if "_SBo" in search:
                             binary_list.append(search)
-                    binary = (tmp + max(binary_list)).split()
+                    try:
+                        binary = (tmp + max(binary_list)).split()
+                    except ValueError:
+                        build_failed(sbo_url, prgnam)
+                        sys.exit()
                     pkg_upgrade(binary)
                     print("Complete!\n")
                     break

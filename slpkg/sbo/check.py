@@ -31,7 +31,7 @@ from pkg.manager import pkg_upgrade
 
 
 from colors import colors
-from messages import template
+from messages import template, build_FAILED
 from functions import get_file
 from __metadata__ import tmp, pkg_path, build_path
 
@@ -108,7 +108,7 @@ def sbo_check():
                 requires.reverse() # Inverting the list brings the
                                    # dependencies in order to be installed.
                 '''
-                Because many packages use the same dependencies, in this loop 
+                Many packages use the same dependencies, in this loop 
                 creates a new list by removing duplicate dependencies but 
                 without spoiling the line must be installed.
                 '''
@@ -119,7 +119,7 @@ def sbo_check():
                 Last and after the list is created with the correct number 
                 of dependencies that must be installed, and add the particular 
                 packages that need to be upgraded if they are not already on 
-                the list.
+                the list in end to list.
                 '''
                 for upg in upg_name:
                     if upg not in dependencies_list:
@@ -199,7 +199,11 @@ def sbo_check():
                         for search in find_package(prgnam, tmp):
                             if "_SBo" in search:
                                 binary_list.append(search)
-                        binary = (tmp + max(binary_list)).split()
+                        try:
+                            binary = (tmp + max(binary_list)).split()
+                        except ValueError:
+                            build_FAILED(sbo_url, prgnam)
+                            sys.exit()
                         pkg_upgrade(binary)
                         print("Complete!\n")
                     if len(pkg_for_upg) > 1:
@@ -213,7 +217,7 @@ def sbo_check():
                                       pkg, upg, ver))
                         template(78)
             else:
-                print("\nTotal {0} SBo packages are up to date:\n".format(len(sbo_list)))
+                print("\nTotal {0} SBo packages are up to date\n".format(len(sbo_list)))
         else:
             sys.stdout.write("Done\n")
             print("\nNo SBo packages found\n")

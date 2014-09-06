@@ -27,7 +27,7 @@ import subprocess
 
 from colors import colors
 from functions import get_file
-from messages import pkg_not_found, pkg_found, template
+from messages import pkg_not_found, pkg_found, template, build_FAILED
 from __metadata__ import tmp, pkg_path, build_path, log_path, sp
 
 from pkg.find import find_package 
@@ -101,7 +101,6 @@ def sbo_build(name):
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
-            
             sys.stdout.write("Done\n")
             '''
             Tag with color green if package already installed
@@ -170,11 +169,15 @@ def sbo_build(name):
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 os.chdir(build_path)
-                for pkg, ver in zip(dependencies, sbo_ver):
-                    sbo_file = "".join(find_package(pkg, pkg_path))
-                    sbo_file_version = sbo_file[len(pkg) + 1:-len(arch) - 7]
-                    if ver > sbo_file_version:
-                        prgnam = ("{0}-{1}".format(pkg, ver))
+                for pkg, ver, ar in zip(dependencies, sbo_ver, pkg_arch):
+                    prgnam = ("{0}-{1}".format(pkg, ver))
+                    sbo_file = "".join(find_package(prgnam, pkg_path))
+                    if sbo_file:
+                        sbo_file_version = sbo_file[len(pkg) + 1:-len(ar) - 7]
+                        template(78)
+                        pkg_found(pkg, sbo_file_version)
+                        template(78)
+                    else:
                         sbo_url = sbo_search_pkg(pkg)
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
@@ -197,15 +200,15 @@ def sbo_build(name):
                         for search in find_package(prgnam, tmp):
                             if "_SBo" in search:
                                 binary_list.append(search)
-                        binary = (tmp + max(binary_list)).split()
+                        try:
+                            binary = (tmp + max(binary_list)).split()
+                        except ValueError:
+                            build_FAILED(sbo_url, prgnam)
+                            sys.exit()
                         pkg_upgrade(binary)
                         print("Complete!\n")
                         installs.append(pkg)
                         versions.append(ver)
-                    else:
-                        template(78)
-                        pkg_found(pkg, sbo_file_version)
-                        template(78)
                 '''
                 Reference list only packages installed
                 '''
