@@ -38,6 +38,7 @@ from __metadata__ import tmp, pkg_path, build_path
 from init import initialization
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
+from dependency import sbo_dependencies_pkg
 from greps import sbo_source_dwn, sbo_version_pkg
 
 def sbo_check():
@@ -51,9 +52,9 @@ def sbo_check():
         sys.stdout.write("Reading package lists ...")
         sys.stdout.flush()
         initialization()
-        sbo_list = []
         index, toolbar_width = 0, 3
         GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
+        sbo_list, dependencies_list, requires, upgrade = [], [], [], []
         upg_name, pkg_for_upg, upg_ver, upg_arch = [], [], [], []
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
@@ -79,12 +80,72 @@ def sbo_check():
                 pkg_version = get_file(name, "-")[1:]
                 name = name[:-(len(pkg_version) + 1)]
                 sbo_version = sbo_version_pkg(name)
-                if sbo_version > pkg_version:
+                if sbo_search_pkg(name):
+                    sbo_package = ("{0}-{1}".format(name, sbo_version))
+                if find_package(sbo_package, pkg_path) == []:
                     upg_name.append(name)
-                    pkg_for_upg.append("{0}-{1}".format(name, pkg_version))
-                    upg_ver.append(sbo_version)
+            sys.stdout.write("Done\n")
+            sys.stdout.write("Resolving dependencies ...")
+            sys.stdout.flush()
+            '''
+            Create list with all dependencies
+            '''
+            for upg in upg_name:
+                dependencies = sbo_dependencies_pkg(upg)
+            '''    
+            Create one dimensional list with
+            all dependencies
+            '''
+            for dep in dependencies:
+                requires += dep
+            requires.reverse()
+            '''
+            Remove double dependencies
+            '''
+            for duplicate in requires:
+                if duplicate not in dependencies_list:
+                    dependencies_list.append(duplicate)
+            '''
+            Add master packages to end of list
+            for install after dependencies.
+            '''
+            for upg in upg_name:
+                if upg not in dependencies_list:
+                    dependencies_list.append(upg)
+            '''
+            Add packages is not installed to a final list.
+            '''
+            for pkg in dependencies_list:
+                if "-x86_64-" in pkg:
+                    arch = "x86_64"
+                elif "-i486-" in pkg:
+                    arch = "i486"
+                elif "-arm-" in pkg:
+                    arch = "arm"
+                elif "-noarch-" in pkg:
+                    arch = "noarch"
+                else:
+                    arch = os.uname()[4]
+                ver = sbo_version_pkg(pkg)
+                prgnam = ("{0}-{1}".format(pkg, ver))
+                pkg_version = ver # if package not installed 
+                                  # take version from repository
+                if find_package(prgnam, pkg_path) == []:
+                    for sbo in os.listdir(pkg_path):
+                        if sbo.startswith(pkg + "-") and sbo.endswith("_SBo"):
+                            # search if packages installed
+                            # if yes grab package name and version
+                            name = sbo[:-(len(arch) + len("_SBo") + 3)]
+                            pkg_version = get_file(name, "-")[1:]
+                    upgrade.append(pkg)
+                    pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
+                    upg_ver.append(ver)
                     upg_arch.append(arch)
             sys.stdout.write("Done\n")
+            '''
+            Create a list to display only the dependencies 
+            that need to be upgraded or installed.
+            '''
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
                 template(78)
@@ -105,7 +166,7 @@ def sbo_check():
                     if not os.path.exists(build_path):
                         os.mkdir(build_path)
                     os.chdir(build_path)
-                    for name, version, arch in zip(upg_name, upg_ver, upg_arch):
+                    for name, version in zip(upgrade, upg_ver):
                         prgnam = ("{0}-{1}".format(name, version))
                         sbo_url = sbo_search_pkg(name)
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
@@ -131,11 +192,11 @@ def sbo_check():
                         binary = (tmp + max(binary_list)).split()
                         pkg_upgrade(binary)
                         print("Complete!\n")
-                    if len(pkg_for_upg) > 1:
+                    if len(pkg_for_upgrade) > 1:
                         template(78)
-                        print("| Total {0} {1} upgraded".format(len(pkg_for_upg), msg_pkg))
+                        print("| Total {0} {1} upgraded".format(len(pkg_for_upgrade), msg_pkg))
                         template(78)
-                        for pkg, upg, ver in zip(pkg_for_upg, upg_name, upg_ver):
+                        for pkg, upg, ver in zip(pkg_for_upg, upgrade, upg_ver):
                             upgraded = ("{0}-{1}".format(upg, ver))
                             if find_package(upgraded, pkg_path):
                                 print("| Package {0} upgraded with new package {1}-{2}".format(
