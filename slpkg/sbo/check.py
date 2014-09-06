@@ -47,15 +47,18 @@ def sbo_check():
     repository.
     NOTE: This functions check packages by version not by build
     tag because build tag not reported the SLACKBUILDS.TXT file.
+    But install the package with maximum build tag if find the 
+    some version in /tmp directory.
     '''
     try:
         sys.stdout.write("Reading package lists ...")
         sys.stdout.flush()
         initialization()
         index, toolbar_width = 0, 3
-        GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
-        sbo_list, dependencies_list, requires, upgrade = [], [], [], []
+        dependencies, dependencies_list = [], []
+        requires, upgrade, sbo_list = [], [], []
         upg_name, pkg_for_upg, upg_ver, upg_arch = [], [], [], []
+        GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
                 sbo_list.append(pkg)
@@ -85,67 +88,74 @@ def sbo_check():
                 if find_package(sbo_package, pkg_path) == []:
                     upg_name.append(name)
             sys.stdout.write("Done\n")
-            sys.stdout.write("Resolving dependencies ...")
-            sys.stdout.flush()
-            '''
-            Create list with all dependencies
-            '''
-            for upg in upg_name:
-                dependencies = sbo_dependencies_pkg(upg)
-            '''    
-            Create one dimensional list with
-            all dependencies
-            '''
-            for dep in dependencies:
-                requires += dep
-            requires.reverse()
-            '''
-            Remove double dependencies
-            '''
-            for duplicate in requires:
-                if duplicate not in dependencies_list:
-                    dependencies_list.append(duplicate)
-            '''
-            Add master packages to end of list
-            for install after dependencies.
-            '''
-            for upg in upg_name:
-                if upg not in dependencies_list:
-                    dependencies_list.append(upg)
-            '''
-            Add packages is not installed to a final list.
-            '''
-            for pkg in dependencies_list:
-                if "-x86_64-" in pkg:
-                    arch = "x86_64"
-                elif "-i486-" in pkg:
-                    arch = "i486"
-                elif "-arm-" in pkg:
-                    arch = "arm"
-                elif "-noarch-" in pkg:
-                    arch = "noarch"
-                else:
-                    arch = os.uname()[4]
-                ver = sbo_version_pkg(pkg)
-                prgnam = ("{0}-{1}".format(pkg, ver))
-                pkg_version = ver # if package not installed 
-                                  # take version from repository
-                if find_package(prgnam, pkg_path) == []:
-                    for sbo in os.listdir(pkg_path):
-                        if sbo.startswith(pkg + "-") and sbo.endswith("_SBo"):
-                            # search if packages installed
-                            # if yes grab package name and version
-                            name = sbo[:-(len(arch) + len("_SBo") + 3)]
-                            pkg_version = get_file(name, "-")[1:]
-                    upgrade.append(pkg)
-                    pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
-                    upg_ver.append(ver)
-                    upg_arch.append(arch)
-            sys.stdout.write("Done\n")
-            '''
-            Create a list to display only the dependencies 
-            that need to be upgraded or installed.
-            '''
+            if upg_name:
+                sys.stdout.write("Resolving dependencies ...")
+                sys.stdout.flush()
+                '''
+                Of the packages found to need upgrading,
+                stored in a series such as reading from the 
+                file .info.
+                '''
+                for upg in upg_name:
+                    dependencies = sbo_dependencies_pkg(upg)
+                '''    
+                Because there are dependencies that depend on other 
+                dependencies are created lists into other lists. 
+                Thus creating this loop create one-dimensional list.
+                '''
+                for dep in dependencies:
+                    requires += dep
+                requires.reverse() # Inverting the list brings the
+                                   # dependencies in order to be installed.
+                '''
+                Because many packages use the same dependencies, in this loop 
+                creates a new list by removing duplicate dependencies but 
+                without spoiling the line must be installed.
+                '''
+                for duplicate in requires:
+                    if duplicate not in dependencies_list:
+                        dependencies_list.append(duplicate)
+                '''
+                Last and after the list is created with the correct number 
+                of dependencies that must be installed, and add the particular 
+                packages that need to be upgraded if they are not already on 
+                the list.
+                '''
+                for upg in upg_name:
+                    if upg not in dependencies_list:
+                        dependencies_list.append(upg)
+                '''
+                In the end lest a check of the packages that are on the list
+                are already installed.
+                '''
+                for pkg in dependencies_list:
+                    ver = sbo_version_pkg(pkg)
+                    prgnam = ("{0}-{1}".format(pkg, ver))
+                    pkg_version = ver # if package not installed 
+                                      # take version from repository
+                    if find_package(prgnam, pkg_path) == []:
+                        for sbo in os.listdir(pkg_path):
+                            if sbo.startswith(pkg + "-") and sbo.endswith("_SBo"):
+                                # search if packages installed
+                                # if yes grab package name,
+                                # version and arch
+                                if "-x86_64-" in sbo:
+                                    arch = "x86_64"
+                                elif "-i486-" in sbo:
+                                    arch = "i486"
+                                elif "-arm-" in sbo:
+                                    arch = "arm"
+                                elif "-noarch-" in sbo:
+                                    arch = "noarch"
+                                else:
+                                    arch = os.uname()[4]
+                                name = sbo[:-(len(arch) + len("_SBo") + 3)]
+                                pkg_version = get_file(name, "-")[1:]
+                        upgrade.append(pkg)
+                        pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
+                        upg_ver.append(ver)
+                        upg_arch.append(arch)
+                sys.stdout.write("Done\n")
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
                 template(78)
@@ -192,9 +202,9 @@ def sbo_check():
                         binary = (tmp + max(binary_list)).split()
                         pkg_upgrade(binary)
                         print("Complete!\n")
-                    if len(pkg_for_upgrade) > 1:
+                    if len(pkg_for_upg) > 1:
                         template(78)
-                        print("| Total {0} {1} upgraded".format(len(pkg_for_upgrade), msg_pkg))
+                        print("| Total {0} {1} upgraded".format(len(pkg_for_upg), msg_pkg))
                         template(78)
                         for pkg, upg, ver in zip(pkg_for_upg, upgrade, upg_ver):
                             upgraded = ("{0}-{1}".format(upg, ver))
