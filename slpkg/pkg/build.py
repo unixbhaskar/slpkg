@@ -23,6 +23,7 @@
 
 import os
 import sys
+import time
 import shutil
 import tarfile
 import subprocess
@@ -34,7 +35,13 @@ def build_package(script, sources, path):
     Build package from source
     '''
     prgnam = script.replace(".tar.gz", "")
+    log_file = ("build_{0}_log".format(prgnam))
+    log_path = ("{0}{1}/".format(path, prgnam))
+    log_date = time.strftime("%c")
+    template = ("#" * 78 + "\n\n")
     try:
+        if os.path.isfile(log_path + log_file):
+            os.remove(log_path + log_file)
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
@@ -42,7 +49,18 @@ def build_package(script, sources, path):
             shutil.copy2(src, prgnam)
         os.chdir(path + prgnam)
         subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
-        subprocess.call("./{0}.SlackBuild".format(prgnam), shell=True)
+        p = subprocess.Popen("./{0}.SlackBuild".format(prgnam), shell=True, stdout=subprocess.PIPE)
+        log = open(log_file, "a")
+        log.write(template)
+        log.write("File : " + log_file + "\n")
+        log.write("Path : " + log_path + "\n")
+        log.write("Date : " + log_date + "\n\n")
+        log.write(template)
+        for build in p.communicate():
+            if build:
+                print build,
+                log.write(str(build,))
+        log.close()
         os.chdir(path)
     except (OSError, IOError):
         message = "Wrong file"
