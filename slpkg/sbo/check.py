@@ -46,8 +46,8 @@ def sbo_check():
     Upgrade all slackbuilds packages from slackbuilds.org
     repository.
     NOTE: This functions check packages by version not by build
-    tag because build tag not reported the SLACKBUILDS.TXT file.
-    But install the package with maximum build tag if find the 
+    tag because build tag not reported the SLACKBUILDS.TXT file,
+    but install the package with maximum build tag if find the 
     some version in /tmp directory.
     '''
     try:
@@ -56,7 +56,7 @@ def sbo_check():
         initialization()
         index, toolbar_width = 0, 3
         dependencies, dependencies_list = [], []
-        requires, upgrade, sbo_list = [], [], []
+        requires, upgrade, installed, sbo_list = [], [], [], []
         upg_name, pkg_for_upg, upg_ver, upg_arch = [], [], [], []
         GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
         for pkg in os.listdir(pkg_path):
@@ -79,14 +79,16 @@ def sbo_check():
                     arch = "noarch"
                 else:
                     arch = os.uname()[4]
-                name = pkg[:-(len(arch) + len("_SBo") + 3)]
-                pkg_version = get_file(name, "-")[1:]
-                name = name[:-(len(pkg_version) + 1)]
-                sbo_version = sbo_version_pkg(name)
+                package = pkg[:-(len(arch) + len("_SBo") + 3)]
+                pkg_version = get_file(package, "-")[1:]
+                name = package[:-(len(pkg_version) + 1)]
                 if sbo_search_pkg(name):
-                    sbo_package = ("{0}-{1}".format(name, sbo_version))
-                if find_package(sbo_package, pkg_path) == []:
-                    upg_name.append(name)
+                    # search packages if exists in the repository
+                    # and it gets to avoidable modified packages
+                    # from the user with the tag _SBo
+                    sbo_package = ("{0}-{1}".format(name, sbo_version_pkg(name)))
+                    if sbo_package > package:
+                        upg_name.append(name)
             sys.stdout.write("Done\n")
             if upg_name:
                 sys.stdout.write("Resolving dependencies ...")
@@ -162,15 +164,26 @@ def sbo_check():
                 print "| Package",  " " * 27, "New version",  " " * 5, "Arch", " " * 7, "Repository"
                 template(78)
                 print("Upgrading:")
+                count_upgraded, count_installed = 0, 0
                 for upg, ver, arch in zip(pkg_for_upg, upg_ver, upg_arch):
-                    print " " , RED + upg + ENDC, " " * (34-len(upg)), GREEN + ver + ENDC, \
+                    if find_package(upg[:-(len(ver) + 1)], pkg_path):
+                        COLOR = colors.YELLOW
+                        count_upgraded += 1
+                    else:
+                        COLOR = colors.RED
+                        count_installed += 1
+                    print " " , COLOR + upg + ENDC, " " * (34-len(upg)), GREEN + ver + ENDC, \
                           " " * (16-len(ver)), arch, " " * (11-len(arch)), "SBo"
-                msg_pkg = "package"
-                if len(pkg_for_upg) > 1:
-                    msg_pkg = msg_pkg + "s"
+                msg_upg = "package"
+                msg_ins = msg_upg
+                if count_upgraded > 1:
+                    msg_upg = msg_upg + "s"
+                if count_installed > 1:
+                    msg_ins = msg_ins + "s"
                 print("\nInstalling summary")
                 print("=" * 79)
-                print("Total {0} {1} will be upgraded.\n".format(len(pkg_for_upg), msg_pkg))
+                print("Total {0} {1} will be upgraded and {2} {3} will be installed.\n".format(
+                      count_upgraded, msg_upg, count_installed, msg_ins))
                 read = raw_input("Would you like to upgrade [Y/n]? ")
                 if read == "Y" or read == "y":
                     if not os.path.exists(build_path):
@@ -203,18 +216,28 @@ def sbo_check():
                         except ValueError:
                             build_FAILED(sbo_url, prgnam)
                             sys.exit()
-                        print("{0}[ Upgrading ] --> {1}{2}".format(GREEN, ENDC, name))
+                        if find_package(name, pkg_path):
+                            print("{0}[ Upgrading ] --> {1}{2}".format(GREEN, ENDC, name))
+                        else:
+                            print("{0}[ Installing ] --> {1}{2}".format(GREEN, ENDC, name))
+                            # Use this list to pick out what 
+                            # packages will be installed
+                            installed.append(name)
                         pkg_upgrade(binary)
                         print("Complete!\n")
                     if len(pkg_for_upg) > 1:
                         template(78)
-                        print("| Total {0} {1} upgraded".format(len(pkg_for_upg), msg_pkg))
+                        print("| Total {0} {1} upgraded and {2} {3} installed".format(
+                              count_upgraded, msg_upg, count_installed, msg_ins))
                         template(78)
                         for pkg, upg, ver in zip(pkg_for_upg, upgrade, upg_ver):
                             upgraded = ("{0}-{1}".format(upg, ver))
                             if find_package(upgraded, pkg_path):
-                                print("| Package {0} upgraded with new package {1}-{2}".format(
-                                      pkg, upg, ver))
+                                if upg in installed:
+                                    print("| Package {0} installed".format(pkg))
+                                else: 
+                                    print("| Package {0} upgraded with new package {1}-{2}".format(
+                                          pkg, upg, ver))
                         template(78)
             else:
                 print("\nTotal {0} SBo packages are up to date\n".format(len(sbo_list)))
