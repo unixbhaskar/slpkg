@@ -29,6 +29,7 @@ import tarfile
 import subprocess
 
 from messages import pkg_not_found
+from __metadata__ import log_path
 
 def build_package(script, sources, path):
     '''
@@ -36,12 +37,16 @@ def build_package(script, sources, path):
     '''
     prgnam = script.replace(".tar.gz", "")
     log_file = ("build_{0}_log".format(prgnam))
-    log_path = ("{0}{1}/".format(path, prgnam))
+    logs = log_path + "logs/"
+    if not os.path.exists(log_path):
+        os.mkdir(log_path)
+    if not os.path.exists(logs):
+        os.mkdir(logs)
     log_date = time.strftime("%c")
     template = ("#" * 79 + "\n\n")
     try:
-        if os.path.isfile(log_path + log_file):
-            os.remove(log_path + log_file)
+        if os.path.isfile(logs + log_file):
+            os.remove(logs + log_file)
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
@@ -49,19 +54,19 @@ def build_package(script, sources, path):
             shutil.copy2(src, prgnam)
         os.chdir(path + prgnam)
         subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
-        with open(log_file, "w") as log: # write headers to log file
+        with open(logs + log_file, "w") as log: # write headers to log file
             log.write(template)
             log.write("File : " + log_file + "\n")
-            log.write("Path : " + log_path + "\n")
+            log.write("Path : " + logs + "\n")
             log.write("Date : " + log_date + "\n\n")
             log.write(template)
             log.close()
-        with open(log_file, "a") as log: # append END tag to a log file
+        with open(logs + log_file, "a") as log: # append END tag to a log file
             log.write(template)
             log.write(" " * 38 + "E N D\n\n")
             log.write(template)
-            subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}".format(
-                             prgnam, log_file), shell=True, stdout=sys.stdout).communicate()
+            subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
+                             prgnam, logs, log_file), shell=True, stdout=sys.stdout).communicate()
             log.close()
             os.chdir(path)
     except (OSError, IOError):
