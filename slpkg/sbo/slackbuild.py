@@ -189,8 +189,6 @@ def sbo_build(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        print("{0}[ Installing ] --> {1}{2}".format(
-                              colors.GREEN, ENDC, pkg))
                         '''
                         Searches the package name and version in /tmp to install.
                         If find two or more packages e.g. to build tag 
@@ -205,6 +203,8 @@ def sbo_build(name):
                         except ValueError:
                             build_FAILED(sbo_url, prgnam)
                             sys.exit()
+                        print("{0}[ Installing ] --> {1}{2}".format(
+                              colors.GREEN, ENDC, pkg))
                         pkg_upgrade(binary)
                         print("Complete!\n")
                         installs.append(pkg)

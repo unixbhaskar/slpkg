@@ -49,22 +49,21 @@ def build_package(script, sources, path):
             shutil.copy2(src, prgnam)
         os.chdir(path + prgnam)
         subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
-        p = subprocess.Popen("./{0}.SlackBuild".format(prgnam), shell=True, stdout=subprocess.PIPE)
-        log = open(log_file, "a")
-        log.write(template)
-        log.write("File : " + log_file + "\n")
-        log.write("Path : " + log_path + "\n")
-        log.write("Date : " + log_date + "\n\n")
-        log.write(template)
-        for build in p.communicate():
-            if build:
-                print build,
-                log.write(str(build,))
-        log.write(template)
-        log.write(" " * 38 + "E N D\n\n")
-        log.write(template)
-        log.close()
-        os.chdir(path)
+        with open(log_file, "w") as log: # write headers to log file
+            log.write(template)
+            log.write("File : " + log_file + "\n")
+            log.write("Path : " + log_path + "\n")
+            log.write("Date : " + log_date + "\n\n")
+            log.write(template)
+            log.close()
+        with open(log_file, "a") as log: # append END tag to a log file
+            log.write(template)
+            log.write(" " * 38 + "E N D\n\n")
+            log.write(template)
+            subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}".format(
+                             prgnam, log_file), shell=True, stdout=sys.stdout).communicate()
+            log.close()
+            os.chdir(path)
     except (OSError, IOError):
         message = "Wrong file"
         pkg_not_found("\n", prgnam, message, "\n")
