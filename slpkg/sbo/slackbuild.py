@@ -27,8 +27,8 @@ import subprocess
 
 from slpkg.colors import colors
 from slpkg.functions import get_file
-from slpkg.messages import pkg_not_found, pkg_found, template
 from slpkg.__metadata__ import tmp, pkg_path, build_path, log_path, sp
+from slpkg.messages import pkg_not_found, pkg_found, template, build_FAILED
 
 from slpkg.pkg.find import find_package 
 from slpkg.pkg.build import build_package
@@ -52,10 +52,10 @@ def sbo_build(name):
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None:
-            pkg_sum = 0
+            pkg_sum, count_upgraded, count_installed = 0, 0, 0
             arch = os.uname()[4]
             sbo_ver, pkg_arch  = [], []
-            installs, versions = [], []
+            installs, upgraded, versions = [], [], []
             requires, dependencies = [], []
             PKG_COLOR, DEP_COLOR, ARCH_COLOR = "", "", ""
             ENDC = colors.ENDC
@@ -101,7 +101,6 @@ def sbo_build(name):
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
-            
             sys.stdout.write("Done\n")
             '''
             Tag with color green if package already installed
@@ -112,8 +111,12 @@ def sbo_build(name):
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
             if find_package(master_pkg, pkg_path):
                 PKG_COLOR = colors.GREEN
+            elif find_package(name + sp, pkg_path):
+                PKG_COLOR = colors.YELLOW
+                count_upgraded += 1    
             else:
                 PKG_COLOR = colors.RED
+                count_installed += 1
             if "UNSUPPORTED" in pkg_arch[-1]:
                 ARCH_COLOR = colors.RED
             elif "UNTESTED" in pkg_arch[-1]:
@@ -134,8 +137,12 @@ def sbo_build(name):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
                 if find_package(dep_pkg, pkg_path):
                     DEP_COLOR = colors.GREEN
+                elif find_package(dep + sp, pkg_path):
+                    DEP_COLOR = colors.YELLOW
+                    count_upgraded += 1
                 else:
                     DEP_COLOR = colors.RED
+                    count_installed += 1
                 if "UNSUPPORTED" in dep_arch:
                     ARCH_COLOR = colors.RED
                 elif "UNTESTED" in dep_arch:
@@ -144,17 +151,18 @@ def sbo_build(name):
                       " " * (38-len(dep)), ver, \
                       " " * (14-len(ver)), ARCH_COLOR + dep_arch + ENDC, \
                       " " * (9-len(dep_arch)), "SBo"
-            msg_pkg = "package"
-            msg_2_pkg = msg_pkg
-            if len(dependencies) > 1:
-                msg_pkg = msg_pkg + "s"
-            if len(dependencies) - pkg_sum > 1:
-                msg_2_pkg = msg_2_pkg + "s"
+            msg_ins = "package"
+            msg_upg = msg_ins
+            if count_installed > 1:
+                msg_ins = msg_ins + "s"
+            if msg_upg > 1:
+                msg_upg = msg_upg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("Total {0} {1}.".format(len(dependencies), msg_pkg))
-            print("{0} {1} will be installed, {2} allready installed.".format(
-                 (len(dependencies) - pkg_sum), msg_2_pkg, pkg_sum))
+            print("Total {0} {1}.".format(len(dependencies), msg_ins))
+            print("{0} {1} will be installed, {2} allready installed and {3} {4}".format(
+                 count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
+            print("will be upgraded.")
             '''
             Check if package supported by arch
             before proceed to install
@@ -170,11 +178,15 @@ def sbo_build(name):
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 os.chdir(build_path)
-                for pkg, ver in zip(dependencies, sbo_ver):
-                    sbo_file = "".join(find_package(pkg, pkg_path))
-                    sbo_file_version = sbo_file[len(pkg) + 1:-len(arch) - 7]
-                    if ver > sbo_file_version:
-                        prgnam = ("{0}-{1}".format(pkg, ver))
+                for pkg, ver, ar in zip(dependencies, sbo_ver, pkg_arch):
+                    prgnam = ("{0}-{1}".format(pkg, ver))
+                    sbo_file = "".join(find_package(prgnam, pkg_path))
+                    if sbo_file:
+                        sbo_file_version = sbo_file[len(pkg) + 1:-len(ar) - 7]
+                        template(78)
+                        pkg_found(pkg, sbo_file_version)
+                        template(78)
+                    else:
                         sbo_url = sbo_search_pkg(pkg)
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
@@ -186,8 +198,6 @@ def sbo_build(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        print("{0}[ Installing ] --> {1}{2}".format(
-                              colors.GREEN, ENDC, pkg))
                         '''
                         Searches the package name and version in /tmp to install.
                         If find two or more packages e.g. to build tag 
@@ -197,26 +207,38 @@ def sbo_build(name):
                         for search in find_package(prgnam, tmp):
                             if "_SBo" in search:
                                 binary_list.append(search)
-                        binary = (tmp + max(binary_list)).split()
+                        try:
+                            binary = (tmp + max(binary_list)).split()
+                        except ValueError:
+                            build_FAILED(sbo_url, prgnam)
+                            sys.exit()
+                        if find_package(pkg, pkg_path):
+                            print("{0}[ Upgrading ] --> {1}{2}".format(
+                                  colors.GREEN, ENDC, pkg))
+                            upgraded.append(pkg)
+                        else:
+                            print("{0}[ Installing ] --> {1}{2}".format(
+                                  colors.GREEN, ENDC, pkg))
                         pkg_upgrade(binary)
                         print("Complete!\n")
                         installs.append(pkg)
                         versions.append(ver)
-                    else:
-                        template(78)
-                        pkg_found(pkg, sbo_file_version)
-                        template(78)
                 '''
-                Reference list only packages installed
+                Reference list with packages installed
+                and upgraded.
                 '''
                 if len(installs) > 1:
                     template(78)
-                    print("| Total {0} packages installed".format(len(installs)))
+                    print("| Total {0} {1} installed and {2} {3} upgraded".format(
+                          count_installed, msg_ins, count_upgraded, msg_upg))
                     template(78)
                     for pkg, ver in zip(installs, versions):
                         installed = ("{0}-{1}".format(pkg, ver))
                         if find_package(installed, pkg_path):
-                            print("| Package {0} installed successfully".format(installed))
+                            if pkg in upgraded:
+                                print("| Package {0} upgraded successfully".format(installed))
+                            else:
+                                print("| Package {0} installed successfully".format(installed))
                         else:
                             print("| Package {0} NOT installed".format(installed))
                     template(78)

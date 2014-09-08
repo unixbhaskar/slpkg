@@ -23,18 +23,31 @@
 
 import os
 import sys
+import time
 import shutil
 import tarfile
 import subprocess
 
 from slpkg.messages import pkg_not_found
+from slpkg.__metadata__ import log_path
 
 def build_package(script, sources, path):
     '''
-    Build package from source
+    Build package from source and
+    create log file in path /var/log/slpkg/logs/
     '''
     prgnam = script.replace(".tar.gz", "")
+    log_file = ("build_{0}_log".format(prgnam))
+    logs = log_path + "logs/"
+    if not os.path.exists(log_path):
+        os.mkdir(log_path)
+    if not os.path.exists(logs):
+        os.mkdir(logs)
+    log_date = time.strftime("%c")
+    template = ("#" * 79 + "\n\n")
     try:
+        if os.path.isfile(logs + log_file):
+            os.remove(logs + log_file)
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
@@ -42,8 +55,21 @@ def build_package(script, sources, path):
             shutil.copy2(src, prgnam)
         os.chdir(path + prgnam)
         subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
-        subprocess.call("./{0}.SlackBuild".format(prgnam), shell=True)
-        os.chdir(path)
+        with open(logs + log_file, "w") as log: # write headers to log file
+            log.write(template)
+            log.write("File : " + log_file + "\n")
+            log.write("Path : " + logs + "\n")
+            log.write("Date : " + log_date + "\n\n")
+            log.write(template)
+            log.close()
+        with open(logs + log_file, "a") as log: # append END tag to a log file
+            log.write(template)
+            log.write(" " * 38 + "E N D\n\n")
+            log.write(template)
+            subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
+                             prgnam, logs, log_file), shell=True, stdout=sys.stdout).communicate()
+            log.close()
+            os.chdir(path)
     except (OSError, IOError):
         message = "Wrong file"
         pkg_not_found("\n", prgnam, message, "\n")

@@ -30,7 +30,7 @@ from slpkg.colors import colors
 from slpkg.url_read import url_read
 from slpkg.messages import template
 from slpkg.__metadata__ import (pkg_path, slpkg_tmp, 
-                                slack_archs)
+                            slack_archs)
 
 from slpkg.pkg.manager import pkg_upgrade
 

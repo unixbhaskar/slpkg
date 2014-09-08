@@ -27,8 +27,8 @@ import subprocess
 
 from slpkg.colors import colors
 from slpkg.functions import get_file
-from slpkg.messages import pkg_not_found, pkg_found, view_sbo, template
 from slpkg.__metadata__ import tmp, build_path, pkg_path, slpkg_tmp, sp
+from slpkg.messages import pkg_not_found, pkg_found, view_sbo, template, build_FAILED
 
 from slpkg.pkg.build import build_package
 from slpkg.pkg.find import find_package
@@ -131,7 +131,6 @@ def sbo_network(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
-                    print("{0}[ Installing ] --> {1}{2}".format(colors.GREEN, colors.ENDC, name))
                     '''
                     Searches the package name and version in /tmp to install.
                     If find two or more packages e.g. to build tag 
@@ -141,7 +140,12 @@ def sbo_network(name):
                     for search in find_package(prgnam, tmp):
                         if "_SBo" in search:
                             binary_list.append(search)
-                    binary = (tmp + max(binary_list)).split()
+                    try:
+                        binary = (tmp + max(binary_list)).split()
+                    except ValueError:
+                        build_FAILED(sbo_url, prgnam)
+                        sys.exit()
+                    print("{0}[ Installing ] --> {1}{2}".format(colors.GREEN, colors.ENDC, name))
                     pkg_upgrade(binary)
                     print("Complete!\n")
                     break

@@ -53,7 +53,7 @@ def pkg_upgrade(binary):
     for pkg in binary:
         try:
             print subprocess.check_output("upgradepkg --install-new {0}".format(pkg),
-                                           shell=True)
+                                          shell=True)
         except subprocess.CalledProcessError:
             message = "Can't upgrade"
             if len(binary) > 1:
@@ -69,7 +69,7 @@ def pkg_reinstall(binary):
     for pkg in binary:
         try:
             print subprocess.check_output("upgradepkg --reinstall {0}".format(pkg),
-                                           shell=True)
+                                          shell=True)
         except subprocess.CalledProcessError:
             message = "Can't reinstall"
             if len(binary) > 1:
@@ -86,7 +86,7 @@ def pkg_remove(binary):
     removed, dependencies = [], []
     rmv_list, rmv_dependencies = [], []
     print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-        colors.CYAN, ', '.join(binary), colors.ENDC))
+          colors.CYAN, ", ".join(binary), colors.ENDC))
     for pkg in binary:
         pkgs = find_package(pkg + sp, pkg_path)
         if pkgs:
@@ -175,7 +175,7 @@ def pkg_find(binary):
     for pkg in binary:
         if find_package(pkg + sp, pkg_path):
             print(colors.GREEN + "[ installed ] - " + colors.ENDC + "\n                ".join(
-                   find_package(pkg + sp, pkg_path)))
+                  find_package(pkg + sp, pkg_path)))
         else:
             message = "Can't find"
             pkg_not_found("", pkg, message, "")
@@ -217,7 +217,7 @@ def pkg_list(pattern):
                 print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
                 if index == page:
                     key = raw_input("\nPress [ {0}Enter{1} ] >> Next page ".format(
-                                         colors.CYAN, colors.ENDC))
+                                    colors.CYAN, colors.ENDC))
                     page += 50
         print # new line at end
     except KeyboardInterrupt:

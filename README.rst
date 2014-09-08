@@ -7,8 +7,12 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
-slpkg 1.8.1
-===========
+Latest Release:
+
+- Version: 1.8.2
+- `Package <https://sourceforge.net/projects/slpkg/>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.2.tar.gz>`_
+- `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
@@ -72,8 +76,6 @@ Features
 It's a quick and easy way to manage your packages in `Slackware <http://www.slackware.com/>`_
 to a command.
 
-`[CHANGELOG] <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
-
 Video Tutorial
 ==============
 
@@ -87,8 +89,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.1.tar.gz
-    $ cd slpkg-1.8.1
+    $ tar xvf slpkg-1.8.2.tar.gz
+    $ cd slpkg-1.8.2
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -151,7 +153,8 @@ build and install with all dependencies :
     $ slpkg -s sbo brasero
     Building dependency tree...... Done
     
-    The following packages will be automatically installed or upgraded with new version:
+    The following packages will be automatically installed or upgraded 
+    with new version:
     
     +==============================================================================
     | Package                                 Version         Arch       Repository
@@ -168,29 +171,10 @@ build and install with all dependencies :
     Installing summary
     ===============================================================================
     Total 6 packages.
-    6 packages will be installed, 0 allready installed.
+    6 packages will be installed, 0 allready installed and 0 package
+    will be upgraded.
 
     Do you want to continue [Y/n]? y
-    .
-    .
-    .
-    +==============================================================================
-    | Installing new package /tmp/brasero-3.11.3-x86_64-1_SBo.tgz
-    +==============================================================================
-
-    Verifying package brasero-3.11.3-x86_64-1_SBo.tgz.
-    Installing package brasero-3.11.3-x86_64-1_SBo.tgz:
-    PACKAGE DESCRIPTION:
-    # brasero (CD/DVD burning application)
-    #
-    # Brasero is a application to burn CD/DVD for the Gnome Desktop. It is
-    # designed to be as simple as possible and has some unique features to
-    # enable users to create their discs easily and quickly.
-    #
-    # Homepage: http://projects.gnome.org/brasero
-    #
-    Executing install script for brasero-3.11.3-x86_64-1_SBo.tgz.
-    Package brasero-3.11.3-x86_64-1_SBo.tgz installed.
     
 Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
 download and install:
@@ -269,7 +253,7 @@ Check if your packages is up to date from slackbuilds.org:
                 
     Installing summary
     ===============================================================================
-    Total 8 packages will be upgraded.
+    Total 8 packages will be upgraded and 0 package will be installed.
                 
     Would you like to upgrade [Y/n]?
 
