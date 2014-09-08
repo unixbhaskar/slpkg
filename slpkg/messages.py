@@ -76,7 +76,7 @@ def s_user(user):
 
 def build_FAILED(sbo_url, prgnam):
     print("\n{0}<-- FAILED{1} to build the package {2}".format(colors.RED, colors.ENDC, prgnam))
-    print("See log file in slpkg_Build directory or read README file:")
+    print("See log file in /var/log/slpkg/logs directory or read README file:")
     print("{0}{1}\n".format(sbo_url, "README"))
 
 def template(max):

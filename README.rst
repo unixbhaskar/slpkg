@@ -9,9 +9,9 @@
 
 Latest Release:
 
-- Version: 1.8.2
+- Version: 1.8.3
 - `Package <https://sourceforge.net/projects/slpkg/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.2.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.3.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
@@ -89,8 +89,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.2.tar.gz
-    $ cd slpkg-1.8.2
+    $ tar xvf slpkg-1.8.3.tar.gz
+    $ cd slpkg-1.8.3
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
