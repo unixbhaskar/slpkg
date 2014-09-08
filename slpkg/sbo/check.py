@@ -29,10 +29,9 @@ from pkg.find import find_package
 from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
-
 from colors import colors
-from messages import template, build_FAILED
 from functions import get_file
+from messages import template, build_FAILED
 from __metadata__ import tmp, pkg_path, build_path
 
 from init import initialization
@@ -166,7 +165,7 @@ def sbo_check():
                 print("Upgrading:")
                 count_upgraded, count_installed = 0, 0
                 for upg, ver, arch in zip(pkg_for_upg, upg_ver, upg_arch):
-                    if find_package(upg[:-(len(ver) + 1)], pkg_path):
+                    if find_package(upg[:-len(ver)], pkg_path):
                         COLOR = colors.YELLOW
                         count_upgraded += 1
                     else:

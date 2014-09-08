@@ -33,7 +33,8 @@ from __metadata__ import log_path
 
 def build_package(script, sources, path):
     '''
-    Build package from source
+    Build package from source and
+    create log file in path /var/log/slpkg/logs/
     '''
     prgnam = script.replace(".tar.gz", "")
     log_file = ("build_{0}_log".format(prgnam))

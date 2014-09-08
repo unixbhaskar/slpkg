@@ -1,3 +1,10 @@
+Version 1.8.2
+08-09-2014
+
+[Updated] - Fix resolving dependencies '-c sbo upgrade' option.
+          - Update sbo summarys
+[Feature] - Add build log file
+
 Version 1.8.1
 04-09-2014
 

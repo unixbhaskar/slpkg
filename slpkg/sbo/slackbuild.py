@@ -27,8 +27,8 @@ import subprocess
 
 from colors import colors
 from functions import get_file
-from messages import pkg_not_found, pkg_found, template, build_FAILED
 from __metadata__ import tmp, pkg_path, build_path, log_path, sp
+from messages import pkg_not_found, pkg_found, template, build_FAILED
 
 from pkg.find import find_package 
 from pkg.build import build_package
@@ -111,7 +111,7 @@ def sbo_build(name):
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
             if find_package(master_pkg, pkg_path):
                 PKG_COLOR = colors.GREEN
-            elif find_package(name, pkg_path):
+            elif find_package(name + sp, pkg_path):
                 PKG_COLOR = colors.YELLOW
                 count_upgraded += 1    
             else:
@@ -137,7 +137,7 @@ def sbo_build(name):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
                 if find_package(dep_pkg, pkg_path):
                     DEP_COLOR = colors.GREEN
-                elif find_package(dep, pkg_path):
+                elif find_package(dep + sp, pkg_path):
                     DEP_COLOR = colors.YELLOW
                     count_upgraded += 1
                 else:
@@ -224,7 +224,8 @@ def sbo_build(name):
                         installs.append(pkg)
                         versions.append(ver)
                 '''
-                Reference list only packages installed
+                Reference list with packages installed
+                and upgraded.
                 '''
                 if len(installs) > 1:
                     template(78)
