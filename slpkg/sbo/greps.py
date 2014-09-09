@@ -78,5 +78,21 @@ def sbo_version_pkg(name):
             sbo_name = line[17:].strip()
         if line.startswith("SLACKBUILD VERSION: "):
             if sbo_name == name:
-                sbo_url = sbo_search_pkg(name)
                 return line[20:].strip()
+
+def sbo_checksum_pkg(name):
+    if arch == "x86_64":
+        for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
+            if arch == "x86_64":
+                if line.startswith("SLACKBUILD NAME: "):
+                    sbo_name = line[17:].strip()
+                if line.startswith("SLACKBUILD MD5SUM_x86_64: "):
+                    if sbo_name == name:
+                        if line[26:].strip():
+                            return line[26:].strip()
+    for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
+        if line.startswith("SLACKBUILD NAME: "):
+            sbo_name = line[17:].strip()
+        if line.startswith("SLACKBUILD MD5SUM: "):
+            if sbo_name == name:
+                return line[19:].strip()
