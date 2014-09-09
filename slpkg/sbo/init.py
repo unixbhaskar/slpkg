@@ -37,54 +37,58 @@ def initialization():
     /var/lib/slpkg/sbo_repo/ and ChangeLog.txt in /var/log/slpkg/ from
     slackbuilds.org
     '''
-    lib = lib_path + "sbo_repo/"
+    sbo_log = log_path + "sbo/"
+    sbo_lib = lib_path + "sbo_repo/"
     if not os.path.exists(log_path):
         os.mkdir(log_path)
-    if not os.path.exists(lib):
+    if not os.path.exists(lib_path):
         os.mkdir(lib_path)
-        os.mkdir(lib)
+    if not os.path.exists(sbo_log):
+        os.mkdir(sbo_log)
+    if not os.path.exists(sbo_lib):
+        os.mkdir(sbo_lib)
     sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
     '''
     Read SLACKBUILDS.TXT from slackbuilds.org and write in /var/lib/slpkg/sbo_repo/
     directory if not exist
     '''
-    if not os.path.isfile(lib + "SLACKBUILDS.TXT"):
+    if not os.path.isfile(sbo_lib + "SLACKBUILDS.TXT"):
         print("\nslpkg ...initialization")
         sys.stdout.write("SLACKBUILDS.TXT read ...")
         sys.stdout.flush()
         SLACKBUILDS_TXT = url_read((
             "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
         sys.stdout.write("Done\n")
-        sbo = open("{0}SLACKBUILDS.TXT".format(lib), "w")
+        sbo = open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w")
         sbo.write(SLACKBUILDS_TXT)
         sbo.close()
-        print("File SLACKBUILDS.TXT created in {0}".format(lib))
+        print("File SLACKBUILDS.TXT created in {0}".format(sbo_lib))
     '''
-    Read ChangeLog.txt from slackbuilds.org and write in /var/log/slpkg/
+    Read ChangeLog.txt from slackbuilds.org and write in /var/log/slpkg/sbo/
     directory if not exist
     '''
-    if not os.path.isfile(log_path + "ChangeLog.txt"):
+    if not os.path.isfile(sbo_log + "ChangeLog.txt"):
         print("\nslpkg initialization")
         sys.stdout.write("ChangeLog.txt read ...")
         sys.stdout.flush()
         ChangeLog_txt = url_read((
             "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(slack_ver())))
         sys.stdout.write("Done\n")
-        log = open("{0}ChangeLog.txt".format(log_path), "w")
+        log = open("{0}ChangeLog.txt".format(sbo_log), "w")
         log.write(ChangeLog_txt)
         log.close()
-        print("File ChangeLog.txt created in {0}".format(log_path))
+        print("File ChangeLog.txt created in {0}".format(sbo_log))
     '''
     We take the size of ChangeLog.txt from the server and locally
     '''
     server = int(''.join(server_file_size(sbo_url + "ChangeLog.txt")))
-    local = int(local_file_size(log_path + "ChangeLog.txt"))
+    local = int(local_file_size(sbo_log + "ChangeLog.txt"))
     '''
     If the two files differ in size delete and replaced with new
     '''
     if server != local:
-        os.remove("{0}sbo_repo/{1}".format(lib_path, "SLACKBUILDS.TXT"))
-        os.remove("{0}{1}".format(log_path, "ChangeLog.txt"))
+        os.remove("{0}{1}".format(sbo_lib, "SLACKBUILDS.TXT"))
+        os.remove("{0}{1}".format(sbo_log, "ChangeLog.txt"))
         print("\nNEWS in ChangeLog.txt")
         print("slpkg ...initialization")
         sys.stdout.write("Files re-created ...")
@@ -93,10 +97,10 @@ def initialization():
             "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
         ChangeLog_txt = url_read((
             "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(slack_ver())))
-        sbo = open("{0}sbo_repo/SLACKBUILDS.TXT".format(lib_path), "w")
+        sbo = open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w")
         sbo.write(SLACKBUILDS_TXT)
         sbo.close()
-        log = open("{0}ChangeLog.txt".format(log_path), "w")
+        log = open("{0}ChangeLog.txt".format(sbo_log), "w")
         log.write(ChangeLog_txt)
         log.close()
         sys.stdout.write("Done\n")

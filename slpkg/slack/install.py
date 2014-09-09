@@ -45,10 +45,10 @@ def install(slack_pkg):
         install_all, package_name, package_location = [], [], []
         tmp_path = slpkg_tmp + "packages/"
         pkg_sum, arch, COLOR, ENDC = 0, "", "", colors.ENDC
+        if not os.path.exists(slpkg_tmp):
+            os.mkdir(slpkg_tmp)
         if not os.path.exists(tmp_path):
-            if not os.path.exists(slpkg_tmp):
-                os.mkdir(slpkg_tmp)
-                os.mkdir(tmp_path)
+            os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
                 colors.CYAN, slack_pkg, ENDC)) 
         sys.stdout.write ("Reading package lists ...")

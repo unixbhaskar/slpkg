@@ -48,10 +48,10 @@ def patches():
         GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
         patch_path = slpkg_tmp + "patches/"
         slack_arch = ""
+        if not os.path.exists(slpkg_tmp):
+            os.mkdir(slpkg_tmp)
         if not os.path.exists(patch_path):
-            if not os.path.exists(slpkg_tmp):
-                os.mkdir(slpkg_tmp)
-                os.mkdir(patch_path)
+            os.mkdir(patch_path)
         sys.stdout.write ("Reading package lists ...")
         sys.stdout.flush()
         PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location="patches/"))
