@@ -9,9 +9,9 @@
 
 Latest Release:
 
-- Version: 1.8.3
+- Version: 1.8.4
 - `Package <https://sourceforge.net/projects/slpkg/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.3.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.4.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
@@ -68,10 +68,12 @@ Features
 - Build and install all in a command
 - Checking for updated packages
 - List all installed packages
+- Support MD5SUM file check
 - Find installed package
 - Read SlackBuilds files
 - Τracking dependencies
-- No dependencies
+- Build log file
+- Sum build time
 
 It's a quick and easy way to manage your packages in `Slackware <http://www.slackware.com/>`_
 to a command.
@@ -89,8 +91,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.3.tar.gz
-    $ cd slpkg-1.8.3
+    $ tar xvf slpkg-1.8.4.tar.gz
+    $ cd slpkg-1.8.4
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -383,6 +385,8 @@ Auto tool to build package:
     install/slack-desc
 
     Slackware package /tmp/termcolor-1.1.0-x86_64-1_SBo.tgz created.
+
+    Total build time for package termcolor : 1 Sec
 
 Upgrade, install package:
 

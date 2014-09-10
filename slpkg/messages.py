@@ -75,9 +75,14 @@ def s_user(user):
         sys.exit()
 
 def build_FAILED(sbo_url, prgnam):
-    print("\n{0}<-- FAILED{1} to build the package {2}".format(colors.RED, colors.ENDC, prgnam))
-    print("See log file in /var/log/slpkg/logs directory or read README file:")
-    print("{0}{1}\n".format(sbo_url, "README"))
+    template(78)
+    print("| Build package {0} [ {1}FAILED{2} ]".format(prgnam, colors.RED, colors.ENDC))
+    template(78)
+    print("| See log file in {0}/var/log/slpkg/sbo/build_logs{1} directory or read README file:".format(
+          colors.CYAN, colors.ENDC))
+    print("| {0}{1}".format(sbo_url, "README"))
+    template(78)
+    print # new line at end
 
 def template(max):
     '''

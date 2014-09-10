@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# mirrors.py file is part of slpkg.
+# checksum.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -21,18 +21,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from slpkg.__metadata__ import arch
-from slack_version import slack_ver
+import hashlib
 
-def mirrors(name, location):
+def md5sum(source):
     '''
-    Select Slackware official mirror packages
-    based architecture
+    Calculate the md5 checksum
     '''
-    if arch == "x86_64":
-        http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
-                slack_ver(), location, name)
-    else:
-        http = "http://mirrors.slackware.com/slackware/slackware-{0}/{1}{2}".format(
-                slack_ver(), location, name)
-    return http
+    with open(source) as file_to_check:
+        data = file_to_check.read()    
+        return hashlib.md5(data).hexdigest()

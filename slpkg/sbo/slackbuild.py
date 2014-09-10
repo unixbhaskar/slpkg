@@ -26,6 +26,7 @@ import sys
 import subprocess
 
 from slpkg.colors import colors
+from slpkg.checksum import md5sum
 from slpkg.functions import get_file
 from slpkg.__metadata__ import tmp, pkg_path, build_path, log_path, sp
 from slpkg.messages import pkg_not_found, pkg_found, template, build_FAILED
@@ -162,9 +163,9 @@ def sbo_build(name):
             print("Total {0} {1}.".format(len(dependencies), msg_ins))
             print("{0} {1} will be installed, {2} allready installed and {3} {4}".format(
                  count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
-            print("will be upgraded.")
+            print("will be upgraded.\n")
             '''
-            Check if package supported by arch
+            Check if package supported or tested by arch
             before proceed to install
             '''
             UNST = ["UNSUPPORTED", "UNTESTED"]
@@ -173,7 +174,10 @@ def sbo_build(name):
                     if item == un:
                         print("\n{0}The package {1}{2}\n".format(colors.RED, item, ENDC))
                         sys.exit()
-            read = raw_input("\nDo you want to continue [Y/n]? ")
+            # exit if all packages already installed
+            if pkg_sum == len(dependencies):
+                sys.exit()
+            read = raw_input("Do you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)

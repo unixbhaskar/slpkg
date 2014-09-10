@@ -26,12 +26,12 @@ import os
 from slpkg.url_read import url_read
 from slpkg.__metadata__ import slpkg_tmp
 
-# create tmp directory if not exist
+# create directories if not exist
 rdm_path = slpkg_tmp + "readme/"
+if not os.path.exists(slpkg_tmp):
+    os.mkdir(slpkg_tmp)
 if not os.path.exists(rdm_path):
-    if not os.path.exists(slpkg_tmp):
-        os.mkdir(slpkg_tmp)
-        os.mkdir(rdm_path)
+    os.mkdir(rdm_path)
 
 def read_readme(sbo_url, name, site):
     '''
