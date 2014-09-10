@@ -26,7 +26,7 @@ import os
 from url_read import url_read
 from __metadata__ import slpkg_tmp
 
-# create tmp directory if not exist
+# create directories if not exist
 rdm_path = slpkg_tmp + "readme/"
 if not os.path.exists(slpkg_tmp):
     os.mkdir(slpkg_tmp)

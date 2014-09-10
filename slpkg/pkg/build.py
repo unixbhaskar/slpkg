@@ -50,7 +50,8 @@ def build_package(script, sources, path):
         os.mkdir(sbo_logs)
     if not os.path.exists(build_logs):
         os.mkdir(build_logs)
-    log_date = time.strftime("%c")
+    log_date = time.strftime("%d/%m/%Y")
+    start_log_time = time.strftime("%H:%M:%S")
     log_line = ("#" * 79 + "\n\n")
     try:
         if os.path.isfile(build_logs + log_file):
@@ -76,7 +77,7 @@ def build_package(script, sources, path):
                     sys.exit()
             else:
                 template(78)
-                print("| MD5SUM check for {0} [ {1}PASS{2} ]".format(
+                print("| MD5SUM check for {0} [ {1}PASSED{2} ]".format(
                       src, colors.GREEN, colors.ENDC))
                 template(78)
                 print # new line after pass checksum
@@ -87,17 +88,33 @@ def build_package(script, sources, path):
             log.write(log_line)
             log.write("File : " + log_file + "\n")
             log.write("Path : " + build_logs + "\n")
-            log.write("Date : " + log_date + "\n\n")
+            log.write("Date : " + log_date + "\n")
+            log.write("Time : " + start_log_time + "\n\n")
             log.write(log_line)
             log.close()
-        with open(build_logs + log_file, "a") as log: # append END tag to a log file
-            log.write(log_line)
-            log.write(" " * 38 + "E N D\n\n")
-            log.write(log_line)
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
                              prgnam, build_logs, log_file), shell=True, stdout=sys.stdout).communicate()
+        end_log_time = time.strftime("%H:%M:%S")
+        start_time = start_log_time.replace(":", "")
+        end_time = end_log_time.replace(":", "")
+        rmv_time = int(end_time) - int(start_time)
+        # calculate build time
+        if rmv_time <= 60:
+            sum_time = str(rmv_time) + " Sec"
+        elif rmv_time > 60:
+            div_time = round(float(rmv_time) / 60, 2)
+            rest_time = str(div_time).replace(".", " ").split()
+            sum_time = rest_time[0] + " Min " + rest_time[1] + " Sec"
+        with open(build_logs + log_file, "a") as log: # append END tag to a log file
+            log.seek(2) # EOF
+            log.write(log_line)
+            log.write("Time : " + end_log_time + "\n")
+            log.write("Total build time : " + sum_time + "\n")
+            log.write(" " * 38 + "E N D\n\n")
+            log.write(log_line)
             log.close()
             os.chdir(path)
+        print("Total build time for package {0} : {1}\n".format(prgnam, sum_time))
     except (OSError, IOError):
         message = "Wrong file"
         pkg_not_found("\n", prgnam, message, "\n")

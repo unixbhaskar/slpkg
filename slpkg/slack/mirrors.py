@@ -26,7 +26,7 @@ from slack_version import slack_ver
 
 def mirrors(name, location):
     '''
-    Select Slackware mirror packages
+    Select Slackware official mirror packages
     based architecture
     '''
     if arch == "x86_64":

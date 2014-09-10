@@ -165,7 +165,7 @@ def sbo_build(name):
                  count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
             print("will be upgraded.\n")
             '''
-            Check if package supported by arch
+            Check if package supported or tested by arch
             before proceed to install
             '''
             UNST = ["UNSUPPORTED", "UNTESTED"]
