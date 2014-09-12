@@ -9,15 +9,17 @@
 
 Latest Release:
 
-- Version: 1.8.5
+- Version: 1.8.6
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.5.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.6.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
 
-The tool focuses on slpkg easy and understandable use.
+Slpkg is written in Python language and is open source.
+Its use is for installing, removing and monitoring packages in Slackware operating system 
+stable release.
 Species are adapted to two repositories:
 
 - SBo - `slackbuilds.org <http://slackbuilds.org/>`_
@@ -28,9 +30,9 @@ to build a package,
 are also used as the Slackware instructions for installing, upgrading or removing a 
 package. 
 
-What makes slpkg apart from other tools is the friendliness and the use of color for the 
-enhancement packages
-that are not installed on the system or is.
+What makes slpkg to distinguish it from other tools; The user friendliness is its primary 
+target as well as easy to understand and use, also use color to highlight packages and 
+display warning messages, etc.
 
 The big advantages is resolving dependencies packages from repository slackbuilds.org and
 monitored for upgraded packages.
@@ -43,8 +45,6 @@ the SLACKBUILDS.TXT file.
 Also you can install official packages of your favorite distribution directly from the 
 official repositories
 of Slackware. Even you can check for the official updates and install them.
-
-I should be grateful if you experience the slpkg and share your opinion with me.
 
 And as we say Slackers, Keep it Simple Stupid!
 
@@ -91,8 +91,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.5.tar.gz
-    $ cd slpkg-1.8.5
+    $ tar xvf slpkg-1.8.6.tar.gz
+    $ cd slpkg-1.8.6
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
