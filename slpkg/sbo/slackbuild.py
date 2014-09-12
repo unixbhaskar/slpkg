@@ -26,7 +26,6 @@ import sys
 import subprocess
 
 from slpkg.colors import colors
-from slpkg.checksum import md5sum
 from slpkg.functions import get_file
 from slpkg.__metadata__ import tmp, pkg_path, build_path, log_path, sp
 from slpkg.messages import pkg_not_found, pkg_found, template, build_FAILED
@@ -37,7 +36,6 @@ from slpkg.pkg.manager import pkg_upgrade
 
 from init import initialization
 from search import sbo_search_pkg
-from file_size import server_file_size
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 from greps import sbo_source_dwn, sbo_version_pkg
@@ -104,10 +102,10 @@ def sbo_build(name):
                     pkg_sum += 1
             sys.stdout.write("Done\n")
             '''
-            Tag with color green if package already installed
-            and color red if not installed. Also if package
-            arch is UNSUPPORTED tag with color red and if 
-            UNTESTED with color yellow.
+            Tag with color green if package already installed,
+            color yellow for packages to upgrade and color red 
+            if not installed. Also if package arch is UNSUPPORTED
+            tag with color red and if UNTESTED with color yellow.
             '''
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
             if find_package(master_pkg, pkg_path):
@@ -169,11 +167,9 @@ def sbo_build(name):
             before proceed to install
             '''
             UNST = ["UNSUPPORTED", "UNTESTED"]
-            for item in UNST:
-                for un in pkg_arch:
-                    if item == un:
-                        print("\n{0}The package {1}{2}\n".format(colors.RED, item, ENDC))
-                        sys.exit()
+            if src in UNST:
+                print("\n{0}The package {1}{2}\n".format(colors.RED, src, ENDC))
+                sys.exit()
             # exit if all packages already installed
             if pkg_sum == len(dependencies):
                 sys.exit()

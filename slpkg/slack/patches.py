@@ -98,8 +98,8 @@ def patches():
                       " " * (6-len(upg[-(5+len(slack)):-(4+len(slack))])), "Slack", \
                       " " , size, " " * (3-len(size)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
-            compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
-            uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
+            compressed = round((sum(map(float, comp_sum)) / 1024), 2)
+            uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
             if compressed < 1:
                 compressed = sum(map(int, comp_sum))
                 comp_unit = "Kb"

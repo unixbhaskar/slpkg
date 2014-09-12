@@ -102,8 +102,8 @@ def install(slack_pkg):
                       " " * (6-len(pkgs[-5:-4])), "Slack", \
                       " " , comp, " " * (3-len(comp)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
-            compressed = round((sum(map(float, comp_sum)) * 0.0001220703125), 2)
-            uncompressed = round((sum(map(float, uncomp_sum)) * 0.0001220703125), 2)
+            compressed = round((sum(map(float, comp_sum)) / 1024), 2)
+            uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
             if compressed < 1:
                 compressed, comp_unit = sum(map(int, comp_sum)), "Kb"
             if uncompressed < 1:
