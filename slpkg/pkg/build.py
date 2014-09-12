@@ -38,7 +38,8 @@ from sbo.greps import sbo_checksum_pkg
 def build_package(script, sources, path):
     '''
     Build package from source and
-    create log file in path /var/log/slpkg/logs/
+    create log file in path /var/log/slpkg/sbo/build_logs/.
+    Also check md5sum calculates.
     '''
     prgnam = script.replace(".tar.gz", "")
     log_file = ("build_{0}_log".format(prgnam))
@@ -60,6 +61,8 @@ def build_package(script, sources, path):
         tar.extractall()
         tar.close()
         for src in sources:
+            # fix build sources with spaces
+            src = src.replace("%20", " ")
             sbo_md5 = sbo_checksum_pkg(prgnam)
             md5 = md5sum(src)
             if sbo_md5 != md5:
@@ -93,7 +96,8 @@ def build_package(script, sources, path):
             log.write(log_line)
             log.close()
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
-                             prgnam, build_logs, log_file), shell=True, stdout=sys.stdout).communicate()
+                             prgnam, build_logs, log_file),  \
+                                     shell=True, stdout=sys.stdout).communicate()
         end_log_time = time.strftime("%H:%M:%S")
         start_time = start_log_time.replace(":", "")
         end_time = end_log_time.replace(":", "")
