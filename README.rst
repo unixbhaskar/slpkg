@@ -9,9 +9,9 @@
 
 Latest Release:
 
-- Version: 1.8.4
-- `Package <https://sourceforge.net/projects/slpkg/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.4.tar.gz>`_
+- Version: 1.8.5
+- `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.5.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
@@ -82,7 +82,7 @@ Video Tutorial
 ==============
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/12036
+    :target: https://asciinema.org/a/12082
 
 Installation
 ------------
@@ -91,8 +91,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.4.tar.gz
-    $ cd slpkg-1.8.4
+    $ tar xvf slpkg-1.8.5.tar.gz
+    $ cd slpkg-1.8.5
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -202,8 +202,8 @@ download and install:
 
     Total 3 packages.
     3 packages will be installed, 0 allready installed.
-    Need to get 6.02 Mb of archives.
-    After this process, 15.72 Mb of additional disk space will be used.
+    Need to get 48.17 Mb of archives.
+    After this process, 125.75 Mb of additional disk space will be used.
 
     Would you like to install [Y/n]?
 
@@ -280,8 +280,8 @@ Check if your distribution is up to date from `Slackware official mirrors
     Installing summary
     ===============================================================================
     Total 3 package will be upgrading.
-    Need to get 1.70 Mb of archives.
-    After this process, 9.51 Mb of additional disk space will be used.
+    Need to get 13.58 Mb of archives.
+    After this process, 76.10 Mb of additional disk space will be used.
     
     Would you like to upgrade [Y/n]?
 
@@ -296,7 +296,7 @@ Find packages from slackbuilds.org:
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
     | SlackBuild : bitfighter.tar.gz
-    | Sources : bitfighter-019c.tar.gz 
+    | Sources : bitfighter-019c.tar.gz, classic_level_pack.zip 
     | Requirements : OpenAL, SDL2, speex, libmodplug
     +===============================================================================
      README               View the README file
