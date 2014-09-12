@@ -32,7 +32,7 @@ from pkg.manager import pkg_upgrade
 from colors import colors
 from functions import get_file
 from messages import template, build_FAILED
-from __metadata__ import tmp, pkg_path, build_path
+from __metadata__ import tmp, pkg_path, build_path, sp
 
 from init import initialization
 from search import sbo_search_pkg
@@ -215,7 +215,7 @@ def sbo_check():
                         except ValueError:
                             build_FAILED(sbo_url, prgnam)
                             sys.exit()
-                        if find_package(name, pkg_path):
+                        if find_package(name + sp, pkg_path):
                             print("{0}[ Upgrading ] --> {1}{2}".format(GREEN, ENDC, name))
                         else:
                             print("{0}[ Installing ] --> {1}{2}".format(GREEN, ENDC, name))

@@ -33,8 +33,6 @@ from messages import pkg_not_found, pkg_found, template, build_FAILED
 from pkg.find import find_package 
 from pkg.build import build_package
 from pkg.manager import pkg_upgrade
-from file_size import server_file_size
-from file_size import server_file_size
 
 from init import initialization
 from search import sbo_search_pkg
@@ -214,7 +212,7 @@ def sbo_build(name):
                         except ValueError:
                             build_FAILED(sbo_url, prgnam)
                             sys.exit()
-                        if find_package(pkg, pkg_path):
+                        if find_package(pkg + sp, pkg_path):
                             print("{0}[ Upgrading ] --> {1}{2}".format(
                                   colors.GREEN, ENDC, pkg))
                             upgraded.append(pkg)
