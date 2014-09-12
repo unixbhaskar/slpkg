@@ -18,8 +18,8 @@ Latest Release:
 packages.
 
 Slpkg is written in Python language and is open source.
-Its use is for installing, removing and monitoring packages in Slackware operating system 
-stable release.
+It's use is for installing, upgrading, removing and monitoring packages in Slackware 
+linux distribution stable release.
 Species are adapted to two repositories:
 
 - SBo - `slackbuilds.org <http://slackbuilds.org/>`_
