@@ -27,10 +27,12 @@ import time
 import subprocess
 
 from colors import colors
+from functions import get_file
 from url_read import url_read
 from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path, slack_archs
 
+from pkg.find import find_package
 from pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
@@ -40,10 +42,11 @@ def install(slack_pkg):
     Install packages from official Slackware distribution
     '''
     try:
+        pkg_sum, uni_sum, upg_sum = 0, 0, 0
         comp_sum, uncomp_sum = [], []
         dwn_list, comp_size, uncomp_size = [], [], []
         install_all, package_name, package_location = [], [], []
-        pkg_sum, arch, COLOR, ENDC = 0, "", "", colors.ENDC
+        arch, COLOR, ENDC = "", "", colors.ENDC
         # create directories if not exist
         tmp_path = slpkg_tmp + "packages/"
         if not os.path.exists(slpkg_tmp):
@@ -83,7 +86,7 @@ def install(slack_pkg):
         sys.stdout.write("{0}Done{1}\n\n".format(colors.GREY, ENDC))
         if install_all:
             template(78)
-            print "| Package",  " " * 33, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
+            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
@@ -91,13 +94,20 @@ def install(slack_pkg):
                     if archs in pkg:
                         pkgs = pkg.replace(archs, "")
                         arch = archs[1:-1]
+                        ver = get_file(pkgs[:-5], "-").replace("-", "")
+                        name = pkgs[:-5].replace("-" + ver, "")    
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
                     COLOR = colors.GREEN
+                elif find_package(name, pkg_path):
+                    COLOR = colors.YELLOW
+                    upg_sum += 1
                 else:
                     COLOR = colors.RED
-                print " " , COLOR + pkgs[:-5] + ENDC, \
-                      " " * (40-len(pkgs[:-5])), arch, \
+                    uni_sum += 1
+                print " " , COLOR + name + ENDC, \
+                      " " * (24-len(name)), ver, \
+                      " " * (15-len(ver)), arch, \
                       " " * (7-len(arch)), pkgs[-5:-4], \
                       " " * (6-len(pkgs[-5:-4])), "Slack", \
                       " " , comp, " " * (3-len(comp)), "K"
@@ -112,13 +122,13 @@ def install(slack_pkg):
             msg_2_pkg = msg_pkg
             if len(install_all) > 1:
                 msg_pkg = msg_pkg + "s"
-            if len(install_all) - pkg_sum > 1:
+            if uni_sum > 1:
                 msg_2_pkg = msg_2_pkg + "s"
             print("\nInstalling summary")
             print("=" * 79)
             print("Total {0} {1}.".format(len(install_all), msg_pkg))
-            print("{0} {1} will be installed, {2} allready installed.".format(
-                 (len(install_all) - pkg_sum), msg_2_pkg, pkg_sum))
+            print("{0} {1} will be installed, {2} will be upgraded and {3} allready installed.".format(
+                 uni_sum, msg_2_pkg, upg_sum, pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
                   uncompressed, uncomp_unit))
