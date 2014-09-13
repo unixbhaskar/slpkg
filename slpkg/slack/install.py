@@ -52,7 +52,7 @@ def install(slack_pkg):
             os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
                 colors.CYAN, slack_pkg, ENDC)) 
-        sys.stdout.write ("Reading package lists ...")
+        sys.stdout.write ("{0}Reading package lists ...{1}".format(colors.GREY, ENDC))
         sys.stdout.flush()
         PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
         EXTRA = url_read(mirrors(name="PACKAGES.TXT", location="extra/"))
@@ -62,7 +62,7 @@ def install(slack_pkg):
         for line in PACKAGES_TXT.splitlines():
             index += 1
             if index == toolbar_width:
-                sys.stdout.write(".")
+                sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
                 sys.stdout.flush()
                 toolbar_width += 800
                 time.sleep(0.00888)
@@ -80,7 +80,7 @@ def install(slack_pkg):
                 install_all.append(name)
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
-        sys.stdout.write("Done\n\n")
+        sys.stdout.write("{0}Done{1}\n\n".format(colors.GREY, ENDC))
         if install_all:
             template(78)
             print "| Package",  " " * 33, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"

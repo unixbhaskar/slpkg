@@ -50,7 +50,8 @@ def sbo_dependencies_pkg(name):
             if dependencies:
                 dep_results.append(dependencies)
                 for dep in dependencies:
-                    sys.stdout.write(".")
+                    sys.stdout.write("{0}.{1}".format(
+                                     colors.GREY, colors.ENDC))
                     sys.stdout.flush()
                     sbo_dependencies_pkg(dep)
             return dep_results
@@ -65,14 +66,15 @@ def pkg_tracking(name):
     if allready installed and color red
     if not installed.
     '''
-    sys.stdout.write("Reading package lists ...")
+    sys.stdout.write("{0}Reading package lists ...{1}".format(
+                     colors.GREY, colors.ENDC))
     sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     GREEN, RED = colors.GREEN, colors.RED
     YELLOW, CYAN, ENDC = colors.YELLOW, colors.CYAN, colors.ENDC
     if dependencies_list is not None:
-        sys.stdout.write("Done\n")
+        sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
         print # new line at start
         requires, dependencies = [], []
         '''
@@ -106,6 +108,6 @@ def pkg_tracking(name):
                 print(" {0}{1}: {2}{3}{4}".format("+--", index, RED, pkg, ENDC))
         print # new line at end
     else:
-        sys.stdout.write("Done\n")
+        sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
         message = "From slackbuilds.org"
         pkg_not_found("\n", name, message, "\n")

@@ -29,8 +29,7 @@ import subprocess
 from colors import colors
 from url_read import url_read
 from messages import template
-from __metadata__ import (pkg_path, slpkg_tmp, 
-                            slack_archs)
+from __metadata__ import pkg_path, slpkg_tmp, slack_archs
 
 from pkg.manager import pkg_upgrade
 
@@ -52,14 +51,14 @@ def patches():
             os.mkdir(slpkg_tmp)
         if not os.path.exists(patch_path):
             os.mkdir(patch_path)
-        sys.stdout.write ("Reading package lists ...")
+        sys.stdout.write ("{0}Reading package lists ...{1}".format(colors.GREY, ENDC))
         sys.stdout.flush()
         PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location="patches/"))
         index, toolbar_width = 0, 100
         for line in PACKAGE_TXT.splitlines():
             index += 1
             if index == toolbar_width:
-                sys.stdout.write(".")
+                sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
                 sys.stdout.flush()
                 toolbar_width += 100
                 time.sleep(0.05)
@@ -77,7 +76,7 @@ def patches():
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
                 upgrade_all.append(name)
-        sys.stdout.write("Done\n")
+        sys.stdout.write("{0}Done{1}\n".format(colors.GREY, ENDC))
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
             template(78)

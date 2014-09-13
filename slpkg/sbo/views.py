@@ -46,7 +46,8 @@ def sbo_network(name):
     from slackbuilds.org
     '''
     rdm_path = slpkg_tmp + "readme/"
-    sys.stdout.write("Reading package lists ...")
+    sys.stdout.write("{0}Reading package lists ...{1}".format(
+                     colors.GREY, colors.ENDC))
     sys.stdout.flush()
     initialization()
     sbo_url = sbo_search_pkg(name)
@@ -54,7 +55,7 @@ def sbo_network(name):
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
-        sys.stdout.write ("Done\n")
+        sys.stdout.write ("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), \
                  ", ".join([get_file(src, "/") for src in source_dwn]), \
                  sbo_req)
@@ -157,6 +158,6 @@ def sbo_network(name):
             else:
                 break
     else:
-        sys.stdout.write ("Done\n")
+        sys.stdout.write ("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
         message = "From slackbuilds.org"
         pkg_not_found("\n", name, message, "\n")

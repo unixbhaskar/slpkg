@@ -50,7 +50,8 @@ def sbo_check():
     some version in /tmp directory.
     '''
     try:
-        sys.stdout.write("Reading package lists ...")
+        sys.stdout.write("{0}Reading package lists ...{1}".format(
+                         colors.GREY, colors.ENDC))
         sys.stdout.flush()
         initialization()
         index, toolbar_width = 0, 3
@@ -65,9 +66,9 @@ def sbo_check():
             for pkg in sbo_list:
                 index += 1
                 if index == toolbar_width:
-                    sys.stdout.write(".")
+                    sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
                     sys.stdout.flush()
-                    toolbar_width += 3
+                    toolbar_width += 4
                 if "-x86_64-" in pkg:
                     arch = "x86_64"
                 elif "-i486-" in pkg:
@@ -88,9 +89,10 @@ def sbo_check():
                     sbo_package = ("{0}-{1}".format(name, sbo_version_pkg(name)))
                     if sbo_package > package:
                         upg_name.append(name)
-            sys.stdout.write("Done\n")
+            sys.stdout.write("{0}Done{1}\n".format(colors.GREY, ENDC))
             if upg_name:
-                sys.stdout.write("Resolving dependencies ...")
+                sys.stdout.write("{0}Resolving dependencies ...{1}".format(
+                                 colors.GREY, ENDC))
                 sys.stdout.flush()
                 '''
                 Of the packages found to need upgrading,
@@ -136,7 +138,7 @@ def sbo_check():
                                       # take version from repository
                     if find_package(prgnam, pkg_path) == []:
                         for sbo in os.listdir(pkg_path):
-                            if sbo.startswith(pkg + "-") and sbo.endswith("_SBo"):
+                            if sbo.startswith(pkg + sp) and sbo.endswith("_SBo"):
                                 # search if packages installed
                                 # if yes grab package name,
                                 # version and arch
@@ -156,7 +158,7 @@ def sbo_check():
                         pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
                         upg_ver.append(ver)
                         upg_arch.append(arch)
-                sys.stdout.write("Done\n")
+                sys.stdout.write("{0}Done{1}\n".format(colors.GREY, ENDC))
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
                 template(78)
@@ -241,7 +243,7 @@ def sbo_check():
             else:
                 print("\nTotal {0} SBo packages are up to date\n".format(len(sbo_list)))
         else:
-            sys.stdout.write("Done\n")
+            sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
             print("\nNo SBo packages found\n")
     except KeyboardInterrupt:
         print # new line at exit
