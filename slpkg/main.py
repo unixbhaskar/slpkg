@@ -86,6 +86,8 @@ def main():
                         type=str, nargs="+", metavar=("sbo, slack", "<upgrade>"))
     parser.add_argument("-s", help="download, build & install packages",
                         type=str, nargs="+", metavar=("sbo, slack","<package>"))
+    parser.add_argument("-f", help="find installed packages",
+                        type=str, metavar=(""))
     parser.add_argument("-t", help="packages tracking dependencies from SBo",
                         type=str, metavar=(""))
     parser.add_argument("-n", help="view packages from SBo repository",
@@ -97,8 +99,6 @@ def main():
     parser.add_argument("-o", help="reinstall binary packages",
                         type=str, nargs="+", metavar=(""))
     parser.add_argument("-r", help="remove binary packages",
-                        type=str, nargs="+", metavar=(""))
-    parser.add_argument("-f", help="view installed packages",
                         type=str, nargs="+", metavar=(""))
     parser.add_argument("-d", help="display the contents of the packages",
                         type=str, nargs="+", metavar=(""))

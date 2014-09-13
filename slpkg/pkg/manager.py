@@ -170,17 +170,32 @@ def pkg_find(binary):
     '''
     Find installed Slackware packages
     '''
-    print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-            colors.CYAN, ', '.join(binary), colors.ENDC))
-    for pkg in binary:
-        if find_package(pkg + sp, pkg_path):
-            print(colors.GREEN + "[ installed ] - " + colors.ENDC + "\n                ".join(
-                  find_package(pkg + sp, pkg_path)))
-        else:
-            message = "Can't find"
-            pkg_not_found("", pkg, message, "")
-    print # new line at end
-
+    matching, size = 0, 0
+    print("\nInstalled packages with name matching [ {0}{1}{2} ]\n".format(
+          colors.CYAN, binary, colors.ENDC))
+    for match in sorted(os.listdir(pkg_path)):
+         if binary in match:
+             matching += 1
+             print colors.GREEN + "[ installed ] -" + colors.ENDC,  match
+             f = open(pkg_path + match, "r")
+             data = f.read()
+             f.close()
+             for line in data.splitlines():
+                 if line.startswith("UNCOMPRESSED PACKAGE SIZE:"):
+                     if "M" in line[26:]:
+                        size += float(line[26:-1]) * 1024
+                     else:
+                        size += float(line[26:-1])
+    if matching == 0:
+        print("No package was found to match\n")
+    else:
+        print("\n{0}Found {1} matcing packages{2}".format(colors.GREY, matching, colors.ENDC))
+        unit = "Kb"
+        if size > 1024:
+            unit = "Mb"
+            size = (size / 1024)
+        print("{0}Total size of installed packages {1} {2}{3}\n".format(
+              colors.GREY, round(size, 2), unit, colors.ENDC))
 def pkg_display(binary):
     '''
     Print the Slackware packages contents
