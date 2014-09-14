@@ -36,6 +36,7 @@ from pkg.find import find_package
 from pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
+from slack_version import slack_ver
 
 def install(slack_pkg):
     '''
@@ -44,7 +45,7 @@ def install(slack_pkg):
     try:
         pkg_sum, uni_sum, upg_sum = 0, 0, 0
         comp_sum, uncomp_sum = [], []
-        dwn_list, comp_size, uncomp_size = [], [], []
+        names, dwn_list, comp_size, uncomp_size = [], [], [], []
         install_all, package_name, package_location = [], [], []
         arch, COLOR, ENDC = "", "", colors.ENDC
         # create directories if not exist
@@ -92,14 +93,17 @@ def install(slack_pkg):
             for pkg, comp in zip(install_all, comp_sum):
                 for archs in slack_archs:
                     if archs in pkg:
-                        pkgs = pkg.replace(archs, "")
+                        pkgs = pkg[:-4]
+                        build = get_file(pkgs, "-").replace("-", "")
+                        name_ver = pkgs[:-(len(archs) + len(build))]
+                        ver = get_file(name_ver, "-").replace("-", "")
+                        name = name_ver[:-(len(ver) + 1)]
                         arch = archs[1:-1]
-                        ver = get_file(pkgs[:-5], "-").replace("-", "")
-                        name = pkgs[:-5].replace("-" + ver, "")    
+                        names.append(name)
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
                     COLOR = colors.GREEN
-                elif find_package(name, pkg_path):
+                elif find_package(name + "-", pkg_path):
                     COLOR = colors.YELLOW
                     upg_sum += 1
                 else:
@@ -108,8 +112,8 @@ def install(slack_pkg):
                 print " " , COLOR + name + ENDC, \
                       " " * (24-len(name)), ver, \
                       " " * (15-len(ver)), arch, \
-                      " " * (7-len(arch)), pkgs[-5:-4], \
-                      " " * (6-len(pkgs[-5:-4])), "Slack", \
+                      " " * (7-len(arch)), build, \
+                      " " * (6-len(build)), "Slack", \
                       " " , comp, " " * (3-len(comp)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
@@ -127,7 +131,7 @@ def install(slack_pkg):
             print("\nInstalling summary")
             print("=" * 79)
             print("Total {0} {1}.".format(len(install_all), msg_pkg))
-            print("{0} {1} will be installed, {2} will be upgraded and {3} allready installed.".format(
+            print("{0} {1} will be installed, {2} will be upgraded and {3} will be resettled.".format(
                  uni_sum, msg_2_pkg, upg_sum, pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.".format(
@@ -137,15 +141,19 @@ def install(slack_pkg):
                 for dwn in dwn_list:
                     subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
                                     tmp_path, dwn, dwn), shell=True)
-                for install in install_all:
-                    if not os.path.isfile(pkg_path + install[:-4]):
-                        print("{0}[ installing ] --> {1}{2}".format(
-                              colors.GREEN, ENDC, install))
-                        pkg_upgrade((tmp_path + install).split())
-                    else:
+                for install, name in zip(install_all, names):
+                    if os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ reinstalling ] --> {1}{2}".format(
                               colors.GREEN, ENDC, install))
                         pkg_reinstall((tmp_path + install).split())
+                    elif find_package(name + "-", pkg_path):
+                        print("{0}[ upgrading ] --> {1}{2}".format(
+                              colors.GREEN, ENDC, install))
+                        pkg_upgrade((tmp_path + install).split())
+                    else:
+                        print("{0}[ installing ] --> {1}{2}".format(
+                              colors.GREEN, ENDC, install))
+                        pkg_upgrade((tmp_path + install).split())
                 print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":

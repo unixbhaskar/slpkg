@@ -29,6 +29,7 @@ import subprocess
 from colors import colors
 from url_read import url_read
 from messages import template
+from functions import get_file
 from __metadata__ import pkg_path, slpkg_tmp, slack_archs
 
 from pkg.manager import pkg_upgrade
@@ -80,22 +81,28 @@ def patches():
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
             template(78)
-            print "| Package",  " " * 33, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
+            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
                 for archs in slack_archs:
                     if archs in upgrade:
-                        upg = upgrade.replace(archs, "")
-                        arch = archs[1:-1]
+                        arch = archs
                 if "_slack" in upgrade:
                     slack = "_slack" + slack_ver()
                 else:
                     slack = ""
-                print " " , GREEN + upg[:-(5+len(slack))] + ENDC, \
-                      " " * (40-len(upg[:-(5+len(slack))])), arch, \
-                      " " * (7-len(arch)), upg[-(5+len(slack)):-(4+len(slack))], \
-                      " " * (6-len(upg[-(5+len(slack)):-(4+len(slack))])), "Slack", \
+                upg = upgrade[:-(len(slack) + 4)]
+                build = get_file(upg, "-").replace("-", "")
+                upg_ver = upg[:-(len(arch) + len(build))]
+                ver = get_file(upg_ver, "-").replace("-", "")
+                name = upg_ver[:-(len(ver) + 1)]
+                arch = arch[1:-1]
+                print " " , GREEN + name + ENDC, \
+                      " " * (24-len(name)), ver, \
+                      " " * (15-len(ver)), arch, \
+                      " " * (7-len(arch)), build, \
+                      " " * (6-len(build)), "Slack", \
                       " " , size, " " * (3-len(size)), "K"
             comp_unit, uncomp_unit = "Mb", "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
