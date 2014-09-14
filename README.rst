@@ -17,7 +17,10 @@ Latest Release:
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
 
-Slpkg is written in Python language and is open source.
+.. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/open-source-logo.png
+    :target: https://github.com/dslackw/slpkg 
+
+Slpkg is Open Source and written in Python language.
 It's use is for installing, upgrading, removing and monitoring packages in Slackware 
 linux distribution stable release.
 Species are adapted to two repositories:
@@ -107,8 +110,6 @@ Using `pip <https://pip.pypa.io/en/latest/>`_ :
 
 Using Slackware command:
     
-Download `SBo package <http://slackbuilds.org/repository/14.1/system/slpkg/>`_
-
 Download binary package from `SourceForge <https://sourceforge.net/projects/slpkg/>`_
     
 Command Line Tool Usage
