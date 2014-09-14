@@ -1,3 +1,11 @@
+Version 1.8.6
+14-09-2014
+
+[Updated] - Correction of reference installing or upgrading.
+          - Updated find installed packages.
+          
+[Feature] - Added print total file size of installed packages.
+          - Added highlight upgraded packages from slack repo.  
 
 Version 1.8.5
 13-09-2014

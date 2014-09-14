@@ -87,7 +87,8 @@ def install(slack_pkg):
         sys.stdout.write("{0}Done{1}\n\n".format(colors.GREY, ENDC))
         if install_all:
             template(78)
-            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
+            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, \
+                  "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):

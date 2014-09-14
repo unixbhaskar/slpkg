@@ -186,16 +186,18 @@ def pkg_find(binary):
                         size += float(line[26:-1]) * 1024
                      else:
                         size += float(line[26:-1])
+                     break
     if matching == 0:
         print("No package was found to match\n")
     else:
-        print("\n{0}Found {1} matcing packages{2}".format(colors.GREY, matching, colors.ENDC))
+        print("\n{0}Found {1} matching packages.{2}".format(colors.GREY, matching, colors.ENDC))
         unit = "Kb"
         if size > 1024:
             unit = "Mb"
             size = (size / 1024)
         print("{0}Total size of installed packages {1} {2}{3}\n".format(
               colors.GREY, round(size, 2), unit, colors.ENDC))
+
 def pkg_display(binary):
     '''
     Print the Slackware packages contents

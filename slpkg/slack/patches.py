@@ -81,7 +81,8 @@ def patches():
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
             template(78)
-            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, "Build", " ", "Repos", " ", "Size"
+            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, \
+                  "Build", " ", "Repos", " ", "Size"
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):

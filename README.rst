@@ -118,8 +118,8 @@ Command Line Tool Usage
 
     usage: slpkg   [-h] [-v] [-a script [source ...]] 
                    [-l all, sbo, slack, noarch] [-c sbo, slack [<upgrade> ...]]
-                   [-s sbo, slack [<package> ...]] [-t] [-n] [-i  [...]]
-                   [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]
+                   [-s sbo, slack [<package> ...]] [-f] [-t] [-n] [-i  [...]]
+                   [-u  [...]] [-o  [...]] [-r  [...]] [-d  [...]]
 
     Utility for easy management packages in Slackware
 
@@ -134,13 +134,13 @@ Command Line Tool Usage
                             check if your packages is up to date
       -s sbo, slack [<package> ...]
                             download, build & install packages
+      -f                    find installed packages
       -t                    packages tracking dependencies from SBo
       -n                    view packages from SBo repository
       -i  [ ...]            install binary packages
       -u  [ ...]            upgrade binary packages
       -o  [ ...]            reinstall binary packages
       -r  [ ...]            remove binary packages
-      -f  [ ...]            view installed packages
       -d  [ ...]            display the contents of the packages
 
 
@@ -190,18 +190,17 @@ download and install:
     Reading package lists.............................. Done    
 
     +==============================================================================
-    | Package                                   Arch     Build   Repos   Size
+    | Package                   Version          Arch     Build   Repos   Size
     +==============================================================================
     Installing:
-      mozilla-firefox-24.1.0esr                 x86_64   1       Slack   23524  K
-      mozilla-nss-3.15.2                        x86_64   2       Slack   1592  K
-      mozilla-thunderbird-24.1.0                x86_64   1       Slack   24208  K
+    mozilla-firefox             24.1.0esr        x86_64   1       Slack   23524  K
+    mozilla-nss                 3.15.2           x86_64   2       Slack   1592  K
+    mozilla-thunderbird         24.1.0           x86_64   1       Slack   24208  K
 
     Installing summary
     ===============================================================================
-
     Total 3 packages.
-    3 packages will be installed, 0 allready installed.
+    0 package will be installed, 3 will be upgraded and 0 will be resettled.
     Need to get 48.17 Mb of archives.
     After this process, 125.75 Mb of additional disk space will be used.
 
@@ -268,14 +267,14 @@ Check if your distribution is up to date from `Slackware official mirrors
     Reading package lists....... Done
 
     These packages need upgrading:
-
+    
     +==============================================================================
-    | Package                                   Arch     Build   Repos   Size
+    | Package                   Version          Arch     Build   Repos   Size
     +==============================================================================
     Upgrading:
-      dhcpcd-6.0.5                              x86_64   3       Slack   92  K
-      samba-4.1.11                              x86_64   1       Slack   9928 K
-      xscreensaver-5.29                         x86_64   1       Slack   3896 K
+      dhcpcd                    6.0.5            x86_64   3       Slack   92  K
+      samba                     4.1.11           x86_64   1       Slack   9928 K
+      xscreensaver              5.29             x86_64   1       Slack   3896 K
 
     Installing summary
     ===============================================================================
@@ -423,16 +422,17 @@ Find installed packages:
 
 .. code-block:: bash
 
-    $ slpkg -f termcolor lua yetris you-get rar pip
-    
-    Packages with name matching [ termcolor, lua, yetris, you-get, rar, pip ]
+    $ slpkg -f apr
 
-    [ installed ] - termcolor-1.1.0-x86_64-1_SBo
-    No such package lua: Cant find
-    [ installed ] - yetris-2.0.1-x86_64-1_SBo
-    No such package you-get: Cant find
-    [ installed ] - rar-5.0.1-x86_64-1_SBo
-    [ installed ] - pip-1.5.4-x86_64-1_SBo
+    Installed packages with name matching [ apr ] 
+    
+    [ installed ] - apr-1.5.0-x86_64-1_slack14.1
+    [ installed ] - apr-util-1.5.3-x86_64-1_slack14.1
+    [ installed ] - xf86dgaproto-2.1-noarch-1
+    [ installed ] - xineramaproto-1.2.1-noarch-1
+
+    Found 4 matcing packages
+    Total size of installed packages 1.61 Mb
 
 Display the contents of the packages:
 
@@ -518,14 +518,6 @@ Remove packages:
     +==============================================================================
     | Package: termcolor removed
     +==============================================================================
-
-    $ slpkg -f termcolor lua rar
-
-    Packages with name matching [ termcolor, lua, rar ] 
-    
-    No such package termcolor: Cant find
-    No such package lua: Cant find
-    [ installed ] - rar-5.0.1-x86_64-1_SBo
 
 Remove packages with all dependencies:
 (presupposes facility with the option 'slpkg -s sbo <package>)

@@ -102,7 +102,7 @@ def build_package(script, sources, path):
         start_time = start_log_time.replace(":", "")
         end_time = end_log_time.replace(":", "")
         rmv_time = int(end_time) - int(start_time)
-        # calculate build time
+        # calculate build time per package
         if rmv_time <= 60:
             sum_time = str(rmv_time) + " Sec"
         elif rmv_time > 60:
