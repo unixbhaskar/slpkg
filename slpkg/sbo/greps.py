@@ -25,6 +25,7 @@ import os
 
 from slpkg.url_read import url_read
 from slpkg.__metadata__ import arch, lib_path
+
 from search import sbo_search_pkg
 
 def sbo_source_dwn(name):

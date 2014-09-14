@@ -46,7 +46,8 @@ def sbo_build(name):
     with all dependencies if version is greater than
     that established.
     '''
-    sys.stdout.write("Building dependency tree ...")
+    sys.stdout.write("{0}Building dependency tree ...{1}".format(
+                     colors.GREY, colors.ENDC))
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     try:
@@ -100,7 +101,8 @@ def sbo_build(name):
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
-            sys.stdout.write("Done\n")
+            sys.stdout.write("{0}Done{1}\n".format(
+                             colors.GREY, ENDC))
             '''
             Tag with color green if package already installed,
             color yellow for packages to upgrade and color red 
@@ -212,7 +214,7 @@ def sbo_build(name):
                         except ValueError:
                             build_FAILED(sbo_url, prgnam)
                             sys.exit()
-                        if find_package(pkg, pkg_path):
+                        if find_package(pkg + sp, pkg_path):
                             print("{0}[ Upgrading ] --> {1}{2}".format(
                                   colors.GREEN, ENDC, pkg))
                             upgraded.append(pkg)
@@ -258,7 +260,7 @@ def sbo_build(name):
                             f.write(dep + "\n")
                         f.close()
         else:
-            sys.stdout.write("Done\n")
+            sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
             message = "From slackbuilds.org"
             pkg_not_found("\n", name, message, "\n")
     except KeyboardInterrupt:

@@ -17,8 +17,8 @@ slpkg - Utility for easy management packages in Slackware
 .SH SYNOPSIS
   \fBusage: slpkg [-h] [-v] [-a script [source ...]] 
                   [-l all, sbo, slack, noarch] [-c sbo, slack [<upgrade> ...]]
-                  [-s sbo, slack [<package> ...]] [-t] [-n] [-i  [...]]
-                  [-u  [...]] [-o  [...]] [-r  [...]] [-f  [...]] [-d  [...]]\fP
+                  [-s sbo, slack [<package> ...]] [-f] [-t] [-n] [-i  [...]]
+                  [-u  [...]] [-o  [...]] [-r  [...]] [-d  [...]]\fP
 
 .SH DESCRIPTION
 \fBslpkg\fP is a terminal multitool in order to easy use Slackware packages.
@@ -35,14 +35,13 @@ It's a quick and easy way to manage your packages in slackware to a command.
   \fB                      check if your packages is up to date\fP
   \fB-s sbo, slack [<package> ...]\fP
   \fB                      download, build & install packages\fP
-  \fB                      list of installed packages\fP
+  \fB-f                    find installed packages\fP
   \fB-t                    packages tracking dependencies from SBo\fP
   \fB-n                    view packages from SBo repositority\fP
   \fB-i  [ ...]            install binary packages\fP
   \fB-u  [ ...]            upgrade binary packages\fP
   \fB-o  [ ...]            reinstall binary packages\fP
   \fB-r  [ ...]            remove binary packages\fP
-  \fB-f  [ ...]            view installed packages\fP
   \fB-d  [ ...]            display the contents of the packages\fP
 
 .SH GLOBAL OPTIONS
@@ -53,10 +52,9 @@ Print the version of program and exit.
 .PP
 The following commands are available.
 .SS -a script source extra
-\fBslpkg\fP \fB-a\fP <\fIscript\fP> <\fIsource\fP> <\fIextra sources\fP>
+\fBslpkg\fP \fB-a\fP <\fIscript\fP> <\fIsources\fP>
 .PP
 With this argument, build slackware package from source quickly and easy.
-Support .tar.gz and .tar.bz2 slackbuilds archives.
 .SS -l all, sbo, slack, noarch
 \fBslpkg\fP \fB-l\fP <\fIall\fP> <\fIsbo\fP>
 .PP
@@ -73,6 +71,10 @@ slackbuilds.org is up to date.
 Installs packages from the repository slackbuilds.org automatically resolving all 
 dependencies of the package. Also installs the official distribution Slackware 
 packages.
+.SS -f find packages
+\fBslpkg\fP \fB-f\fP <\fIname of packages\fP>
+.PP
+Find installed packages with view total file size. 
 .SS -t , tracking dependencies
 \fBslpkg\fP \fB-t\fP <\fIname of package\fP>
 .PP
@@ -113,10 +115,6 @@ packages with command 'slpkg -s sbo <package>' then write a file
 in /var/log/slpkg/dep/ with all dependencies and it allows you  
 can remove them all together. 'Requires root
 privileges' (like slackware command removepkg)
-.SS -f find packages
-\fBslpkg\fP \fB-f\fP <\fIname of packages\fP>
-.PP
-Find if package allready installed or not.
 .SS -d , display contents
 \fBslpkg\fP \fB-d\fP <\fIname of packages\fP>
 .PP
@@ -272,9 +270,9 @@ $ \fBslpkg -r termcolor yetris\fP
 
 $ \fBslpkg -f termcolor\fP
 
-  Packages with name matching [ termcolor ]
+  Installed packages with name matching [ termcolor ]
   
-  No such package termcolor: Can't find
+  No package was found to match
 
 $ \fBslpkg -d termcolor\fP
 
