@@ -7,6 +7,9 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
+.. contents:: Table of Contents:
+
+ 
 Latest Release:
 
 - Version: 1.8.7
@@ -86,8 +89,6 @@ Video Tutorial
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
     :target: https://asciinema.org/a/12082
-
-.. contents:: Table of Contents:
 
 
 Installation
