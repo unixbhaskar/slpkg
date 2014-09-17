@@ -65,10 +65,8 @@ def sbo_network(name):
         '''
         FAULT = ""
         UNST = ["UNSUPPORTED", "UNTESTED"]
-        for item in UNST:
-            for un in source_dwn:
-                if item == un:
-                    FAULT = item
+        if "".join(source_dwn) in UNST:
+            FAULT = "".join(source_dwn)
         while True:
             try:
                 read = raw_input("_ ")
