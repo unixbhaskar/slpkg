@@ -60,7 +60,7 @@ And as we say Slackers, Keep it Simple Stupid!
 
 
 Features
-========
+--------
 
 - Build third party packages from source with all dependencies
 - Install packages through from official `Slackware <http://www.slackware.com/>`_ mirrors
@@ -84,8 +84,8 @@ Features
 It's a quick and easy way to manage your packages in `Slackware <http://www.slackware.com/>`_
 to a command.
 
-Video Tutorial
-==============
+Tutorial
+--------
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
     :target: https://asciinema.org/a/12082
