@@ -9,9 +9,9 @@
 
 Latest Release:
 
-- Version: 1.8.6
+- Version: 1.8.7
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.6.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.7.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
@@ -87,6 +87,9 @@ Video Tutorial
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
     :target: https://asciinema.org/a/12082
 
+.. contents:: Table of Contents:
+
+
 Installation
 ------------
 
@@ -94,8 +97,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.6.tar.gz
-    $ cd slpkg-1.8.6
+    $ tar xvf slpkg-1.8.7.tar.gz
+    $ cd slpkg-1.8.7
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
