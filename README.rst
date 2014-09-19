@@ -7,11 +7,14 @@
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
+.. contents:: Table of Contents:
+
+ 
 Latest Release:
 
-- Version: 1.8.6
+- Version: 1.8.7
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.6.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.7.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
@@ -57,7 +60,7 @@ And as we say Slackers, Keep it Simple Stupid!
 
 
 Features
-========
+--------
 
 - Build third party packages from source with all dependencies
 - Install packages through from official `Slackware <http://www.slackware.com/>`_ mirrors
@@ -81,11 +84,12 @@ Features
 It's a quick and easy way to manage your packages in `Slackware <http://www.slackware.com/>`_
 to a command.
 
-Video Tutorial
-==============
+Tutorial
+--------
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
     :target: https://asciinema.org/a/12082
+
 
 Installation
 ------------
@@ -94,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.6.tar.gz
-    $ cd slpkg-1.8.6
+    $ tar xvf slpkg-1.8.7.tar.gz
+    $ cd slpkg-1.8.7
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :

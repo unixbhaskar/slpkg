@@ -22,6 +22,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import re
 import sys
 import time
 import shutil
@@ -37,8 +38,8 @@ from slpkg.sbo.greps import sbo_checksum_pkg
 
 def build_package(script, sources, path):
     '''
-    Build package from source and
-    create log file in path /var/log/slpkg/sbo/build_logs/.
+    Build package from source and create log 
+    file in path /var/log/slpkg/sbo/build_logs/.
     Also check md5sum calculates.
     '''
     prgnam = script.replace(".tar.gz", "")
@@ -53,6 +54,7 @@ def build_package(script, sources, path):
         os.mkdir(build_logs)
     log_date = time.strftime("%d/%m/%Y")
     start_log_time = time.strftime("%H:%M:%S")
+    start_time = time.time()
     log_line = ("#" * 79 + "\n\n")
     try:
         if os.path.isfile(build_logs + log_file):
@@ -96,24 +98,27 @@ def build_package(script, sources, path):
             log.write(log_line)
             log.close()
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
-                             prgnam, build_logs, log_file),  \
+                             prgnam, build_logs, log_file), \
                                      shell=True, stdout=sys.stdout).communicate()
         end_log_time = time.strftime("%H:%M:%S")
-        start_time = start_log_time.replace(":", "")
-        end_time = end_log_time.replace(":", "")
-        rmv_time = int(end_time) - int(start_time)
+        end_time = time.time()
+        diff_time = round(end_time - start_time, 2)
         # calculate build time per package
-        if rmv_time <= 60:
-            sum_time = str(rmv_time) + " Sec"
-        elif rmv_time > 60:
-            div_time = round(float(rmv_time) / 60, 2)
-            rest_time = str(div_time).replace(".", " ").split()
-            sum_time = rest_time[0] + " Min " + rest_time[1] + " Sec"
+        if diff_time <= 60:
+            sum_time = str(diff_time) + " Sec"
+        elif diff_time > 60:
+            sum_time = round(diff_time / 60, 2)
+            sum_time_list = re.findall(r"\d+", str(sum_time))  
+            sum_time = ("{0} Min {1} Sec".format(sum_time_list[0], sum_time_list[1]))
+        elif diff_time > 3600:
+            sum_time = round(diff_time / 3600, 2)
+            sum_time_list = re.findall(r"\d+", str(sum_time))  
+            sum_time = ("{0} Hours {1} Min".format(sum_time_list[0], sum_time_list[1]))
         with open(build_logs + log_file, "a") as log: # append END tag to a log file
             log.seek(2) # EOF
             log.write(log_line)
             log.write("Time : " + end_log_time + "\n")
-            log.write("Total build time : " + sum_time + "\n")
+            log.write("Total build time : {0}\n".format(sum_time))
             log.write(" " * 38 + "E N D\n\n")
             log.write(log_line)
             log.close()
