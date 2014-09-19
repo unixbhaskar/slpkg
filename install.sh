@@ -21,11 +21,12 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=slpkg
-VERSION=${VERSION:-1.8.6}
+VERSION=${VERSION:-1.8.7}
 TAG=${TAG:-_dsw}
 
 cd ..
 # Installation script.
+# With this script allows you to install the slpkg as a package SlackBuild.
 # Select archive to copy in slackbuild directory
 # support wget download.
 if [ -f $PRGNAM-$VERSION.zip ]; then
