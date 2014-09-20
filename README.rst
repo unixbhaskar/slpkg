@@ -23,7 +23,7 @@ packages.
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/open-source-logo.png
     :target: https://github.com/dslackw/slpkg 
 
-Slpkg is Open Source and written in Python language.
+Slpkg is `Open Source <http://en.wikipedia.org/wiki/Open_source>`_ and written in Python language.
 It's use is for installing, upgrading, removing and monitoring packages in Slackware 
 linux distribution stable release.
 Species are adapted to two repositories:
