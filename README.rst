@@ -12,10 +12,10 @@ Latest Release:
 - `Source <https://github.com/dslackw/slpkg/archive/v1.8.7.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
-.. contents:: Table of Contents:
-
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
+
+.. contents:: Table of Contents:
 
 `Slpkg <https://github.com/dslackw/slpkg>`_ is a terminal multitool in order to easy use `Slackware <http://www.slackware.com/>`_ 
 packages.
