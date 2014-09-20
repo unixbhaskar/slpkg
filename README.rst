@@ -5,8 +5,6 @@
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 
-.. contents:: Table of Contents:
- 
 Latest Release:
 
 - Version: 1.8.7
@@ -14,6 +12,8 @@ Latest Release:
 - `Source <https://github.com/dslackw/slpkg/archive/v1.8.7.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
+.. contents:: Table of Contents:
+
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
     :target: https://github.com/dslackw/slpkg 
 
