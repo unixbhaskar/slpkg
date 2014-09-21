@@ -3,7 +3,8 @@ Version 1.8.8
 
 [Updated] - Fix Alignment viewing packages
           - Fix build time
-
+[Feature] - Added search dependencies from local SLACKBUILDS.TXT file
+        
 Version 1.8.7
 19-09-2014
 
