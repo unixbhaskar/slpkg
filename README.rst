@@ -158,7 +158,7 @@ build and install with all dependencies :
 .. code-block:: bash
     
     $ slpkg -s sbo brasero
-    Building dependency tree...... Done
+    Building dependency tree ......Done
     
     The following packages will be automatically installed or upgraded 
     with new version:
@@ -191,16 +191,15 @@ download and install:
     $ slpkg -s slack mozilla
 
     Packages with name matching [ mozilla ]
-    
-    Reading package lists.............................. Done    
+    Reading package lists ..............................Done
 
     +==============================================================================
     | Package                   Version          Arch     Build  Repos         Size
     +==============================================================================
     Installing:
-    mozilla-firefox             24.1.0esr        x86_64   1      Slack     23524  K
-    mozilla-nss                 3.15.2           x86_64   2      Slack      1592  K
-    mozilla-thunderbird         24.1.0           x86_64   1      Slack     24208  K
+      mozilla-firefox           24.1.0esr        x86_64   1      Slack     23524  K
+      mozilla-nss               3.15.2           x86_64   2      Slack      1592  K
+      mozilla-thunderbird       24.1.0           x86_64   1      Slack     24208  K
 
     Installing summary
     ===============================================================================
@@ -217,7 +216,7 @@ and also displays installed packages:
 .. code-block:: bash
 
     $ slpkg -t brasero
-    Reading package lists...... Done
+    Reading package lists ......Done
 
     +=========================
     | brasero dependencies   :
@@ -240,7 +239,7 @@ Check if your packages is up to date from slackbuilds.org:
 .. code-block:: bash
 
     $ slpkg -c sbo upgrade
-    Reading package lists. Done
+    Reading package lists ...Done
 
     These packages need upgrading:
 
@@ -269,7 +268,7 @@ Check if your distribution is up to date from `Slackware official mirrors
 .. code-block:: bash
 
     $ slpkg -c slack upgrade
-    Reading package lists....... Done
+    Reading package lists .......Done
 
     These packages need upgrading:
     
@@ -294,7 +293,7 @@ Find packages from slackbuilds.org:
 .. code-block:: bash
 
     $ slpkg -n bitfighter
-    Reading package lists. Done
+    Reading package lists ...Done
     
     +===============================================================================
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
