@@ -33,9 +33,9 @@ except ImportError:
     from distutils.core import setup
 
 setup(
-    name='slpkg',
-    packages=['slpkg', 'slpkg/sbo', 'slpkg/pkg', 'slpkg/slack'],
-    scripts=['bin/slpkg'],
+    name="slpkg",
+    packages=["slpkg", "slpkg/sbo", "slpkg/pkg", "slpkg/slack"],
+    scripts=["bin/slpkg"],
     version=__version__,
     description="Python tool to manage Slackware packages",
     keywords=["slackware", "slpkg", "upgrade", "install", "remove",
@@ -61,11 +61,11 @@ setup(
     long_description=open("README.rst").read()
     )
 
-if 'install' in sys.argv:
+if "install" in sys.argv:
     man_path = "/usr/man/man8/"
     os.system("mkdir -p {}".format(man_path))
     if os.path.exists(man_path):
         print("Installing man pages")
         man_page = "man/slpkg.8"
         shutil.copy2(man_page, man_path)
-        os.chmod(man_path, int('444', 8))
+        os.chmod(man_path, int("444", 8))

@@ -52,34 +52,25 @@ def sbo_build(name):
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None:
-            pkg_sum, count_upgraded, count_installed = 0, 0, 0
-            arch = os.uname()[4]
-            sbo_ver, pkg_arch  = [], []
-            installs, upgraded, versions = [], [], []
-            requires, dependencies = [], []
-            PKG_COLOR, DEP_COLOR, ARCH_COLOR = "", "", ""
+            pkg_sum = count_upgraded = count_installed = int()
+            sbo_ver, pkg_arch, installs, upgraded, \
+            versions, requires, dependencies = ([] for i in range(7))
+            PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
             ENDC = colors.ENDC
-            '''
-            Insert master package in list to 
-            install it after dependencies
-            '''
+            arch = os.uname()[4]
+            # Insert master package in list to 
+            # install it after dependencies
             requires.append(name)
-            '''
-            Create one list for all packages
-            '''
+            # Create one list for all packages
             for pkg in dependencies_list:
                 requires += pkg
             requires.reverse()
-            '''
-            Remove double dependencies
-            '''
+            # Remove double dependencies
             for duplicate in requires:
                 if duplicate not in dependencies:
                     dependencies.append(duplicate)
-            '''
-            Create two lists one for package version and one
-            for package arch.
-            '''
+            # Create two lists one for package version and one
+            # for package arch.
             for pkg in dependencies:
                 version = sbo_version_pkg(pkg)
                 sbo_ver.append(version)
@@ -90,10 +81,8 @@ def sbo_build(name):
                     pkg_arch.append("i486")
                 elif "arm" in arch:
                     pkg_arch.append("arm")
-                '''
-                Looks if sources unsupported or untested
-                from arch
-                '''
+                # Looks if sources unsupported or untested
+                # from arch
                 if "UNSUPPORTED" in src:
                     pkg_arch.append("UNSUPPORTED")
                 elif "UNTESTED" in src:
@@ -103,12 +92,10 @@ def sbo_build(name):
                     pkg_sum += 1
             sys.stdout.write("{0}Done{1}\n".format(
                              colors.GREY, ENDC))
-            '''
-            Tag with color green if package already installed,
-            color yellow for packages to upgrade and color red 
-            if not installed. Also if package arch is UNSUPPORTED
-            tag with color red and if UNTESTED with color yellow.
-            '''
+            # Tag with color green if package already installed,
+            # color yellow for packages to upgrade and color red 
+            # if not installed. Also if package arch is UNSUPPORTED
+            # tag with color red and if UNTESTED with color yellow.
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
             if find_package(master_pkg, pkg_path):
                 PKG_COLOR = colors.GREEN
@@ -125,13 +112,14 @@ def sbo_build(name):
             print("\nThe following packages will be automatically installed or upgraded")
             print("with new version:\n")
             template(78)
-            print "| Package",  " " * 31, "Version",  " " * 7, "Arch", " " * 5, "Repository"
+            print("{0}{1}{2}{3}{4}{5}{6}".format("| Package", " " * 30, "Version", \
+                  " " * 10, "Arch", " " * 9, "Repository"))
             template(78)
             print("Installing:")
-            print " " , PKG_COLOR + name + ENDC, \
+            print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(PKG_COLOR, name, ENDC, \
                   " " * (38-len(name)), sbo_ver[-1], \
-                  " " * (14-len(sbo_ver[-1])), ARCH_COLOR + pkg_arch[-1] + ENDC, \
-                  " " * (9-len(pkg_arch[-1])), "SBo"
+                  " " * (17-len(sbo_ver[-1])), ARCH_COLOR, pkg_arch[-1], ENDC, \
+                  " " * (13-len(pkg_arch[-1])), "SBo"))
             print("Installing for dependencies:")
             ARCH_COLOR = "" # reset arch color for dependencies packages
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1], pkg_arch[:-1]):
@@ -148,10 +136,10 @@ def sbo_build(name):
                     ARCH_COLOR = colors.RED
                 elif "UNTESTED" in dep_arch:
                     ARCH_COLOR = colors.YELLOW
-                print " " , DEP_COLOR + dep + ENDC, \
+                print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(DEP_COLOR, dep, ENDC, \
                       " " * (38-len(dep)), ver, \
-                      " " * (14-len(ver)), ARCH_COLOR + dep_arch + ENDC, \
-                      " " * (9-len(dep_arch)), "SBo"
+                      " " * (17-len(ver)), ARCH_COLOR, dep_arch, ENDC, \
+                      " " * (13-len(dep_arch)), "SBo"))
             msg_ins = "package"
             msg_upg = msg_ins
             if count_installed > 1:
@@ -164,10 +152,8 @@ def sbo_build(name):
             print("{0} {1} will be installed, {2} allready installed and {3} {4}".format(
                  count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
             print("will be upgraded.\n")
-            '''
-            Check if package supported or tested by arch
-            before proceed to install
-            '''
+            # Check if package supported or tested by arch
+            # before proceed to install
             UNST = ["UNSUPPORTED", "UNTESTED"]
             if src in UNST:
                 print("\n{0}The package {1}{2}\n".format(colors.RED, src, ENDC))
@@ -200,11 +186,9 @@ def sbo_build(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        '''
-                        Searches the package name and version in /tmp to install.
-                        If find two or more packages e.g. to build tag 
-                        2 or 3 will fit most.
-                        '''
+                        # Searches the package name and version in /tmp to install.
+                        # If find two or more packages e.g. to build tag 
+                        # 2 or 3 will fit most.
                         binary_list = []
                         for search in find_package(prgnam, tmp):
                             if "_SBo" in search:
@@ -225,10 +209,8 @@ def sbo_build(name):
                         print("Complete!\n")
                         installs.append(pkg)
                         versions.append(ver)
-                '''
-                Reference list with packages installed
-                and upgraded.
-                '''
+                # Reference list with packages installed
+                # and upgraded.
                 if len(installs) > 1:
                     template(78)
                     print("| Total {0} {1} installed and {2} {3} upgraded".format(
@@ -244,10 +226,8 @@ def sbo_build(name):
                         else:
                             print("| Package {0} NOT installed".format(installed))
                     template(78)
-                '''
-                Write dependencies in a log file 
-                into directory `/var/log/slpkg/dep/`
-                '''
+                # Write dependencies in a log file 
+                # into directory `/var/log/slpkg/dep/`
                 if find_package(name + sp, pkg_path):
                     dep_path = log_path + "dep/"
                     if not os.path.exists(dep_path):

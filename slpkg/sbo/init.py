@@ -48,10 +48,8 @@ def initialization():
     if not os.path.exists(sbo_lib):
         os.mkdir(sbo_lib)
     sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
-    '''
-    Read SLACKBUILDS.TXT from slackbuilds.org and write in /var/lib/slpkg/sbo_repo/
-    directory if not exist
-    '''
+    # Read SLACKBUILDS.TXT from slackbuilds.org and write in /var/lib/slpkg/sbo_repo/
+    # directory if not exist
     if not os.path.isfile(sbo_lib + "SLACKBUILDS.TXT"):
         print("\nslpkg ...initialization")
         sys.stdout.write("SLACKBUILDS.TXT read ...")
@@ -63,10 +61,8 @@ def initialization():
         sbo.write(SLACKBUILDS_TXT)
         sbo.close()
         print("File SLACKBUILDS.TXT created in {0}".format(sbo_lib))
-    '''
-    Read ChangeLog.txt from slackbuilds.org and write in /var/log/slpkg/sbo/
-    directory if not exist
-    '''
+    # Read ChangeLog.txt from slackbuilds.org and write in /var/log/slpkg/sbo/
+    # directory if not exist
     if not os.path.isfile(sbo_log + "ChangeLog.txt"):
         print("\nslpkg initialization")
         sys.stdout.write("ChangeLog.txt read ...")
@@ -78,14 +74,10 @@ def initialization():
         log.write(ChangeLog_txt)
         log.close()
         print("File ChangeLog.txt created in {0}".format(sbo_log))
-    '''
-    We take the size of ChangeLog.txt from the server and locally
-    '''
+    # We take the size of ChangeLog.txt from the server and locally
     server = int(''.join(server_file_size(sbo_url + "ChangeLog.txt")))
     local = int(local_file_size(sbo_log + "ChangeLog.txt"))
-    '''
-    If the two files differ in size delete and replaced with new
-    '''
+    # If the two files differ in size delete and replaced with new
     if server != local:
         os.remove("{0}{1}".format(sbo_lib, "SLACKBUILDS.TXT"))
         os.remove("{0}{1}".format(sbo_log, "ChangeLog.txt"))

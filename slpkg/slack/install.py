@@ -43,11 +43,12 @@ def install(slack_pkg):
     Install packages from official Slackware distribution
     '''
     try:
-        pkg_sum, uni_sum, upg_sum = 0, 0, 0
-        comp_sum, uncomp_sum = [], []
-        names, dwn_list, comp_size, uncomp_size = [], [], [], []
-        install_all, package_name, package_location = [], [], []
-        arch, COLOR, ENDC = "", "", colors.ENDC
+        pkg_sum = uni_sum = upg_sum = int()
+        comp_sum, uncomp_sum, names, dwn_list, comp_size, \
+        uncomp_size, install_all, package_name, \
+        package_location = ([] for i in range(9))
+        arch = COLOR = str()
+        ENDC = colors.ENDC
         # create directories if not exist
         tmp_path = slpkg_tmp + "packages/"
         if not os.path.exists(slpkg_tmp):
@@ -87,8 +88,9 @@ def install(slack_pkg):
         sys.stdout.write("{0}Done{1}\n\n".format(colors.GREY, ENDC))
         if install_all:
             template(78)
-            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, \
-                  "Build", " ", "Repos", " ", "Size"
+            print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
+                  "| Package", " " * 17, "Version", " " * 12, "Arch", " " * 4, \
+                  "Build", " " * 2, "Repos", " " * 10, "Size"))
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
@@ -110,13 +112,14 @@ def install(slack_pkg):
                 else:
                     COLOR = colors.RED
                     uni_sum += 1
-                print " " , COLOR + name + ENDC, \
-                      " " * (24-len(name)), ver, \
-                      " " * (15-len(ver)), arch, \
-                      " " * (7-len(arch)), build, \
-                      " " * (6-len(build)), "Slack", \
-                      " " , comp, " " * (3-len(comp)), "K"
-            comp_unit, uncomp_unit = "Mb", "Mb"
+                print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
+                      COLOR, name, ENDC, \
+                      " " * (25-len(name)), ver, \
+                      " " * (19-len(ver)), arch, \
+                      " " * (8-len(arch)), build, \
+                      " " * (7-len(build)), "Slack", \
+                      comp, " K"))
+            comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
             if compressed < 1:

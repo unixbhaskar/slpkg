@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.8.7
+- Version: 1.8.8
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.7.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.8.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -98,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.7.tar.gz
-    $ cd slpkg-1.8.7
+    $ tar xvf slpkg-1.8.8.tar.gz
+    $ cd slpkg-1.8.8
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -195,12 +195,12 @@ download and install:
     Reading package lists.............................. Done    
 
     +==============================================================================
-    | Package                   Version          Arch     Build   Repos   Size
+    | Package                   Version          Arch     Build  Repos         Size
     +==============================================================================
     Installing:
-    mozilla-firefox             24.1.0esr        x86_64   1       Slack   23524  K
-    mozilla-nss                 3.15.2           x86_64   2       Slack   1592  K
-    mozilla-thunderbird         24.1.0           x86_64   1       Slack   24208  K
+    mozilla-firefox             24.1.0esr        x86_64   1      Slack     23524  K
+    mozilla-nss                 3.15.2           x86_64   2      Slack      1592  K
+    mozilla-thunderbird         24.1.0           x86_64   1      Slack     24208  K
 
     Installing summary
     ===============================================================================
@@ -274,12 +274,12 @@ Check if your distribution is up to date from `Slackware official mirrors
     These packages need upgrading:
     
     +==============================================================================
-    | Package                   Version          Arch     Build   Repos   Size
+    | Package                   Version          Arch     Build  Repos         Size
     +==============================================================================
     Upgrading:
-      dhcpcd                    6.0.5            x86_64   3       Slack   92  K
-      samba                     4.1.11           x86_64   1       Slack   9928 K
-      xscreensaver              5.29             x86_64   1       Slack   3896 K
+      dhcpcd                    6.0.5            x86_64   3      Slack         92 K
+      samba                     4.1.11           x86_64   1      Slack       9928 K
+      xscreensaver              5.29             x86_64   1      Slack       3896 K
 
     Installing summary
     ===============================================================================

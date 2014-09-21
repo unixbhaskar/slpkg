@@ -48,14 +48,16 @@ def sbo_source_dwn(name):
             if sbo_name == name:
                 return line[21:].strip() 
         
-def sbo_requires_pkg(sbo_url, name):
- '''
- Grab package requirements
- '''
- read_info = url_read(sbo_url + name + ".info")
- for line in read_info.splitlines():
-     if line.startswith("REQUIRES=\""):
-         return line[10:-1].strip().split()
+def sbo_requires_pkg(name):
+    '''
+    Grab package requirements
+    '''
+    for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
+        if line.startswith("SLACKBUILD NAME: "):
+            sbo_name = line[17:].strip()
+        if line.startswith("SLACKBUILD REQUIRES: "):
+            if sbo_name == name:
+                return line[21:].strip().split()
 
 def sbo_build_tag(sbo_url, name):
     # This feature is not yet used
