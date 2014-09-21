@@ -43,7 +43,7 @@ def sbo_dependencies_pkg(name):
         dependencies = []
         sbo_url = sbo_search_pkg(name)
         if sbo_url:
-            requires = sbo_requires_pkg(sbo_url, name)
+            requires = sbo_requires_pkg(name)
             for req in requires:
                 # avoid to add %README% as dependency
                 if "%README%" not in req:

@@ -52,7 +52,7 @@ def sbo_network(name):
     initialization()
     sbo_url = sbo_search_pkg(name)
     if sbo_url:
-        sbo_req = sbo_requires_pkg(sbo_url, name)
+        sbo_req = sbo_requires_pkg(name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
         sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
