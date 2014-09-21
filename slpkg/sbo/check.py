@@ -54,10 +54,16 @@ def sbo_check():
                          colors.GREY, colors.ENDC))
         sys.stdout.flush()
         initialization()
-        index, toolbar_width = 0, 3
-        dependencies, dependencies_list = [], []
-        requires, upgrade, installed, sbo_list = [], [], [], []
-        upg_name, pkg_for_upg, upg_ver, upg_arch = [], [], [], []
+        arches = [
+                "-x86_64-", 
+                "-i486-", 
+                "-arm-", 
+                "-noarch-"
+                ]
+        index, toolbar_width = int(), 3
+        dependencies,  dependencies_list, \
+        requires, upgrade, installed, sbo_list, \
+        upg_name, pkg_for_upg, upg_ver, upg_arch = ([] for i in range(10))
         GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
@@ -69,16 +75,11 @@ def sbo_check():
                     sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
                     sys.stdout.flush()
                     toolbar_width += 4
-                if "-x86_64-" in pkg:
-                    arch = "x86_64"
-                elif "-i486-" in pkg:
-                    arch = "i486"
-                elif "-arm-" in pkg:
-                    arch = "arm"
-                elif "-noarch-" in pkg:
-                    arch = "noarch"
-                else:
-                    arch = os.uname()[4]
+                for _arch in arches:
+                    if _arch in pkg:
+                        arch = _arch[1:-1]
+                    else:
+                        arch = os.uname()[4]
                 package = pkg[:-(len(arch) + len("_SBo") + 3)]
                 pkg_version = get_file(package, "-")[1:]
                 name = package[:-(len(pkg_version) + 1)]
@@ -94,43 +95,33 @@ def sbo_check():
                 sys.stdout.write("{0}Resolving dependencies ...{1}".format(
                                  colors.GREY, ENDC))
                 sys.stdout.flush()
-                '''
-                Of the packages found to need upgrading,
-                stored in a series such as reading from the 
-                file .info.
-                '''
+                # Of the packages found to need upgrading,
+                # stored in a series such as reading from the 
+                # file .info.
                 for upg in upg_name:
                     dependencies = sbo_dependencies_pkg(upg)
-                '''    
-                Because there are dependencies that depend on other 
-                dependencies are created lists into other lists. 
-                Thus creating this loop create one-dimensional list.
-                '''
+                # Because there are dependencies that depend on other 
+                # dependencies are created lists into other lists. 
+                # Thus creating this loop create one-dimensional list.
                 for dep in dependencies:
                     requires += dep
                 requires.reverse() # Inverting the list brings the
                                    # dependencies in order to be installed.
-                '''
-                Many packages use the same dependencies, in this loop 
-                creates a new list by removing duplicate dependencies but 
-                without spoiling the line must be installed.
-                '''
+                # Many packages use the same dependencies, in this loop 
+                # creates a new list by removing duplicate dependencies but 
+                # without spoiling the line must be installed.
                 for duplicate in requires:
                     if duplicate not in dependencies_list:
                         dependencies_list.append(duplicate)
-                '''
-                Last and after the list is created with the correct number 
-                of dependencies that must be installed, and add the particular 
-                packages that need to be upgraded if they are not already on 
-                the list in end to list.
-                '''
+                # Last and after the list is created with the correct number 
+                # of dependencies that must be installed, and add the particular 
+                # packages that need to be upgraded if they are not already on 
+                # the list in end to list.
                 for upg in upg_name:
                     if upg not in dependencies_list:
                         dependencies_list.append(upg)
-                '''
-                In the end lest a check of the packages that are on the list
-                are already installed.
-                '''
+                # In the end lest a check of the packages that are on the list
+                # are already installed.
                 for pkg in dependencies_list:
                     ver = sbo_version_pkg(pkg)
                     prgnam = ("{0}-{1}".format(pkg, ver))
@@ -142,16 +133,11 @@ def sbo_check():
                                 # search if packages installed
                                 # if yes grab package name,
                                 # version and arch
-                                if "-x86_64-" in sbo:
-                                    arch = "x86_64"
-                                elif "-i486-" in sbo:
-                                    arch = "i486"
-                                elif "-arm-" in sbo:
-                                    arch = "arm"
-                                elif "-noarch-" in sbo:
-                                    arch = "noarch"
-                                else:
-                                    arch = os.uname()[4]
+                                for _arch in arches:
+                                    if _arch in pkg:
+                                        arch = _arch[1:-1]
+                                    else:
+                                        arch = os.uname()[4]
                                 name = sbo[:-(len(arch) + len("_SBo") + 3)]
                                 pkg_version = get_file(name, "-")[1:]
                         upgrade.append(pkg)
@@ -162,10 +148,11 @@ def sbo_check():
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
                 template(78)
-                print "| Package",  " " * 27, "New version",  " " * 5, "Arch", " " * 7, "Repository"
+                print("{0}{1}{2}{3}{4}{5}{6}".format("| Package", " " * 30, "New version", \
+                      " " * 6 , "Arch", " " * 9, "Repository"))
                 template(78)
                 print("Upgrading:")
-                count_upgraded, count_installed = 0, 0
+                count_upgraded = count_installed = int()
                 for upg, ver, arch in zip(pkg_for_upg, upg_ver, upg_arch):
                     if find_package(upg[:-len(ver)], pkg_path):
                         COLOR = colors.YELLOW
@@ -173,8 +160,9 @@ def sbo_check():
                     else:
                         COLOR = colors.RED
                         count_installed += 1
-                    print " " , COLOR + upg + ENDC, " " * (34-len(upg)), GREEN + ver + ENDC, \
-                          " " * (16-len(ver)), arch, " " * (11-len(arch)), "SBo"
+                    print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(COLOR, upg, ENDC, \
+                          " " * (38-len(upg)), GREEN, ver, ENDC, \
+                          " " * (17-len(ver)), arch, " " * (13-len(arch)), "SBo"))
                 msg_upg = "package"
                 msg_ins = msg_upg
                 if count_upgraded > 1:
@@ -203,11 +191,9 @@ def sbo_check():
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                         build_package(script, sources, build_path)
-                        '''
-                        Searches the package name and version in /tmp to install.
-                        If find two or more packages e.g. to build tag 
-                        2 or 3 will fit most.
-                        '''
+                        # Searches the package name and version in /tmp to install.
+                        # If find two or more packages e.g. to build tag 
+                        # 2 or 3 will fit most.
                         binary_list = []
                         for search in find_package(prgnam, tmp):
                             if "_SBo" in search:

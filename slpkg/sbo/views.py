@@ -55,15 +55,13 @@ def sbo_network(name):
         sbo_req = sbo_requires_pkg(sbo_url, name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
-        sys.stdout.write ("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
+        sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
         view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), \
                  ", ".join([get_file(src, "/") for src in source_dwn]), \
                  sbo_req)
-        '''
-        Check if package supported by arch
-        before proceed to install
-        '''
-        FAULT = ""
+        # Check if package supported by arch
+        # before proceed to install
+        FAULT = str()
         UNST = ["UNSUPPORTED", "UNTESTED"]
         if "".join(source_dwn) in UNST:
             FAULT = "".join(source_dwn)
@@ -130,11 +128,9 @@ def sbo_network(name):
                             subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(get_file(src, "/"))
                     build_package(script, sources, build_path)
-                    '''
-                    Searches the package name and version in /tmp to install.
-                    If find two or more packages e.g. to build tag 
-                    2 or 3 will fit most.
-                    '''
+                    # Searches the package name and version in /tmp to install.
+                    # If find two or more packages e.g. to build tag 
+                    # 2 or 3 will fit most.
                     binary_list = []
                     for search in find_package(prgnam, tmp):
                         if "_SBo" in search:

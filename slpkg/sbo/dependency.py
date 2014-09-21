@@ -45,6 +45,7 @@ def sbo_dependencies_pkg(name):
         if sbo_url:
             requires = sbo_requires_pkg(sbo_url, name)
             for req in requires:
+                # avoid to add %README% as dependency
                 if "%README%" not in req:
                     dependencies.append(req)
             if dependencies:
@@ -77,15 +78,11 @@ def pkg_tracking(name):
         sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
         print # new line at start
         requires, dependencies = [], []
-        '''
-        Create one list for all packages
-        '''
+        # Create one list for all packages
         for pkg in dependencies_list:
             requires += pkg
         requires.reverse()
-        '''
-        Remove double dependencies
-        '''
+        # Remove double dependencies
         for duplicate in requires:
             if duplicate not in dependencies:
                 dependencies.append(duplicate)
@@ -97,7 +94,7 @@ def pkg_tracking(name):
         template(pkg_len)
         print("\\")
         print(" +---{0}[ Tree of dependencies ]{1}".format(YELLOW, ENDC))
-        index = 0
+        index = int()
         for pkg in dependencies:
             index += 1
             if find_package(pkg + sp, pkg_path):

@@ -42,12 +42,11 @@ def patches():
     Install new patches from official Slackware mirrors
     '''
     try:
-        comp_sum, uncomp_sum = [], []
-        dwn_patches, comp_size, uncomp_size = [], [], []
-        upgrade_all, package_name, package_location = [], [], []
+        slack_arch = str()
+        comp_sum, uncomp_sum, dwn_patches, comp_size, uncomp_size, \
+        upgrade_all, package_name, package_location = ([] for i in range(8))
         GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
         patch_path = slpkg_tmp + "patches/"
-        slack_arch = ""
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)
         if not os.path.exists(patch_path):
@@ -81,8 +80,9 @@ def patches():
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
             template(78)
-            print "| Package", " " * 17, "Version", " " * 8, "Arch", " " * 3, \
-                  "Build", " ", "Repos", " ", "Size"
+            print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
+                  "| Package", " " * 17, "Version", " " * 12, "Arch", " " * 4, \
+                  "Build", " " * 2, "Repos", " " * 10, "Size"))
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
@@ -92,20 +92,21 @@ def patches():
                 if "_slack" in upgrade:
                     slack = "_slack" + slack_ver()
                 else:
-                    slack = ""
+                    slack = str()
                 upg = upgrade[:-(len(slack) + 4)]
                 build = get_file(upg, "-").replace("-", "")
                 upg_ver = upg[:-(len(arch) + len(build))]
                 ver = get_file(upg_ver, "-").replace("-", "")
                 name = upg_ver[:-(len(ver) + 1)]
                 arch = arch[1:-1]
-                print " " , GREEN + name + ENDC, \
-                      " " * (24-len(name)), ver, \
-                      " " * (15-len(ver)), arch, \
-                      " " * (7-len(arch)), build, \
-                      " " * (6-len(build)), "Slack", \
-                      " " , size, " " * (3-len(size)), "K"
-            comp_unit, uncomp_unit = "Mb", "Mb"
+                print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
+                      GREEN, name, ENDC, \
+                      " " * (25-len(name)), ver, \
+                      " " * (19-len(ver)), arch, \
+                      " " * (8-len(arch)), build, \
+                      " " * (7-len(build)), "Slack", \
+                      size, " K"))
+            comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
             if compressed < 1:
