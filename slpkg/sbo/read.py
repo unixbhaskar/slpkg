@@ -38,15 +38,15 @@ def read_readme(sbo_url, name, site):
     Read SlackBuild README file
     '''
     readme = url_read(sbo_url + site)
-    f = open("{0}{1}.{2}".format(rdm_path, name, site), "w")
-    f.write(readme)
-    f.close()
+    with open("{0}{1}.{2}".format(rdm_path, name, site), "w") as f:
+        f.write(readme)
+        f.close()
 
 def read_info_slackbuild(sbo_url, name, site):
     '''
     Read info SlackBuild file
     '''
     info = url_read(sbo_url + name + site)
-    f = open("{0}{1}{2}".format(rdm_path, name, site), "w")
-    f.write(info)
-    f.close()
+    with open("{0}{1}{2}".format(rdm_path, name, site), "w") as f:
+        f.write(info)
+        f.close()

@@ -27,8 +27,11 @@ import subprocess
 
 from colors import colors
 from functions import get_file
-from __metadata__ import tmp, pkg_path, build_path, log_path, sp, lib_path
-from messages import pkg_not_found, pkg_found, template, build_FAILED, sbo_packages_view
+from __metadata__ import (tmp, pkg_path, build_path, 
+                                 log_path, lib_path, sp)
+
+from messages import (pkg_not_found, pkg_found, template, 
+                            build_FAILED, sbo_packages_view)
 
 from pkg.find import find_package 
 from pkg.build import build_package
@@ -46,7 +49,6 @@ def sbo_build(name):
     with all dependencies if version is greater than
     that established.
     '''
-    arch = os.uname()[4]
     sbo_ver, pkg_arch, installs, upgraded, \
     versions, requires, dependencies = ([] for i in range(7))
     PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
@@ -77,18 +79,7 @@ def sbo_build(name):
                 version = sbo_version_pkg(pkg)
                 sbo_ver.append(version)
                 src = sbo_source_dwn(pkg)
-                # Looks if sources unsupported or untested
-                # from arch else select arch
-                if "UNSUPPORTED" in src:
-                    pkg_arch.append("UNSUPPORTED")
-                elif "UNTESTED" in src:
-                    pkg_arch.append("UNTESTED")
-                elif arch == "x86_64":
-                    pkg_arch.append("x86_64")
-                elif arch.startswith("i") and arch.endswith("86"):
-                    pkg_arch.append("i486")
-                elif "arm" in arch:
-                    pkg_arch.append("arm")
+                pkg_arch.append(select_arch(src))
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
@@ -144,10 +135,10 @@ def sbo_build(name):
                 msg_upg = msg_upg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("{0}Total {1} {2}.{3}".format(GREY, len(dependencies), msg_ins, ENDC))
-            print("{0}{1} {2} will be installed, {3} allready installed and {4} {5}{6}".format(
-                  GREY, count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg, ENDC))
-            print("{0}will be upgraded.{1}\n".format(GREY, ENDC))
+            print("{0}Total {1} {2}.".format(GREY, len(dependencies), msg_ins))
+            print("{0} {1} will be installed, {2} allready installed and {3} {4}".format(
+                  count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
+            print("will be upgraded.{0}\n".format(ENDC))
             # Check if package supported or tested by arch
             # before proceed to install
             UNST = ["UNSUPPORTED", "UNTESTED"]
@@ -231,38 +222,29 @@ def sbo_build(name):
                     if os.path.isfile(dep_path + name): 
                         os.remove(dep_path + name)
                     if len(dependencies) > 1:
-                        f = open(dep_path + name, "w")
-                        for dep in dependencies:
-                            f.write(dep + "\n")
-                        f.close()
+                        with open(dep_path + name, "w") as f:
+                            for dep in dependencies:
+                                f.write(dep + "\n")
+                            f.close()
         else:
             ins = uns = int()
             sbo_matching = []
             index, toolbar_width = int(), 3
-            for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
-                if line.startswith("SLACKBUILD NAME: "):
-                    sbo_name = line[17:].strip()
-                    if name in sbo_name:
-                        index += 1
-                        if index == toolbar_width:
-                            sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
-                            sys.stdout.flush()
-                            toolbar_width += 6
-                        sbo_matching.append(sbo_name)
-                        sbo_ver.append(sbo_version_pkg(sbo_name))
-                        src = sbo_source_dwn(sbo_name)
-                        # Looks if sources unsupported or untested
-                        # from arch else select arch
-                        if "UNSUPPORTED" in src:
-                            pkg_arch.append("UNSUPPORTED")
-                        elif "UNTESTED" in src:
-                            pkg_arch.append("UNTESTED")
-                        elif arch == "x86_64":
-                            pkg_arch.append("x86_64")
-                        elif arch.startswith("i") and arch.endswith("86"):
-                            pkg_arch.append("i486")
-                        elif "arm" in arch:
-                            pkg_arch.append("arm")
+            with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
+                for line in SLACKBUILDS_TXT:
+                    if line.startswith("SLACKBUILD NAME: "):
+                        sbo_name = line[17:].strip()
+                        if name in sbo_name:
+                            index += 1
+                            if index == toolbar_width:
+                                sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
+                                sys.stdout.flush()
+                                toolbar_width += 6
+                            sbo_matching.append(sbo_name)
+                            sbo_ver.append(sbo_version_pkg(sbo_name))
+                            src = sbo_source_dwn(sbo_name)
+                            pkg_arch.append(select_arch(src))
+            SLACKBUILDS_TXT.close()
             sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
             if sbo_matching:
                 print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
@@ -289,12 +271,30 @@ def sbo_build(name):
                     uns_msg = uns_msg + "s"
                 print("\nMatching summary")
                 print("=" * 79)
-                print("{0}Total found {1} matching {2}.{3}".format(
-                      GREY, len(sbo_matching), total_msg, ENDC))
-                print("{0}{1} installed {2} and {3} uninstalled {4}.{5}\n".format(
-                      GREY, ins, ins_msg, uns, uns_msg, ENDC))
+                print("{0}Total found {1} matching {2}.".format(
+                      GREY, len(sbo_matching), total_msg))
+                print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
+                      ins, ins_msg, uns, uns_msg, ENDC))
             else:
                 print("\nNo package was found to match\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
+
+def select_arch(src):
+    '''
+    Looks if sources unsupported or untested
+    from arch else select arch
+    '''
+    arch = os.uname()[4]
+    if "UNSUPPORTED" in src:
+        arch = "UNSUPPORTED"
+    elif "UNTESTED" in src:
+        arch = "UNTESTED"
+    elif arch == "x86_64":
+        arch = "x86_64"
+    elif arch.startswith("i") and arch.endswith("86"):
+        arch = "i486"
+    elif "arm" in arch:
+        arch = "arm"
+    return arch

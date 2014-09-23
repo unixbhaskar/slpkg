@@ -57,10 +57,10 @@ def initialization():
         SLACKBUILDS_TXT = url_read((
             "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
         sys.stdout.write("Done\n")
-        sbo = open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w")
-        sbo.write(SLACKBUILDS_TXT)
-        sbo.close()
-        print("File SLACKBUILDS.TXT created in {0}".format(sbo_lib))
+        with open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w") as sbo:
+            sbo.write(SLACKBUILDS_TXT)
+            sbo.close()
+            print("File SLACKBUILDS.TXT created in {0}".format(sbo_lib))
     # Read ChangeLog.txt from slackbuilds.org and write in /var/log/slpkg/sbo/
     # directory if not exist
     if not os.path.isfile(sbo_log + "ChangeLog.txt"):
@@ -70,10 +70,10 @@ def initialization():
         ChangeLog_txt = url_read((
             "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(slack_ver())))
         sys.stdout.write("Done\n")
-        log = open("{0}ChangeLog.txt".format(sbo_log), "w")
-        log.write(ChangeLog_txt)
-        log.close()
-        print("File ChangeLog.txt created in {0}".format(sbo_log))
+        with open("{0}ChangeLog.txt".format(sbo_log), "w") as log:
+            log.write(ChangeLog_txt)
+            log.close()
+            print("File ChangeLog.txt created in {0}".format(sbo_log))
     # We take the size of ChangeLog.txt from the server and locally
     server = int(''.join(server_file_size(sbo_url + "ChangeLog.txt")))
     local = int(local_file_size(sbo_log + "ChangeLog.txt"))
@@ -89,10 +89,10 @@ def initialization():
             "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
         ChangeLog_txt = url_read((
             "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(slack_ver())))
-        sbo = open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w")
-        sbo.write(SLACKBUILDS_TXT)
-        sbo.close()
-        log = open("{0}ChangeLog.txt".format(sbo_log), "w")
-        log.write(ChangeLog_txt)
-        log.close()
+        with open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w") as sbo:
+            sbo.write(SLACKBUILDS_TXT)
+            sbo.close()
+        with open("{0}ChangeLog.txt".format(sbo_log), "w") as log:
+            log.write(ChangeLog_txt)
+            log.close()
         sys.stdout.write("Done\n")

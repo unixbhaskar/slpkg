@@ -113,9 +113,9 @@ def pkg_remove(binary):
                 # then look log file for dependencies in /var/log/slpkg/dep,
                 # read and remove all else remove only the package.
                 if os.path.isfile(dep_path + rmv):
-                    f = open(dep_path + rmv, "r")
-                    dependencies = f.read().split()
-                    f.close()
+                    with open(dep_path + rmv, "r") as f:
+                        dependencies = f.read().split()
+                        f.close()
                     print # new line at start
                     template(78)
                     print("| Found dependencies for package {0}:".format(rmv))
@@ -173,9 +173,9 @@ def pkg_find(binary):
              matching += 1
              print("[ {0}installed{1} ] - {2}".format(
                    colors.GREEN, colors.ENDC, match))
-             f = open(pkg_path + match, "r")
-             data = f.read()
-             f.close()
+             with open(pkg_path + match, "r") as f:
+                 data = f.read()
+                 f.close()
              for line in data.splitlines():
                  if line.startswith("UNCOMPRESSED PACKAGE SIZE:"):
                      if "M" in line[26:]:
@@ -191,7 +191,7 @@ def pkg_find(binary):
         if size > 1024:
             unit = "Mb"
             size = (size / 1024)
-        print("{0}Size of installed packages {1} {2}{3}\n".format(
+        print("{0}Size of installed packages {1} {2}.{3}\n".format(
               colors.GREY, round(size, 2), unit, colors.ENDC))
 
 def pkg_display(binary):

@@ -36,10 +36,12 @@ def sbo_search_pkg(name):
     '''
     try:
         sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
-        for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
-            if line.startswith("SLACKBUILD LOCATION"):
-                if name == get_file(line[23:].strip(), "/").replace("\n", ""):
-                    return sbo_url + line[23:].strip() + "/"
+        with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
+            for line in SLACKBUILDS_TXT:
+                if line.startswith("SLACKBUILD LOCATION"):
+                    if name == get_file(line[23:].strip(), "/").replace("\n", ""):
+                        SLACKBUILDS_TXT.close()
+                        return sbo_url + line[23:].strip() + "/"
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
