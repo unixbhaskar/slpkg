@@ -52,11 +52,12 @@ def sbo_network(name):
     initialization()
     sbo_url = sbo_search_pkg(name)
     if sbo_url:
+        sbo_desc = sbo_description_pkg(name)[len(name) + 2:-1]
         sbo_req = sbo_requires_pkg(name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
         sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
-        view_sbo(name, sbo_url, get_file(sbo_dwn, "/"), \
+        view_sbo(name, sbo_url, sbo_desc, get_file(sbo_dwn, "/"), \
                  ", ".join([get_file(src, "/") for src in source_dwn]), \
                  sbo_req)
         # Check if package supported by arch

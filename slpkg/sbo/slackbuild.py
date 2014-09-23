@@ -27,8 +27,11 @@ import subprocess
 
 from slpkg.colors import colors
 from slpkg.functions import get_file
-from slpkg.__metadata__ import tmp, pkg_path, build_path, log_path, sp
-from slpkg.messages import pkg_not_found, pkg_found, template, build_FAILED
+from slpkg.__metadata__ import (tmp, pkg_path, build_path, 
+                                log_path, lib_path, sp)
+
+from slpkg.messages import (pkg_not_found, pkg_found, template, 
+                            build_FAILED, sbo_packages_view)
 
 from slpkg.pkg.find import find_package 
 from slpkg.pkg.build import build_package
@@ -46,18 +49,19 @@ def sbo_build(name):
     with all dependencies if version is greater than
     that established.
     '''
-    sys.stdout.write("{0}Building dependency tree ...{1}".format(
+    sbo_ver, pkg_arch, installs, upgraded, \
+    versions, requires, dependencies = ([] for i in range(7))
+    PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
+    GREEN, RED, GREY, ENDC = colors.GREEN, colors.RED, \
+                             colors.GREY, colors.ENDC
+    sys.stdout.write("{0}Reading package lists ...{1}".format(
                      colors.GREY, colors.ENDC))
+    sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None:
             pkg_sum = count_upgraded = count_installed = int()
-            sbo_ver, pkg_arch, installs, upgraded, \
-            versions, requires, dependencies = ([] for i in range(7))
-            PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
-            ENDC = colors.ENDC
-            arch = os.uname()[4]
             # Insert master package in list to 
             # install it after dependencies
             requires.append(name)
@@ -75,18 +79,7 @@ def sbo_build(name):
                 version = sbo_version_pkg(pkg)
                 sbo_ver.append(version)
                 src = sbo_source_dwn(pkg)
-                if arch == "x86_64":
-                    pkg_arch.append("x86_64")
-                elif arch.startswith("i") and arch.endswith("86"):
-                    pkg_arch.append("i486")
-                elif "arm" in arch:
-                    pkg_arch.append("arm")
-                # Looks if sources unsupported or untested
-                # from arch
-                if "UNSUPPORTED" in src:
-                    pkg_arch.append("UNSUPPORTED")
-                elif "UNTESTED" in src:
-                    pkg_arch.append("UNTESTED")
+                pkg_arch.append(select_arch(src))
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
@@ -116,10 +109,7 @@ def sbo_build(name):
                   " " * 10, "Arch", " " * 9, "Repository"))
             template(78)
             print("Installing:")
-            print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(PKG_COLOR, name, ENDC, \
-                  " " * (38-len(name)), sbo_ver[-1], \
-                  " " * (17-len(sbo_ver[-1])), ARCH_COLOR, pkg_arch[-1], ENDC, \
-                  " " * (13-len(pkg_arch[-1])), "SBo"))
+            sbo_packages_view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR, pkg_arch[-1])
             print("Installing for dependencies:")
             ARCH_COLOR = "" # reset arch color for dependencies packages
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1], pkg_arch[:-1]):
@@ -136,32 +126,29 @@ def sbo_build(name):
                     ARCH_COLOR = colors.RED
                 elif "UNTESTED" in dep_arch:
                     ARCH_COLOR = colors.YELLOW
-                print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(DEP_COLOR, dep, ENDC, \
-                      " " * (38-len(dep)), ver, \
-                      " " * (17-len(ver)), ARCH_COLOR, dep_arch, ENDC, \
-                      " " * (13-len(dep_arch)), "SBo"))
-            msg_ins = "package"
-            msg_upg = msg_ins
+                sbo_packages_view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
+            msg_upg = msg_ins = "package"
             if count_installed > 1:
                 msg_ins = msg_ins + "s"
-            if msg_upg > 1:
+            if count_upgraded > 1:
                 msg_upg = msg_upg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("Total {0} {1}.".format(len(dependencies), msg_ins))
+            print("{0}Total {1} {2}.".format(GREY, len(dependencies), msg_ins))
             print("{0} {1} will be installed, {2} allready installed and {3} {4}".format(
-                 count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
-            print("will be upgraded.\n")
+                  count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
+            print("will be upgraded.{0}\n".format(ENDC))
             # Check if package supported or tested by arch
             # before proceed to install
             UNST = ["UNSUPPORTED", "UNTESTED"]
             if src in UNST:
                 print("\n{0}The package {1}{2}\n".format(colors.RED, src, ENDC))
-                sys.exit()
+                read = ""
             # exit if all packages already installed
-            if pkg_sum == len(dependencies):
-                sys.exit()
-            read = raw_input("Do you want to continue [Y/n]? ")
+            elif pkg_sum == len(dependencies):
+                read = ""
+            else:
+                read = raw_input("Do you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
@@ -235,14 +222,79 @@ def sbo_build(name):
                     if os.path.isfile(dep_path + name): 
                         os.remove(dep_path + name)
                     if len(dependencies) > 1:
-                        f = open(dep_path + name, "w")
-                        for dep in dependencies:
-                            f.write(dep + "\n")
-                        f.close()
+                        with open(dep_path + name, "w") as f:
+                            for dep in dependencies:
+                                f.write(dep + "\n")
+                            f.close()
         else:
+            ins = uns = int()
+            sbo_matching = []
+            index, toolbar_width = int(), 3
+            with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
+                for line in SLACKBUILDS_TXT:
+                    if line.startswith("SLACKBUILD NAME: "):
+                        sbo_name = line[17:].strip()
+                        if name in sbo_name:
+                            index += 1
+                            if index == toolbar_width:
+                                sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
+                                sys.stdout.flush()
+                                toolbar_width += 6
+                            sbo_matching.append(sbo_name)
+                            sbo_ver.append(sbo_version_pkg(sbo_name))
+                            src = sbo_source_dwn(sbo_name)
+                            pkg_arch.append(select_arch(src))
+            SLACKBUILDS_TXT.close()
             sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
-            message = "From slackbuilds.org"
-            pkg_not_found("\n", name, message, "\n")
+            if sbo_matching:
+                print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
+                      colors.CYAN, name, colors.ENDC))
+                template(78)
+                print("{0}{1}{2}{3}{4}{5}{6}".format("| Package", " " * 30, "Version", \
+                      " " * 10, "Arch", " " * 9, "Repository"))
+                template(78)
+                print("Matching:")
+                ARCH_COLOR = str()
+                for match, ver, march in zip(sbo_matching, sbo_ver, pkg_arch):
+                    if find_package(match + sp + ver, pkg_path):
+                        sbo_packages_view(GREEN, match, ver, ARCH_COLOR, march)
+                        ins += 1
+                    else:
+                        sbo_packages_view(RED, match, ver, ARCH_COLOR, march)
+                        uns += 1
+                total_msg = ins_msg = uns_msg = "package"
+                if len(sbo_matching) > 1:
+                    total_msg = total_msg + "s"
+                if ins > 1:
+                    ins_msg = ins_msg + "s"
+                if uns > 1:
+                    uns_msg = uns_msg + "s"
+                print("\nInstalling summary")
+                print("=" * 79)
+                print("{0}Total found {1} matching {2}.".format(
+                      GREY, len(sbo_matching), total_msg))
+                print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
+                      ins, ins_msg, uns, uns_msg, ENDC))
+            else:
+                print("\nNo package was found to match\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
+
+def select_arch(src):
+    '''
+    Looks if sources unsupported or untested
+    from arch else select arch
+    '''
+    arch = os.uname()[4]
+    if "UNSUPPORTED" in src:
+        arch = "UNSUPPORTED"
+    elif "UNTESTED" in src:
+        arch = "UNTESTED"
+    elif arch == "x86_64":
+        arch = "x86_64"
+    elif arch.startswith("i") and arch.endswith("86"):
+        arch = "i486"
+    elif "arm" in arch:
+        arch = "arm"
+    return arch

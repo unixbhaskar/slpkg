@@ -47,16 +47,16 @@ def install(slack_pkg):
         comp_sum, uncomp_sum, names, dwn_list, comp_size, \
         uncomp_size, install_all, package_name, \
         package_location = ([] for i in range(9))
+        GREEN, GREY, ENDC = colors.GREEN, colors.GREY, colors.ENDC
         arch = COLOR = str()
-        ENDC = colors.ENDC
-        # create directories if not exist
+        # create directories if not exists
         tmp_path = slpkg_tmp + "packages/"
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)
         if not os.path.exists(tmp_path):
             os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-                colors.CYAN, slack_pkg, ENDC)) 
+              colors.CYAN, slack_pkg, ENDC)) 
         sys.stdout.write ("{0}Reading package lists ...{1}".format(colors.GREY, ENDC))
         sys.stdout.flush()
         PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
@@ -134,12 +134,12 @@ def install(slack_pkg):
                 msg_2_pkg = msg_2_pkg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("Total {0} {1}.".format(len(install_all), msg_pkg))
+            print("{0}Total {1} {2}.".format(GREY, len(install_all), msg_pkg))
             print("{0} {1} will be installed, {2} will be upgraded and {3} will be resettled.".format(
                  uni_sum, msg_2_pkg, upg_sum, pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
-            print("After this process, {0} {1} of additional disk space will be used.".format(
-                  uncompressed, uncomp_unit))
+            print("After this process, {0} {1} of additional disk space will be used.{2}".format(
+                  uncompressed, uncomp_unit, ENDC))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_list:
@@ -148,15 +148,15 @@ def install(slack_pkg):
                 for install, name in zip(install_all, names):
                     if os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ reinstalling ] --> {1}{2}".format(
-                              colors.GREEN, ENDC, install))
+                              GREEN, ENDC, install))
                         pkg_reinstall((tmp_path + install).split())
                     elif find_package(name + "-", pkg_path):
                         print("{0}[ upgrading ] --> {1}{2}".format(
-                              colors.GREEN, ENDC, install))
+                              GREEN, ENDC, install))
                         pkg_upgrade((tmp_path + install).split())
                     else:
                         print("{0}[ installing ] --> {1}{2}".format(
-                              colors.GREEN, ENDC, install))
+                              GREEN, ENDC, install))
                         pkg_upgrade((tmp_path + install).split())
                 print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")

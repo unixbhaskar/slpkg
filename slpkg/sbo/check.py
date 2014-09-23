@@ -64,7 +64,7 @@ def sbo_check():
         dependencies,  dependencies_list, \
         requires, upgrade, installed, sbo_list, \
         upg_name, pkg_for_upg, upg_ver, upg_arch = ([] for i in range(10))
-        GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
+        GREEN, RED, GREY, ENDC = colors.GREEN, colors.RED, colors.GREY, colors.ENDC
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
                 sbo_list.append(pkg)
@@ -171,8 +171,8 @@ def sbo_check():
                     msg_ins = msg_ins + "s"
                 print("\nInstalling summary")
                 print("=" * 79)
-                print("Total {0} {1} will be upgraded and {2} {3} will be installed.\n".format(
-                      count_upgraded, msg_upg, count_installed, msg_ins))
+                print("{0}Total {1} {2} will be upgraded and {3} {4} will be installed.{5}\n".format(
+                      GREY, count_upgraded, msg_upg, count_installed, msg_ins, ENDC))
                 read = raw_input("Would you like to upgrade [Y/n]? ")
                 if read == "Y" or read == "y":
                     if not os.path.exists(build_path):

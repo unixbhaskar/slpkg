@@ -45,7 +45,7 @@ def patches():
         slack_arch = str()
         comp_sum, uncomp_sum, dwn_patches, comp_size, uncomp_size, \
         upgrade_all, package_name, package_location = ([] for i in range(8))
-        GREEN, RED, ENDC = colors.GREEN, colors.RED, colors.ENDC
+        GREEN, RED, GREY, ENDC = colors.GREEN, colors.RED, colors.GREY, colors.ENDC
         patch_path = slpkg_tmp + "patches/"
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)
@@ -120,10 +120,10 @@ def patches():
                 msg_pkg = msg_pkg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("Total {0} {1} will be upgraded.".format(len(upgrade_all), msg_pkg))
+            print("{0}Total {1} {2} will be upgraded.".format(GREY, len(upgrade_all), msg_pkg))
             print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
-            print("After this process, {0} {1} of additional disk space will be used.".format(
-                  uncompressed, uncomp_unit))
+            print("After this process, {0} {1} of additional disk space will be used.{2}".format(
+                  uncompressed, uncomp_unit, ENDC))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:

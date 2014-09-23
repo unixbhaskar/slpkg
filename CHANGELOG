@@ -1,5 +1,13 @@
+Version 1.8.9
+23-09-2014
+
+[Feature] - Added short description
+          - Added view matching packages from SBo repostirory
+
+[Updated] - Update open-close files as SLACKBUILDS.TXT
+
 Version 1.8.8
-22-08-2014
+22-09-2014
 
 [Updated] - Fix Alignment viewing packages
           - Fix build time

@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.8.8
+- Version: 1.8.9
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.8.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.9.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -98,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.8.tar.gz
-    $ cd slpkg-1.8.8
+    $ tar xvf slpkg-1.8.9.tar.gz
+    $ cd slpkg-1.8.9
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -158,7 +158,7 @@ build and install with all dependencies :
 .. code-block:: bash
     
     $ slpkg -s sbo brasero
-    Building dependency tree ......Done
+    Reading package lists ......Done
     
     The following packages will be automatically installed or upgraded 
     with new version:
@@ -182,6 +182,27 @@ build and install with all dependencies :
     will be upgraded.
 
     Do you want to continue [Y/n]? y
+    
+    
+    $ slpkg -s sbo fmpeg
+    Reading package lists ....Done
+
+    Packages with name matching [ fmpeg ]
+
+    +==============================================================================
+    | Package                              Version          Arch         Repository
+    +==============================================================================
+    Matching:
+     ffmpegthumbnailer                     2.0.8            x86_64       SBo
+     ffmpeg                                2.1.5            x86_64       SBo
+     ffmpeg2theora                         0.29             x86_64       SBo
+     gst-ffmpeg                            0.10.13          x86_64       SBo
+
+    Installing summary
+    ===============================================================================
+    Total found 4 matching packages.
+    0 installed package and 4 uninstalled packages.
+    
     
 Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
 download and install:
@@ -298,6 +319,7 @@ Find packages from slackbuilds.org:
     +===============================================================================
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
+    | Description : multi-player combat game
     | SlackBuild : bitfighter.tar.gz
     | Sources : bitfighter-019c.tar.gz, classic_level_pack.zip 
     | Requirements : OpenAL, SDL2, speex, libmodplug
