@@ -171,7 +171,8 @@ def pkg_find(binary):
     for match in sorted(os.listdir(pkg_path)):
          if binary in match:
              matching += 1
-             print colors.GREEN + "[ installed ] -" + colors.ENDC,  match
+             print("[ {0}installed{1} ] - {2}".format(
+                   colors.GREEN, colors.ENDC, match))
              f = open(pkg_path + match, "r")
              data = f.read()
              f.close()
@@ -185,12 +186,12 @@ def pkg_find(binary):
     if matching == 0:
         print("No package was found to match\n")
     else:
-        print("\n{0}Found {1} matching packages.{2}".format(colors.GREY, matching, colors.ENDC))
+        print("\n{0}Total found {1} matching packages.{2}".format(colors.GREY, matching, colors.ENDC))
         unit = "Kb"
         if size > 1024:
             unit = "Mb"
             size = (size / 1024)
-        print("{0}Total size of installed packages {1} {2}{3}\n".format(
+        print("{0}Size of installed packages {1} {2}{3}\n".format(
               colors.GREY, round(size, 2), unit, colors.ENDC))
 
 def pkg_display(binary):
