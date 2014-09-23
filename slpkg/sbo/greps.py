@@ -98,3 +98,16 @@ def sbo_checksum_pkg(name):
         if line.startswith("SLACKBUILD MD5SUM: "):
             if sbo_name == name:
                 return line[19:].strip()
+
+def sbo_description_pkg(name):
+    '''
+    Grab package verion
+    '''
+    for line in open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r"):
+        if line.startswith("SLACKBUILD NAME: "):
+            sbo_name = line[17:].strip()
+        if line.startswith("SLACKBUILD SHORT DESCRIPTION:  "):
+            if sbo_name == name:
+                return line[31:].strip()
+
+
