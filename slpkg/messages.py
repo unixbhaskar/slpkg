@@ -90,12 +90,13 @@ def template(max):
     '''
     print("+" + "=" * max)
 
-def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, sbo_req):
+def view_sbo(pkg, sbo_url, sbo_desc, sbo_dwn, source_dwn, sbo_req):
     print # new line at start
     template(78)
     print("| {0}Package {1}{2}{3} --> {4}".format(colors.GREEN,
             colors.CYAN, pkg, colors.GREEN, colors.ENDC + sbo_url))
     template(78)
+    print("| {0}Description : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_desc))
     print("| {0}SlackBuild : {1}{2}".format(colors.GREEN, colors.ENDC, sbo_dwn))
     print("| {0}Sources : {1}{2}".format(colors.GREEN, colors.ENDC, source_dwn))
     print("| {0}Requirements : {1}{2}".format(colors.YELLOW, colors.ENDC,
@@ -108,4 +109,14 @@ def view_sbo(pkg, sbo_url, sbo_dwn, source_dwn, sbo_req):
     print(" {0}B{1}uild                Download and build".format(colors.RED, colors.ENDC))
     print(" {0}I{1}nstall              Download/Build/Install".format(colors.RED, colors.ENDC))
     print(" {0}Q{1}uit                 Quit\n".format(colors.RED, colors.ENDC))
+
+def sbo_packages_view(PKG_COLOR, package, version, ARCH_COLOR, arch):
+    '''
+    View slackbuild packages with version and arch
+    '''
+    ENDC = colors.ENDC
+    print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(PKG_COLOR, package, ENDC, \
+          " " * (38-len(package)), version, \
+          " " * (17-len(version)), ARCH_COLOR, arch, ENDC, \
+          " " * (13-len(arch)), "SBo"))
 
