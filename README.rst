@@ -457,8 +457,8 @@ Find installed packages:
     [ installed ] - xf86dgaproto-2.1-noarch-1
     [ installed ] - xineramaproto-1.2.1-noarch-1
 
-    Found 4 matcing packages
-    Total size of installed packages 1.61 Mb
+    Total 4 matcing packages.
+    Size of installed packages 1.61 Mb.
 
 Display the contents of the packages:
 
