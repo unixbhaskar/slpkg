@@ -49,7 +49,7 @@ def install(slack_pkg):
         package_location = ([] for i in range(9))
         GREEN, GREY, ENDC = colors.GREEN, colors.GREY, colors.ENDC
         arch = COLOR = str()
-        # create directories if not exist
+        # create directories if not exists
         tmp_path = slpkg_tmp + "packages/"
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)

@@ -107,7 +107,7 @@ def main():
         if args.verbose:
             prog_version()
         if args.a:
-    	    s_user(getpass.getuser())
+            s_user(getpass.getuser())
             build_package(args.a[0], args.a[1:], path)
         if args.l:
             pkg_list(args.l)
@@ -180,7 +180,7 @@ def main():
             s_user(getpass.getuser())
             pkg_upgrade(args.u)
         if args.o:
-    	    s_user(getpass.getuser())
+            s_user(getpass.getuser())
             pkg_reinstall(args.o)
         if args.r:
             s_user(getpass.getuser())

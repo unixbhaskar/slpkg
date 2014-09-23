@@ -41,7 +41,7 @@ def sbo_search_pkg(name):
                 if line.startswith("SLACKBUILD LOCATION"):
                     if name == get_file(line[23:].strip(), "/").replace("\n", ""):
                         SLACKBUILDS_TXT.close()
-                        return sbo_url + line[23:].strip() + "/"
+                        return (sbo_url + line[23:].strip() + "/")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

@@ -25,4 +25,4 @@ def sbo_slackbuild_dwn(sbo_url):
     '''
     Create download slackbuild tar.gz archive
     '''
-    return sbo_url[:-1] + ".tar.gz"
+    return (sbo_url[:-1] + ".tar.gz")

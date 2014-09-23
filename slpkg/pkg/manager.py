@@ -37,7 +37,7 @@ def pkg_install(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output("installpkg {0}".format(pkg), shell=True)
+            print(subprocess.check_output("installpkg {0}".format(pkg), shell=True))
         except subprocess.CalledProcessError:
             message = "Can't install"
             if len(binary) > 1:
@@ -52,8 +52,8 @@ def pkg_upgrade(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output("upgradepkg --install-new {0}".format(pkg),
-                                          shell=True)
+            print(subprocess.check_output("upgradepkg --install-new {0}".format(pkg),
+                                          shell=True))
         except subprocess.CalledProcessError:
             message = "Can't upgrade"
             if len(binary) > 1:
@@ -68,8 +68,8 @@ def pkg_reinstall(binary):
     '''
     for pkg in binary:
         try:
-            print subprocess.check_output("upgradepkg --reinstall {0}".format(pkg),
-                                          shell=True)
+            print(subprocess.check_output("upgradepkg --reinstall {0}".format(pkg),
+                                          shell=True))
         except subprocess.CalledProcessError:
             message = "Can't reinstall"
             if len(binary) > 1:
@@ -134,19 +134,19 @@ def pkg_remove(binary):
                     if remove_dep == "y" or remove_dep == "Y":
                         for dep in dependencies:
                             if find_package(dep + sp, pkg_path):
-                                print subprocess.check_output("removepkg {0}".format(dep), shell=True)
+                                print(subprocess.check_output("removepkg {0}".format(dep), shell=True))
                                 rmv_list.append(dep)
                         os.remove(dep_path + rmv)
                         rmv_dependencies += dependencies[:-1]
                     else:
                         if find_package(rmv + sp, pkg_path):
-                            print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
+                            print(subprocess.check_output("removepkg {0}".format(rmv), shell=True))
                             rmv_list.append(rmv)
                         f.close()
                         os.remove(dep_path + rmv)
                 else:
                     if find_package(rmv + sp, pkg_path):
-                        print subprocess.check_output("removepkg {0}".format(rmv), shell=True)
+                        print(subprocess.check_output("removepkg {0}".format(rmv), shell=True))
                         rmv_list.append(rmv)
             # Prints all removed packages
             if len(rmv_list) > 1:
@@ -200,8 +200,8 @@ def pkg_display(binary):
     '''
     for pkg in binary:
         if find_package(pkg + sp, pkg_path):
-            print subprocess.check_output("cat {0}{1}".format(pkg_path,
-                  " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True)
+            print(subprocess.check_output("cat {0}{1}".format(pkg_path,
+                  " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True))
         else:
             message = "Can't dislpay"
             if len(binary) > 1:

@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.8.8
+- Version: 1.8.9
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.8.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.8.9.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -88,7 +88,7 @@ Tutorial
 --------
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/12082
+    :target: https://asciinema.org/a/12340
 
 
 Installation
@@ -98,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.8.tar.gz
-    $ cd slpkg-1.8.8
+    $ tar xvf slpkg-1.8.9.tar.gz
+    $ cd slpkg-1.8.9
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -158,7 +158,7 @@ build and install with all dependencies :
 .. code-block:: bash
     
     $ slpkg -s sbo brasero
-    Building dependency tree...... Done
+    Reading package lists ......Done
     
     The following packages will be automatically installed or upgraded 
     with new version:
@@ -183,6 +183,27 @@ build and install with all dependencies :
 
     Do you want to continue [Y/n]? y
     
+    
+    $ slpkg -s sbo fmpeg
+    Reading package lists ....Done
+
+    Packages with name matching [ fmpeg ]
+
+    +==============================================================================
+    | Package                              Version          Arch         Repository
+    +==============================================================================
+    Matching:
+     ffmpegthumbnailer                     2.0.8            x86_64       SBo
+     ffmpeg                                2.1.5            x86_64       SBo
+     ffmpeg2theora                         0.29             x86_64       SBo
+     gst-ffmpeg                            0.10.13          x86_64       SBo
+
+    Installing summary
+    ===============================================================================
+    Total found 4 matching packages.
+    0 installed package and 4 uninstalled packages.
+    
+    
 Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
 download and install:
 
@@ -191,16 +212,15 @@ download and install:
     $ slpkg -s slack mozilla
 
     Packages with name matching [ mozilla ]
-    
-    Reading package lists.............................. Done    
+    Reading package lists ..............................Done
 
     +==============================================================================
     | Package                   Version          Arch     Build  Repos         Size
     +==============================================================================
     Installing:
-    mozilla-firefox             24.1.0esr        x86_64   1      Slack     23524  K
-    mozilla-nss                 3.15.2           x86_64   2      Slack      1592  K
-    mozilla-thunderbird         24.1.0           x86_64   1      Slack     24208  K
+      mozilla-firefox           24.1.0esr        x86_64   1      Slack     23524  K
+      mozilla-nss               3.15.2           x86_64   2      Slack      1592  K
+      mozilla-thunderbird       24.1.0           x86_64   1      Slack     24208  K
 
     Installing summary
     ===============================================================================
@@ -217,7 +237,7 @@ and also displays installed packages:
 .. code-block:: bash
 
     $ slpkg -t brasero
-    Reading package lists...... Done
+    Reading package lists ......Done
 
     +=========================
     | brasero dependencies   :
@@ -240,7 +260,7 @@ Check if your packages is up to date from slackbuilds.org:
 .. code-block:: bash
 
     $ slpkg -c sbo upgrade
-    Reading package lists. Done
+    Reading package lists ...Done
 
     These packages need upgrading:
 
@@ -269,7 +289,7 @@ Check if your distribution is up to date from `Slackware official mirrors
 .. code-block:: bash
 
     $ slpkg -c slack upgrade
-    Reading package lists....... Done
+    Reading package lists .......Done
 
     These packages need upgrading:
     
@@ -294,11 +314,12 @@ Find packages from slackbuilds.org:
 .. code-block:: bash
 
     $ slpkg -n bitfighter
-    Reading package lists. Done
+    Reading package lists ...Done
     
     +===============================================================================
     | Package bitfighter --> http://slackbuilds.org/repository/14.1/games/bitfighter/
     +===============================================================================
+    | Description : multi-player combat game
     | SlackBuild : bitfighter.tar.gz
     | Sources : bitfighter-019c.tar.gz, classic_level_pack.zip 
     | Requirements : OpenAL, SDL2, speex, libmodplug

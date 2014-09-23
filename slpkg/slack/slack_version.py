@@ -30,4 +30,4 @@ def slack_ver():
     with open("/etc/slackware-version", "r") as f:
         sv = f.read()
         f.close()
-    return ".".join(re.findall(r"\d+", sv))
+    return (".".join(re.findall(r"\d+", sv)))

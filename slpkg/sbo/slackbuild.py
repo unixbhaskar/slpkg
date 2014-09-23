@@ -127,11 +127,10 @@ def sbo_build(name):
                 elif "UNTESTED" in dep_arch:
                     ARCH_COLOR = colors.YELLOW
                 sbo_packages_view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
-            msg_ins = "package"
-            msg_upg = msg_ins
+            msg_upg = msg_ins = "package"
             if count_installed > 1:
                 msg_ins = msg_ins + "s"
-            if msg_upg > 1:
+            if count_upgraded > 1:
                 msg_upg = msg_upg + "s"
             print("\nInstalling summary")
             print("=" * 79)
@@ -144,11 +143,12 @@ def sbo_build(name):
             UNST = ["UNSUPPORTED", "UNTESTED"]
             if src in UNST:
                 print("\n{0}The package {1}{2}\n".format(colors.RED, src, ENDC))
-                sys.exit()
+                read = ""
             # exit if all packages already installed
-            if pkg_sum == len(dependencies):
-                sys.exit()
-            read = raw_input("Do you want to continue [Y/n]? ")
+            elif pkg_sum == len(dependencies):
+                read = ""
+            else:
+                read = raw_input("Do you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
@@ -269,7 +269,7 @@ def sbo_build(name):
                     ins_msg = ins_msg + "s"
                 if uns > 1:
                     uns_msg = uns_msg + "s"
-                print("\nMatching summary")
+                print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total found {1} matching {2}.".format(
                       GREY, len(sbo_matching), total_msg))
