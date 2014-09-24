@@ -124,32 +124,27 @@ def main():
                     if args.c[1] == "upgrade":
                         sbo_check()
                     else:
-                        choices = ["upgrade"]
                         ext_err_args()
-                        err1_args("".join(args.c[1]), choices)
+                        err1_args("".join(args.c[1]), "'upgrade'")
                 elif "slack" in args.c:
                     if args.c[1] == "upgrade":
                         patches()
                     else:
-                        choices = ["upgrade"]
                         ext_err_args()
-                        err1_args("".join(args.c[1]), choices)
+                        err1_args("".join(args.c[1]), "'upgrade'")
                 else:
-                    choices = ["sbo", "slack"]
                     ext_err_args()
-                    err1_args("".join(args.c[0]), choices)
+                    err1_args("".join(args.c[0]), "'sbo', 'slack'")
             elif len(args.c) < 2:
                 if "sbo" in args.c or "slack" in args.c:
-                    choices = ['upgrade']
                     ext_err_args()
-                    err2_args(choices)
+                    err2_args("'upgrade'")
                 else:
-                    choices = ["sbo", "slack"]
                     ext_err_args()
-                    err1_args("".join(args.c), choices)
+                    err1_args("".join(args.c), "'sbo', 'slack'")
             else:
                 ext_err_args()
-                err2_args()    
+                err2_args("'upgrade'")    
         if args.s:
             s_user(getpass.getuser())
             if len(args.s) == 2:
@@ -158,21 +153,18 @@ def main():
                 elif "slack" in args.s:
                     install("".join(args.s[1]))
                 else:
-                    choices = ["sbo", "slack"]
                     ext_err_args()
-                    err1_args("".join(args.s[0]), choices)
+                    err1_args("".join(args.s[0]), "'sbo', 'slack'")
             elif len(args.s) < 2:
                 if "sbo" in args.s or "slack" in args.s:
-                    choices = ["package"]
                     ext_err_args()
-                    err2_args(choices)
+                    err2_args("'package'")
                 else:
-                    choices = ["sbo", "slack"]
                     ext_err_args()
-                    err1_args("".join(args.s), choices)
+                    err1_args("".join(args.s), "'sbo', 'slack'")
             else:
                 ext_err_args()
-                err2_args()
+                err2_args("'package'")
         if args.i:
             s_user(getpass.getuser())
             pkg_install(args.i)
