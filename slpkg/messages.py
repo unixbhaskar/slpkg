@@ -56,7 +56,7 @@ def err1_args(invalid, choices):
     '''
     Print error message arguments
     '''
-    print("{0}: error: invalid choice: '{1}' choose from {2}".format(
+    print("{0}: error: invalid choice: '{1}' (choose from {2})".format(
             __all__, invalid, choices))
 
 def err2_args(choices):

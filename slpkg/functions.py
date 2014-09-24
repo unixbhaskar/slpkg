@@ -27,11 +27,4 @@ def get_file(link, char):
     '''
     Get filename from links
     '''
-    i = 0
-    results = []
-    for file in range(len(link)):
-        i -= 1
-        results.append(link[i])
-        if link[i] == char:
-            break
-    return ("".join(results[::-1]).replace("/", "").strip())
+    return link.split(char)[-1] 
