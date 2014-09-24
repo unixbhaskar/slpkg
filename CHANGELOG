@@ -1,3 +1,9 @@
+Version 1.9.0
+24-09-2014
+
+[Updated] - Fix arguments.
+          - Replace less command with pydoc.
+
 Version 1.8.9
 23-09-2014
 

@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.8.9
+- Version: 1.9.0
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.8.9.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.9.0.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -98,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.8.9.tar.gz
-    $ cd slpkg-1.8.9
+    $ tar xvf slpkg-1.9.0.tar.gz
+    $ cd slpkg-1.9.0
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -331,7 +331,8 @@ Find packages from slackbuilds.org:
      Build                Download and build this package
      Install              Download/Build/Install
      Quit                 Quit
-    _
+     
+     > _
 
 Auto tool to build package:
 
@@ -457,8 +458,8 @@ Find installed packages:
     [ installed ] - xf86dgaproto-2.1-noarch-1
     [ installed ] - xineramaproto-1.2.1-noarch-1
 
-    Found 4 matcing packages
-    Total size of installed packages 1.61 Mb
+    Total found 4 matcing packages
+    Size of installed packages 1.61 Mb
 
 Display the contents of the packages:
 

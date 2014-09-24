@@ -23,11 +23,12 @@
 
 import os
 import sys
+import pydoc
 import subprocess
 
 from colors import colors
 from functions import get_file
-from __metadata__ import tmp, build_path, pkg_path, slpkg_tmp, sp
+from __metadata__ import tmp, build_path, pkg_path, sp
 from messages import pkg_not_found, pkg_found, view_sbo, template, build_FAILED
 
 from pkg.build import build_package
@@ -45,7 +46,6 @@ def sbo_network(name):
     View SlackBuild package, read or install them 
     from slackbuilds.org
     '''
-    rdm_path = slpkg_tmp + "readme/"
     sys.stdout.write("{0}Reading package lists ...{1}".format(
                      colors.GREY, colors.ENDC))
     sys.stdout.flush()
@@ -68,7 +68,7 @@ def sbo_network(name):
             FAULT = "".join(source_dwn)
         while True:
             try:
-                read = raw_input("_ ")
+                read = raw_input(" {0}>{1} ".format(colors.GREY, colors.ENDC))
             except KeyboardInterrupt:
                 print # new line at exit
                 break
@@ -80,20 +80,14 @@ def sbo_network(name):
                 print("Complete!\n")
                 break
             elif read == "R" or read == "r":
-                site = "README"
-                read_readme(sbo_url, name, site)
-                subprocess.call("less {0}{1}.{2}".format(rdm_path, name, site), shell=True)
-                os.remove("{0}{1}.{2}".format(rdm_path, name, site))
+                readme = "README"
+                pydoc.pager(read_readme(sbo_url, readme))
             elif read == "F" or read == "f":
-                site = ".info"
-                read_info_slackbuild(sbo_url, name, site)
-                subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
-                os.remove("{0}{1}{2}".format(rdm_path, name, site))
+                _info = ".info"
+                pydoc.pager(read_info_slackbuild(sbo_url, name, _info))
             elif read == "S" or read == "s":
-                site = ".SlackBuild"
-                read_info_slackbuild(sbo_url, name, site)
-                subprocess.call("less {0}{1}{2}".format(rdm_path, name, site), shell=True)
-                os.remove("{0}{1}{2}".format(rdm_path, name, site))
+                _SlackBuild = ".SlackBuild"
+                pydoc.pager(read_info_slackbuild(sbo_url, name, _SlackBuild))
             elif read == "B" or read == "b":
                 if FAULT:
                     print("\n{0}The package {1}{2}\n".format(colors.RED, FAULT, colors.ENDC))

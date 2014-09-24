@@ -56,7 +56,7 @@ def install(slack_pkg):
         if not os.path.exists(tmp_path):
             os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-                colors.CYAN, slack_pkg, ENDC)) 
+              colors.CYAN, slack_pkg, ENDC)) 
         sys.stdout.write ("{0}Reading package lists ...{1}".format(colors.GREY, ENDC))
         sys.stdout.flush()
         PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))

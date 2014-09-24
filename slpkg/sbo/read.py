@@ -26,27 +26,14 @@ import os
 from url_read import url_read
 from __metadata__ import slpkg_tmp
 
-# create directories if not exist
-rdm_path = slpkg_tmp + "readme/"
-if not os.path.exists(slpkg_tmp):
-    os.mkdir(slpkg_tmp)
-if not os.path.exists(rdm_path):
-    os.mkdir(rdm_path)
-
-def read_readme(sbo_url, name, site):
+def read_readme(sbo_url, sbo_readme):
     '''
     Read SlackBuild README file
     '''
-    readme = url_read(sbo_url + site)
-    with open("{0}{1}.{2}".format(rdm_path, name, site), "w") as f:
-        f.write(readme)
-        f.close()
+    return url_read(sbo_url + sbo_readme)
 
-def read_info_slackbuild(sbo_url, name, site):
+def read_info_slackbuild(sbo_url, name, sbo_file):
     '''
-    Read info SlackBuild file
+    Read info and SlackBuild file
     '''
-    info = url_read(sbo_url + name + site)
-    with open("{0}{1}{2}".format(rdm_path, name, site), "w") as f:
-        f.write(info)
-        f.close()
+    return url_read(sbo_url + name + sbo_file)
