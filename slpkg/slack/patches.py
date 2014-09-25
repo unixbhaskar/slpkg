@@ -29,7 +29,6 @@ import subprocess
 from colors import colors
 from url_read import url_read
 from messages import template
-from functions import get_file
 from __metadata__ import pkg_path, slpkg_tmp, slack_archs
 
 from pkg.manager import pkg_upgrade
@@ -94,9 +93,9 @@ def patches():
                 else:
                     slack = str()
                 upg = upgrade[:-(len(slack) + 4)]
-                build = get_file(upg, "-").replace("-", "")
+                build = upg.split("-")[-1] 
                 upg_ver = upg[:-(len(arch) + len(build))]
-                ver = get_file(upg_ver, "-").replace("-", "")
+                ver = upg_ver.split("-")[-1]
                 name = upg_ver[:-(len(ver) + 1)]
                 arch = arch[1:-1]
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(

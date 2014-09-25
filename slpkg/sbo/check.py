@@ -30,7 +30,6 @@ from pkg.build import build_package
 from pkg.manager import pkg_upgrade
 
 from colors import colors
-from functions import get_file
 from messages import template, build_FAILED
 from __metadata__ import tmp, pkg_path, build_path, sp
 
@@ -81,7 +80,7 @@ def sbo_check():
                     else:
                         arch = os.uname()[4]
                 package = pkg[:-(len(arch) + len("_SBo") + 3)]
-                pkg_version = get_file(package, "-")[1:]
+                pkg_version = package.split("-")[-1] 
                 name = package[:-(len(pkg_version) + 1)]
                 if sbo_search_pkg(name):
                     # search packages if exists in the repository
@@ -139,7 +138,7 @@ def sbo_check():
                                     else:
                                         arch = os.uname()[4]
                                 name = sbo[:-(len(arch) + len("_SBo") + 3)]
-                                pkg_version = get_file(name, "-")[1:]
+                                pkg_version = name.split("-")[-1]
                         upgrade.append(pkg)
                         pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
                         upg_ver.append(ver)
@@ -183,13 +182,13 @@ def sbo_check():
                         sbo_url = sbo_search_pkg(name)
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
                         src_dwn = sbo_source_dwn(name).split()
-                        script = get_file(sbo_dwn, "/")
+                        script = sbo_dwn.split("/")[-1] # keep file from script link
                         print("\n{0}Start -->{1} {2}\n".format(GREEN, ENDC, name))
                         subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                         sources = []
                         for src in src_dwn:
                             subprocess.call("wget -N {0}".format(src), shell=True)
-                            sources.append(get_file(src, "/"))
+                            sources.append(src.split("/")[-1]) # keep file from source link
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.
                         # If find two or more packages e.g. to build tag 

@@ -56,7 +56,6 @@ import argparse
 
 from colors import colors
 from __metadata__ import path
-from functions import get_file
 from version import prog_version
 from messages import (ext_err_args, s_user,
                       err1_args, err2_args)
@@ -79,9 +78,9 @@ def main():
                         action="store_true")
     parser.add_argument("-a", help="auto build packages",
                         type=str, nargs="+", metavar=("script", "sources"))
-    parser.add_argument("-l", help="list of installed packages",  
+    parser.add_argument("-l", help="list of installed packages",
                         choices="all sbo slack noarch".split(),
-			            metavar=("all, sbo, slack, noarch"))
+                        metavar=("all, sbo, slack, noarch"))
     parser.add_argument("-c", help="check if your packages is up to date",
                         type=str, nargs="+", metavar=("sbo, slack", "<upgrade>"))
     parser.add_argument("-s", help="download, build & install packages",

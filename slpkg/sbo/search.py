@@ -25,7 +25,6 @@ import os
 import re
 import sys
 
-from functions import get_file
 from __metadata__ import lib_path
 
 from slack.slack_version import slack_ver
@@ -39,7 +38,7 @@ def sbo_search_pkg(name):
         with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
             for line in SLACKBUILDS_TXT:
                 if line.startswith("SLACKBUILD LOCATION"):
-                    if name == get_file(line[23:].strip(), "/").replace("\n", ""):
+                    if name == (line[23:].split("/")[-1].replace("\n", "")).strip():
                         SLACKBUILDS_TXT.close()
                         return (sbo_url + line[23:].strip() + "/")
     except KeyboardInterrupt:

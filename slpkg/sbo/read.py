@@ -24,7 +24,6 @@
 import os
 
 from url_read import url_read
-from __metadata__ import slpkg_tmp
 
 def read_readme(sbo_url, sbo_readme):
     '''

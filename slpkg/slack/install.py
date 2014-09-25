@@ -27,7 +27,6 @@ import time
 import subprocess
 
 from colors import colors
-from functions import get_file
 from url_read import url_read
 from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path, slack_archs
@@ -97,9 +96,9 @@ def install(slack_pkg):
                 for archs in slack_archs:
                     if archs in pkg:
                         pkgs = pkg[:-4]
-                        build = get_file(pkgs, "-").replace("-", "")
+                        build = pkgs.split("-")[-1]
                         name_ver = pkgs[:-(len(archs) + len(build))]
-                        ver = get_file(name_ver, "-").replace("-", "")
+                        ver = name_ver.split("-")[-1]
                         name = name_ver[:-(len(ver) + 1)]
                         arch = archs[1:-1]
                         names.append(name)

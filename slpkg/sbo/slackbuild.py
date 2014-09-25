@@ -26,7 +26,6 @@ import sys
 import subprocess
 
 from colors import colors
-from functions import get_file
 from __metadata__ import (tmp, pkg_path, build_path, 
                                  log_path, lib_path, sp)
 
@@ -165,13 +164,13 @@ def sbo_build(name):
                         sbo_url = sbo_search_pkg(pkg)
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
-                        script = get_file(sbo_link, "/")
+                        script = sbo_link.split("/")[-1] # get file from script
                         print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, ENDC, pkg))
                         subprocess.call("wget -N {0}".format(sbo_link), shell=True)
                         sources = []
                         for src in src_link:
                             subprocess.call("wget -N {0}".format(src), shell=True)
-                            sources.append(get_file(src, "/"))
+                            sources.append(src.split("/")[-1]) # get file from source
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.
                         # If find two or more packages e.g. to build tag 
