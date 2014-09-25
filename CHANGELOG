@@ -2,6 +2,7 @@ Version 1.9.1
 25-09-2014
 
 [Updated] - Bugfix v1.9.0 no update slackbuilds packages
+          - Fix arch in sbo upgrade
 
 Version 1.9.0
 24-09-2014
