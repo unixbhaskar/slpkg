@@ -30,7 +30,6 @@ from slpkg.pkg.build import build_package
 from slpkg.pkg.manager import pkg_upgrade
 
 from slpkg.colors import colors
-from slpkg.functions import get_file
 from slpkg.messages import template, build_FAILED
 from slpkg.__metadata__ import tmp, pkg_path, build_path, sp
 
@@ -54,12 +53,7 @@ def sbo_check():
                          colors.GREY, colors.ENDC))
         sys.stdout.flush()
         initialization()
-        arches = [
-                "-x86_64-", 
-                "-i486-", 
-                "-arm-", 
-                "-noarch-"
-                ]
+        arches = ["-x86_64-", "-i486-", "-arm-", "-noarch-"]
         index, toolbar_width = int(), 3
         dependencies,  dependencies_list, \
         requires, upgrade, installed, sbo_list, \
@@ -80,8 +74,10 @@ def sbo_check():
                         arch = _arch[1:-1]
                     else:
                         arch = os.uname()[4]
+                        if arch.startswith("i") and arch.endswith("86"):
+                            arch = "i486"
                 package = pkg[:-(len(arch) + len("_SBo") + 3)]
-                pkg_version = get_file(package, "-")[1:]
+                pkg_version = package.split("-")[-1] 
                 name = package[:-(len(pkg_version) + 1)]
                 if sbo_search_pkg(name):
                     # search packages if exists in the repository
@@ -127,6 +123,9 @@ def sbo_check():
                     prgnam = ("{0}-{1}".format(pkg, ver))
                     pkg_version = ver # if package not installed 
                                       # take version from repository
+                    arch = os.uname()[4]
+                    if arch.startswith("i") and arch.endswith("86"):
+                        arch = "i486"
                     if find_package(prgnam, pkg_path) == []:
                         for sbo in os.listdir(pkg_path):
                             if sbo.startswith(pkg + sp) and sbo.endswith("_SBo"):
@@ -134,12 +133,10 @@ def sbo_check():
                                 # if yes grab package name,
                                 # version and arch
                                 for _arch in arches:
-                                    if _arch in pkg:
+                                    if _arch in sbo:
                                         arch = _arch[1:-1]
-                                    else:
-                                        arch = os.uname()[4]
                                 name = sbo[:-(len(arch) + len("_SBo") + 3)]
-                                pkg_version = get_file(name, "-")[1:]
+                                pkg_version = name.split("-")[-1]
                         upgrade.append(pkg)
                         pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
                         upg_ver.append(ver)
@@ -183,13 +180,13 @@ def sbo_check():
                         sbo_url = sbo_search_pkg(name)
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
                         src_dwn = sbo_source_dwn(name).split()
-                        script = get_file(sbo_dwn, "/")
+                        script = sbo_dwn.split("/")[-1] # keep file from script link
                         print("\n{0}Start -->{1} {2}\n".format(GREEN, ENDC, name))
                         subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                         sources = []
                         for src in src_dwn:
                             subprocess.call("wget -N {0}".format(src), shell=True)
-                            sources.append(get_file(src, "/"))
+                            sources.append(src.split("/")[-1]) # keep file from source link
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.
                         # If find two or more packages e.g. to build tag 

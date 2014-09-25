@@ -27,10 +27,9 @@ import pydoc
 import subprocess
 
 from slpkg.colors import colors
-from slpkg.functions import get_file
 from slpkg.__metadata__ import tmp, build_path, pkg_path, sp
 from slpkg.messages import (pkg_not_found, pkg_found, view_sbo, 
-                           template, build_FAILED)
+                            template, build_FAILED)
 
 from slpkg.pkg.build import build_package
 from slpkg.pkg.find import find_package
@@ -58,8 +57,8 @@ def sbo_network(name):
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
         sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
-        view_sbo(name, sbo_url, sbo_desc, get_file(sbo_dwn, "/"), \
-                 ", ".join([get_file(src, "/") for src in source_dwn]), \
+        view_sbo(name, sbo_url, sbo_desc, sbo_dwn.split("/")[-1], \
+                 ", ".join([src.split("/")[-1] for src in source_dwn]), \
                  sbo_req)
         # Check if package supported by arch
         # before proceed to install
@@ -97,12 +96,12 @@ def sbo_network(name):
                     os.mkdir(build_path)
                 sources = []
                 os.chdir(build_path)
-                script = get_file(sbo_dwn, "/")
+                script = sbo_dwn.split("/")[-1] # get file from script link
                 print("\n{0}Start -->{0} {1}\n".format(colors.GREEN, colors.ENDC, name))
                 subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
                 for src in source_dwn:
                     subprocess.call("wget -N {0}".format(src), shell=True)
-                    sources.append(get_file(src, "/"))
+                    sources.append(src.split("/")[-1]) # get file from source link
                 build_package(script, sources, build_path)
                 print("Complete!\n")
                 break
@@ -119,10 +118,10 @@ def sbo_network(name):
                     os.chdir(build_path)
                     print("\n{0}Start -->{0} {1}\n".format(colors.GREEN, colors.ENDC, name))
                     subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
-                    script = get_file(sbo_dwn, "/")
+                    script = sbo_dwn.split("/")[-1] # get file from script link
                     for src in source_dwn:
                             subprocess.call("wget -N {0}".format(src), shell=True)
-                            sources.append(get_file(src, "/"))
+                            sources.append(src.split("/")[-1]) # get file from source link
                     build_package(script, sources, build_path)
                     # Searches the package name and version in /tmp to install.
                     # If find two or more packages e.g. to build tag 

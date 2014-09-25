@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.9.0
+- Version: 1.9.1
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.9.0.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.9.1.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -98,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.9.0.tar.gz
-    $ cd slpkg-1.9.0
+    $ tar xvf slpkg-1.9.1.tar.gz
+    $ cd slpkg-1.9.1
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
