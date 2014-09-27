@@ -23,9 +23,9 @@
 
 import os
 import sys
-import subprocess
 
-from colors import colors
+from colors import *
+from downloader import download 
 from __metadata__ import (tmp, pkg_path, build_path, 
                                  log_path, lib_path, sp)
 
@@ -51,10 +51,9 @@ def sbo_build(name):
     sbo_ver, pkg_arch, installs, upgraded, \
     versions, requires, dependencies = ([] for i in range(7))
     PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
-    GREEN, RED, GREY, ENDC = colors.GREEN, colors.RED, \
-                             colors.GREY, colors.ENDC
-    sys.stdout.write("{0}Reading package lists ...{1}".format(
-                     colors.GREY, colors.ENDC))
+    done = "{0}Done{1}\n".format(GREY, ENDC)
+    reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+    sys.stdout.write(reading_lists)
     sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
@@ -82,25 +81,24 @@ def sbo_build(name):
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
-            sys.stdout.write("{0}Done{1}\n".format(
-                             colors.GREY, ENDC))
+            sys.stdout.write(done)
             # Tag with color green if package already installed,
             # color yellow for packages to upgrade and color red 
             # if not installed. Also if package arch is UNSUPPORTED
             # tag with color red and if UNTESTED with color yellow.
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
             if find_package(master_pkg, pkg_path):
-                PKG_COLOR = colors.GREEN
+                PKG_COLOR = GREEN
             elif find_package(name + sp, pkg_path):
-                PKG_COLOR = colors.YELLOW
+                PKG_COLOR = YELLOW
                 count_upgraded += 1    
             else:
-                PKG_COLOR = colors.RED
+                PKG_COLOR = RED
                 count_installed += 1
             if "UNSUPPORTED" in pkg_arch[-1]:
-                ARCH_COLOR = colors.RED
+                ARCH_COLOR = RED
             elif "UNTESTED" in pkg_arch[-1]:
-                ARCH_COLOR = colors.YELLOW
+                ARCH_COLOR = YELLOW
             print("\nThe following packages will be automatically installed or upgraded")
             print("with new version:\n")
             template(78)
@@ -114,17 +112,17 @@ def sbo_build(name):
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1], pkg_arch[:-1]):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
                 if find_package(dep_pkg, pkg_path):
-                    DEP_COLOR = colors.GREEN
+                    DEP_COLOR = GREEN
                 elif find_package(dep + sp, pkg_path):
-                    DEP_COLOR = colors.YELLOW
+                    DEP_COLOR = YELLOW
                     count_upgraded += 1
                 else:
-                    DEP_COLOR = colors.RED
+                    DEP_COLOR = RED
                     count_installed += 1
                 if "UNSUPPORTED" in dep_arch:
-                    ARCH_COLOR = colors.RED
+                    ARCH_COLOR = RED
                 elif "UNTESTED" in dep_arch:
-                    ARCH_COLOR = colors.YELLOW
+                    ARCH_COLOR = YELLOW
                 sbo_packages_view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
             msg_upg = msg_ins = "package"
             if count_installed > 1:
@@ -141,7 +139,7 @@ def sbo_build(name):
             # before proceed to install
             UNST = ["UNSUPPORTED", "UNTESTED"]
             if src in UNST:
-                print("\n{0}The package {1}{2}\n".format(colors.RED, src, ENDC))
+                print("\n{0}The package {1}{2}\n".format(RED, src, ENDC))
                 read = ""
             # exit if all packages already installed
             elif pkg_sum == len(dependencies):
@@ -165,12 +163,11 @@ def sbo_build(name):
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = sbo_link.split("/")[-1] # get file from script
-                        print("\n{0}Start -->{1} {2}\n".format(colors.GREEN, ENDC, pkg))
-                        subprocess.call("wget -N {0}".format(sbo_link), shell=True)
+                        download(build_path, sbo_link)
                         sources = []
                         for src in src_link:
-                            subprocess.call("wget -N {0}".format(src), shell=True)
                             sources.append(src.split("/")[-1]) # get file from source
+                            download(build_path, src)
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.
                         # If find two or more packages e.g. to build tag 
@@ -186,13 +183,12 @@ def sbo_build(name):
                             sys.exit()
                         if find_package(pkg + sp, pkg_path):
                             print("{0}[ Upgrading ] --> {1}{2}".format(
-                                  colors.GREEN, ENDC, pkg))
+                                  GREEN, ENDC, pkg))
                             upgraded.append(pkg)
                         else:
                             print("{0}[ Installing ] --> {1}{2}".format(
-                                  colors.GREEN, ENDC, pkg))
+                                  GREEN, ENDC, pkg))
                         pkg_upgrade(binary)
-                        print("Complete!\n")
                         installs.append(pkg)
                         versions.append(ver)
                 # Reference list with packages installed
@@ -236,7 +232,7 @@ def sbo_build(name):
                         if name in sbo_name:
                             index += 1
                             if index == toolbar_width:
-                                sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
+                                sys.stdout.write("{0}.{1}".format(GREY, ENDC))
                                 sys.stdout.flush()
                                 toolbar_width += 6
                             sbo_matching.append(sbo_name)
@@ -244,10 +240,10 @@ def sbo_build(name):
                             src = sbo_source_dwn(sbo_name)
                             pkg_arch.append(select_arch(src))
             SLACKBUILDS_TXT.close()
-            sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
+            sys.stdout.write(done)
             if sbo_matching:
                 print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-                      colors.CYAN, name, colors.ENDC))
+                      CYAN, name, ENDC))
                 template(78)
                 print("{0}{1}{2}{3}{4}{5}{6}".format("| Package", " " * 30, "Version", \
                       " " * 10, "Arch", " " * 9, "Repository"))

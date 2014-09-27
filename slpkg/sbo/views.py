@@ -24,9 +24,9 @@
 import os
 import sys
 import pydoc
-import subprocess
 
-from colors import colors
+from colors import *
+from downloader import download
 from __metadata__ import tmp, build_path, pkg_path, sp
 from messages import (pkg_not_found, pkg_found, view_sbo, 
                             template, build_FAILED)
@@ -46,8 +46,9 @@ def sbo_network(name):
     View SlackBuild package, read or install them 
     from slackbuilds.org
     '''
-    sys.stdout.write("{0}Reading package lists ...{1}".format(
-                     colors.GREY, colors.ENDC))
+    done = "{0}Done{1}\n".format(GREY, ENDC)
+    reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+    sys.stdout.write(reading_lists)
     sys.stdout.flush()
     initialization()
     sbo_url = sbo_search_pkg(name)
@@ -56,7 +57,7 @@ def sbo_network(name):
         sbo_req = sbo_requires_pkg(name)
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
         source_dwn = sbo_source_dwn(name).split()
-        sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
+        sys.stdout.write(done)
         view_sbo(name, sbo_url, sbo_desc, sbo_dwn.split("/")[-1], \
                  ", ".join([src.split("/")[-1] for src in source_dwn]), \
                  sbo_req)
@@ -68,16 +69,15 @@ def sbo_network(name):
             FAULT = "".join(source_dwn)
         while True:
             try:
-                read = raw_input(" {0}>{1} ".format(colors.GREY, colors.ENDC))
+                read = raw_input(" {0}>{1} ".format(GREY, ENDC))
             except KeyboardInterrupt:
                 print # new line at exit
                 break
             if read == "D" or read == "d":
-                print("\n{0}Start --> {1}{2}\n".format(colors.GREEN, colors.ENDC, name))
-                subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                path = ""
+                download(path, sbo_dwn)
                 for src in source_dwn:
-                    subprocess.call("wget -N {0}".format(src), shell=True)
-                print("Complete!\n")
+                    download(path, src)
                 break
             elif read == "R" or read == "r":
                 readme = "README"
@@ -90,24 +90,22 @@ def sbo_network(name):
                 pydoc.pager(read_info_slackbuild(sbo_url, name, _SlackBuild))
             elif read == "B" or read == "b":
                 if FAULT:
-                    print("\n{0}The package {1}{2}\n".format(colors.RED, FAULT, colors.ENDC))
+                    print("\n{0}The package {1} {2}\n".format(RED, FAULT, ENDC))
                     sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 sources = []
                 os.chdir(build_path)
                 script = sbo_dwn.split("/")[-1] # get file from script link
-                print("\n{0}Start -->{0} {1}\n".format(colors.GREEN, colors.ENDC, name))
-                subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                download(build_path, sbo_dwn)
                 for src in source_dwn:
-                    subprocess.call("wget -N {0}".format(src), shell=True)
+                    download(build_path, src)
                     sources.append(src.split("/")[-1]) # get file from source link
                 build_package(script, sources, build_path)
-                print("Complete!\n")
                 break
             elif read == "I" or read == "i":
                 if FAULT:
-                    print("\n{0}The package {1}{2}\n".format(colors.RED, FAULT, colors.ENDC))
+                    print("\n{0}The package {1} {2}\n".format(RED, FAULT, ENDC))
                     sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
@@ -116,11 +114,10 @@ def sbo_network(name):
                 if find_package(prgnam + sp, pkg_path) == []:
                     sources = []
                     os.chdir(build_path)
-                    print("\n{0}Start -->{0} {1}\n".format(colors.GREEN, colors.ENDC, name))
-                    subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                    download(build_path, sbo_dwn)
                     script = sbo_dwn.split("/")[-1] # get file from script link
                     for src in source_dwn:
-                            subprocess.call("wget -N {0}".format(src), shell=True)
+                            download(build_path, src)
                             sources.append(src.split("/")[-1]) # get file from source link
                     build_package(script, sources, build_path)
                     # Searches the package name and version in /tmp to install.
@@ -135,9 +132,8 @@ def sbo_network(name):
                     except ValueError:
                         build_FAILED(sbo_url, prgnam)
                         sys.exit()
-                    print("{0}[ Installing ] --> {1}{2}".format(colors.GREEN, colors.ENDC, name))
+                    print("{0}[ Installing ] --> {1} {2}".format(GREEN, ENDC, name))
                     pkg_upgrade(binary)
-                    print("Complete!\n")
                     break
                 else:
                     template(78)
@@ -147,6 +143,6 @@ def sbo_network(name):
             else:
                 break
     else:
-        sys.stdout.write ("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
+        sys.stdout.write (done)
         message = "From slackbuilds.org"
         pkg_not_found("\n", name, message, "\n")

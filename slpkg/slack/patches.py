@@ -26,9 +26,10 @@ import sys
 import time
 import subprocess
 
-from colors import colors
+from colors import *
 from url_read import url_read
 from messages import template
+from downloader import download
 from __metadata__ import pkg_path, slpkg_tmp, slack_archs
 
 from pkg.manager import pkg_upgrade
@@ -44,20 +45,21 @@ def patches():
         slack_arch = str()
         comp_sum, uncomp_sum, dwn_patches, comp_size, uncomp_size, \
         upgrade_all, package_name, package_location = ([] for i in range(8))
-        GREEN, RED, GREY, ENDC = colors.GREEN, colors.RED, colors.GREY, colors.ENDC
+        done = "{0}Done{1}\n".format(GREY, ENDC)
+        reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
         patch_path = slpkg_tmp + "patches/"
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)
         if not os.path.exists(patch_path):
             os.mkdir(patch_path)
-        sys.stdout.write ("{0}Reading package lists ...{1}".format(colors.GREY, ENDC))
+        sys.stdout.write (reading_lists)
         sys.stdout.flush()
         PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location="patches/"))
         index, toolbar_width = 0, 100
         for line in PACKAGE_TXT.splitlines():
             index += 1
             if index == toolbar_width:
-                sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
+                sys.stdout.write("{0}.{1}".format(GREY, ENDC))
                 sys.stdout.flush()
                 toolbar_width += 100
                 time.sleep(0.05)
@@ -75,7 +77,7 @@ def patches():
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
                 upgrade_all.append(name)
-        sys.stdout.write("{0}Done{1}\n".format(colors.GREY, ENDC))
+        sys.stdout.write(done)
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
             template(78)
@@ -126,8 +128,8 @@ def patches():
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:
-                    subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
-                                    patch_path, dwn, dwn), shell=True)
+                    download(patch_path, dwn)
+                    download(patch_path, dwn + ".asc")
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC, pkg[:-4]))
                     pkg_upgrade((patch_path + pkg).split())
@@ -136,7 +138,6 @@ def patches():
                         print("The kernel has been upgraded, reinstall `lilo` ...")
                         subprocess.call("lilo", shell=True)
                         break
-                print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for pkg in upgrade_all:

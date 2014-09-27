@@ -63,7 +63,7 @@ setup(
 
 if "install" in sys.argv:
     man_path = "/usr/man/man8/"
-    os.system("mkdir -p {}".format(man_path))
+    os.system("mkdir -p {0}".format(man_path))
     if os.path.exists(man_path):
         print("Installing man pages")
         man_page = "man/slpkg.8"

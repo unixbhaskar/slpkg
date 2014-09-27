@@ -25,7 +25,7 @@ import os
 import sys
 import subprocess
 
-from colors import colors
+from colors import *
 from messages import pkg_not_found, template
 from __metadata__ import pkg_path, sp, log_path
 
@@ -38,6 +38,7 @@ def pkg_install(binary):
     for pkg in binary:
         try:
             print(subprocess.check_output("installpkg {0}".format(pkg), shell=True))
+            print("Completed!\n")
         except subprocess.CalledProcessError:
             message = "Can't install"
             if len(binary) > 1:
@@ -54,6 +55,7 @@ def pkg_upgrade(binary):
         try:
             print(subprocess.check_output("upgradepkg --install-new {0}".format(pkg),
                                           shell=True))
+            print("Completed!\n")
         except subprocess.CalledProcessError:
             message = "Can't upgrade"
             if len(binary) > 1:
@@ -61,6 +63,7 @@ def pkg_upgrade(binary):
             else:
                 bol = eol = "\n"
             pkg_not_found(bol, pkg, message, eol)
+        
 
 def pkg_reinstall(binary):
     '''
@@ -70,6 +73,7 @@ def pkg_reinstall(binary):
         try:
             print(subprocess.check_output("upgradepkg --reinstall {0}".format(pkg),
                                           shell=True))
+            print("Completed!\n")
         except subprocess.CalledProcessError:
             message = "Can't reinstall"
             if len(binary) > 1:
@@ -86,11 +90,11 @@ def pkg_remove(binary):
     removed, dependencies, \
     rmv_list, rmv_dependencies = ([] for i in range(4))
     print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-          colors.CYAN, ", ".join(binary), colors.ENDC))
+          CYAN, ", ".join(binary), ENDC))
     for pkg in binary:
         pkgs = find_package(pkg + sp, pkg_path)
         if pkgs:
-            print(colors.RED + "[ delete ] --> " + colors.ENDC + "\n               ".join(pkgs))
+            print(RED + "[ delete ] --> " + ENDC + "\n               ".join(pkgs))
             removed.append(pkg)
         else:
             message = "Can't remove"
@@ -123,7 +127,7 @@ def pkg_remove(binary):
                     # Prints dependecies before removed except master package
                     # because referred as master package
                     for dep in dependencies[:-1]:
-                        print("| " + dep)
+                        print("| {0}{1}{2}".format(RED, dep, ENDC))
                     template(78)
                     try:
                         remove_dep = raw_input(
@@ -165,14 +169,15 @@ def pkg_find(binary):
     '''
     Find installed Slackware packages
     '''
+    binary = "".join(binary)
     matching = size = int()
     print("\nInstalled packages with name matching [ {0}{1}{2} ]\n".format(
-          colors.CYAN, binary, colors.ENDC))
+          CYAN, binary, ENDC))
     for match in sorted(os.listdir(pkg_path)):
          if binary in match:
              matching += 1
              print("[ {0}installed{1} ] - {2}".format(
-                   colors.GREEN, colors.ENDC, match))
+                   GREEN, ENDC, match))
              with open(pkg_path + match, "r") as f:
                  data = f.read()
                  f.close()
@@ -186,13 +191,13 @@ def pkg_find(binary):
     if matching == 0:
         print("No package was found to match\n")
     else:
-        print("\n{0}Total found {1} matching packages.{2}".format(colors.GREY, matching, colors.ENDC))
+        print("\n{0}Total found {1} matching packages.{2}".format(GREY, matching, ENDC))
         unit = "Kb"
         if size > 1024:
             unit = "Mb"
             size = (size / 1024)
         print("{0}Size of installed packages {1} {2}.{3}\n".format(
-              colors.GREY, round(size, 2), unit, colors.ENDC))
+              GREY, round(size, 2), unit, ENDC))
 
 def pkg_display(binary):
     '''
@@ -227,10 +232,10 @@ def pkg_list(pattern):
         for pkg in sorted(os.listdir(pkg_path)):
             if search in pkg:
                 index += 1
-                print("{0}{1}:{2} {3}".format(colors.GREY, index, colors.ENDC, pkg))
+                print("{0}{1}:{2} {3}".format(GREY, index, ENDC, pkg))
                 if index == page:
                     key = raw_input("\nPress [ {0}Enter{1} ] >> Next page ".format(
-                                    colors.CYAN, colors.ENDC))
+                                    CYAN, ENDC))
                     page += 50
         print # new line at end
     except KeyboardInterrupt:

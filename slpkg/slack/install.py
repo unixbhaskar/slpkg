@@ -24,10 +24,10 @@
 import os
 import sys
 import time
-import subprocess
 
-from colors import colors
+from colors import *
 from url_read import url_read
+from downloader import download
 from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path, slack_archs
 
@@ -46,7 +46,8 @@ def install(slack_pkg):
         comp_sum, uncomp_sum, names, dwn_list, comp_size, \
         uncomp_size, install_all, package_name, \
         package_location = ([] for i in range(9))
-        GREEN, GREY, ENDC = colors.GREEN, colors.GREY, colors.ENDC
+        done = "{0}Done{1}\n".format(GREY, ENDC)
+        reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
         arch = COLOR = str()
         # create directories if not exists
         tmp_path = slpkg_tmp + "packages/"
@@ -55,8 +56,8 @@ def install(slack_pkg):
         if not os.path.exists(tmp_path):
             os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-              colors.CYAN, slack_pkg, ENDC)) 
-        sys.stdout.write ("{0}Reading package lists ...{1}".format(colors.GREY, ENDC))
+              CYAN, slack_pkg, ENDC)) 
+        sys.stdout.write(reading_lists)
         sys.stdout.flush()
         PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
         EXTRA = url_read(mirrors(name="PACKAGES.TXT", location="extra/"))
@@ -66,7 +67,7 @@ def install(slack_pkg):
         for line in PACKAGES_TXT.splitlines():
             index += 1
             if index == toolbar_width:
-                sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
+                sys.stdout.write("{0}.{1}".format(GREY, ENDC))
                 sys.stdout.flush()
                 toolbar_width += 800
                 time.sleep(0.00888)
@@ -84,7 +85,7 @@ def install(slack_pkg):
                 install_all.append(name)
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
-        sys.stdout.write("{0}Done{1}\n\n".format(colors.GREY, ENDC))
+        sys.stdout.write(done)
         if install_all:
             template(78)
             print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
@@ -104,12 +105,12 @@ def install(slack_pkg):
                         names.append(name)
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
-                    COLOR = colors.GREEN
+                    COLOR = GREEN
                 elif find_package(name + "-", pkg_path):
-                    COLOR = colors.YELLOW
+                    COLOR = YELLOW
                     upg_sum += 1
                 else:
-                    COLOR = colors.RED
+                    COLOR = RED
                     uni_sum += 1
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
                       COLOR, name, ENDC, \
@@ -142,8 +143,8 @@ def install(slack_pkg):
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_list:
-                    subprocess.call("wget -N --directory-prefix={0} {1} {2}.asc".format(
-                                    tmp_path, dwn, dwn), shell=True)
+                    download(tmp_path, dwn)
+                    download(tmp_path, dwn + ".asc")
                 for install, name in zip(install_all, names):
                     if os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ reinstalling ] --> {1}{2}".format(
@@ -157,7 +158,6 @@ def install(slack_pkg):
                         print("{0}[ installing ] --> {1}{2}".format(
                               GREEN, ENDC, install))
                         pkg_upgrade((tmp_path + install).split())
-                print("Completed!\n")
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:
@@ -171,7 +171,7 @@ def install(slack_pkg):
                     print("\nThere are packages in directory {0}\n".format(tmp_path))
         else:
             message = "No matching"
-            pkg_not_found("", slack_pkg, message, "\n")
+            pkg_not_found("\n", slack_pkg, message, "\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

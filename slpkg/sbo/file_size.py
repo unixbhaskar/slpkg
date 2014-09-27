@@ -32,8 +32,8 @@ def server_file_size(url):
     try:
         tar = urllib2.urlopen(url)
         meta = tar.info()
-        return meta.getheaders("Content-Length")
-    except urllib2.URLError:
+        return int(meta.getheaders("Content-Length")[0])
+    except (urllib2.URLError, IndexError):
         print("\nError: connection refused\n")
         sys.exit()
     except KeyboardInterrupt:

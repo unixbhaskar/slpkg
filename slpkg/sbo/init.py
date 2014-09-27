@@ -75,8 +75,8 @@ def initialization():
             log.close()
             print("File ChangeLog.txt created in {0}".format(sbo_log))
     # We take the size of ChangeLog.txt from the server and locally
-    server = int(''.join(server_file_size(sbo_url + "ChangeLog.txt")))
-    local = int(local_file_size(sbo_log + "ChangeLog.txt"))
+    server = server_file_size(sbo_url + "ChangeLog.txt")
+    local = local_file_size(sbo_log + "ChangeLog.txt")
     # If the two files differ in size delete and replaced with new
     if server != local:
         os.remove("{0}{1}".format(sbo_lib, "SLACKBUILDS.TXT"))

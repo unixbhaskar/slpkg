@@ -92,6 +92,9 @@ def sbo_version_pkg(name):
                     return line[20:].strip()
 
 def sbo_checksum_pkg(name):
+    '''
+    Grab checksum string
+    '''
     if arch == "x86_64":
         with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
             for line in SLACKBUILDS_TXT:

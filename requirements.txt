@@ -1,5 +1,6 @@
-# Python 2.7.5+
+# Python 2.7+
+# GNU wget
+# Slackware 32 x86
+# Slackware 64 x86_64
 # Slackware current (not supported yet)
-# Slackware
-# Slackware 64
-# No other Python packages needed
+
