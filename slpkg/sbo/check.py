@@ -23,13 +23,13 @@
 
 import os
 import sys
-import subprocess
 
 from slpkg.pkg.find import find_package
 from slpkg.pkg.build import build_package
 from slpkg.pkg.manager import pkg_upgrade
 
-from slpkg.colors import colors
+from slpkg.colors import *
+from slpkg.downloader import download 
 from slpkg.messages import template, build_FAILED
 from slpkg.__metadata__ import tmp, pkg_path, build_path, sp
 
@@ -49,8 +49,9 @@ def sbo_check():
     some version in /tmp directory.
     '''
     try:
-        sys.stdout.write("{0}Reading package lists ...{1}".format(
-                         colors.GREY, colors.ENDC))
+        done = "{0}Done{1}\n".format(GREY, ENDC)
+        reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+        sys.stdout.write(reading_lists)
         sys.stdout.flush()
         initialization()
         arches = ["-x86_64-", "-i486-", "-arm-", "-noarch-"]
@@ -58,7 +59,6 @@ def sbo_check():
         dependencies,  dependencies_list, \
         requires, upgrade, installed, sbo_list, \
         upg_name, pkg_for_upg, upg_ver, upg_arch = ([] for i in range(10))
-        GREEN, RED, GREY, ENDC = colors.GREEN, colors.RED, colors.GREY, colors.ENDC
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
                 sbo_list.append(pkg)
@@ -66,7 +66,7 @@ def sbo_check():
             for pkg in sbo_list:
                 index += 1
                 if index == toolbar_width:
-                    sys.stdout.write("{0}.{1}".format(colors.GREY, ENDC))
+                    sys.stdout.write("{0}.{1}".format(GREY, ENDC))
                     sys.stdout.flush()
                     toolbar_width += 4
                 for _arch in arches:
@@ -86,10 +86,10 @@ def sbo_check():
                     sbo_package = ("{0}-{1}".format(name, sbo_version_pkg(name)))
                     if sbo_package > package:
                         upg_name.append(name)
-            sys.stdout.write("{0}Done{1}\n".format(colors.GREY, ENDC))
+            sys.stdout.write(done)
             if upg_name:
                 sys.stdout.write("{0}Resolving dependencies ...{1}".format(
-                                 colors.GREY, ENDC))
+                                 GREY, ENDC))
                 sys.stdout.flush()
                 # Of the packages found to need upgrading,
                 # stored in a series such as reading from the 
@@ -141,7 +141,7 @@ def sbo_check():
                         pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
                         upg_ver.append(ver)
                         upg_arch.append(arch)
-                sys.stdout.write("{0}Done{1}\n".format(colors.GREY, ENDC))
+                sys.stdout.write(done)
             if pkg_for_upg:
                 print("\nThese packages need upgrading:\n")
                 template(78)
@@ -152,10 +152,10 @@ def sbo_check():
                 count_upgraded = count_installed = int()
                 for upg, ver, arch in zip(pkg_for_upg, upg_ver, upg_arch):
                     if find_package(upg[:-len(ver)], pkg_path):
-                        COLOR = colors.YELLOW
+                        COLOR = YELLOW
                         count_upgraded += 1
                     else:
-                        COLOR = colors.RED
+                        COLOR = RED
                         count_installed += 1
                     print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(COLOR, upg, ENDC, \
                           " " * (38-len(upg)), GREEN, ver, ENDC, \
@@ -181,11 +181,10 @@ def sbo_check():
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
                         src_dwn = sbo_source_dwn(name).split()
                         script = sbo_dwn.split("/")[-1] # keep file from script link
-                        print("\n{0}Start -->{1} {2}\n".format(GREEN, ENDC, name))
-                        subprocess.call("wget -N {0}".format(sbo_dwn), shell=True)
+                        download(build_path, sbo_dwn)
                         sources = []
                         for src in src_dwn:
-                            subprocess.call("wget -N {0}".format(src), shell=True)
+                            download(build_path, src)
                             sources.append(src.split("/")[-1]) # keep file from source link
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.
@@ -208,7 +207,6 @@ def sbo_check():
                             # packages will be installed
                             installed.append(name)
                         pkg_upgrade(binary)
-                        print("Complete!\n")
                     if len(pkg_for_upg) > 1:
                         template(78)
                         print("| Total {0} {1} upgraded and {2} {3} installed".format(
@@ -226,7 +224,7 @@ def sbo_check():
             else:
                 print("\nTotal {0} SBo packages are up to date\n".format(len(sbo_list)))
         else:
-            sys.stdout.write("{0}Done{1}\n".format(colors.GREY, colors.ENDC))
+            sys.stdout.write(done)
             print("\nNo SBo packages found\n")
     except KeyboardInterrupt:
         print # new line at exit

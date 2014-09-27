@@ -29,7 +29,7 @@ import shutil
 import tarfile
 import subprocess
 
-from slpkg.colors import colors
+from slpkg.colors import *
 from slpkg.checksum import md5sum
 from slpkg.__metadata__ import log_path
 from slpkg.messages import pkg_not_found, template
@@ -70,7 +70,7 @@ def build_package(script, sources, path):
             if sbo_md5 != md5:
                 template(78)
                 print("| MD5SUM check for {0} [ {1}FAILED{2} ]".format(
-                      src, colors.RED, colors.ENDC))
+                      src, RED, ENDC))
                 template(78)
                 print("| Expected: {0}".format(md5))
                 print("| Found: {0}".format(sbo_md5))
@@ -83,7 +83,7 @@ def build_package(script, sources, path):
             else:
                 template(78)
                 print("| MD5SUM check for {0} [ {1}PASSED{2} ]".format(
-                      src, colors.GREEN, colors.ENDC))
+                      src, GREEN, ENDC))
                 template(78)
                 print # new line after pass checksum
             shutil.copy2(src, prgnam)

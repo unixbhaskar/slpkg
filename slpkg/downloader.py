@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# colors.py file is part of slpkg.
+# downloader.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -21,12 +21,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-'''
-Foreground colors
-'''
-RED = "\x1b[31m"
-GREEN = "\x1b[32m"
-YELLOW = "\x1b[33m"
-CYAN = "\x1b[36m"
-GREY = "\x1b[38;5;247m"
-ENDC = "\x1b[0m"
+import os
+import subprocess
+
+from colors import *
+
+def download(path, url):
+    '''
+    Download files usign wget.
+    Check if file exist or file is broken.
+    '''
+    print("\n{0}[ Download ] -->{1} {2}\n".format(GREEN, ENDC, url.split("/")[-1]))
+    subprocess.call("wget -N --directory-prefix={0} {1}".format(path, url), shell=True)

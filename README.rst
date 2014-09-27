@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.9.1
+- Version: 1.9.2
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.9.1.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.9.2.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -98,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.9.1.tar.gz
-    $ cd slpkg-1.9.1
+    $ tar xvf slpkg-1.9.2.tar.gz
+    $ cd slpkg-1.9.2
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -120,34 +120,28 @@ Command Line Tool Usage
 -----------------------
 
 .. code-block:: bash
+    
+    slpkg - Utility for easy management packages in Slackware
 
-    usage: slpkg   [-h] [-v] [-a script [source ...]] 
-                   [-l all, sbo, slack, noarch] [-c sbo, slack [<upgrade> ...]]
-                   [-s sbo, slack [<package> ...]] [-f] [-t] [-n] [-i  [...]]
-                   [-u  [...]] [-o  [...]] [-r  [...]] [-d  [...]]
+    Optional arguments:
+      -h, --help                   show this help message and exit
+      -v, --version                print version and exit
+      -a, script [source...]      auto build packages
+      -l, all, sbo, slack, noarch  list of installed packages
+      -c, <repository> --upgrade   check if your packages is up to date
+      -s, <repository> <package>   download, build & install packages
+      -f, <package>                find installed packages
+      -t, <package>                packages tracking dependencies from SBo
+      -n, <package>                view packages from SBo repository
+      -i, [package...]             install binary packages
+      -u, [package...]             upgrade binary packages
+      -o, [package...]             reinstall binary packages
+      -r, [package...]             remove binary packages
+      -d, [package...]             display the contents of the packages
 
-    Utility for easy management packages in Slackware
-
-    optional arguments:
-      -h, --help            show this help message and exit
-      -v, --verbose         print version and exit
-      -a script [source ...]
-                            auto build package
-      -l all, sbo, slack, noarch
-                            list of installed packages
-      -c sbo, slack [<upgrade> ...]
-                            check if your packages is up to date
-      -s sbo, slack [<package> ...]
-                            download, build & install packages
-      -f                    find installed packages
-      -t                    packages tracking dependencies from SBo
-      -n                    view packages from SBo repository
-      -i  [ ...]            install binary packages
-      -u  [ ...]            upgrade binary packages
-      -o  [ ...]            reinstall binary packages
-      -r  [ ...]            remove binary packages
-      -d  [ ...]            display the contents of the packages
-
+    Repositories:
+          SlackBuilds = sbo
+          Slackware = slack
 
 Slpkg Examples
 --------------
@@ -259,7 +253,7 @@ Check if your packages is up to date from slackbuilds.org:
 
 .. code-block:: bash
 
-    $ slpkg -c sbo upgrade
+    $ slpkg -c sbo --upgrade
     Reading package lists ...Done
 
     These packages need upgrading:
@@ -288,7 +282,7 @@ Check if your distribution is up to date from `Slackware official mirrors
 
 .. code-block:: bash
 
-    $ slpkg -c slack upgrade
+    $ slpkg -c slack --upgrade
     Reading package lists .......Done
 
     These packages need upgrading:
