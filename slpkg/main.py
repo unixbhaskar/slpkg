@@ -50,6 +50,7 @@ import getpass
 from colors import *
 from messages import s_user
 from version import prog_version
+from blacklist import blacklisted, add_blacklist, remove_blacklist
 from __metadata__ import path, __version__
 
 from pkg.manager import *
@@ -69,20 +70,22 @@ def main():
             "slpkg - version {0}\n".format(__version__),
             "Utility for easy management packages in Slackware\n",
             "Optional arguments:",
-            "  -h, --help                   show this help message and exit",
-            "  -v, --version                print version and exit",
-            "  -a, script [source...]       auto build packages",
-            "  -l, all, sbo, slack, noarch  list of installed packages",
-            "  -c, <repository> --upgrade   check if your packages is up to date",
-            "  -s, <repository> <package>   download, build & install packages",
-            "  -f, <package>                find installed packages",
-            "  -t, <package>                packages tracking dependencies from SBo",
-            "  -n, <package>                view packages from SBo repository",
-            "  -i, [package...]             install binary packages",
-            "  -u, [package...]             upgrade binary packages",
-            "  -o, [package...]             reinstall binary packages",
-            "  -r, [package...]             remove binary packages",
-            "  -d, [package...]             display the contents of the packages\n",
+            "  -h, --help                       show this help message and exit",
+            "  -v, --version                    print version and exit",
+            "  -a, script [source...]           auto build packages",
+            "  -l, all, sbo, slack, noarch      list of installed packages",
+            "  -c, <repository> --upgrade       check if your packages is up to date",
+            "  -s, <repository> <package>       download, build & install packages",
+            "  -f, <package>                    find installed packages",
+            "  -t, <package>                    packages tracking dependencies from SBo",
+            "  -n, <package>                    view packages from SBo repository",
+            "  -b, --list                       blacklisted packages",
+            "  -b  [package...] --add --remove  add, remove packages in blacklist",
+            "  -i, [package...]                 install binary packages",
+            "  -u, [package...]                 upgrade binary packages",
+            "  -o, [package...]                 reinstall binary packages",
+            "  -r, [package...]                 remove binary packages",
+            "  -d, [package...]                 display the contents of the packages\n",
             "Repositories:",
             "      SlackBuilds = sbo",
             "      Slackware = slack\n",
@@ -135,6 +138,15 @@ def main():
     elif len(args) == 2 and args[0] == "-n":
         s_user(getpass.getuser())
         sbo_network(args[1])
+    elif len(args) == 2 and args[0] == "-b" and args[1] == "--list":
+        s_user(getpass.getuser())
+        blacklisted()    
+    elif len(args) > 2 and args[0] == "-b" and args[-1] == "--add":
+        s_user(getpass.getuser())
+        add_blacklist(args[1:-1])
+    elif len(args) > 2 and args[0] == "-b" and args[-1] == "--remove":
+        s_user(getpass.getuser())
+        remove_blacklist(args[1:-1])
     elif len(args) > 1 and args[0] == "-i":
         s_user(getpass.getuser())
         pkg_install(args[1:])

@@ -24,12 +24,13 @@
 import sys
 
 from colors import *
+from init import initialization
+from blacklist import black_packages
 from __metadata__ import pkg_path, sp
 from messages import pkg_not_found, template
 
 from pkg.find import find_package
 
-from init import initialization
 from search import sbo_search_pkg
 from greps import sbo_requires_pkg
 
@@ -41,12 +42,14 @@ def sbo_dependencies_pkg(name):
     '''
     try:
         dependencies = []
+        blacklist = black_packages()
         sbo_url = sbo_search_pkg(name)
         if sbo_url:
             requires = sbo_requires_pkg(name)
             for req in requires:
-                # avoid to add %README% as dependency
-                if "%README%" not in req:
+                # avoid to add %README% as dependency and
+                # if require in blacklist
+                if "%README%" not in req and req not in blacklist:
                     dependencies.append(req)
             if dependencies:
                 dep_results.append(dependencies)
@@ -71,7 +74,7 @@ def pkg_tracking(name):
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
-    initialization()
+    init = initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     if dependencies_list is not None:
         sys.stdout.write(done)

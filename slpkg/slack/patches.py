@@ -30,6 +30,8 @@ from colors import *
 from url_read import url_read
 from messages import template
 from downloader import download
+from init import initialization
+from blacklist import black_packages
 from __metadata__ import pkg_path, slpkg_tmp, slack_archs
 
 from pkg.manager import pkg_upgrade
@@ -54,6 +56,8 @@ def patches():
             os.mkdir(patch_path)
         sys.stdout.write (reading_lists)
         sys.stdout.flush()
+        init = initialization()
+        blacklist = black_packages()
         PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location="patches/"))
         index, toolbar_width = 0, 100
         for line in PACKAGE_TXT.splitlines():
@@ -72,7 +76,7 @@ def patches():
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
         for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
-            if not os.path.isfile(pkg_path + name[:-4]):
+            if not os.path.isfile(pkg_path + name[:-4]) and name.split("-")[-4] not in " ".join(blacklist):
                 dwn_patches.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)

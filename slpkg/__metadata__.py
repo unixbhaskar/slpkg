@@ -26,7 +26,7 @@ import subprocess
 
 __all__ = "slpkg"
 __author__ = "dslackw"
-__version_info__ = (1, 9, 2)
+__version_info__ = (1, 9, 3)
 __version__ = "{0}.{1}.{2}".format(*__version_info__)
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
@@ -52,6 +52,9 @@ slpkg_tmp = tmp + "slpkg/"
 
 ''' packages log files path '''
 pkg_path = "/var/log/packages/"
+
+''' blacklist conf path '''
+bls_path = "/etc/slpkg/"
 
 ''' computer architecture '''
 arch = os.uname()[4]

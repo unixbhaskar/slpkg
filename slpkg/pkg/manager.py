@@ -26,6 +26,7 @@ import sys
 import subprocess
 
 from colors import *
+from blacklist import black_packages
 from messages import pkg_not_found, template
 from __metadata__ import pkg_path, sp, log_path
 

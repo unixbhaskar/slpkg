@@ -28,6 +28,8 @@ import time
 from colors import *
 from url_read import url_read
 from downloader import download
+from init import initialization
+from blacklist import black_packages
 from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path, slack_archs
 
@@ -59,6 +61,8 @@ def install(slack_pkg):
               CYAN, slack_pkg, ENDC)) 
         sys.stdout.write(reading_lists)
         sys.stdout.flush()
+        init = initialization()
+        blacklist = black_packages()
         PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
         EXTRA = url_read(mirrors(name="PACKAGES.TXT", location="extra/"))
         PASTURE = url_read(mirrors(name="PACKAGES.TXT", location="pasture/"))
@@ -80,7 +84,7 @@ def install(slack_pkg):
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
         for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
-            if slack_pkg in name:
+            if slack_pkg in name and slack_pkg not in blacklist:
                 dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
                 install_all.append(name)
                 comp_sum.append(comp)

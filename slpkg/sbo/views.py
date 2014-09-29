@@ -26,6 +26,7 @@ import sys
 import pydoc
 
 from colors import *
+from init import initialization
 from downloader import download
 from __metadata__ import tmp, build_path, pkg_path, sp
 from messages import (pkg_not_found, pkg_found, view_sbo, 
@@ -37,7 +38,6 @@ from pkg.manager import pkg_upgrade
 
 from read import *
 from greps import *
-from init import initialization
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 
@@ -50,7 +50,7 @@ def sbo_network(name):
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
-    initialization()
+    init = initialization()
     sbo_url = sbo_search_pkg(name)
     if sbo_url:
         sbo_desc = sbo_description_pkg(name)[len(name) + 2:-1]
