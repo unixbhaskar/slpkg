@@ -585,7 +585,7 @@ with the following options:
 
 .. code-block:: bash
     
-    $ slpkg -b live5555555 speex faac --add
+    $ slpkg -b live555 speex faac --add
 
     Add packages in blacklist: 
 
