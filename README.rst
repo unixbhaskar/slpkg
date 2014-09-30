@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.9.2
+- Version: 1.9.3
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.9.2.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.9.3.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -88,7 +88,7 @@ Tutorial
 --------
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/12340
+    :target: https://asciinema.org/a/12544
 
 
 Installation
@@ -98,8 +98,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.9.2.tar.gz
-    $ cd slpkg-1.9.2
+    $ tar xvf slpkg-1.9.3.tar.gz
+    $ cd slpkg-1.9.3
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -120,28 +120,31 @@ Command Line Tool Usage
 -----------------------
 
 .. code-block:: bash
-    
-    slpkg - Utility for easy management packages in Slackware
+
+    Utility for easy management packages in Slackware
 
     Optional arguments:
-      -h, --help                   show this help message and exit
-      -v, --version                print version and exit
-      -a, script [source...]      auto build packages
-      -l, all, sbo, slack, noarch  list of installed packages
-      -c, <repository> --upgrade   check if your packages is up to date
-      -s, <repository> <package>   download, build & install packages
-      -f, <package>                find installed packages
-      -t, <package>                packages tracking dependencies from SBo
-      -n, <package>                view packages from SBo repository
-      -i, [package...]             install binary packages
-      -u, [package...]             upgrade binary packages
-      -o, [package...]             reinstall binary packages
-      -r, [package...]             remove binary packages
-      -d, [package...]             display the contents of the packages
+      -h, --help                       show this help message and exit
+      -v, --version                    print version and exit
+      -a, script [source...]           auto build packages
+      -l, all, sbo, slack, noarch      list of installed packages
+      -c, <repository> --upgrade       check if your packages is up to date
+      -s, <repository> <package>       download, build & install packages
+      -f, <package>                    find installed packages
+      -t, <package>                    packages tracking dependencies from SBo
+      -n, <package>                    view packages from SBo repository
+      -b, --list                       blacklisted packages
+      -b  [package...] --add --remove  add, remove packages in blacklist
+      -i, [package...]                 install binary packages
+      -u, [package...]                 upgrade binary packages
+      -o, [package...]                 reinstall binary packages
+      -r, [package...]                 remove binary packages
+      -d, [package...]                 display the contents of the packages
 
     Repositories:
           SlackBuilds = sbo
           Slackware = slack
+    
 
 Slpkg Examples
 --------------
@@ -575,6 +578,35 @@ Remove packages with all dependencies:
     | Package Jinja2 removed
     | Package werkzeug removed
     +==============================================================================
+
+
+Using the blacklist file manually from /etc/slpkg/blacklist or
+with the following options:
+
+.. code-block:: bash
+    
+    $ slpkg -b live554 speex faac --add
+
+    Add packages in blacklist: 
+
+    live555
+    speex
+    faac
+
+
+    $ slpkg -b speex --remove
+
+    Remove packages from blacklist:
+
+    speex
+
+
+    $ slpkg -b --list
+
+    Packages in blacklist:
+
+    live555
+    faac
 
 Man page it is available for full support:
 

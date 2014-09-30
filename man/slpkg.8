@@ -27,25 +27,29 @@ slpkg - Utility for easy management packages in Slackware
 .PP
 It's a quick and easy way to manage your packages in slackware to a command.
 .SH EXAMPLES
-  \fBOptional arguments:
-       -h, --help                   show this help message and exit
-       -v, --version                print version and exit
-       -a, script [source...]       auto build packages
-       -l, all, sbo, slack, noarch  list of installed packages
-       -c, <repository> --upgrade   check if your packages is up to date
-       -s, <repository> <package>   download, build & install packages
-       -f, <package>                find installed packages
-       -t, <package>                packages tracking dependencies from SBo
-       -n, <package>                view packages from SBo repository
-       -i, [package...]             install binary packages
-       -u, [package...]             upgrade binary packages
-       -o, [package...]             reinstall binary packages
-       -r, [package...]             remove binary packages
-       -d, [package...]             display the contents of the packages
+\fBUtility for easy management packages in Slackware
 
-      Repositories:
-           SlackBuilds = sbo
-           Slackware = slack\fp
+Optional arguments:
+  -h, --help                       show this help message and exit
+  -v, --version                    print version and exit
+  -a, script [source...]           auto build packages
+  -l, all, sbo, slack, noarch      list of installed packages
+  -c, <repository> --upgrade       check if your packages is up to date
+  -s, <repository> <package>       download, build & install packages
+  -f, <package>                    find installed packages
+  -t, <package>                    packages tracking dependencies from SBo
+  -n, <package>                    view packages from SBo repository
+  -b, --list                       blacklisted packages
+  -b  [package...] --add --remove  add, remove packages in blacklist
+  -i, [package...]                 install binary packages
+  -u, [package...]                 upgrade binary packages
+  -o, [package...]                 reinstall binary packages
+  -r, [package...]                 remove binary packages
+  -d, [package...]                 display the contents of the packages
+
+Repositories:
+      SlackBuilds = sbo
+      Slackware = slack\fP
 
 .SH GLOBAL OPTIONS
 .TP
@@ -88,6 +92,16 @@ The sequence shown is that you must follow to correctly install package.
 .PP
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
+.SS -b , --list blacklisted packages
+\fBslpkg\fP \fB-b\fP \fB--list\fP
+.PP
+Print all blacklist packages. Each package listed here may not be
+installed be upgraded be find or deleted.
+.SS -b , <packages> -- add --remove
+\fBslpkg\fP \fB-b\fP <\fIpackages\fP> \fB--add\fP \fB--remove\fP
+.PP
+Add or remove packages from blacklist. The settings here affect 
+all repositories.
 .SS -i , install binary package
 \fBslpkg\fP \fB-i\fP <\fIpackages.t?z\fP>
 .PP

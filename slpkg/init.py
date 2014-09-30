@@ -23,7 +23,9 @@
 
 import os
 import sys
+import getpass
 
+from messages import s_user
 from url_read import url_read
 from __metadata__ import log_path, lib_path, bls_path
 from file_size import server_file_size, local_file_size
@@ -36,6 +38,7 @@ def initialization():
     /var/lib/slpkg/sbo_repo/ and ChangeLog.txt in /var/log/slpkg/ from
     slackbuilds.org
     '''
+    s_user(getpass.getuser())
     blacklist_conf = [
             "# This is the blacklist file. Each package listed here may not be\n",
             "# installed be upgraded be find or deleted.\n",
