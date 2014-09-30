@@ -23,12 +23,15 @@
 
 import os
 
+from slpkg.blacklist import black_packages
+
 def find_package(find_pkg, directory):
     '''
     Find packages
     '''
     pkgs = []
+    blacklist = black_packages()
     for pkg in os.listdir(directory):
-        if pkg.startswith(find_pkg):
+        if pkg.startswith(find_pkg) and find_pkg[:-1] not in blacklist:
             pkgs.append(pkg)
     return pkgs

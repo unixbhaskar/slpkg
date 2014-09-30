@@ -1,0 +1,32 @@
+# Example Configuration file blacklist. 
+# This file is automatically created in the folder /etc/slpkg
+#
+# This is the blacklist file. Each package listed here may not be
+# installed be upgraded be find or deleted.
+# NOTE: The settings here affect all repositories.
+#
+# An example syntax is as follows:
+# add a package from SBo repository:
+  brasero
+#
+# Add package from slackware repository:
+# example add package 'wicd-1.7.2.4-x86_64-4.txz':
+  wicd
+#
+# Sometimes the automatic kernel update creates problems because you
+# may need to file intervention 'lilo'. The slpkg automatically detects
+# if the core has been upgraded and running 'lilo'. If you want to avoid
+# any problems uncomment the lines below.
+#
+# kernel-firmware
+# kernel-generic
+# kernel-generic-smp
+# kernel-headers
+# kernel-huge
+# kernel-huge-smp
+# kernel-modules
+# kernel-modules-smp
+# kernel-source
+#
+#
+

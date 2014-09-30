@@ -29,11 +29,11 @@ from slpkg.pkg.build import build_package
 from slpkg.pkg.manager import pkg_upgrade
 
 from slpkg.colors import *
+from slpkg.init import initialization
 from slpkg.downloader import download 
 from slpkg.messages import template, build_FAILED
 from slpkg.__metadata__ import tmp, pkg_path, build_path, sp
 
-from init import initialization
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
@@ -53,7 +53,7 @@ def sbo_check():
         reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
         sys.stdout.write(reading_lists)
         sys.stdout.flush()
-        initialization()
+        init = initialization()
         arches = ["-x86_64-", "-i486-", "-arm-", "-noarch-"]
         index, toolbar_width = int(), 3
         dependencies,  dependencies_list, \

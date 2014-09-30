@@ -25,9 +25,10 @@ import os
 import sys
 
 from slpkg.colors import *
+from slpkg.init import initialization
 from slpkg.downloader import download 
 from slpkg.__metadata__ import (tmp, pkg_path, build_path, 
-                                 log_path, lib_path, sp)
+                                log_path, lib_path, sp)
 
 from slpkg.messages import (pkg_not_found, pkg_found, template, 
                             build_FAILED, sbo_packages_view)
@@ -36,7 +37,6 @@ from slpkg.pkg.find import find_package
 from slpkg.pkg.build import build_package
 from slpkg.pkg.manager import pkg_upgrade
 
-from init import initialization
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
@@ -55,10 +55,10 @@ def sbo_build(name):
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
-    initialization()
+    init = initialization()
     dependencies_list = sbo_dependencies_pkg(name)
     try:
-        if dependencies_list is not None:
+        if dependencies_list is not None or sbo_search_pkg(name) is not None:
             pkg_sum = count_upgraded = count_installed = int()
             # Insert master package in list to 
             # install it after dependencies

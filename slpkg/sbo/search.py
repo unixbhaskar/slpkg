@@ -26,6 +26,7 @@ import re
 import sys
 
 from slpkg.__metadata__ import lib_path
+from slpkg.blacklist import black_packages
 
 from slpkg.slack.slack_version import slack_ver
 
@@ -34,11 +35,13 @@ def sbo_search_pkg(name):
     Search for package path from SLACKBUILDS.TXT file
     '''
     try:
+        blacklist = black_packages()
         sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
         with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
             for line in SLACKBUILDS_TXT:
                 if line.startswith("SLACKBUILD LOCATION"):
-                    if name == (line[23:].split("/")[-1].replace("\n", "")).strip():
+                    sbo_name = (line[23:].split("/")[-1].replace("\n", "")).strip()
+                    if name == sbo_name and name not in blacklist:
                         SLACKBUILDS_TXT.close()
                         return (sbo_url + line[23:].strip() + "/")
     except KeyboardInterrupt:

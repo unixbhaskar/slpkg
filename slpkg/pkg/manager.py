@@ -26,6 +26,7 @@ import sys
 import subprocess
 
 from slpkg.colors import *
+from slpkg.blacklist import black_packages
 from slpkg.messages import pkg_not_found, template
 from slpkg.__metadata__ import pkg_path, sp, log_path
 
@@ -173,7 +174,7 @@ def pkg_find(binary):
     matching = size = int()
     print("\nInstalled packages with name matching [ {0}{1}{2} ]\n".format(
           CYAN, binary, ENDC))
-    for match in sorted(os.listdir(pkg_path)):
+    for match in sorted(find_package(binary, pkg_path)):
          if binary in match:
              matching += 1
              print("[ {0}installed{1} ] - {2}".format(
