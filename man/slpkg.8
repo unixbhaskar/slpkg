@@ -17,8 +17,8 @@ slpkg - Utility for easy management packages in Slackware
 .SH SYNOPSIS
   \fBUsage: slpkg [-h] [-v] [-a script [sources...]]
                   [-l all, sbo, slack, noarch]
-                  [-c <repository> --upgrade]
-                  [-s <repository> <package>]
+                  [-c <repository> --upgrade --current]
+                  [-s <repository> <package> --current]
                   [-f] [-t] [-n] [-i [...]]
                   [-u  [...]] [-o [...]] [-r [...]] [-d [...]]\fp
 
@@ -30,26 +30,26 @@ It's a quick and easy way to manage your packages in slackware to a command.
 \fBUtility for easy management packages in Slackware
 
 Optional arguments:
-  -h, --help                       show this help message and exit
-  -v, --version                    print version and exit
-  -a, script [source...]           auto build packages
-  -l, all, sbo, slack, noarch      list of installed packages
-  -c, <repository> --upgrade       check if your packages is up to date
-  -s, <repository> <package>       download, build & install packages
-  -f, <package>                    find installed packages
-  -t, <package>                    packages tracking dependencies from SBo
-  -n, <package>                    view packages from SBo repository
-  -b, --list                       blacklisted packages
-  -b  [package...] --add --remove  add, remove packages in blacklist
-  -i, [package...]                 install binary packages
-  -u, [package...]                 upgrade binary packages
-  -o, [package...]                 reinstall binary packages
-  -r, [package...]                 remove binary packages
-  -d, [package...]                 display the contents of the packages
+  -h, --help                            show this help message and exit
+  -v, --version                         print version and exit
+  -a, script [source...]                auto build packages
+  -l, all, sbo, slack, noarch           list of installed packages
+  -c, <repository> --upgrade --current  check if your packages is up to date
+  -s, <repository> <package> --current  download, build & install packages
+  -f, <package>                         find installed packages
+  -t, <package>                         packages tracking dependencies from SBo
+  -n, <package>                         view packages from SBo repository
+  -b, --list                            blacklisted packages
+  -b  [package...] --add --remove       add, remove packages in blacklist
+  -i, [package...]                      install binary packages
+  -u, [package...]                      upgrade binary packages
+  -o, [package...]                      reinstall binary packages
+  -r, [package...]                      remove binary packages
+  -d, [package...]                      display the contents of the packages
 
 Repositories:
       SlackBuilds = sbo
-      Slackware = slack\fP
+      Slackware = slack '--current'\fP
 
 .SH GLOBAL OPTIONS
 .TP
@@ -68,16 +68,16 @@ With this argument, build slackware package from source quickly and easy.
 Four display options list, sbo, slack, noarch and all packages
 items that are installed on the system.
 .SS -c , <repository> check if your packages is up to date
-\fBslpkg\fP \fB-c\fP <\fIrepository\fP> \fI--upgrade\fP
+\fBslpkg\fP \fB-c\fP <\fIrepository\fP> \fI--upgrade\fP \fI--current\fP
 .PP
 Check your packages from Slackware official mirrors or from 
-slackbuilds.org is up to date.
+slackbuilds.org is up to date. Use '--current' to switch in current repository.
 .SS -s , <repository> download, build and install package with all dependencies
-\fBslpkg\fP \fB-s\fP <\fIrepository\fP> <\fIname of package\fP>
+\fBslpkg\fP \fB-s\fP <\fIrepository\fP> <\fIname of package\fP> \fI--current\fP
 .PP
 Installs or upgrade packages from the repository slackbuilds.org automatically resolving all 
 dependencies of the package. Also installs the official distribution Slackware 
-packages.
+packages. Use '--current' to install packages from Slackware current repository.
 .SS -f find packages
 \fBslpkg\fP \fB-f\fP <\fIname of packages\fP>
 .PP

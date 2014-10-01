@@ -5,10 +5,8 @@ Installation
 Python & OS Support
 -------------------
 
-slpkg works with Python versions 2.7.5+
-slpkg works on Slackware stable distribution.
-
-Slackware current not support yet.
+slpkg works with Python versions 2.7.5+ (Python 3 not supported yet)
+slpkg works on Slackware distribution.
 
 Install slpkg
 -------------

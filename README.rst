@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.9.3
+- Version: 1.9.4
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.9.3.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.9.4.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -98,15 +98,15 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.9.3.tar.gz
-    $ cd slpkg-1.9.3
+    $ tar xvf slpkg-1.9.4.tar.gz
+    $ cd slpkg-1.9.4
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
 
 .. code-block:: bash
 
-    $ pip install slpkg
+    $ pip install --upgrade slpkg
     
     uninstall:
 
@@ -124,32 +124,32 @@ Command Line Tool Usage
     Utility for easy management packages in Slackware
 
     Optional arguments:
-      -h, --help                       show this help message and exit
-      -v, --version                    print version and exit
-      -a, script [source...]           auto build packages
-      -l, all, sbo, slack, noarch      list of installed packages
-      -c, <repository> --upgrade       check if your packages is up to date
-      -s, <repository> <package>       download, build & install packages
-      -f, <package>                    find installed packages
-      -t, <package>                    packages tracking dependencies from SBo
-      -n, <package>                    view packages from SBo repository
-      -b, --list                       blacklisted packages
-      -b  [package...] --add --remove  add, remove packages in blacklist
-      -i, [package...]                 install binary packages
-      -u, [package...]                 upgrade binary packages
-      -o, [package...]                 reinstall binary packages
-      -r, [package...]                 remove binary packages
-      -d, [package...]                 display the contents of the packages
+      -h, --help                            show this help message and exit
+      -v, --version                         print version and exit
+      -a, script [source...]                auto build packages
+      -l, all, sbo, slack, noarch           list of installed packages
+      -c, <repository> --upgrade --current  check if your packages is up to date
+      -s, <repository> <package> --current  download, build & install packages
+      -f, <package>                         find installed packages
+      -t, <package>                         packages tracking dependencies from SBo
+      -n, <package>                         view packages from SBo repository
+      -b, --list                            blacklisted packages
+      -b  [package...] --add --remove       add, remove packages in blacklist
+      -i, [package...]                      install binary packages
+      -u, [package...]                      upgrade binary packages
+      -o, [package...]                      reinstall binary packages
+      -r, [package...]                      remove binary packages
+      -d, [package...]                      display the contents of the packages
 
     Repositories:
           SlackBuilds = sbo
-          Slackware = slack
+          Slackware = slack '--current'
     
 
 Slpkg Examples
 --------------
 
-Find package from slackbuilds.org download, 
+Find packages from slackbuilds.org download, 
 build and install with all dependencies :
 
 .. code-block:: bash
@@ -202,11 +202,11 @@ build and install with all dependencies :
     
     
 Find packages from `Slackware official mirrors <http://mirrors.slackware.com/>`_ 
-download and install:
+download and install (use '--current' to switch in current repository):
 
 .. code-block:: bash
 
-    $ slpkg -s slack mozilla
+    $ slpkg -s slack mozilla (add '--current' to switch in current version)
 
     Packages with name matching [ mozilla ]
     Reading package lists ..............................Done
@@ -281,11 +281,11 @@ Check if your packages is up to date from slackbuilds.org:
     Would you like to upgrade [Y/n]?
 
 Check if your distribution is up to date from `Slackware official mirrors 
-<http://mirrors.slackware.com/>`_
+<http://mirrors.slackware.com/>`_ (use '--current' to switch in current repository):
 
 .. code-block:: bash
 
-    $ slpkg -c slack --upgrade
+    $ slpkg -c slack --upgrade (add '--current' to switch in current version)
     Reading package lists .......Done
 
     These packages need upgrading:
@@ -329,7 +329,7 @@ Find packages from slackbuilds.org:
      Install              Download/Build/Install
      Quit                 Quit
      
-     > _
+     Choose an option: _
 
 Auto tool to build package:
 
@@ -580,12 +580,12 @@ Remove packages with all dependencies:
     +==============================================================================
 
 
-Using the blacklist file manually from /etc/slpkg/blacklist or
-with the following options:
+Add packages in blacklist file manually from 
+/etc/slpkg/blacklist or with the following options:
 
 .. code-block:: bash
     
-    $ slpkg -b live554 speex faac --add
+    $ slpkg -b live555 speex faac --add
 
     Add packages in blacklist: 
 

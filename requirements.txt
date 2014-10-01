@@ -2,5 +2,8 @@
 # GNU wget
 # Slackware 32 x86
 # Slackware 64 x86_64
-# Slackware current (not supported yet)
-
+# Slackware current
+#
+# NOTE from SlackBuilds.org FAQ(15): 
+# Slackware -current is not supported, but as a general rule, the scripts
+# should work on it as well.
