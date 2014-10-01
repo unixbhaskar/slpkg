@@ -36,7 +36,8 @@ def initialization():
     '''
     Slpkg initialization, creating directories and SLACKBUILDS.TXT in 
     /var/lib/slpkg/sbo_repo/ and ChangeLog.txt in /var/log/slpkg/ from
-    slackbuilds.org
+    slackbuilds.org also create blacklist configuration file in /etc/
+    slpkg.
     '''
     s_user(getpass.getuser())
     blacklist_conf = [

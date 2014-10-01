@@ -39,7 +39,7 @@ from pkg.manager import pkg_upgrade, pkg_reinstall
 from mirrors import mirrors
 from slack_version import slack_ver
 
-def install(slack_pkg):
+def install(slack_pkg, version):
     '''
     Install packages from official Slackware distribution
     '''
@@ -63,9 +63,9 @@ def install(slack_pkg):
         sys.stdout.flush()
         init = initialization()
         blacklist = black_packages()
-        PACKAGES = url_read(mirrors(name="PACKAGES.TXT", location=""))
-        EXTRA = url_read(mirrors(name="PACKAGES.TXT", location="extra/"))
-        PASTURE = url_read(mirrors(name="PACKAGES.TXT", location="pasture/"))
+        PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
+        EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
+        PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", version))
         PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
         index, toolbar_width = 0, 800
         for line in PACKAGES_TXT.splitlines():
@@ -85,7 +85,7 @@ def install(slack_pkg):
                 uncomp_size.append(line[30:-2].strip())
         for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
             if slack_pkg in name and slack_pkg not in blacklist:
-                dwn_list.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
+                dwn_list.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
                 install_all.append(name)
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)

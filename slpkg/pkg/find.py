@@ -31,7 +31,7 @@ def find_package(find_pkg, directory):
     '''
     pkgs = []
     blacklist = black_packages()
-    for pkg in os.listdir(directory):
+    for pkg in sorted(os.listdir(directory)):
         if pkg.startswith(find_pkg) and find_pkg[:-1] not in blacklist:
             pkgs.append(pkg)
     return pkgs

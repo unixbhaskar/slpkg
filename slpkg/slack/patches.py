@@ -39,7 +39,7 @@ from pkg.manager import pkg_upgrade
 from mirrors import mirrors
 from slack_version import slack_ver
 
-def patches():
+def patches(version):
     '''
     Install new patches from official Slackware mirrors
     '''
@@ -58,14 +58,19 @@ def patches():
         sys.stdout.flush()
         init = initialization()
         blacklist = black_packages()
-        PACKAGE_TXT = url_read(mirrors(name="PACKAGES.TXT", location="patches/"))
-        index, toolbar_width = 0, 100
+        if version == "stable":
+            PACKAGE_TXT = url_read(mirrors("PACKAGES.TXT", "patches/", version))
+            step = 100
+        else:
+            PACKAGE_TXT = url_read(mirrors("PACKAGES.TXT", "", version))
+            step = 700
+        index, toolbar_width = 0, step
         for line in PACKAGE_TXT.splitlines():
             index += 1
             if index == toolbar_width:
                 sys.stdout.write("{0}.{1}".format(GREY, ENDC))
                 sys.stdout.flush()
-                toolbar_width += 100
+                toolbar_width += step
                 time.sleep(0.05)
             if line.startswith("PACKAGE NAME"):
 		        package_name.append(line[15:].strip())
@@ -77,7 +82,7 @@ def patches():
                 uncomp_size.append(line[30:-2].strip())
         for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
             if not os.path.isfile(pkg_path + name[:-4]) and name.split("-")[-4] not in " ".join(blacklist):
-                dwn_patches.append("{0}{1}/{2}".format(mirrors("",""), loc, name))
+                dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
                 upgrade_all.append(name)
@@ -105,7 +110,7 @@ def patches():
                 name = upg_ver[:-(len(ver) + 1)]
                 arch = arch[1:-1]
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
-                      GREEN, name, ENDC, \
+                      YELLOW, name, ENDC, \
                       " " * (25-len(name)), ver, \
                       " " * (19-len(ver)), arch, \
                       " " * (8-len(arch)), build, \
