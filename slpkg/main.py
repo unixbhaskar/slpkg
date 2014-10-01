@@ -48,32 +48,32 @@ def main():
             "slpkg - version {0}\n".format(__version__),
             "Utility for easy management packages in Slackware\n",
             "Optional arguments:",
-            "  -h, --help                       show this help message and exit",
-            "  -v, --version                    print version and exit",
-            "  -a, script [source...]           auto build packages",
-            "  -l, all, sbo, slack, noarch      list of installed packages",
-            "  -c, <repository> --upgrade       check if your packages is up to date",
-            "  -s, <repository> <package>       download, build & install packages",
-            "  -f, <package>                    find installed packages",
-            "  -t, <package>                    packages tracking dependencies from SBo",
-            "  -n, <package>                    view packages from SBo repository",
-            "  -b, --list                       blacklisted packages",
-            "  -b  [package...] --add --remove  add, remove packages in blacklist",
-            "  -i, [package...]                 install binary packages",
-            "  -u, [package...]                 upgrade binary packages",
-            "  -o, [package...]                 reinstall binary packages",
-            "  -r, [package...]                 remove binary packages",
-            "  -d, [package...]                 display the contents of the packages\n",
+            "  -h, --help                            show this help message and exit",
+            "  -v, --version                         print version and exit",
+            "  -a, script [source...]                auto build packages",
+            "  -l, all, sbo, slack, noarch           list of installed packages",
+            "  -c, <repository> --upgrade --current  check if your packages is up to date",
+            "  -s, <repository> <package> --current  download, build & install packages",
+            "  -f, <package>                         find installed packages",
+            "  -t, <package>                         packages tracking dependencies from SBo",
+            "  -n, <package>                         view packages from SBo repository",
+            "  -b, --list                            blacklisted packages",
+            "  -b  [package...] --add --remove       add, remove packages in blacklist",
+            "  -i, [package...]                      install binary packages",
+            "  -u, [package...]                      upgrade binary packages",
+            "  -o, [package...]                      reinstall binary packages",
+            "  -r, [package...]                      remove binary packages",
+            "  -d, [package...]                      display the contents of the packages\n",
             "Repositories:",
             "      SlackBuilds = sbo",
-            "      Slackware = slack\n",
+            "      Slackware = slack '--current'\n",
             ]
     usage = [
             "slpkg - version {0}\n".format(__version__),
             "Usage: slpkg [-h] [-v] [-a script [sources...]]",
             "             [-l all, sbo, slack, noarch]", 
-            "             [-c <repository> --upgrade]",
-            "             [-s <repository> <package>]",
+            "             [-c <repository> --upgrade --current]",
+            "             [-s <repository> <package> --current]",
             "             [-f] [-t] [-n] [-b --list]", 
             "             [-b  [...] --add --remove] [-i [...]]",
             "             [-u  [...]] [-o [...]] [-r [...]] [-d [...]]\n",
@@ -84,9 +84,9 @@ def main():
     repository = ["sbo", "slack"]
     if len(args) == 0:
         for opt in usage: print(opt)
-    elif len(args) == 1 and args[0] == "-h" or args[0] == "--help":
+    elif len(args) == 1 and args[0] == "-h" or args[0] == "--help" and args[1:] == []:
         for opt in arguments: print(opt)
-    elif len(args) == 1 and args[0] == "-v" or args[0] == "--version":
+    elif len(args) == 1 and args[0] == "-v" or args[0] == "--version" and args[1:] == []:
         prog_version()
     elif len(args) == 3 and args[0] == "-a":
         build_package(args[1], args[2:], path)
@@ -100,14 +100,28 @@ def main():
         if args[1] == repository[0] and args[2] == "--upgrade":
             sbo_check()
         elif args[1] == repository[1] and args[2] == "--upgrade":
-            patches()
+            version = "stable"
+            patches(version)
+        else:
+            for opt in usage: print(opt)
+    elif len(args) == 4 and args[0] == "-c":
+        if args[1] == repository[1] and args[3] == "--current":
+            version = "current"
+            patches(version) 
         else:
             for opt in usage: print(opt)
     elif len(args) == 3 and args[0] == "-s":
         if args[1] == repository[0]:
             sbo_build(args[2])
         elif args[1] == repository[1]:
-            install(args[2])         
+            version = "stable" 
+            install(args[2], version)         
+    elif len(args) == 4 and args[0] == "-s":
+        if args[1] == repository[1] and args[3] == "--current":
+            version = "current"
+            install(args[2], version) 
+        else:
+            for opt in usage: print(opt)
     elif len(args) == 2 and args[0] == "-t":
         pkg_tracking(args[1])
     elif len(args) == 2 and args[0] == "-n":

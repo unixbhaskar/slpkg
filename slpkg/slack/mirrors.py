@@ -24,15 +24,23 @@
 from slpkg.__metadata__ import arch
 from slack_version import slack_ver
 
-def mirrors(name, location):
+def mirrors(name, location, version):
     '''
     Select Slackware official mirror packages
-    based architecture
+    based architecture and version.
     '''
     if arch == "x86_64":
-        http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
-                slack_ver(), location, name)
+        if version == "stable":
+            http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
+                   slack_ver(), location, name)
+        else: 
+            http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
+                   version, location, name)
     else:
-        http = "http://mirrors.slackware.com/slackware/slackware-{0}/{1}{2}".format(
-                slack_ver(), location, name)
+        if version == "stable":
+            http = "http://mirrors.slackware.com/slackware/slackware-{0}/{1}{2}".format(
+                   slack_ver(), location, name)
+        else:
+            http = "http://mirrors.slackware.com/slackware/slackware-{0}/{1}{2}".format(
+                   version, location, name)
     return http

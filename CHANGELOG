@@ -1,3 +1,11 @@
+Version 1.9.4
+01-10-2014
+
+[Feature] - Added support install packages from Slackware current (version)
+            repository.
+            Added support upgrade current version. (Upgrade all Slackware current tree)
+[Updated] - Fix arguments.
+
 Version 1.9.3
 29-09-2014
 

@@ -28,7 +28,7 @@ from slpkg.colors import *
 from slpkg.init import initialization
 from slpkg.downloader import download 
 from slpkg.__metadata__ import (tmp, pkg_path, build_path, 
-                                log_path, lib_path, sp)
+                                 log_path, lib_path, sp)
 
 from slpkg.messages import (pkg_not_found, pkg_found, template, 
                             build_FAILED, sbo_packages_view)

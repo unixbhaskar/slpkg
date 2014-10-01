@@ -69,7 +69,7 @@ def sbo_network(name):
             FAULT = "".join(source_dwn)
         while True:
             try:
-                read = raw_input(" {0}>{1} ".format(GREY, ENDC))
+                read = raw_input(" {0}Choose an option: {1}".format(GREY, ENDC))
             except KeyboardInterrupt:
                 print # new line at exit
                 break

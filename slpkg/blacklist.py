@@ -48,11 +48,14 @@ def blacklisted():
     '''
     Print blacklist packages
     '''
+    exit = 0
     print("\nPackages in blacklist:\n")
     for black in black_packages():
         if black:
             print(black)
-    print # new line at exit
+            exit = 1
+    if exit == 1:
+        print # new line at exit
 
 def add_blacklist(pkgs):
     '''
@@ -92,4 +95,3 @@ def remove_blacklist(pkgs):
         black_conf.close()
     if exit == 1:
         print # new line at exit
-

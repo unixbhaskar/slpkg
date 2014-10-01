@@ -32,7 +32,7 @@ def url_read(link):
         f = urllib2.urlopen(link)
         return f.read()
     except urllib2.URLError:
-        print ("\nError: connection refused\n")
+        print ("\nslpkg: error: connection refused\n")
         sys.exit()
     except KeyboardInterrupt:
         print # new line at exit
