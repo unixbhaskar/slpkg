@@ -23,18 +23,16 @@ packages.
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/open-source-logo.png
     :target: https://github.com/dslackw/slpkg 
 
-Slpkg is `Open Source <http://en.wikipedia.org/wiki/Open_source>`_ and written in Python language.
-It's use is for installing, upgrading, removing and monitoring packages in Slackware 
-linux distribution stable release.
+Slpkg is `Open Source <http://en.wikipedia.org/wiki/Open_source>`_ software written in 
+Python language. It's use is for managing packages in Slackware linux distribution.
 Species are adapted to two repositories:
 
 - SBo - `slackbuilds.org <http://slackbuilds.org/>`_
 - Slack - `slackware.com <http://www.slackware.com/>`_
 
-The slpkg cooperate in accordance with the standards of the organization slackbuilds.org 
-to build a package,
-are also used as the Slackware instructions for installing, upgrading or removing a 
-package. 
+Slpkg works in accordance with the standards of the organization slackbuilds.org 
+to builds a packages. Also uses the Slackware linux instructions for installation,
+upgrading or removing a package. 
 
 What makes slpkg to distinguish it from other tools; The user friendliness is its primary 
 target as well as easy to understand and use, also use color to highlight packages and 
