@@ -31,7 +31,7 @@ Species are adapted to two repositories:
 - Slack - `slackware.com <http://www.slackware.com/>`_
 
 Slpkg works in accordance with the standards of the organization slackbuilds.org 
-to builds a packages. Also uses the Slackware linux instructions for installation,
+to builds packages. Also uses the Slackware linux instructions for installation,
 upgrading or removing a package. 
 
 What makes slpkg to distinguish it from other tools; The user friendliness is its primary 
