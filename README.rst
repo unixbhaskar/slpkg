@@ -32,7 +32,7 @@ Species are adapted to two repositories:
 
 Slpkg works in accordance with the standards of the organization slackbuilds.org 
 to builds packages. Also uses the Slackware linux instructions for installation,
-upgrading or removing a package. 
+upgrading or removing a packages. 
 
 What makes slpkg to distinguish it from other tools; The user friendliness is its primary 
 target as well as easy to understand and use, also use color to highlight packages and 
