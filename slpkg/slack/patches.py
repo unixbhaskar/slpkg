@@ -32,11 +32,12 @@ from messages import template
 from downloader import download
 from init import initialization
 from blacklist import black_packages
-from __metadata__ import pkg_path, slpkg_tmp, slack_archs
+from __metadata__ import pkg_path, slpkg_tmp
 
 from pkg.manager import pkg_upgrade
 
 from mirrors import mirrors
+from splitting import split_package
 from slack_version import slack_ver
 
 def patches(version):
@@ -96,19 +97,11 @@ def patches(version):
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
-                for archs in slack_archs:
-                    if archs in upgrade:
-                        arch = archs
-                if "_slack" in upgrade:
-                    slack = "_slack" + slack_ver()
-                else:
-                    slack = str()
-                upg = upgrade[:-(len(slack) + 4)]
-                build = upg.split("-")[-1] 
-                upg_ver = upg[:-(len(arch) + len(build))]
-                ver = upg_ver.split("-")[-1]
-                name = upg_ver[:-(len(ver) + 1)]
-                arch = arch[1:-1]
+                pkg_split = split_package(upgrade)
+                name = pkg_split[0]
+                ver = pkg_split[1]
+                arch = pkg_split[2]
+                build = pkg_split[3]
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
                       YELLOW, name, ENDC, \
                       " " * (25-len(name)), ver, \
@@ -161,8 +154,8 @@ def patches(version):
         else:
             if os.uname()[4] == "x86_64":
                 slack_arch = 64
-            print("\nSlackware{0} v{1} distribution is up to date\n".format(
-                  slack_arch, slack_ver()))
+            print("\nSlackware{0} '{1}' v{2} distribution is up to date\n".format(
+                  slack_arch, version, slack_ver()))
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

@@ -68,7 +68,9 @@ def initialization():
             "# kernel-modules-smp\n",
             "# kernel-source\n"
             "#\n",
-            "#\n"
+            "#\n",
+            "# aaa_elflibs can't be updated.\n",
+            "aaa_elflibs\n"
             ]
     black_conf = bls_path + "blacklist"
     sbo_log = log_path + "sbo/"

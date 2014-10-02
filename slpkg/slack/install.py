@@ -37,6 +37,7 @@ from pkg.find import find_package
 from pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
+from splitting import split_package
 from slack_version import slack_ver
 
 def install(slack_pkg, version):
@@ -98,15 +99,11 @@ def install(slack_pkg, version):
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
-                for archs in slack_archs:
-                    if archs in pkg:
-                        pkgs = pkg[:-4]
-                        build = pkgs.split("-")[-1]
-                        name_ver = pkgs[:-(len(archs) + len(build))]
-                        ver = name_ver.split("-")[-1]
-                        name = name_ver[:-(len(ver) + 1)]
-                        arch = archs[1:-1]
-                        names.append(name)
+                pkg_split = split_package(pkg)
+                name = pkg_split[0]
+                ver = pkg_split[1]
+                arch = pkg_split[2]
+                build = pkg_split[3]
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
                     COLOR = GREEN

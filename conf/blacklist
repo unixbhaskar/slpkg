@@ -1,17 +1,14 @@
-# Example Configuration file blacklist. 
-# This file is automatically created in the folder /etc/slpkg
-#
 # This is the blacklist file. Each package listed here may not be
 # installed be upgraded be find or deleted.
 # NOTE: The settings here affect all repositories.
 #
 # An example syntax is as follows:
 # add a package from SBo repository:
-  brasero
+# brasero
 #
 # Add package from slackware repository:
 # example add package 'wicd-1.7.2.4-x86_64-4.txz':
-  wicd
+# wicd
 #
 # Sometimes the automatic kernel update creates problems because you
 # may need to file intervention 'lilo'. The slpkg automatically detects
@@ -29,4 +26,5 @@
 # kernel-source
 #
 #
-
+# aaa_elflibs can't be updated.
+aaa_elflibs
