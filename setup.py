@@ -69,3 +69,9 @@ if "install" in sys.argv:
         man_page = "man/slpkg.8"
         shutil.copy2(man_page, man_path)
         os.chmod(man_path, int("444", 8))
+    conf_path = "/etc/slpkg/"
+    if not os.path.exists(conf_path):
+        os.system("mkdir -p {0}".format(conf_path))
+        print("Installing blacklist file")
+        black_file = "conf/blacklist"
+        shutil.copy2(black_file, conf_path)

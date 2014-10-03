@@ -40,6 +40,7 @@ def initialization():
     slpkg.
     '''
     s_user(getpass.getuser())
+    # blacklist configuration file
     blacklist_conf = [
             "# This is the blacklist file. Each package listed here may not be\n",
             "# installed be upgraded be find or deleted.\n",

@@ -38,7 +38,6 @@ from pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
 from splitting import split_package
-from slack_version import slack_ver
 
 def install(slack_pkg, version):
     '''

@@ -81,12 +81,32 @@ def patches(version):
                 comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
-        for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
-            if not os.path.isfile(pkg_path + name[:-4]) and name.split("-")[-4] not in " ".join(blacklist):
-                dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
-                comp_sum.append(comp)
-                uncomp_sum.append(uncomp)
-                upgrade_all.append(name)
+        if version == "stable":
+            for loc, name, comp, uncomp in zip(package_location, package_name, \
+                                               comp_size, uncomp_size):
+                if not os.path.isfile(pkg_path + name[:-4]) and split_package(
+                                                 name)[0] not in blacklist:
+                    dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
+                    comp_sum.append(comp)
+                    uncomp_sum.append(uncomp)
+                    upgrade_all.append(name)
+        else: # current version upgrade
+            installed = []
+            # get all installed packages and store the package name.
+            for pkg in os.listdir(pkg_path):
+                installed.append(split_package(pkg + ".txz")[0])
+            for loc, name, comp, uncomp in zip(package_location, package_name, \
+                                               comp_size, uncomp_size):
+                # If the package from the current repository is installed
+                # (check with the name) but not is in the path (check with all package
+                # like 'apr-1.5.0-x86_64-1') then add to list for upgrade.
+                if split_package(name)[0] in installed:
+                    if not os.path.isfile(pkg_path + name[:-4]) and split_package(
+                                                     name)[0] not in blacklist:
+                        dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
+                        comp_sum.append(comp)
+                        uncomp_sum.append(uncomp)
+                        upgrade_all.append(name)
         sys.stdout.write(done)
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
