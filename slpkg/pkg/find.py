@@ -23,15 +23,17 @@
 
 import os
 
-from blacklist import black_packages
+from blacklist import BlackList
+
+from slack.splitting import split_package
 
 def find_package(find_pkg, directory):
     '''
     Find packages
     '''
     pkgs = []
-    blacklist = black_packages()
+    blacklist = BlackList().packages()
     for pkg in sorted(os.listdir(directory)):
-        if pkg.startswith(find_pkg) and find_pkg[:-1] not in blacklist:
+        if pkg.startswith(find_pkg) and split_package(pkg + ".???")[0] not in blacklist:
             pkgs.append(pkg)
     return pkgs

@@ -27,7 +27,7 @@ from slack_version import slack_ver
 
 def split_package(package):
     '''
-    Split package by name, version
+    Split package in name, version
     arch and build tag.
     '''
     for archs in slack_archs:

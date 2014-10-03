@@ -30,7 +30,7 @@ from colors import *
 from url_read import url_read
 from messages import template
 from downloader import download
-from blacklist import black_packages
+from blacklist import BlackList
 from __metadata__ import pkg_path, slpkg_tmp
 
 from pkg.manager import pkg_upgrade
@@ -56,7 +56,7 @@ def patches(version):
             os.mkdir(patch_path)
         sys.stdout.write (reading_lists)
         sys.stdout.flush()
-        blacklist = black_packages()
+        blacklist = BlackList().packages()
         if version == "stable":
             PACKAGE_TXT = url_read(mirrors("PACKAGES.TXT", "patches/", version))
             step = 100
@@ -92,7 +92,7 @@ def patches(version):
             installed = []
             # get all installed packages and store the package name.
             for pkg in os.listdir(pkg_path):
-                installed.append(split_package(pkg + ".txz")[0])
+                installed.append(split_package(pkg + ".???")[0])
             for loc, name, comp, uncomp in zip(package_location, package_name, \
                                                comp_size, uncomp_size):
                 # If the package from the current repository is installed

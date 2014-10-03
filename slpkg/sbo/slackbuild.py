@@ -29,7 +29,6 @@ from init import initialization
 from downloader import download 
 from __metadata__ import (tmp, pkg_path, build_path, 
                                  log_path, lib_path, sp)
-
 from messages import (pkg_not_found, pkg_found, template, 
                             build_FAILED, sbo_packages_view)
 
