@@ -42,7 +42,7 @@ from slack.install import install
 
 
 def main():
-    
+    # root privileges required 
     s_user(getpass.getuser())
     arguments = [
             "slpkg - version {0}\n".format(__version__),
