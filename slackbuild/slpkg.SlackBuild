@@ -25,7 +25,7 @@
 PRGNAM=slpkg
 VERSION=${VERSION:-1.9.5}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}
+TAG=${TAG:-_dsw}
 
 if [ -z "$ARCH" ]; then
   case "$( uname -m )" in
@@ -69,10 +69,18 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
  -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
+# avoid install man page and blacklist over setup.py
+sed -i 's/if "install"/if ""/' setup.py
+
 python setup.py install --root=$PKG
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
+mkdir -p $PKG/etc/$PRGNAM
+if [ ! -f /etc/$PRGNAM/blacklist ]; then
+    install -D -m0644 conf/blacklist $PKG/etc/$PRGNAM/blacklist
+fi
 
 mkdir -p $PKG/usr/man/man8
 gzip -9 man/$PRGNAM.8
