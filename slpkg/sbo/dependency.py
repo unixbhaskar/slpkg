@@ -25,7 +25,7 @@ import sys
 
 from slpkg.colors import *
 from slpkg.init import initialization
-from slpkg.blacklist import black_packages
+from slpkg.blacklist import BlackList
 from slpkg.__metadata__ import pkg_path, sp
 from slpkg.messages import pkg_not_found, template
 
@@ -42,7 +42,7 @@ def sbo_dependencies_pkg(name):
     '''
     try:
         dependencies = []
-        blacklist = black_packages()
+        blacklist = BlackList().packages() 
         sbo_url = sbo_search_pkg(name)
         if sbo_url:
             requires = sbo_requires_pkg(name)

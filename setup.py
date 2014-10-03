@@ -23,6 +23,7 @@
 
 import os
 import sys
+import gzip
 import shutil
 
 from slpkg import __version__, __email__, __author__
@@ -61,11 +62,25 @@ setup(
     long_description=open("README.rst").read()
     )
 
+# install man page and blacklist configuration 
+# file if not exists.
 if "install" in sys.argv:
     man_path = "/usr/man/man8/"
     os.system("mkdir -p {0}".format(man_path))
     if os.path.exists(man_path):
-        print("Installing man pages")
         man_page = "man/slpkg.8"
-        shutil.copy2(man_page, man_path)
+        gzip_man = "man/slpkg.8.gz"
+        print("Installing man pages")
+        f_in = open(man_page, "rb")
+        f_out = gzip.open(gzip_man, 'wb')
+        f_out.writelines(f_in)
+        f_out.close()
+        f_in.close()
+        shutil.copy2(gzip_man, man_path)
         os.chmod(man_path, int("444", 8))
+    conf_path = "/etc/slpkg/"
+    if not os.path.exists(conf_path):
+        os.system("mkdir -p {0}".format(conf_path))
+        print("Installing blacklist configuration file")
+        black_file = "conf/blacklist"
+        shutil.copy2(black_file, conf_path)

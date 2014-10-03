@@ -26,7 +26,7 @@ import sys
 import subprocess
 
 from slpkg.colors import *
-from slpkg.blacklist import black_packages
+from slpkg.blacklist import BlackList
 from slpkg.messages import pkg_not_found, template
 from slpkg.__metadata__ import pkg_path, sp, log_path
 
@@ -65,7 +65,6 @@ def pkg_upgrade(binary):
                 bol = eol = "\n"
             pkg_not_found(bol, pkg, message, eol)
         
-
 def pkg_reinstall(binary):
     '''
     Reinstall Slackware binary packages
@@ -172,7 +171,7 @@ def pkg_find(binary):
     '''
     binary = "".join(binary)
     matching = size = int()
-    print("\nInstalled packages with name matching [ {0}{1}{2} ]\n".format(
+    print("\nInstalled packages with name begin matching [ {0}{1}{2} ]\n".format(
           CYAN, binary, ENDC))
     for match in find_package(binary, pkg_path):
          if binary in match:
@@ -230,7 +229,7 @@ def pkg_list(pattern):
         elif "all" in pattern:
             search = ""
         index, page = 0, 50
-        for pkg in sorted(os.listdir(pkg_path)):
+        for pkg in find_package("", pkg_path):
             if search in pkg:
                 index += 1
                 print("{0}{1}:{2} {3}".format(GREY, index, ENDC, pkg))

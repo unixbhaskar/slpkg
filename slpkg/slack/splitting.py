@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# find.py file is part of slpkg.
+# splitting.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -21,19 +21,25 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os
+from slpkg.__metadata__ import slack_archs
 
-from slpkg.blacklist import BlackList
+from slack_version import slack_ver
 
-from slpkg.slack.splitting import split_package
-
-def find_package(find_pkg, directory):
+def split_package(package):
     '''
-    Find packages
+    Split package in name, version
+    arch and build tag.
     '''
-    pkgs = []
-    blacklist = BlackList().packages()
-    for pkg in sorted(os.listdir(directory)):
-        if pkg.startswith(find_pkg) and split_package(pkg + ".???")[0] not in blacklist:
-            pkgs.append(pkg)
-    return pkgs
+    for archs in slack_archs:
+        if archs in package:
+            arch = archs
+        if "_slack" in package:
+            slack = "_slack" + slack_ver()
+        else:
+            slack = ""
+    pkg = package[:-(len(slack) + 4)]
+    build = pkg.split("-")[-1] 
+    pkg_ver = pkg[:-(len(arch) + len(build))]
+    ver = pkg_ver.split("-")[-1]
+    name = pkg_ver[:-(len(ver) + 1)]
+    return [name, ver, arch[1:-1], build]

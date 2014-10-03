@@ -30,13 +30,13 @@ from slpkg.colors import *
 from slpkg.url_read import url_read
 from slpkg.messages import template
 from slpkg.downloader import download
-from slpkg.init import initialization
-from slpkg.blacklist import black_packages
-from slpkg.__metadata__ import pkg_path, slpkg_tmp, slack_archs
+from slpkg.blacklist import BlackList
+from slpkg.__metadata__ import pkg_path, slpkg_tmp
 
 from slpkg.pkg.manager import pkg_upgrade
 
 from mirrors import mirrors
+from splitting import split_package
 from slack_version import slack_ver
 
 def patches(version):
@@ -56,8 +56,7 @@ def patches(version):
             os.mkdir(patch_path)
         sys.stdout.write (reading_lists)
         sys.stdout.flush()
-        init = initialization()
-        blacklist = black_packages()
+        blacklist = BlackList().packages()
         if version == "stable":
             PACKAGE_TXT = url_read(mirrors("PACKAGES.TXT", "patches/", version))
             step = 100
@@ -80,12 +79,34 @@ def patches(version):
                 comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
-        for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
-            if not os.path.isfile(pkg_path + name[:-4]) and name.split("-")[-4] not in " ".join(blacklist):
-                dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
-                comp_sum.append(comp)
-                uncomp_sum.append(uncomp)
-                upgrade_all.append(name)
+        if version == "stable": # stables versions upgrade
+            for loc, name, comp, uncomp in zip(package_location, package_name, \
+                                               comp_size, uncomp_size):
+                if not os.path.isfile(pkg_path + name[:-4]) and split_package(
+                                                 name)[0] not in blacklist:
+                    dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
+                    comp_sum.append(comp)
+                    uncomp_sum.append(uncomp)
+                    upgrade_all.append(name)
+        else: # current version upgrade
+            installed = []
+            # get all installed packages and store the package name.
+            for pkg in os.listdir(pkg_path):
+                installed.append(split_package(pkg + ".???")[0])
+            for loc, name, comp, uncomp in zip(package_location, package_name, \
+                                               comp_size, uncomp_size):
+                # If the package from the current repository is installed
+                # (check with the name) but not is in the path (check with all package
+                # like 'apr-1.5.0-x86_64-1') then add to list for upgrade.
+                # etc. 'apr' in list 'installed' ?? if yes 'apr-1.5.0-x86_64-1' exist
+                # in /var/log/packages ?? if no add to upgrade.
+                if split_package(name)[0] in installed:
+                    if not os.path.isfile(pkg_path + name[:-4]) and split_package(
+                                                     name)[0] not in blacklist:
+                        dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
+                        comp_sum.append(comp)
+                        uncomp_sum.append(uncomp)
+                        upgrade_all.append(name)
         sys.stdout.write(done)
         if upgrade_all:
             print("\nThese packages need upgrading:\n")
@@ -96,19 +117,11 @@ def patches(version):
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
-                for archs in slack_archs:
-                    if archs in upgrade:
-                        arch = archs
-                if "_slack" in upgrade:
-                    slack = "_slack" + slack_ver()
-                else:
-                    slack = str()
-                upg = upgrade[:-(len(slack) + 4)]
-                build = upg.split("-")[-1] 
-                upg_ver = upg[:-(len(arch) + len(build))]
-                ver = upg_ver.split("-")[-1]
-                name = upg_ver[:-(len(ver) + 1)]
-                arch = arch[1:-1]
+                pkg_split = split_package(upgrade)
+                name = pkg_split[0]
+                ver = pkg_split[1]
+                arch = pkg_split[2]
+                build = pkg_split[3]
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
                       YELLOW, name, ENDC, \
                       " " * (25-len(name)), ver, \
@@ -119,6 +132,12 @@ def patches(version):
             comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
+            if compressed > 1024:
+                compressed = round((compressed / 1024), 2)
+                comp_unit = "Gb"
+            if uncompressed > 1024:
+                uncompressed = round((uncompressed / 1024), 2)
+                uncomp_unit = "Gb"
             if compressed < 1:
                 compressed = sum(map(int, comp_sum))
                 comp_unit = "Kb"

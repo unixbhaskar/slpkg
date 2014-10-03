@@ -28,8 +28,7 @@ import time
 from slpkg.colors import *
 from slpkg.url_read import url_read
 from slpkg.downloader import download
-from slpkg.init import initialization
-from slpkg.blacklist import black_packages
+from slpkg.blacklist import BlackList
 from slpkg.messages import pkg_not_found, template
 from slpkg.__metadata__ import slpkg_tmp, pkg_path, slack_archs
 
@@ -37,7 +36,7 @@ from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import pkg_upgrade, pkg_reinstall
 
 from mirrors import mirrors
-from slack_version import slack_ver
+from splitting import split_package
 
 def install(slack_pkg, version):
     '''
@@ -61,8 +60,7 @@ def install(slack_pkg, version):
               CYAN, slack_pkg, ENDC)) 
         sys.stdout.write(reading_lists)
         sys.stdout.flush()
-        init = initialization()
-        blacklist = black_packages()
+        blacklist = BlackList().packages()
         PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
         EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
         PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", version))
@@ -98,15 +96,11 @@ def install(slack_pkg, version):
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
-                for archs in slack_archs:
-                    if archs in pkg:
-                        pkgs = pkg[:-4]
-                        build = pkgs.split("-")[-1]
-                        name_ver = pkgs[:-(len(archs) + len(build))]
-                        ver = name_ver.split("-")[-1]
-                        name = name_ver[:-(len(ver) + 1)]
-                        arch = archs[1:-1]
-                        names.append(name)
+                pkg_split = split_package(pkg)
+                name = pkg_split[0]
+                ver = pkg_split[1]
+                arch = pkg_split[2]
+                build = pkg_split[3]
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
                     COLOR = GREEN
@@ -126,10 +120,18 @@ def install(slack_pkg, version):
             comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
+            if compressed > 1024:
+                compressed = round((compressed / 1024), 2)
+                comp_unit = "Gb"
+            if uncompressed > 1024:
+                uncompressed = round((uncompressed / 1024), 2)
+                uncomp_unit = "Gb"
             if compressed < 1:
-                compressed, comp_unit = sum(map(int, comp_sum)), "Kb"
+                compressed = sum(map(int, comp_sum))
+                comp_unit = "Kb"
             if uncompressed < 1:
-                uncompressed, uncomp_unit = sum(map(int, uncomp_sum)), "Kb"
+                uncompressed = sum(map(int, uncomp_sum))
+                uncomp_unit = "Kb"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(install_all) > 1:

@@ -5,5 +5,5 @@
 # Slackware current
 #
 # NOTE from SlackBuilds.org FAQ(15): 
-# Slackware -current is not supported, but as a general rule, the scripts
+# Slackware current is not supported, but as a general rule, the scripts
 # should work on it as well.

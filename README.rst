@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.9.4
+- Version: 1.9.5
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.9.4.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.9.5.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -96,8 +96,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.9.4.tar.gz
-    $ cd slpkg-1.9.4
+    $ tar xvf slpkg-1.9.5.tar.gz
+    $ cd slpkg-1.9.5
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -122,23 +122,21 @@ Command Line Tool Usage
     Utility for easy management packages in Slackware
 
     Optional arguments:
-      -h, --help                            show this help message and exit
-      -v, --version                         print version and exit
-      -a, script [source...]                auto build packages
-      -l, all, sbo, slack, noarch           list of installed packages
-      -c, <repository> --upgrade --current  check if your packages is up to date
-      -s, <repository> <package> --current  download, build & install packages
-      -f, <package>                         find installed packages
-      -t, <package>                         packages tracking dependencies from SBo
-      -n, <package>                         view packages from SBo repository
-      -b, --list                            blacklisted packages
-      -b  [package...] --add --remove       add, remove packages in blacklist
-      -i, [package...]                      install binary packages
-      -u, [package...]                      upgrade binary packages
-      -o, [package...]                      reinstall binary packages
-      -r, [package...]                      remove binary packages
-      -d, [package...]                      display the contents of the packages
-
+      -h, --help                                show this help message and exit
+      -v, --version                             print version and exit
+      -a, script [source...]                    auto build packages
+      -b, --list, [package...] --add, --remove  add, remove packages in blacklist
+      -l, all, sbo, slack, noarch               list of installed packages
+      -c, <repository> --upgrade --current      check for updated packages
+      -s, <repository> <package> --current      download, build & install
+      -f, <package>                             find installed packages
+      -t, <package>                             tracking dependencies from SBo
+      -n, <package>                             view packages from SBo
+      -i, [package...]                          install binary packages
+      -u, [package...]                          upgrade binary packages
+      -o, [package...]                          reinstall binary packages
+      -r, [package...]                          remove binary packages
+      -d, [package...]                          display the contents
     Repositories:
           SlackBuilds = sbo
           Slackware = slack '--current'
@@ -446,7 +444,7 @@ Find installed packages:
 
     $ slpkg -f apr
 
-    Installed packages with name matching [ apr ] 
+    Installed packages with name begin matching [ apr ] 
     
     [ installed ] - apr-1.5.0-x86_64-1_slack14.1
     [ installed ] - apr-util-1.5.3-x86_64-1_slack14.1
