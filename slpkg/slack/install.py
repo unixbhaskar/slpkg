@@ -28,7 +28,6 @@ import time
 from colors import *
 from url_read import url_read
 from downloader import download
-from init import initialization
 from blacklist import black_packages
 from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path, slack_archs
@@ -61,7 +60,6 @@ def install(slack_pkg, version):
               CYAN, slack_pkg, ENDC)) 
         sys.stdout.write(reading_lists)
         sys.stdout.flush()
-        init = initialization()
         blacklist = black_packages()
         PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
         EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
@@ -122,10 +120,18 @@ def install(slack_pkg, version):
             comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
+            if compressed > 1024:
+                compressed = round((compressed / 1024), 2)
+                comp_unit = "Gb"
+            if uncompressed > 1024:
+                uncompressed = round((uncompressed / 1024), 2)
+                uncomp_unit = "Gb"
             if compressed < 1:
-                compressed, comp_unit = sum(map(int, comp_sum)), "Kb"
+                compressed = sum(map(int, comp_sum))
+                comp_unit = "Kb"
             if uncompressed < 1:
-                uncompressed, uncomp_unit = sum(map(int, uncomp_sum)), "Kb"
+                uncompressed = sum(map(int, uncomp_sum))
+                uncomp_unit = "Kb"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
             if len(install_all) > 1:

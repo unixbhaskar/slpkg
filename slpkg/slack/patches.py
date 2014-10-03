@@ -30,7 +30,6 @@ from colors import *
 from url_read import url_read
 from messages import template
 from downloader import download
-from init import initialization
 from blacklist import black_packages
 from __metadata__ import pkg_path, slpkg_tmp
 
@@ -57,7 +56,6 @@ def patches(version):
             os.mkdir(patch_path)
         sys.stdout.write (reading_lists)
         sys.stdout.flush()
-        init = initialization()
         blacklist = black_packages()
         if version == "stable":
             PACKAGE_TXT = url_read(mirrors("PACKAGES.TXT", "patches/", version))
@@ -81,7 +79,7 @@ def patches(version):
                 comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
-        if version == "stable":
+        if version == "stable": # stables versions upgrade
             for loc, name, comp, uncomp in zip(package_location, package_name, \
                                                comp_size, uncomp_size):
                 if not os.path.isfile(pkg_path + name[:-4]) and split_package(
@@ -100,6 +98,8 @@ def patches(version):
                 # If the package from the current repository is installed
                 # (check with the name) but not is in the path (check with all package
                 # like 'apr-1.5.0-x86_64-1') then add to list for upgrade.
+                # etc. 'apr' in list 'installed' ?? if yes 'apr-1.5.0-x86_64-1' exist
+                # in /var/log/packages ?? if no add to upgrade.
                 if split_package(name)[0] in installed:
                     if not os.path.isfile(pkg_path + name[:-4]) and split_package(
                                                      name)[0] not in blacklist:
@@ -132,6 +132,12 @@ def patches(version):
             comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
+            if compressed > 1024:
+                compressed = round((compressed / 1024), 2)
+                comp_unit = "Gb"
+            if uncompressed > 1024:
+                uncompressed = round((uncompressed / 1024), 2)
+                uncomp_unit = "Gb"
             if compressed < 1:
                 compressed = sum(map(int, comp_sum))
                 comp_unit = "Kb"

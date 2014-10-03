@@ -27,7 +27,7 @@ import getpass
 
 from messages import s_user
 from url_read import url_read
-from __metadata__ import log_path, lib_path, bls_path
+from __metadata__ import log_path, lib_path
 from file_size import server_file_size, local_file_size
 
 from slack.slack_version import slack_ver
@@ -36,44 +36,8 @@ def initialization():
     '''
     Slpkg initialization, creating directories and SLACKBUILDS.TXT in 
     /var/lib/slpkg/sbo_repo/ and ChangeLog.txt in /var/log/slpkg/ from
-    slackbuilds.org also create blacklist configuration file in /etc/
-    slpkg.
+    slackbuilds.org.
     '''
-    s_user(getpass.getuser())
-    # blacklist configuration file
-    blacklist_conf = [
-            "# This is the blacklist file. Each package listed here may not be\n",
-            "# installed be upgraded be find or deleted.\n",
-            "# NOTE: The settings here affect all repositories.\n",
-            "#\n",
-            "# An example syntax is as follows:\n",
-            "# add a package from SBo repository:\n",
-            "# brasero\n",
-            "#\n",
-            "# Add package from slackware repository:\n",
-            "# example add package 'wicd-1.7.2.4-x86_64-4.txz':\n",
-            "# wicd\n",
-            "#\n",
-            "# Sometimes the automatic kernel update creates problems because you\n",
-            "# may need to file intervention 'lilo'. The slpkg automatically detects\n", 
-            "# if the core has been upgraded and running 'lilo'. If you want to avoid\n",
-            "# any problems uncomment the lines below.\n",
-            "#\n",
-            "# kernel-firmware\n",
-            "# kernel-generic\n",
-            "# kernel-generic-smp\n",
-            "# kernel-headers\n",
-            "# kernel-huge\n",
-            "# kernel-huge-smp\n",
-            "# kernel-modules\n",
-            "# kernel-modules-smp\n",
-            "# kernel-source\n"
-            "#\n",
-            "#\n",
-            "# aaa_elflibs can't be updated.\n",
-            "aaa_elflibs\n"
-            ]
-    black_conf = bls_path + "blacklist"
     sbo_log = log_path + "sbo/"
     sbo_lib = lib_path + "sbo_repo/"
     if not os.path.exists(log_path):
@@ -84,13 +48,6 @@ def initialization():
         os.mkdir(sbo_log)
     if not os.path.exists(sbo_lib):
         os.mkdir(sbo_lib)
-    if not os.path.exists(bls_path):
-        os.mkdir(bls_path)
-    if not os.path.isfile(bls_path + "blacklist"):
-        with open(black_conf, "w") as conf:
-            for line in blacklist_conf:
-                conf.write(line)
-            conf.close()
     sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
     # Read SLACKBUILDS.TXT from slackbuilds.org and write in /var/lib/slpkg/sbo_repo/
     # directory if not exist

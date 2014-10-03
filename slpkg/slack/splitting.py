@@ -21,8 +21,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from slack_version import slack_ver
 from __metadata__ import slack_archs
+
+from slack_version import slack_ver
 
 def split_package(package):
     '''

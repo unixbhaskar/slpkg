@@ -23,11 +23,49 @@
 
 import os
 
-from init import initialization
 from __metadata__ import bls_path
 
+# create blacklist configuration file in /etc/slpkg if not exist.
+blacklist_conf = [
+            "# This is the blacklist file. Each package listed here may not be\n",
+            "# installed be upgraded be find or deleted.\n",
+            "# NOTE: The settings here affect all repositories.\n",
+            "#\n",
+            "# An example syntax is as follows:\n",
+            "# add a package from SBo repository:\n",
+            "# brasero\n",
+            "#\n",
+            "# Add package from slackware repository:\n",
+            "# example add package 'wicd-1.7.2.4-x86_64-4.txz':\n",
+            "# wicd\n",
+            "#\n",
+            "# Sometimes the automatic kernel update creates problems because you\n",
+            "# may need to file intervention 'lilo'. The slpkg automatically detects\n", 
+            "# if the core has been upgraded and running 'lilo'. If you want to avoid\n",
+            "# any problems uncomment the lines below.\n",
+            "#\n",
+            "# kernel-firmware\n",
+            "# kernel-generic\n",
+            "# kernel-generic-smp\n",
+            "# kernel-headers\n",
+            "# kernel-huge\n",
+            "# kernel-huge-smp\n",
+            "# kernel-modules\n",
+            "# kernel-modules-smp\n",
+            "# kernel-source\n"
+            "#\n",
+            "#\n",
+            "# aaa_elflibs can't be updated.\n",
+            "aaa_elflibs\n"
+            ]
+black_conf = bls_path + "blacklist"
+if not os.path.exists(bls_path):
+    os.mkdir(bls_path)
 if not os.path.isfile(bls_path + "blacklist"):
-    init = initialization()
+    with open(black_conf, "w") as conf:
+        for line in blacklist_conf:
+            conf.write(line)
+        conf.close()
 
 def black_packages():
     '''
