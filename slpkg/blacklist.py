@@ -70,7 +70,7 @@ class BlackList(object):
         if not os.path.exists(bls_path):
             os.mkdir(bls_path)
         if not os.path.isfile(self.blackfile):
-            with open(black_conf, "w") as conf:
+            with open(self.blackfile, "w") as conf:
                 for line in blacklist_conf:
                     conf.write(line)
                 conf.close()
@@ -115,7 +115,7 @@ class BlackList(object):
                     print(pkg)
                     black_conf.write(pkg + "\n")
                     exit = 1
-            black_conf.close()
+                    black_conf.close()
         if exit == 1:
             print # new line at exit
 
