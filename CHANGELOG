@@ -1,5 +1,10 @@
+Version 1.9.6
+04-10-2014
+
+[Updated] - Bugfix install packages from slack repo.
+
 Version 1.9.5
-04-10.2014
+04-10-2014
 
 [Updated] - Added 'aaa_elflibs' in blacklist.
           - Fix current version upgrade only installed packages.

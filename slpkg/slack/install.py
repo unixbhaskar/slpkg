@@ -101,6 +101,7 @@ def install(slack_pkg, version):
                 ver = pkg_split[1]
                 arch = pkg_split[2]
                 build = pkg_split[3]
+                names.append(name)
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
                     COLOR = GREEN
