@@ -34,7 +34,7 @@ from messages import (pkg_not_found, pkg_found, view_sbo,
 
 from pkg.build import build_package
 from pkg.find import find_package
-from pkg.manager import pkg_upgrade
+from pkg.manager import PackageManager
 
 from read import *
 from greps import *
@@ -133,7 +133,7 @@ def sbo_network(name):
                         build_FAILED(sbo_url, prgnam)
                         sys.exit()
                     print("{0}[ Installing ] --> {1} {2}".format(GREEN, ENDC, name))
-                    pkg_upgrade(binary)
+                    PackageManager(binary).upgrade()
                     break
                 else:
                     template(78)

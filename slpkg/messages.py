@@ -63,7 +63,7 @@ def build_FAILED(sbo_url, prgnam):
 
 def template(max):
     '''
-    Print view template
+    Print template
     '''
     print("+" + "=" * max)
 

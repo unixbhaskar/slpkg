@@ -34,7 +34,7 @@ from messages import (pkg_not_found, pkg_found, template,
 
 from pkg.find import find_package 
 from pkg.build import build_package
-from pkg.manager import pkg_upgrade
+from pkg.manager import PackageManager
 
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
@@ -187,7 +187,7 @@ def sbo_build(name):
                         else:
                             print("{0}[ Installing ] --> {1}{2}".format(
                                   GREEN, ENDC, pkg))
-                        pkg_upgrade(binary)
+                        PackageManager(binary).upgrade()
                         installs.append(pkg)
                         versions.append(ver)
                 # Reference list with packages installed

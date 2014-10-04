@@ -33,7 +33,7 @@ from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path, slack_archs
 
 from pkg.find import find_package
-from pkg.manager import pkg_upgrade, pkg_reinstall
+from pkg.manager import PackageManager
 
 from mirrors import mirrors
 from splitting import split_package
@@ -101,6 +101,7 @@ def install(slack_pkg, version):
                 ver = pkg_split[1]
                 arch = pkg_split[2]
                 build = pkg_split[3]
+                names.append(name)
                 if os.path.isfile(pkg_path + pkg[:-4]):
                     pkg_sum += 1
                     COLOR = GREEN
@@ -152,18 +153,19 @@ def install(slack_pkg, version):
                     download(tmp_path, dwn)
                     download(tmp_path, dwn + ".asc")
                 for install, name in zip(install_all, names):
+                    package = ((tmp_path + install).split())
                     if os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ reinstalling ] --> {1}{2}".format(
                               GREEN, ENDC, install))
-                        pkg_reinstall((tmp_path + install).split())
+                        PackageManager(package).reinstall()
                     elif find_package(name + "-", pkg_path):
                         print("{0}[ upgrading ] --> {1}{2}".format(
                               GREEN, ENDC, install))
-                        pkg_upgrade((tmp_path + install).split())
+                        PackageManager(package).upgrade()
                     else:
                         print("{0}[ installing ] --> {1}{2}".format(
                               GREEN, ENDC, install))
-                        pkg_upgrade((tmp_path + install).split())
+                        PackageManager(package).upgrade()
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:

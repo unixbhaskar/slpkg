@@ -32,213 +32,226 @@ from __metadata__ import pkg_path, sp, log_path
 
 from find import find_package
 
-def pkg_install(binary):
+class PackageManager(object):
     '''
-    Install Slackware binary packages
-    '''
-    for pkg in binary:
-        try:
-            print(subprocess.check_output("installpkg {0}".format(pkg), shell=True))
-            print("Completed!\n")
-        except subprocess.CalledProcessError:
-            message = "Can't install"
-            if len(binary) > 1:
-                bol = eol = str()
-            else:
-                bol = eol = "\n"
-            pkg_not_found(bol, pkg, message, eol)
+    Package manager class for install, upgrade,
+    reinstall, remove, find and display packages.
+    '''    
+    def __init__(self, binary):
+        self.binary = binary        
 
-def pkg_upgrade(binary):
-    '''
-    Upgrade Slackware binary packages
-    '''
-    for pkg in binary:
-        try:
-            print(subprocess.check_output("upgradepkg --install-new {0}".format(pkg),
-                                          shell=True))
-            print("Completed!\n")
-        except subprocess.CalledProcessError:
-            message = "Can't upgrade"
-            if len(binary) > 1:
-                bol = eol = str()
-            else:
-                bol = eol = "\n"
-            pkg_not_found(bol, pkg, message, eol)
-        
+    def install(self):
+        '''
+        Install Slackware binary packages
+        '''
+        for pkg in self.binary:
+            try:
+                print(subprocess.check_output("installpkg {0}".format(
+                                              pkg), shell=True))
+                print("Completed!\n")
+            except subprocess.CalledProcessError:
+                message = "Can't install"
+                if len(self.binary) > 1:
+                    bol = eol = str()
+                else:
+                    bol = eol = "\n"
+                pkg_not_found(bol, pkg, message, eol)
 
-def pkg_reinstall(binary):
-    '''
-    Reinstall Slackware binary packages
-    '''
-    for pkg in binary:
-        try:
-            print(subprocess.check_output("upgradepkg --reinstall {0}".format(pkg),
-                                          shell=True))
-            print("Completed!\n")
-        except subprocess.CalledProcessError:
-            message = "Can't reinstall"
-            if len(binary) > 1:
-                bol = eol = str()
-            else:
-                bol = eol = "\n"
-            pkg_not_found(bol, pkg, message, eol)
+    def upgrade(self):
+        '''
+        Upgrade Slackware binary packages
+        '''
+        for pkg in self.binary:
+            try:
+                print(subprocess.check_output("upgradepkg --install-new {0}".format(
+                                              pkg), shell=True))
+                print("Completed!\n")
+            except subprocess.CalledProcessError:
+                message = "Can't upgrade"
+                if len(self.binary) > 1:
+                    bol = eol = str()
+                else:
+                    bol = eol = "\n"
+                pkg_not_found(bol, pkg, message, eol)
 
-def pkg_remove(binary):
-    '''
-    Remove Slackware binary packages
-    '''
-    dep_path = log_path + "dep/"
-    removed, dependencies, \
-    rmv_list, rmv_dependencies = ([] for i in range(4))
-    print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-          CYAN, ", ".join(binary), ENDC))
-    for pkg in binary:
-        pkgs = find_package(pkg + sp, pkg_path)
-        if pkgs:
-            print(RED + "[ delete ] --> " + ENDC + "\n               ".join(pkgs))
-            removed.append(pkg)
+    def reinstall(self):
+        '''
+        Reinstall Slackware binary packages
+        '''
+        for pkg in self.binary:
+            try:
+                print(subprocess.check_output("upgradepkg --reinstall {0}".format(
+                                              pkg), shell=True))
+                print("Completed!\n")
+            except subprocess.CalledProcessError:
+                message = "Can't reinstall"
+                if len(self.binary) > 1:
+                    bol = eol = str()
+                else:
+                    bol = eol = "\n"
+                pkg_not_found(bol, pkg, message, eol)
+
+    def remove(self):
+        '''
+        Remove Slackware binary packages
+        '''
+        dep_path = log_path + "dep/"
+        removed, dependencies, \
+        rmv_list, rmv_dependencies = ([] for i in range(4))
+        print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
+              CYAN, ", ".join(self.binary), ENDC))
+        for pkg in self.binary:
+            pkgs = find_package(pkg + sp, pkg_path)
+            if pkgs:
+                print(RED + "[ delete ] --> " + ENDC + "\n               ".join(pkgs))
+                removed.append(pkg)
+            else:
+                message = "Can't remove"
+                pkg_not_found("", pkg, message, "")
+        if removed == []:
+            print # new line at end
         else:
-            message = "Can't remove"
-            pkg_not_found("", pkg, message, "")
-    if removed == []:
-        print # new line at end
-    else:
-        msg = "package"
-        if len(removed) > 1:
-            msg = msg + "s"
+            msg = "package"
+            if len(removed) > 1:
+                msg = msg + "s"
+            try:
+                remove_pkg = raw_input("\nAre you sure to remove {0} {1} [Y/n]? ".format(
+                                        str(len(removed)), msg))
+            except KeyboardInterrupt:
+                print # new line at exit
+                sys.exit()
+            if remove_pkg == "y" or remove_pkg == "Y":
+                for rmv in removed:
+                    # If package build and install with 'slpkg -s sbo <package>'
+                    # then look log file for dependencies in /var/log/slpkg/dep,
+                    # read and remove all else remove only the package.
+                    if os.path.isfile(dep_path + rmv):
+                        with open(dep_path + rmv, "r") as f:
+                            dependencies = f.read().split()
+                            f.close()
+                        print # new line at start
+                        template(78)
+                        print("| Found dependencies for package {0}:".format(rmv))
+                        template(78)
+                        # Prints dependecies before removed except master package
+                        # because referred as master package
+                        for dep in dependencies[:-1]:
+                            print("| {0}{1}{2}".format(RED, dep, ENDC))
+                        template(78)
+                        try:
+                            remove_dep = raw_input(
+                                    "\nRemove dependencies (maybe used by other packages) [Y/n]? ")
+                        except KeyboardInterrupt:
+                            print # new line at exit
+                            sys.exit()
+                        if remove_dep == "y" or remove_dep == "Y":
+                            for dep in dependencies:
+                                if find_package(dep + sp, pkg_path):
+                                    print(subprocess.check_output("removepkg {0}".format(
+                                          dep), shell=True))
+                                    rmv_list.append(dep)
+                            os.remove(dep_path + rmv)
+                            rmv_dependencies += dependencies[:-1]
+                        else:
+                            if find_package(rmv + sp, pkg_path):
+                                print(subprocess.check_output("removepkg {0}".format(
+                                      rmv), shell=True))
+                                rmv_list.append(rmv)
+                            f.close()
+                            os.remove(dep_path + rmv)
+                    else:
+                        if find_package(rmv + sp, pkg_path):
+                            print(subprocess.check_output("removepkg {0}".format(
+                                  rmv), shell=True))
+                            rmv_list.append(rmv)
+                # Prints all removed packages
+                if len(rmv_list) > 1:
+                    template(78)
+                    print("| Total {0} packages removed".format(len(rmv_list)))
+                template(78)
+                for pkg in rmv_list:
+                    if find_package(pkg + sp, pkg_path) == []:
+                        print("| Package {0} removed".format(pkg))
+                    else:
+                        print("| Package {0} not found".format(pkg))
+                template(78)
+            print # new line at end
+
+    def find(self):
+        '''
+        Find installed Slackware packages
+        '''
+        self.binary = "".join(self.binary)
+        matching = size = int()
+        print("\nInstalled packages with name begin matching [ {0}{1}{2} ]\n".format(
+              CYAN, self.binary, ENDC))
+        for match in find_package(self.binary, pkg_path):
+             if self.binary in match:
+                 matching += 1
+                 print("[ {0}installed{1} ] - {2}".format(
+                       GREEN, ENDC, match))
+                 with open(pkg_path + match, "r") as f:
+                     data = f.read()
+                     f.close()
+                 for line in data.splitlines():
+                     if line.startswith("UNCOMPRESSED PACKAGE SIZE:"):
+                         if "M" in line[26:]:
+                            size += float(line[26:-1]) * 1024
+                         else:
+                            size += float(line[26:-1])
+                         break
+        if matching == 0:
+            print("No package was found to match\n")
+        else:
+            print("\n{0}Total found {1} matching packages.{2}".format(
+                  GREY, matching, ENDC))
+            unit = "Kb"
+            if size > 1024:
+                unit = "Mb"
+                size = (size / 1024)
+            print("{0}Size of installed packages {1} {2}.{3}\n".format(
+                  GREY, round(size, 2), unit, ENDC))
+
+    def display(self):
+        '''
+        Print the Slackware packages contents
+        '''
+        for pkg in self.binary:
+            if find_package(pkg + sp, pkg_path):
+                print(subprocess.check_output("cat {0}{1}".format(pkg_path,
+                      " /var/log/packages/".join(find_package(
+                      pkg + sp, pkg_path))), shell=True))
+            else:
+                message = "Can't dislpay"
+                if len(self.binary) > 1:
+                    bol = eol = str()
+                else:
+                    bol = eol = "\n"
+                pkg_not_found(bol, pkg, message, eol)
+
+    def list(self, pattern):
+        '''
+        List with the installed packages
+        '''
         try:
-            remove_pkg = raw_input("\nAre you sure to remove {0} {1} [Y/n]? ".format(
-                                    str(len(removed)), msg))
+            if "sbo" in pattern:
+                search = "_SBo"
+            elif "slack" in pattern:
+                search = "_slack"
+            elif "noarch" in pattern:
+                search = "-noarch-"
+            elif "all" in pattern:
+                search = ""
+            index, page = 0, 50
+            for pkg in find_package("", pkg_path):
+                if search in pkg:
+                    index += 1
+                    print("{0}{1}:{2} {3}".format(GREY, index, ENDC, pkg))
+                    if index == page:
+                        key = raw_input("\nPress [ {0}Enter{1} ] >> Next page ".format(
+                                        CYAN, ENDC))
+                        page += 50
+            print # new line at end
         except KeyboardInterrupt:
             print # new line at exit
             sys.exit()
-        if remove_pkg == "y" or remove_pkg == "Y":
-            for rmv in removed:
-                # If package build and install with 'slpkg -s sbo <package>'
-                # then look log file for dependencies in /var/log/slpkg/dep,
-                # read and remove all else remove only the package.
-                if os.path.isfile(dep_path + rmv):
-                    with open(dep_path + rmv, "r") as f:
-                        dependencies = f.read().split()
-                        f.close()
-                    print # new line at start
-                    template(78)
-                    print("| Found dependencies for package {0}:".format(rmv))
-                    template(78)
-                    # Prints dependecies before removed except master package
-                    # because referred as master package
-                    for dep in dependencies[:-1]:
-                        print("| {0}{1}{2}".format(RED, dep, ENDC))
-                    template(78)
-                    try:
-                        remove_dep = raw_input(
-                                "\nRemove dependencies (maybe used by other packages) [Y/n]? ")
-                    except KeyboardInterrupt:
-                        print # new line at exit
-                        sys.exit()
-                    if remove_dep == "y" or remove_dep == "Y":
-                        for dep in dependencies:
-                            if find_package(dep + sp, pkg_path):
-                                print(subprocess.check_output("removepkg {0}".format(dep), shell=True))
-                                rmv_list.append(dep)
-                        os.remove(dep_path + rmv)
-                        rmv_dependencies += dependencies[:-1]
-                    else:
-                        if find_package(rmv + sp, pkg_path):
-                            print(subprocess.check_output("removepkg {0}".format(rmv), shell=True))
-                            rmv_list.append(rmv)
-                        f.close()
-                        os.remove(dep_path + rmv)
-                else:
-                    if find_package(rmv + sp, pkg_path):
-                        print(subprocess.check_output("removepkg {0}".format(rmv), shell=True))
-                        rmv_list.append(rmv)
-            # Prints all removed packages
-            if len(rmv_list) > 1:
-                template(78)
-                print("| Total {0} packages removed".format(len(rmv_list)))
-            template(78)
-            for pkg in rmv_list:
-                if find_package(pkg + sp, pkg_path) == []:
-                    print("| Package {0} removed".format(pkg))
-                else:
-                    print("| Package {0} not found".format(pkg))
-            template(78)
-        print # new line at end
-
-def pkg_find(binary):
-    '''
-    Find installed Slackware packages
-    '''
-    binary = "".join(binary)
-    matching = size = int()
-    print("\nInstalled packages with name begin matching [ {0}{1}{2} ]\n".format(
-          CYAN, binary, ENDC))
-    for match in find_package(binary, pkg_path):
-         if binary in match:
-             matching += 1
-             print("[ {0}installed{1} ] - {2}".format(
-                   GREEN, ENDC, match))
-             with open(pkg_path + match, "r") as f:
-                 data = f.read()
-                 f.close()
-             for line in data.splitlines():
-                 if line.startswith("UNCOMPRESSED PACKAGE SIZE:"):
-                     if "M" in line[26:]:
-                        size += float(line[26:-1]) * 1024
-                     else:
-                        size += float(line[26:-1])
-                     break
-    if matching == 0:
-        print("No package was found to match\n")
-    else:
-        print("\n{0}Total found {1} matching packages.{2}".format(GREY, matching, ENDC))
-        unit = "Kb"
-        if size > 1024:
-            unit = "Mb"
-            size = (size / 1024)
-        print("{0}Size of installed packages {1} {2}.{3}\n".format(
-              GREY, round(size, 2), unit, ENDC))
-
-def pkg_display(binary):
-    '''
-    Print the Slackware packages contents
-    '''
-    for pkg in binary:
-        if find_package(pkg + sp, pkg_path):
-            print(subprocess.check_output("cat {0}{1}".format(pkg_path,
-                  " /var/log/packages/".join(find_package(pkg +sp, pkg_path))), shell=True))
-        else:
-            message = "Can't dislpay"
-            if len(binary) > 1:
-                bol = eol = str()
-            else:
-                bol = eol = "\n"
-            pkg_not_found(bol, pkg, message, eol)
-
-def pkg_list(pattern):
-    '''
-    List with the installed packages
-    '''
-    try:
-        if "sbo" in pattern:
-            search = "_SBo"
-        elif "slack" in pattern:
-            search = "_slack"
-        elif "noarch" in pattern:
-            search = "-noarch-"
-        elif "all" in pattern:
-            search = ""
-        index, page = 0, 50
-        for pkg in find_package("", pkg_path):
-            if search in pkg:
-                index += 1
-                print("{0}{1}:{2} {3}".format(GREY, index, ENDC, pkg))
-                if index == page:
-                    key = raw_input("\nPress [ {0}Enter{1} ] >> Next page ".format(
-                                    CYAN, ENDC))
-                    page += 50
-        print # new line at end
-    except KeyboardInterrupt:
-        print # new line at exit
-        sys.exit()

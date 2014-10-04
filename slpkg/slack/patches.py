@@ -33,7 +33,7 @@ from downloader import download
 from blacklist import BlackList
 from __metadata__ import pkg_path, slpkg_tmp
 
-from pkg.manager import pkg_upgrade
+from pkg.manager import PackageManager
 
 from mirrors import mirrors
 from splitting import split_package
@@ -160,7 +160,7 @@ def patches(version):
                     download(patch_path, dwn + ".asc")
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC, pkg[:-4]))
-                    pkg_upgrade((patch_path + pkg).split())
+                    PackageManager((patch_path + pkg).split()).upgrade()
                 for kernel in upgrade_all:
                     if "kernel" in kernel:
                         print("The kernel has been upgraded, reinstall `lilo` ...")

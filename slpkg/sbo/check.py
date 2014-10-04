@@ -26,7 +26,7 @@ import sys
 
 from pkg.find import find_package
 from pkg.build import build_package
-from pkg.manager import pkg_upgrade
+from pkg.manager import PackageManager
 
 from colors import *
 from init import initialization
@@ -206,7 +206,7 @@ def sbo_check():
                             # Use this list to pick out what 
                             # packages will be installed
                             installed.append(name)
-                        pkg_upgrade(binary)
+                        PackageManager(binary).upgrade()
                     if len(pkg_for_upg) > 1:
                         template(78)
                         print("| Total {0} {1} upgraded and {2} {3} installed".format(
