@@ -36,6 +36,7 @@ from messages import pkg_not_found, template
 
 from sbo.greps import sbo_checksum_pkg
 
+
 def build_package(script, sources, path):
     '''
     Build package from source and create log 

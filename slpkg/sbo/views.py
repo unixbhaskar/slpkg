@@ -27,7 +27,7 @@ import pydoc
 
 from colors import *
 from init import initialization
-from downloader import download
+from downloader import Download
 from __metadata__ import tmp, build_path, pkg_path, sp
 from messages import (pkg_not_found, pkg_found, view_sbo, 
                             template, build_FAILED)
@@ -40,6 +40,7 @@ from read import *
 from greps import *
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
+
 
 def sbo_network(name):
     '''
@@ -75,9 +76,9 @@ def sbo_network(name):
                 break
             if read == "D" or read == "d":
                 path = ""
-                download(path, sbo_dwn)
+                Download(path, sbo_dwn).start()
                 for src in source_dwn:
-                    download(path, src)
+                    Download(path, src).start()
                 break
             elif read == "R" or read == "r":
                 readme = "README"
@@ -97,9 +98,9 @@ def sbo_network(name):
                 sources = []
                 os.chdir(build_path)
                 script = sbo_dwn.split("/")[-1] # get file from script link
-                download(build_path, sbo_dwn)
+                Download(build_path, sbo_dwn).start()
                 for src in source_dwn:
-                    download(build_path, src)
+                    Download(build_path, src).start()
                     sources.append(src.split("/")[-1]) # get file from source link
                 build_package(script, sources, build_path)
                 break
@@ -114,10 +115,10 @@ def sbo_network(name):
                 if find_package(prgnam + sp, pkg_path) == []:
                     sources = []
                     os.chdir(build_path)
-                    download(build_path, sbo_dwn)
+                    Download(build_path, sbo_dwn).start()
                     script = sbo_dwn.split("/")[-1] # get file from script link
                     for src in source_dwn:
-                            download(build_path, src)
+                            Download(build_path, src).start()
                             sources.append(src.split("/")[-1]) # get file from source link
                     build_package(script, sources, build_path)
                     # Searches the package name and version in /tmp to install.

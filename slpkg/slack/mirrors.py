@@ -24,6 +24,7 @@
 from __metadata__ import arch
 from slack_version import slack_ver
 
+
 def mirrors(name, location, version):
     '''
     Select Slackware official mirror packages

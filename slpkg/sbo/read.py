@@ -25,6 +25,7 @@ import os
 
 from url_read import url_read
 
+
 def read_readme(sbo_url, sbo_readme):
     '''
     Read SlackBuild README file

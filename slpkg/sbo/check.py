@@ -30,7 +30,7 @@ from pkg.manager import PackageManager
 
 from colors import *
 from init import initialization
-from downloader import download 
+from downloader import Download
 from messages import template, build_FAILED
 from __metadata__ import tmp, pkg_path, build_path, sp
 
@@ -38,6 +38,7 @@ from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 from greps import sbo_source_dwn, sbo_version_pkg
+
 
 def sbo_check():
     '''
@@ -181,10 +182,10 @@ def sbo_check():
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
                         src_dwn = sbo_source_dwn(name).split()
                         script = sbo_dwn.split("/")[-1] # keep file from script link
-                        download(build_path, sbo_dwn)
+                        Download(build_path, sbo_dwn).start()
                         sources = []
                         for src in src_dwn:
-                            download(build_path, src)
+                            Download(build_path, src).start()
                             sources.append(src.split("/")[-1]) # keep file from source link
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.

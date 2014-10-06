@@ -29,7 +29,7 @@ import subprocess
 from colors import *
 from url_read import url_read
 from messages import template
-from downloader import download
+from downloader import Download
 from blacklist import BlackList
 from __metadata__ import pkg_path, slpkg_tmp
 
@@ -38,6 +38,7 @@ from pkg.manager import PackageManager
 from mirrors import mirrors
 from splitting import split_package
 from slack_version import slack_ver
+
 
 def patches(version):
     '''
@@ -156,8 +157,8 @@ def patches(version):
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:
-                    download(patch_path, dwn)
-                    download(patch_path, dwn + ".asc")
+                    Download(patch_path, dwn).start()
+                    Download(patch_path, dwn + ".asc").start()
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC, pkg[:-4]))
                     PackageManager((patch_path + pkg).split()).upgrade()

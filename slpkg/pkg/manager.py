@@ -32,6 +32,7 @@ from __metadata__ import pkg_path, sp, log_path
 
 from find import find_package
 
+
 class PackageManager(object):
     '''
     Package manager class for install, upgrade,

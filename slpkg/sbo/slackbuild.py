@@ -26,7 +26,7 @@ import sys
 
 from colors import *
 from init import initialization
-from downloader import download 
+from downloader import Download 
 from __metadata__ import (tmp, pkg_path, build_path, 
                                  log_path, lib_path, sp)
 from messages import (pkg_not_found, pkg_found, template, 
@@ -40,6 +40,7 @@ from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 from greps import sbo_source_dwn, sbo_version_pkg
+
 
 def sbo_build(name):
     '''
@@ -162,11 +163,11 @@ def sbo_build(name):
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
                         src_link = sbo_source_dwn(pkg).split() 
                         script = sbo_link.split("/")[-1] # get file from script
-                        download(build_path, sbo_link)
+                        Download(build_path, sbo_link).start()
                         sources = []
                         for src in src_link:
                             sources.append(src.split("/")[-1]) # get file from source
-                            download(build_path, src)
+                            Download(build_path, src).start()
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.
                         # If find two or more packages e.g. to build tag 

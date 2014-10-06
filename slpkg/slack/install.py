@@ -27,7 +27,7 @@ import time
 
 from colors import *
 from url_read import url_read
-from downloader import download
+from downloader import Download
 from blacklist import BlackList
 from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path, slack_archs
@@ -37,6 +37,7 @@ from pkg.manager import PackageManager
 
 from mirrors import mirrors
 from splitting import split_package
+
 
 def install(slack_pkg, version):
     '''
@@ -150,8 +151,8 @@ def install(slack_pkg, version):
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_list:
-                    download(tmp_path, dwn)
-                    download(tmp_path, dwn + ".asc")
+                    Download(tmp_path, dwn).start()
+                    Download(tmp_path, dwn + ".asc").start()
                 for install, name in zip(install_all, names):
                     package = ((tmp_path + install).split())
                     if os.path.isfile(pkg_path + install[:-4]):

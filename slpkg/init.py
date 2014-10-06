@@ -25,12 +25,13 @@ import os
 import sys
 import getpass
 
+from file_size import *
 from messages import s_user
 from url_read import url_read
 from __metadata__ import log_path, lib_path
-from file_size import server_file_size, local_file_size
 
 from slack.slack_version import slack_ver
+
 
 def initialization():
     '''
@@ -76,8 +77,8 @@ def initialization():
             log.close()
             print("File ChangeLog.txt created in {0}".format(sbo_log))
     # We take the size of ChangeLog.txt from the server and locally
-    server = server_file_size(sbo_url + "ChangeLog.txt")
-    local = local_file_size(sbo_log + "ChangeLog.txt")
+    server = FileSize(sbo_url + "ChangeLog.txt").server()
+    local = FileSize(sbo_log + "ChangeLog.txt").local()
     # If the two files differ in size delete and replaced with new
     if server != local:
         os.remove("{0}{1}".format(sbo_lib, "SLACKBUILDS.TXT"))

@@ -24,6 +24,7 @@
 import os
 from __metadata__ import bls_path
 
+
 class BlackList(object):
     '''
     Blacklist class to add, remove or listed packages

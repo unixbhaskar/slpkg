@@ -34,6 +34,7 @@ from pkg.find import find_package
 from search import sbo_search_pkg
 from greps import sbo_requires_pkg
 
+
 dep_results = []
 
 def sbo_dependencies_pkg(name):
