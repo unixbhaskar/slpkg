@@ -34,7 +34,8 @@ from slpkg.checksum import md5sum
 from slpkg.__metadata__ import log_path
 from slpkg.messages import pkg_not_found, template
 
-from slpkg.sbo.greps import sbo_checksum_pkg
+from slpkg.sbo.greps import SBoGrep
+
 
 def build_package(script, sources, path):
     '''
@@ -65,7 +66,7 @@ def build_package(script, sources, path):
         for src in sources:
             # fix build sources with spaces
             src = src.replace("%20", " ")
-            sbo_md5 = sbo_checksum_pkg(prgnam)
+            sbo_md5 = SBoGrep(prgnam).checksum()
             md5 = md5sum(src)
             if sbo_md5 != md5:
                 template(78)

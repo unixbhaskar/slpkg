@@ -24,6 +24,7 @@
 import os
 from __metadata__ import bls_path
 
+
 class BlackList(object):
     '''
     Blacklist class to add, remove or listed packages
@@ -115,7 +116,7 @@ class BlackList(object):
                     print(pkg)
                     black_conf.write(pkg + "\n")
                     exit = 1
-            black_conf.close()
+                    black_conf.close()
         if exit == 1:
             print # new line at exit
 

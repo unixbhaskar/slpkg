@@ -24,6 +24,7 @@
 import sys
 import urllib2
 
+
 def url_read(link):
     '''
     Open url and read

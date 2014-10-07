@@ -25,6 +25,7 @@ import sys
 from colors import *
 from __metadata__ import __all__
 
+
 def pkg_not_found(bol, pkg, message, eol):
     '''
     Print message when package not found
@@ -63,7 +64,7 @@ def build_FAILED(sbo_url, prgnam):
 
 def template(max):
     '''
-    Print view template
+    Print template
     '''
     print("+" + "=" * max)
 

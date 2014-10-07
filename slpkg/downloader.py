@@ -22,14 +22,29 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+import sys
 import subprocess
 
 from colors import *
 
-def download(path, url):
-    '''
-    Download files usign wget.
-    Check if file exist or file is broken.
-    '''
-    print("\n{0}[ Download ] -->{1} {2}\n".format(GREEN, ENDC, url.split("/")[-1]))
-    subprocess.call("wget -N --directory-prefix={0} {1}".format(path, url), shell=True)
+
+class Download(object):
+
+    def __init__(self, path, url):
+        self.path = path
+        self.url = url
+        self.file_name = self.url.split("/")[-1]
+
+    def start(self):
+        '''
+        Download files usign wget.
+        Check if file already download the skip or continue
+        download if before stoped.
+        '''
+        print("\n{0}[ Download ] -->{1} {2}\n".format(GREEN, ENDC, self.file_name))
+        try:
+            subprocess.call("wget -c -N --directory-prefix={0} {1}".format(
+                            self.path, self.url), shell=True)
+        except KeyboardInterrupt:
+            print # new line at cancel
+            sys.exit()

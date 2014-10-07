@@ -26,20 +26,21 @@ import sys
 
 from slpkg.colors import *
 from slpkg.init import initialization
-from slpkg.downloader import download 
+from slpkg.downloader import Download 
 from slpkg.__metadata__ import (tmp, pkg_path, build_path, 
-                                 log_path, lib_path, sp)
-from slpkg.messages import (pkg_not_found, pkg_found, template, 
-                            build_FAILED, sbo_packages_view)
+                                log_path, lib_path, sp)
+from slpkg.messages import (pkg_found, template, build_FAILED,
+                            pkg_not_found, sbo_packages_view)
 
 from slpkg.pkg.find import find_package 
 from slpkg.pkg.build import build_package
-from slpkg.pkg.manager import pkg_upgrade
+from slpkg.pkg.manager import PackageManager
 
+from greps import SBoGrep
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
-from greps import sbo_source_dwn, sbo_version_pkg
+
 
 def sbo_build(name):
     '''
@@ -47,14 +48,21 @@ def sbo_build(name):
     with all dependencies if version is greater than
     that established.
     '''
-    sbo_ver, pkg_arch, installs, upgraded, \
-    versions, requires, dependencies = ([] for i in range(7))
-    PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
     done = "{0}Done{1}\n".format(GREY, ENDC)
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
     init = initialization()
+    [
+        sbo_ver,
+        pkg_arch,
+        installs,
+        upgraded,
+        versions,
+        requires,
+        dependencies
+    ] = ([] for i in range(7))
+    PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None or sbo_search_pkg(name) is not None:
@@ -73,9 +81,9 @@ def sbo_build(name):
             # Create two lists one for package version and one
             # for package arch.
             for pkg in dependencies:
-                version = sbo_version_pkg(pkg)
+                version = SBoGrep(pkg).version()
                 sbo_ver.append(version)
-                src = sbo_source_dwn(pkg)
+                src = SBoGrep(pkg).source()
                 pkg_arch.append(select_arch(src))
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
@@ -138,7 +146,7 @@ def sbo_build(name):
             # before proceed to install
             UNST = ["UNSUPPORTED", "UNTESTED"]
             if src in UNST:
-                print("\n{0}The package {1}{2}\n".format(RED, src, ENDC))
+                print("{0}The package {1}{2}\n".format(RED, src, ENDC))
                 read = ""
             # exit if all packages already installed
             elif pkg_sum == len(dependencies):
@@ -160,13 +168,13 @@ def sbo_build(name):
                     else:
                         sbo_url = sbo_search_pkg(pkg)
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
-                        src_link = sbo_source_dwn(pkg).split() 
+                        src_link = SBoGrep(pkg).source().split() 
                         script = sbo_link.split("/")[-1] # get file from script
-                        download(build_path, sbo_link)
+                        Download(build_path, sbo_link).start()
                         sources = []
                         for src in src_link:
                             sources.append(src.split("/")[-1]) # get file from source
-                            download(build_path, src)
+                            Download(build_path, src).start()
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to install.
                         # If find two or more packages e.g. to build tag 
@@ -187,7 +195,7 @@ def sbo_build(name):
                         else:
                             print("{0}[ Installing ] --> {1}{2}".format(
                                   GREEN, ENDC, pkg))
-                        pkg_upgrade(binary)
+                        PackageManager(binary).upgrade()
                         installs.append(pkg)
                         versions.append(ver)
                 # Reference list with packages installed
@@ -235,8 +243,8 @@ def sbo_build(name):
                                 sys.stdout.flush()
                                 toolbar_width += 6
                             sbo_matching.append(sbo_name)
-                            sbo_ver.append(sbo_version_pkg(sbo_name))
-                            src = sbo_source_dwn(sbo_name)
+                            sbo_ver.append(SBoGrep(sbo_name).version())
+                            src = SBoGrep(sbo_name).source()
                             pkg_arch.append(select_arch(src))
             SLACKBUILDS_TXT.close()
             sys.stdout.write(done)
@@ -270,7 +278,8 @@ def sbo_build(name):
                 print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
                       ins, ins_msg, uns, uns_msg, ENDC))
             else:
-                print("\nNo package was found to match\n")
+                message = "No matching"
+                pkg_not_found("\n", name, message, "\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()

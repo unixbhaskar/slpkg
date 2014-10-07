@@ -21,21 +21,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 import getpass
 
 from colors import *
 from messages import s_user
+from blacklist import BlackList
 from version import prog_version
 from __metadata__ import path, __version__
-from blacklist import BlackList
 
-from pkg.manager import *
 from pkg.build import build_package
+from pkg.manager import PackageManager 
 
 from sbo.check import sbo_check
 from sbo.views import sbo_network
+from sbo.tracking import track_dep
 from sbo.slackbuild import sbo_build
-from sbo.dependency import pkg_tracking
 
 from slack.patches import patches
 from slack.install import install
@@ -92,7 +93,7 @@ def main():
     elif len(args) == 2 and args[0] == "-l":
         sbo_list = ["all", "sbo", "slack", "noarch"]
         if args[1] in sbo_list:
-            pkg_list(args[1])
+            PackageManager(None).list(args[1])
         else:
             for opt in usage: print(opt)
     elif len(args) == 3 and args[0] == "-c":
@@ -122,7 +123,7 @@ def main():
         else:
             for opt in usage: print(opt)
     elif len(args) == 2 and args[0] == "-t":
-        pkg_tracking(args[1])
+        track_dep(args[1])
     elif len(args) == 2 and args[0] == "-n":
         sbo_network(args[1])
     elif len(args) == 2 and args[0] == "-b" and args[1] == "--list":
@@ -132,17 +133,17 @@ def main():
     elif len(args) > 2 and args[0] == "-b" and args[-1] == "--remove":
         BlackList().remove(args[1:-1])
     elif len(args) > 1 and args[0] == "-i":
-        pkg_install(args[1:])
+        PackageManager(args[1:]).install()
     elif len(args) > 1 and args[0] == "-u":
-        pkg_upgrade(args[1:])
+        PackageManager(args[1:]).upgrade()
     elif len(args) > 1 and args[0] == "-o":
-        pkg_reinstall(args[1:])
+        PackageManager(args[1:]).reinstall()
     elif len(args) > 1 and args[0] == "-r":
-        pkg_remove(args[1:])
+        PackageManager(args[1:]).remove()
     elif len(args) > 1 and args[0] == "-f":
-        pkg_find(args[1:])
+        PackageManager(args[1:]).find()
     elif len(args) > 1 and args[0] == "-d":
-        pkg_display(args[1:])
+        PackageManager(args[1:]).display()
     else:
         for opt in usage: print(opt)
 

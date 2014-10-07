@@ -25,23 +25,29 @@ import os
 import sys
 import urllib2
 
-def server_file_size(url):
-    '''
-    Returns the size of remote files
-    '''
-    try:
-        tar = urllib2.urlopen(url)
-        meta = tar.info()
-        return int(meta.getheaders("Content-Length")[0])
-    except (urllib2.URLError, IndexError):
-        print("\nError: connection refused\n")
-        sys.exit()
-    except KeyboardInterrupt:
-        print # new line at exit
-        sys.exit()
 
-def local_file_size(registry):
-    '''
-    Returns the size of local files
-    '''
-    return os.path.getsize(registry)
+class FileSize(object):
+
+    def __init__(self, registry):
+        self.registry = registry
+    
+    def server(self):
+        '''
+        Returns the size of remote files
+        '''
+        try:
+            tar = urllib2.urlopen(self.registry)
+            meta = tar.info()
+            return int(meta.getheaders("Content-Length")[0])
+        except (urllib2.URLError, IndexError):
+            print("\nError: connection refused\n")
+            sys.exit()
+        except KeyboardInterrupt:
+            print # new line at exit
+            sys.exit()
+
+    def local(self):
+        '''
+        Returns the size of local files
+        '''
+        return os.path.getsize(self.registry)

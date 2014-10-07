@@ -27,29 +27,37 @@ import time
 
 from slpkg.colors import *
 from slpkg.url_read import url_read
-from slpkg.downloader import download
+from slpkg.downloader import Download
 from slpkg.blacklist import BlackList
 from slpkg.messages import pkg_not_found, template
 from slpkg.__metadata__ import slpkg_tmp, pkg_path, slack_archs
 
 from slpkg.pkg.find import find_package
-from slpkg.pkg.manager import pkg_upgrade, pkg_reinstall
+from slpkg.pkg.manager import PackageManager
 
 from mirrors import mirrors
 from splitting import split_package
+
 
 def install(slack_pkg, version):
     '''
     Install packages from official Slackware distribution
     '''
     try:
-        pkg_sum = uni_sum = upg_sum = int()
-        comp_sum, uncomp_sum, names, dwn_list, comp_size, \
-        uncomp_size, install_all, package_name, \
-        package_location = ([] for i in range(9))
         done = "{0}Done{1}\n".format(GREY, ENDC)
         reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+        [
+            comp_sum,
+            uncomp_sum,
+            names, dwn_list,
+            comp_size,
+            uncomp_size,
+            install_all,
+            package_name,
+            package_location
+        ] = ([] for i in range(9))
         arch = COLOR = str()
+        pkg_sum = uni_sum = upg_sum = int()
         # create directories if not exists
         tmp_path = slpkg_tmp + "packages/"
         if not os.path.exists(slpkg_tmp):
@@ -150,21 +158,22 @@ def install(slack_pkg, version):
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_list:
-                    download(tmp_path, dwn)
-                    download(tmp_path, dwn + ".asc")
+                    Download(tmp_path, dwn).start()
+                    Download(tmp_path, dwn + ".asc").start()
                 for install, name in zip(install_all, names):
+                    package = ((tmp_path + install).split())
                     if os.path.isfile(pkg_path + install[:-4]):
                         print("{0}[ reinstalling ] --> {1}{2}".format(
                               GREEN, ENDC, install))
-                        pkg_reinstall((tmp_path + install).split())
+                        PackageManager(package).reinstall()
                     elif find_package(name + "-", pkg_path):
                         print("{0}[ upgrading ] --> {1}{2}".format(
                               GREEN, ENDC, install))
-                        pkg_upgrade((tmp_path + install).split())
+                        PackageManager(package).upgrade()
                     else:
                         print("{0}[ installing ] --> {1}{2}".format(
                               GREEN, ENDC, install))
-                        pkg_upgrade((tmp_path + install).split())
+                        PackageManager(package).upgrade()
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
                     for remove in install_all:

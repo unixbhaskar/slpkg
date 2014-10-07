@@ -29,26 +29,35 @@ import subprocess
 from slpkg.colors import *
 from slpkg.url_read import url_read
 from slpkg.messages import template
-from slpkg.downloader import download
+from slpkg.downloader import Download
 from slpkg.blacklist import BlackList
 from slpkg.__metadata__ import pkg_path, slpkg_tmp
 
-from slpkg.pkg.manager import pkg_upgrade
+from slpkg.pkg.manager import PackageManager
 
 from mirrors import mirrors
 from splitting import split_package
 from slack_version import slack_ver
+
 
 def patches(version):
     '''
     Install new patches from official Slackware mirrors
     '''
     try:
-        slack_arch = str()
-        comp_sum, uncomp_sum, dwn_patches, comp_size, uncomp_size, \
-        upgrade_all, package_name, package_location = ([] for i in range(8))
         done = "{0}Done{1}\n".format(GREY, ENDC)
         reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+        [
+            comp_sum,
+            uncomp_sum,
+            dwn_patches,
+            comp_size,
+            uncomp_size,
+            upgrade_all,
+            package_name,
+            package_location 
+        ] = ([] for i in range(8))
+        slack_arch = str()
         patch_path = slpkg_tmp + "patches/"
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)
@@ -156,11 +165,11 @@ def patches(version):
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:
-                    download(patch_path, dwn)
-                    download(patch_path, dwn + ".asc")
+                    Download(patch_path, dwn).start()
+                    Download(patch_path, dwn + ".asc").start()
                 for pkg in upgrade_all:
                     print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC, pkg[:-4]))
-                    pkg_upgrade((patch_path + pkg).split())
+                    PackageManager((patch_path + pkg).split()).upgrade()
                 for kernel in upgrade_all:
                     if "kernel" in kernel:
                         print("The kernel has been upgraded, reinstall `lilo` ...")

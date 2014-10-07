@@ -27,6 +27,7 @@ from slpkg.blacklist import BlackList
 
 from slpkg.slack.splitting import split_package
 
+
 def find_package(find_pkg, directory):
     '''
     Find packages

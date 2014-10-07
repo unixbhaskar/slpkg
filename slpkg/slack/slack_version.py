@@ -23,6 +23,7 @@
 
 import re
 
+
 def slack_ver():
     '''
     Open file and read Slackware version
