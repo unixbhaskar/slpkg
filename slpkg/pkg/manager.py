@@ -97,8 +97,12 @@ class PackageManager(object):
         Remove Slackware binary packages
         '''
         dep_path = log_path + "dep/"
-        removed, dependencies, \
-        rmv_list, rmv_dependencies = ([] for i in range(4))
+        [
+            removed,
+            dependencies,
+            rmv_list,
+            rmv_dependencies
+        ] = ([] for i in range(4))
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, ", ".join(self.binary), ENDC))
         for pkg in self.binary:
@@ -202,7 +206,8 @@ class PackageManager(object):
                             size += float(line[26:-1])
                          break
         if matching == 0:
-            print("No package was found to match\n")
+            message = "Can't find"
+            pkg_not_found("", self.binary, message, "\n")
         else:
             print("\n{0}Total found {1} matching packages.{2}".format(
                   GREY, matching, ENDC))

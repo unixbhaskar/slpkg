@@ -29,7 +29,7 @@ from colors import *
 from init import initialization
 from downloader import Download
 from __metadata__ import tmp, build_path, pkg_path, sp
-from messages import (pkg_found, view_sbo, 
+from messages import (pkg_found, view_sbo, pkg_not_found, 
                             template, build_FAILED)
 
 from pkg.build import build_package
@@ -144,5 +144,6 @@ def sbo_network(name):
             else:
                 break
     else:
-        sys.stdout.write (done)
-        print("\nNo package was found to match\n")
+        sys.stdout.write(done)
+        message = "Can't view"
+        pkg_not_found("\n", name, message, "\n")

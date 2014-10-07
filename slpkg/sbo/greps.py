@@ -42,7 +42,7 @@ class SBoGrep(object):
         self.line_req = "SLACKBUILD REQUIRES: "
         self.line_ver = "SLACKBUILD VERSION: "
         self.line_md5 = "SLACKBUILD MD5SUM: "
-        self.line_md5_64 = "SLACKBUILD MD5SUM_{0}".format(arch64)
+        self.line_md5_64 = "SLACKBUILD MD5SUM_{0}: ".format(arch64)
         self.line_des = "SLACKBUILD SHORT DESCRIPTION:  "
         self.sbo_txt = lib_path + "sbo_repo/SLACKBUILDS.TXT"
 

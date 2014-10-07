@@ -28,9 +28,9 @@ from colors import *
 from init import initialization
 from downloader import Download 
 from __metadata__ import (tmp, pkg_path, build_path, 
-                                 log_path, lib_path, sp)
-from messages import (pkg_not_found, pkg_found, template, 
-                            build_FAILED, sbo_packages_view)
+                                log_path, lib_path, sp)
+from messages import (pkg_found, template, build_FAILED,
+                            pkg_not_found, sbo_packages_view)
 
 from pkg.find import find_package 
 from pkg.build import build_package
@@ -278,7 +278,8 @@ def sbo_build(name):
                 print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
                       ins, ins_msg, uns, uns_msg, ENDC))
             else:
-                print("\nNo package was found to match\n")
+                message = "No matching"
+                pkg_not_found("\n", name, message, "\n")
     except KeyboardInterrupt:
         print # new line at exit
         sys.exit()
