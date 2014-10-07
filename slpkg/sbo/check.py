@@ -34,10 +34,10 @@ from downloader import Download
 from messages import template, build_FAILED
 from __metadata__ import tmp, pkg_path, build_path, sp
 
+from greps import SBoGrep
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
-from greps import sbo_source_dwn, sbo_version_pkg
 
 
 def sbo_check():
@@ -49,17 +49,27 @@ def sbo_check():
     but install the package with maximum build tag if find the 
     some version in /tmp directory.
     '''
-    try:
-        done = "{0}Done{1}\n".format(GREY, ENDC)
-        reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
-        sys.stdout.write(reading_lists)
-        sys.stdout.flush()
-        init = initialization()
-        arches = ["-x86_64-", "-i486-", "-arm-", "-noarch-"]
-        index, toolbar_width = int(), 3
-        dependencies,  dependencies_list, \
-        requires, upgrade, installed, sbo_list, \
-        upg_name, pkg_for_upg, upg_ver, upg_arch = ([] for i in range(10))
+    
+    done = "{0}Done{1}\n".format(GREY, ENDC)
+    reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+    sys.stdout.write(reading_lists)
+    sys.stdout.flush()
+    init = initialization()
+    arches = ["-x86_64-", "-i486-", "-arm-", "-noarch-"]
+    index, toolbar_width = int(), 3
+    [
+        dependencies,
+        dependencies_list,
+        requires,
+        upgrade,
+        installed,
+        sbo_list,
+        upg_name,
+        pkg_for_upg,
+        upg_ver,
+        upg_arch
+    ] = ([] for i in range(10))
+    try:        
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
                 sbo_list.append(pkg)
@@ -84,7 +94,7 @@ def sbo_check():
                     # search packages if exists in the repository
                     # and it gets to avoidable modified packages
                     # from the user with the tag _SBo
-                    sbo_package = ("{0}-{1}".format(name, sbo_version_pkg(name)))
+                    sbo_package = ("{0}-{1}".format(name, SBoGrep(name).version()))
                     if sbo_package > package:
                         upg_name.append(name)
             sys.stdout.write(done)
@@ -120,7 +130,7 @@ def sbo_check():
                 # In the end lest a check of the packages that are on the list
                 # are already installed.
                 for pkg in dependencies_list:
-                    ver = sbo_version_pkg(pkg)
+                    ver = SBoGrep(pkg).version()
                     prgnam = ("{0}-{1}".format(pkg, ver))
                     pkg_version = ver # if package not installed 
                                       # take version from repository
@@ -180,7 +190,7 @@ def sbo_check():
                         prgnam = ("{0}-{1}".format(name, version))
                         sbo_url = sbo_search_pkg(name)
                         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
-                        src_dwn = sbo_source_dwn(name).split()
+                        src_dwn = SBoGrep(name).source().split()
                         script = sbo_dwn.split("/")[-1] # keep file from script link
                         Download(build_path, sbo_dwn).start()
                         sources = []

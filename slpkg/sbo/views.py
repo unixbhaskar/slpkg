@@ -29,7 +29,7 @@ from colors import *
 from init import initialization
 from downloader import Download
 from __metadata__ import tmp, build_path, pkg_path, sp
-from messages import (pkg_not_found, pkg_found, view_sbo, 
+from messages import (pkg_found, view_sbo, 
                             template, build_FAILED)
 
 from pkg.build import build_package
@@ -37,7 +37,7 @@ from pkg.find import find_package
 from pkg.manager import PackageManager
 
 from read import *
-from greps import *
+from greps import SBoGrep 
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 
@@ -54,10 +54,10 @@ def sbo_network(name):
     init = initialization()
     sbo_url = sbo_search_pkg(name)
     if sbo_url:
-        sbo_desc = sbo_description_pkg(name)[len(name) + 2:-1]
-        sbo_req = sbo_requires_pkg(name)
+        sbo_desc = SBoGrep(name).description()[len(name) + 2:-1]
+        sbo_req = SBoGrep(name).requires()
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
-        source_dwn = sbo_source_dwn(name).split()
+        source_dwn = SBoGrep(name).source().split()
         sys.stdout.write(done)
         view_sbo(name, sbo_url, sbo_desc, sbo_dwn.split("/")[-1], \
                  ", ".join([src.split("/")[-1] for src in source_dwn]), \
@@ -110,7 +110,7 @@ def sbo_network(name):
                     sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
-                sbo_version = sbo_version_pkg(name)
+                sbo_version = SBoGrep(name).version()
                 prgnam = ("{0}-{1}".format(name, sbo_version))
                 if find_package(prgnam + sp, pkg_path) == []:
                     sources = []
@@ -145,5 +145,4 @@ def sbo_network(name):
                 break
     else:
         sys.stdout.write (done)
-        message = "From slackbuilds.org"
-        pkg_not_found("\n", name, message, "\n")
+        print("\nNo package was found to match\n")

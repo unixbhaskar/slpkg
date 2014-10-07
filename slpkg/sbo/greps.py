@@ -29,102 +29,104 @@ from __metadata__ import arch, lib_path
 from search import sbo_search_pkg
 
 
-def sbo_source_dwn(name):
+class SBoGrep(object):
     '''
-    Grab sources downloads links
+    Class data grab
     '''
-    if arch == "x86_64":
-        with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
-            for line in SLACKBUILDS_TXT:
-                if arch == "x86_64":
-                    if line.startswith("SLACKBUILD NAME: "):
+    def __init__(self, name):
+        self.name = name
+        arch64 = "x86_64"
+        self.line_name = "SLACKBUILD NAME: "
+        self.line_down = "SLACKBUILD DOWNLOAD: "
+        self.line_down_64 = "SLACKBUILD DOWNLOAD_{0}: ".format(arch64)
+        self.line_req = "SLACKBUILD REQUIRES: "
+        self.line_ver = "SLACKBUILD VERSION: "
+        self.line_md5 = "SLACKBUILD MD5SUM: "
+        self.line_md5_64 = "SLACKBUILD MD5SUM_{0}".format(arch64)
+        self.line_des = "SLACKBUILD SHORT DESCRIPTION:  "
+        self.sbo_txt = lib_path + "sbo_repo/SLACKBUILDS.TXT"
+
+    def source(self):
+        '''
+        Grab sources downloads links
+        '''
+        if arch == "x86_64":
+            with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
+                for line in SLACKBUILDS_TXT:
+                    if line.startswith(self.line_name):
                         sbo_name = line[17:].strip()
-                    if line.startswith("SLACKBUILD DOWNLOAD_x86_64: "):
-                        if sbo_name == name:
+                    if line.startswith(self.line_down_64):
+                        if sbo_name == self.name:
                             if line[28:].strip():
                                 SLACKBUILDS_TXT.close()
                                 return line[28:].strip()
-    with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
-        for line in SLACKBUILDS_TXT:
-            if line.startswith("SLACKBUILD NAME: "):
-                sbo_name = line[17:].strip()
-            if line.startswith("SLACKBUILD DOWNLOAD: "):
-                if sbo_name == name:
-                    SLACKBUILDS_TXT.close()
-                    return line[21:].strip() 
-        
-def sbo_requires_pkg(name):
-    '''
-    Grab package requirements
-    '''
-    with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
-        for line in SLACKBUILDS_TXT:
-            if line.startswith("SLACKBUILD NAME: "):
-                sbo_name = line[17:].strip()
-            if line.startswith("SLACKBUILD REQUIRES: "):
-                if sbo_name == name:
-                    SLACKBUILDS_TXT.close()
-                    return line[21:].strip().split()
-
-def sbo_build_tag(sbo_url, name):
-    # This feature is not yet used
-    # because the program is doing heavy on search.
-    # Looking for the best option to be able to use
-    # the BUILD tag
-    '''
-    Grab .SlackBuild BUILD tag
-    '''
-    read_info = url_read(sbo_url + name + ".SlackBuild")
-    for line in read_info.splitlines():
-        if line.startswith("BUILD=${BUILD:"):
-            return line[15:-1].strip().split()
-
-def sbo_version_pkg(name):
-    '''
-    Grab package verion
-    '''
-    with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
-        for line in SLACKBUILDS_TXT:
-            if line.startswith("SLACKBUILD NAME: "):
-                sbo_name = line[17:].strip()
-            if line.startswith("SLACKBUILD VERSION: "):
-                if sbo_name == name:
-                    SLACKBUILDS_TXT.close()
-                    return line[20:].strip()
-
-def sbo_checksum_pkg(name):
-    '''
-    Grab checksum string
-    '''
-    if arch == "x86_64":
-        with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
+        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
             for line in SLACKBUILDS_TXT:
-                if arch == "x86_64":
-                    if line.startswith("SLACKBUILD NAME: "):
+                if line.startswith(self.line_name):
+                    sbo_name = line[17:].strip()
+                if line.startswith(self.line_down):
+                    if sbo_name == self.name:
+                        SLACKBUILDS_TXT.close()
+                        return line[21:].strip() 
+            
+    def requires(self):
+        '''
+        Grab package requirements
+        '''
+        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
+            for line in SLACKBUILDS_TXT:
+                if line.startswith(self.line_name):
+                    sbo_name = line[17:].strip()
+                if line.startswith(self.line_req):
+                    if sbo_name == self.name:
+                        SLACKBUILDS_TXT.close()
+                        return line[21:].strip().split()
+
+    def version(self):
+        '''
+        Grab package version
+        '''
+        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
+            for line in SLACKBUILDS_TXT:
+                if line.startswith(self.line_name):
+                    sbo_name = line[17:].strip()
+                if line.startswith(self.line_ver):
+                    if sbo_name == self.name:
+                        SLACKBUILDS_TXT.close()
+                        return line[20:].strip()
+
+    def checksum(self):
+        '''
+        Grab checksum string
+        '''
+        if arch == "x86_64":
+            with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
+                for line in SLACKBUILDS_TXT:
+                    if line.startswith(self.line_name):
                         sbo_name = line[17:].strip()
-                    if line.startswith("SLACKBUILD MD5SUM_x86_64: "):
-                        if sbo_name == name:
+                    if line.startswith(self.line_md5_64):
+                        if sbo_name == self.name:
                             if line[26:].strip():
                                 SLACKBUILDS_TXT.close()
                                 return line[26:].strip()
-    with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
-        for line in SLACKBUILDS_TXT:
-            if line.startswith("SLACKBUILD NAME: "):
-                sbo_name = line[17:].strip()
-            if line.startswith("SLACKBUILD MD5SUM: "):
-                if sbo_name == name:
-                    SLACKBUILDS_TXT.close()
-                    return line[19:].strip()
-    
-def sbo_description_pkg(name):
-    '''
-    Grab package verion
-    '''
-    with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
-        for line in SLACKBUILDS_TXT:
-            if line.startswith("SLACKBUILD NAME: "):
-                sbo_name = line[17:].strip()
-            if line.startswith("SLACKBUILD SHORT DESCRIPTION:  "):
-                if sbo_name == name:
-                    SLACKBUILDS_TXT.close()
-                    return line[31:].strip()
+        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
+            for line in SLACKBUILDS_TXT:
+                if line.startswith(self.line_name):
+                    sbo_name = line[17:].strip()
+                if line.startswith(self.line_md5):
+                    if sbo_name == self.name:
+                        SLACKBUILDS_TXT.close()
+                        return line[19:].strip()
+        
+    def description(self):
+        '''
+        Grab package verion
+        '''
+        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
+            for line in SLACKBUILDS_TXT:
+                if line.startswith(self.line_name):
+                    sbo_name = line[17:].strip()
+                if line.startswith(self.line_des):
+                    if sbo_name == self.name:
+                        SLACKBUILDS_TXT.close()
+                        return line[31:].strip()

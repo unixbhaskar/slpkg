@@ -44,13 +44,20 @@ def install(slack_pkg, version):
     Install packages from official Slackware distribution
     '''
     try:
-        pkg_sum = uni_sum = upg_sum = int()
-        comp_sum, uncomp_sum, names, dwn_list, comp_size, \
-        uncomp_size, install_all, package_name, \
-        package_location = ([] for i in range(9))
         done = "{0}Done{1}\n".format(GREY, ENDC)
         reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+        [
+            comp_sum,
+            uncomp_sum,
+            names, dwn_list,
+            comp_size,
+            uncomp_size,
+            install_all,
+            package_name,
+            package_location
+        ] = ([] for i in range(9))
         arch = COLOR = str()
+        pkg_sum = uni_sum = upg_sum = int()
         # create directories if not exists
         tmp_path = slpkg_tmp + "packages/"
         if not os.path.exists(slpkg_tmp):

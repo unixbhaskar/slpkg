@@ -36,10 +36,10 @@ from pkg.find import find_package
 from pkg.build import build_package
 from pkg.manager import PackageManager
 
+from greps import SBoGrep
 from search import sbo_search_pkg
 from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
-from greps import sbo_source_dwn, sbo_version_pkg
 
 
 def sbo_build(name):
@@ -48,14 +48,21 @@ def sbo_build(name):
     with all dependencies if version is greater than
     that established.
     '''
-    sbo_ver, pkg_arch, installs, upgraded, \
-    versions, requires, dependencies = ([] for i in range(7))
-    PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
     done = "{0}Done{1}\n".format(GREY, ENDC)
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
     init = initialization()
+    [
+        sbo_ver,
+        pkg_arch,
+        installs,
+        upgraded,
+        versions,
+        requires,
+        dependencies
+    ] = ([] for i in range(7))
+    PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list is not None or sbo_search_pkg(name) is not None:
@@ -74,9 +81,9 @@ def sbo_build(name):
             # Create two lists one for package version and one
             # for package arch.
             for pkg in dependencies:
-                version = sbo_version_pkg(pkg)
+                version = SBoGrep(pkg).version()
                 sbo_ver.append(version)
-                src = sbo_source_dwn(pkg)
+                src = SBoGrep(pkg).source()
                 pkg_arch.append(select_arch(src))
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
@@ -139,7 +146,7 @@ def sbo_build(name):
             # before proceed to install
             UNST = ["UNSUPPORTED", "UNTESTED"]
             if src in UNST:
-                print("\n{0}The package {1}{2}\n".format(RED, src, ENDC))
+                print("{0}The package {1}{2}\n".format(RED, src, ENDC))
                 read = ""
             # exit if all packages already installed
             elif pkg_sum == len(dependencies):
@@ -161,7 +168,7 @@ def sbo_build(name):
                     else:
                         sbo_url = sbo_search_pkg(pkg)
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
-                        src_link = sbo_source_dwn(pkg).split() 
+                        src_link = SBoGrep(pkg).source().split() 
                         script = sbo_link.split("/")[-1] # get file from script
                         Download(build_path, sbo_link).start()
                         sources = []
@@ -236,8 +243,8 @@ def sbo_build(name):
                                 sys.stdout.flush()
                                 toolbar_width += 6
                             sbo_matching.append(sbo_name)
-                            sbo_ver.append(sbo_version_pkg(sbo_name))
-                            src = sbo_source_dwn(sbo_name)
+                            sbo_ver.append(SBoGrep(sbo_name).version())
+                            src = SBoGrep(sbo_name).source()
                             pkg_arch.append(select_arch(src))
             SLACKBUILDS_TXT.close()
             sys.stdout.write(done)

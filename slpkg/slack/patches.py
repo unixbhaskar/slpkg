@@ -45,11 +45,19 @@ def patches(version):
     Install new patches from official Slackware mirrors
     '''
     try:
-        slack_arch = str()
-        comp_sum, uncomp_sum, dwn_patches, comp_size, uncomp_size, \
-        upgrade_all, package_name, package_location = ([] for i in range(8))
         done = "{0}Done{1}\n".format(GREY, ENDC)
         reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
+        [
+            comp_sum,
+            uncomp_sum,
+            dwn_patches,
+            comp_size,
+            uncomp_size,
+            upgrade_all,
+            package_name,
+            package_location 
+        ] = ([] for i in range(8))
+        slack_arch = str()
         patch_path = slpkg_tmp + "patches/"
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)
