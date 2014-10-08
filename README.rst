@@ -86,7 +86,7 @@ Tutorial
 --------
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/12544
+    :target: https://asciinema.org/a/12667
 
 
 Installation
