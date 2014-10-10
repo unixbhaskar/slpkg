@@ -25,6 +25,7 @@ import sys
 import getpass
 
 from colors import *
+from queue import QueuePkgs
 from messages import s_user
 from blacklist import BlackList
 from version import prog_version
@@ -53,6 +54,8 @@ def main():
             "  -v, --version                             print version and exit",
             "  -a, script [source...]                    auto build packages",
             "  -b, --list, [package...] --add, --remove  add, remove packages in blacklist",
+            "  -q, --list, [package...] --add, --remove  add, remove packages in queue",
+            "      --build, --install, --build-install   build or install from queue", 
             "  -l, all, sbo, slack, noarch               list of installed packages",
             "  -c, <repository> --upgrade --current      check for updated packages",
             "  -s, <repository> <package> --current      download, build & install",
@@ -72,6 +75,8 @@ def main():
             "slpkg - version {0}\n".format(__version__),
             "Usage: slpkg [-h] [-v] [-a script [sources...]]",
             "             [-b --list, [...] --add, --remove]",
+            "             [-q --list, [...] --add, --remove]",
+            "             [-q <repository> --build --install]",             
             "             [-l all, sbo, slack, noarch]", 
             "             [-c <repository> --upgrade --current]",
             "             [-s <repository> <package> --current]",
@@ -82,6 +87,8 @@ def main():
     args = sys.argv
     args.pop(0)
     repository = ["sbo", "slack"]
+    blacklist = BlackList()
+    queue = QueuePkgs()
     if len(args) == 0:
         for opt in usage: print(opt)
     elif len(args) == 1 and args[0] == "-h" or args[0] == "--help" and args[1:] == []:
@@ -127,11 +134,24 @@ def main():
     elif len(args) == 2 and args[0] == "-n":
         sbo_network(args[1])
     elif len(args) == 2 and args[0] == "-b" and args[1] == "--list":
-        BlackList().listed()    
+        blacklist.listed()    
     elif len(args) > 2 and args[0] == "-b" and args[-1] == "--add":
-        BlackList().add(args[1:-1])
+        blacklist.add(args[1:-1])
     elif len(args) > 2 and args[0] == "-b" and args[-1] == "--remove":
-        BlackList().remove(args[1:-1])
+        blacklist.remove(args[1:-1])
+    elif len(args) == 2 and args[0] == "-q" and args[1] == "--list":
+        queue.listed()    
+    elif len(args) > 2 and args[0] == "-q" and args[-1] == "--add":
+        queue.add(args[1:-1])
+    elif len(args) > 2 and args[0] == "-q" and args[-1] == "--remove":
+        queue.remove(args[1:-1])
+    elif len(args) == 2 and args[0] =="-q" and args[1] == "--build":
+        queue.build()
+    elif len(args) == 2 and args[0] =="-q" and args[1] == "--install":
+        queue.install()
+    elif len(args) == 2 and args[0] =="-q" and args[1] == "--build-install":
+        queue.build()
+        queue.install()
     elif len(args) > 1 and args[0] == "-i":
         PackageManager(args[1:]).install()
     elif len(args) > 1 and args[0] == "-u":

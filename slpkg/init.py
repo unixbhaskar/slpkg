@@ -41,6 +41,7 @@ def initialization():
     '''
     sbo_log = log_path + "sbo/"
     sbo_lib = lib_path + "sbo_repo/"
+    pkg_que = lib_path + "queue"
     if not os.path.exists(log_path):
         os.mkdir(log_path)
     if not os.path.exists(lib_path):
@@ -49,6 +50,8 @@ def initialization():
         os.mkdir(sbo_log)
     if not os.path.exists(sbo_lib):
         os.mkdir(sbo_lib)
+    if not os.path.exists(pkg_que):
+        os.mkdir(pkg_que)
     sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
     # Read SLACKBUILDS.TXT from slackbuilds.org and write in /var/lib/slpkg/sbo_repo/
     # directory if not exist
