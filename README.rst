@@ -599,6 +599,14 @@ Build and install packages that have added to the queue:
     roxterm
 
     
+    $ slpkg -q --list
+
+    Packages in queue:
+
+    SDL2
+    CEGUI
+    
+    
     $ slpkg -q --build (build only packages from queue)
 
     $ slpkg -q --install (install packages from queue)
