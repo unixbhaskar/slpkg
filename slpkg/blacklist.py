@@ -22,6 +22,8 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
+
+from colors import *
 from __metadata__ import bls_path
 
 
@@ -98,7 +100,7 @@ class BlackList(object):
         print("\nPackages in blacklist:\n")
         for black in self.packages():
             if black:
-                print(black)
+                print("{0}{1}{2}".format(GREEN, black, ENDC))
                 exit = 1
         if exit == 1:
             print # new line at exit
@@ -109,14 +111,15 @@ class BlackList(object):
         '''
         exit = 0
         blacklist = self.packages()
+        pkgs = set(pkgs)
         print("\nAdd packages in blacklist:\n")
         with open(self.blackfile, "a") as black_conf:
             for pkg in pkgs:
                 if pkg not in blacklist:
-                    print(pkg)
+                    print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     black_conf.write(pkg + "\n")
                     exit = 1
-                    black_conf.close()
+            black_conf.close()
         if exit == 1:
             print # new line at exit
 
@@ -126,16 +129,17 @@ class BlackList(object):
         '''
         exit = 0
         print("\nRemove packages from blacklist:\n")
-        with open(self.blackfile, "r") as read_black_conf:
-            lines = read_black_conf.read()
-            read_black_conf.close()
-        with open(self.blackfile, "w") as write_black_conf:
+        
+        with open(self.blackfile, "r") as black_conf:
+            lines = black_conf.read()
+            black_conf.close()
+        with open(self.blackfile, "w") as black_conf:
             for line in lines.splitlines():
                 if line not in pkgs:
-                    write_black_conf.write(line + "\n")
+                    black_conf.write(line + "\n")
                 else:
-                    print(line)
+                    print("{0}{1}{2}".format(RED, line, ENDC))
                     exit = 1
-            write_black_conf.close()
+            black_conf.close()
         if exit == 1:
             print # new line at exit

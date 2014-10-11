@@ -7,9 +7,9 @@
 
 Latest Release:
 
-- Version: 1.9.8
+- Version: 1.9.9
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v1.9.8.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v1.9.9.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -86,7 +86,7 @@ Tutorial
 --------
 
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/screenshot-1.png
-    :target: https://asciinema.org/a/12667
+    :target: https://asciinema.org/a/12544
 
 
 Installation
@@ -96,8 +96,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-1.9.8.tar.gz
-    $ cd slpkg-1.9.8
+    $ tar xvf slpkg-1.9.9.tar.gz
+    $ cd slpkg-1.9.9
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :
@@ -126,6 +126,8 @@ Command Line Tool Usage
       -v, --version                             print version and exit
       -a, script [source...]                    auto build packages
       -b, --list, [package...] --add, --remove  add, remove packages in blacklist
+      -q, --list, [package...] --add, --remove  add, remove packages in queue
+          --build, --install, --build-install   build or install from queue
       -l, all, sbo, slack, noarch               list of installed packages
       -c, <repository> --upgrade --current      check for updated packages
       -s, <repository> <package> --current      download, build & install
@@ -575,6 +577,41 @@ Remove packages with all dependencies:
     | Package werkzeug removed
     +==============================================================================
 
+
+
+Build and install packages that have added to the queue:
+
+.. code-block:: bash
+
+    $ slpkg -q roxterm SDL2 CEGUI --add
+    
+    Add packages in queue:
+
+    roxterm
+    SDL2
+    CEGUI
+
+    
+    $ slpkg -q roxterm --remove (or 'slpkg -q all --remove' remove all packages from queue)
+    
+    Remove packages from queue:
+
+    roxterm
+
+    
+    $ slpkg -q --list
+
+    Packages in queue:
+
+    SDL2
+    CEGUI
+    
+    
+    $ slpkg -q --build (build only packages from queue)
+
+    $ slpkg -q --install (install packages from queue)
+
+    $ slpkg -q --build-install (build and install)
 
 Add packages in blacklist file manually from 
 /etc/slpkg/blacklist or with the following options:
