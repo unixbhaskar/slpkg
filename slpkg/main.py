@@ -76,7 +76,7 @@ def main():
             "Usage: slpkg [-h] [-v] [-a script [sources...]]",
             "             [-b --list, [...] --add, --remove]",
             "             [-q --list, [...] --add, --remove]",
-            "             [-q <repository> --build --install]",             
+            "             [-q --build, --install, --build-install]",             
             "             [-l all, sbo, slack, noarch]", 
             "             [-c <repository> --upgrade --current]",
             "             [-s <repository> <package> --current]",

@@ -23,20 +23,23 @@
 
 import os
 import sys
-from __metadata__ import lib_path, build_path, tmp
-from downloader import Download
 
-from pkg.find import find_package
-from pkg.manager import PackageManager
-from pkg.build import build_package
+from colors import *
+from downloader import Download
+from __metadata__ import lib_path, build_path, tmp
+
 from sbo.greps import SBoGrep
-from sbo.download import sbo_slackbuild_dwn
+from pkg.find import find_package
+from pkg.build import build_package
 from sbo.search import sbo_search_pkg
+from pkg.manager import PackageManager
+from sbo.download import sbo_slackbuild_dwn
 
 
 class QueuePkgs(object):
     '''
-    Class to list, add or remove packages in queue.
+    Class to list, add or remove packages in queue,
+    also build or install.
     '''
     def __init__(self):
         queue_file = [
@@ -78,7 +81,7 @@ class QueuePkgs(object):
         print("\nPackages in queue:\n")
         for pkg in self.packages():
             if pkg:
-                print(pkg)
+                print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                 exit = 1
         if exit == 1:
             print # new line at exit
@@ -89,12 +92,17 @@ class QueuePkgs(object):
         '''
         exit = 0
         queue_list = self.packages()
+        pkgs = set(pkgs)
         print("\nAdd packages in queue:\n")
         with open(self.queue_list, "a") as queue:
             for pkg in pkgs:
-                if pkg not in queue_list:
-                    print(pkg)
+                find = sbo_search_pkg(pkg)
+                if pkg not in queue_list and find is not None:
+                    print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     queue.write(pkg + "\n")
+                    exit = 1
+                else:
+                    print("{0}{1}{2}".format(RED, pkg, ENDC))
                     exit = 1
             queue.close()
         if exit == 1:
@@ -115,7 +123,7 @@ class QueuePkgs(object):
                 if line not in pkgs:
                     queue.write(line + "\n")
                 else:
-                    print(line)
+                    print("{0}{1}{2}".format(RED, line, ENDC))
                     exit = 1
             queue.close()
         if exit == 1:
@@ -129,7 +137,7 @@ class QueuePkgs(object):
         if packages:
             for pkg in packages:
                 if not os.path.exists(build_path):
-                        os.mkdir(build_path)
+                    os.mkdir(build_path)
                 sbo_url = sbo_search_pkg(pkg)
                 sbo_dwn = sbo_slackbuild_dwn(sbo_url)
                 source_dwn = SBoGrep(pkg).source().split()
@@ -142,17 +150,18 @@ class QueuePkgs(object):
                     sources.append(src.split("/")[-1]) # get file from source link
                 build_package(script, sources, build_path)
         else:
-            print("\nPackages not found in the queue\n")
+            print("\nPackages not found in the queue for building\n")
 
     def install(self):
         packages = self.packages()
         if packages:
+            print # new line at start
             for pkg in packages:
+                # check if package exist in repository
                 find = find_package(pkg, tmp)
-                if find:
-                    find = max(find)
-                    if pkg in find:
-                        binary = "{0}{1}".format(tmp, find)
-                        PackageManager(binary.split()).install()
+                find = max(find)
+                if pkg in find:
+                    binary = "{0}{1}".format(tmp, find)
+                    PackageManager(binary.split()).install()
         else:
-            print("\nPackages not found in the queue\n")
+            print("\nPackages not found in the queue for installation\n")

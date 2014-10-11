@@ -17,6 +17,8 @@ slpkg - Utility for easy management packages in Slackware
 .SH SYNOPSIS
   \fBUsage: slpkg [-h] [-v] [-a script [sources...]]
                   [-b --list, --add, --remove [...]]
+                  [-q --list, [...] --add, --remove]
+                  [-q --build, --install, --build-install]
                   [-l all, sbo, slack, noarch]
                   [-c <repository> --upgrade --current]
                   [-s <repository> <package> --current]
@@ -35,6 +37,8 @@ Optional arguments:
   -v, --version                             print version and exit
   -a, script [source...]                    auto build packages
   -b, --list, [package...] --add, --remove  add, remove packages in blacklist
+  -q, --list, [package...] --add, --remove  add, remove packages in queue
+      --build, --install, --build-install   build or install from queue
   -l, all, sbo, slack, noarch               list of installed packages
   -c, <repository> --upgrade --current      check for updated packages
   -s, <repository> <package> --current      download, build & install
@@ -65,26 +69,35 @@ With this argument, build slackware package from source quickly and easy.
 .SS -b , --list <packages> -- add --remove
 \fBslpkg\fP \fB-b\fP \fB--list\fP <\fIpackages\fP> \fB--add\fP \fB--remove\fP
 .PP
-Print, add or remove packages from blacklist file. The settings here affect 
+List, add or remove packages from blacklist file. The settings here affect 
 all repositories.
+.SS -q , --list <packages> --add, --remove, --build, --install, --build-install
+\fBslpkg\fP \fB-q\fP \fB--list\fP <\fIpackages\fP> \fB--add\fP \fB--remove\fP
+.PP
+List, add, or remove sbo packages from queue. If you want to remove all the packages
+from the list 'slpkg -q all --remove'. (these arguments only working for the sbo repository)
+.PP
+\fBslpkg\fP \fB-q\fP \fB--build\fP \fB--install\fP \fB--build-install\fP
+.PP
+Build or install or build and install packages are queued.
 .SS -l all, sbo, slack, noarch
-\fBslpkg\fP \fB-l\fP \fIall\fP \fIsbo\fP \fIslack\fp \fInoarch\fp
+\fBslpkg\fP \fB-l\fP \fIall\fP \fIsbo\fP \fIslack\fP \fInoarch\fP
 .PP
 Four display options list, sbo, slack, noarch and all packages
 items that are installed on the system.
 .SS -c , <repository> check if your packages is up to date
-\fBslpkg\fP \fB-c\fP <\fIrepository\fP> \fI--upgrade\fP \fI--current\fP
+\fBslpkg\fP \fB-c\fP <\fIrepository\fP> \fI--upgrade\fP \fB--current\fP
 .PP
 Check your packages from Slackware official mirrors or from 
 slackbuilds.org is up to date. Use '--current' to switch in current repository.
 .SS -s , <repository> download, build and install package with all dependencies
-\fBslpkg\fP \fB-s\fP <\fIrepository\fP> <\fIname of package\fP> \fI--current\fP
+\fBslpkg\fP \fB-s\fP <\fIrepository\fP> <\fIname of package\fP> \fB--current\fP
 .PP
 Installs or upgrade packages from the repository slackbuilds.org automatically resolving all 
 dependencies of the package. Also installs the official distribution Slackware 
 packages. Use '--current' to install packages from Slackware current repository.
 .SS -f find packages
-\fBslpkg\fP \fB-f\fP <\fIname of packages\fP>
+\fBslpkg\fP \fB-f\fP <\fIname of package\fP>
 .PP
 Find installed packages with view total file size. 
 .SS -t , tracking dependencies
@@ -97,19 +110,19 @@ The sequence shown is that you must follow to correctly install package.
 .PP
 With this method you can find the SBo script that interests you through
 the network. (www.slackbuilds.org)
-.SS -i , install binary package
+.SS -i , install binary packages
 \fBslpkg\fP \fB-i\fP <\fIpackages.t?z\fP>
 .PP
 Installs single binary packages designed for use with the 
 Slackware Linux distribution into your system.
-.SS -u , install-upgrade package with new
+.SS -u , install-upgrade packages with new
 \fBslpkg\fP \fB-u\fP <\fIpackages.t?z\fP>
 .PP
 Normally upgrade only upgrades packages that are already
 installed on the system, and will skip any packages that do not
 already have a version installed. 'Requires root privileges'
 (like slackware command upgradepkg --install-new)
-.SS -o , reinstall binary package
+.SS -o , reinstall binary packages
 \fBslpkg\fP \fB-o\fP <\fIpackages.t?z\fP>
 .PP
 Upgradepkg usually skips packages if the exact same package
