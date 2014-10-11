@@ -126,6 +126,8 @@ Command Line Tool Usage
       -v, --version                             print version and exit
       -a, script [source...]                    auto build packages
       -b, --list, [package...] --add, --remove  add, remove packages in blacklist
+      -q, --list, [package...] --add, --remove  add, remove packages in queue
+          --build, --install, --build-install   build or install from queue
       -l, all, sbo, slack, noarch               list of installed packages
       -c, <repository> --upgrade --current      check for updated packages
       -s, <repository> <package> --current      download, build & install
