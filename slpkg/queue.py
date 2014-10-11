@@ -159,7 +159,11 @@ class QueuePkgs(object):
             for pkg in packages:
                 # check if package exist in repository
                 find = find_package(pkg, tmp)
-                find = max(find)
+                try:
+                    find = max(find)
+                except ValueError:
+                    print("Package '{0}' not found in /tmp\n".format(pkg)) 
+                    pass
                 if pkg in find:
                     binary = "{0}{1}".format(tmp, find)
                     PackageManager(binary.split()).install()
