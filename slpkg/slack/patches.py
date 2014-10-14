@@ -26,12 +26,12 @@ import sys
 import time
 import subprocess
 
-from colors import GREEN, GREY, YELLOW, ENDC
 from url_read import url_read
 from messages import template
 from downloader import Download
 from blacklist import BlackList
 from __metadata__ import pkg_path, slpkg_tmp
+from colors import GREEN, GREY, YELLOW, ENDC
 
 from pkg.manager import PackageManager
 

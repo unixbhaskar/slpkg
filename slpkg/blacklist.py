@@ -23,8 +23,8 @@
 
 import os
 
-from colors import RED, GREEN, ENDC
 from __metadata__ import bls_path
+from colors import RED, GREEN, ENDC
 
 
 class BlackList(object):

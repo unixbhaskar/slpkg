@@ -43,7 +43,7 @@ class FileSize(object):
             print("\nError: connection refused\n")
             sys.exit()
         except KeyboardInterrupt:
-            print   # new line at cancle
+            print   # new line at cancel
             sys.exit()
 
     def local(self):

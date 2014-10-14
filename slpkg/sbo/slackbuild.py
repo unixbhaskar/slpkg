@@ -301,14 +301,13 @@ def select_arch(src):
     from arch else select arch
     '''
     arch = os.uname()[4]
-    if "UNSUPPORTED" in src:
-        arch = "UNSUPPORTED"
-    elif "UNTESTED" in src:
-        arch = "UNTESTED"
-    elif arch == "x86_64":
-        arch = "x86_64"
-    elif arch.startswith("i") and arch.endswith("86"):
-        arch = "i486"
-    elif "arm" in arch:
-        arch = "arm"
+    if arch.startswith("i") and arch.endswith("86"):
+            arch = "i486"
+    support = [
+        "UNSUPPORTED",
+        "UNTESTED",
+    ]
+    for item in support:
+        if item in src:
+            arch = item
     return arch
