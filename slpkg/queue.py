@@ -22,10 +22,9 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
 
-from colors import *
 from downloader import Download
+from colors import GREEN, RED, ENDC
 from __metadata__ import lib_path, build_path, tmp
 
 from sbo.greps import SBoGrep
@@ -43,10 +42,10 @@ class QueuePkgs(object):
     '''
     def __init__(self):
         queue_file = [
-                "# In this file you can create a list of\n",
-                "# packages you want to build or install.\n",
-                "#\n"
-                ]
+            "# In this file you can create a list of\n",
+            "# packages you want to build or install.\n",
+            "#\n"
+        ]
         self.queue = lib_path + "queue/"
         self.queue_list = self.queue + "queue_list"
         if not os.path.exists(lib_path):
@@ -58,10 +57,10 @@ class QueuePkgs(object):
                 for line in queue_file:
                     queue.write(line)
                 queue.close()
-    
+
     def packages(self):
         '''
-        Return queue list from /var/lib/queue/queue_list 
+        Return queue list from /var/lib/queue/queue_list
         file.
         '''
         queue_list = []
@@ -69,7 +68,7 @@ class QueuePkgs(object):
             for read in queue:
                 read = read.lstrip()
                 if not read.startswith("#"):
-                    queue_list.append(read.replace("\n", "")) 
+                    queue_list.append(read.replace("\n", ""))
             queue.close()
         return queue_list
 
@@ -84,7 +83,7 @@ class QueuePkgs(object):
                 print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                 exit = 1
         if exit == 1:
-            print # new line at exit
+            print   # new line at exit
 
     def add(self, pkgs):
         '''
@@ -106,7 +105,7 @@ class QueuePkgs(object):
                     exit = 1
             queue.close()
         if exit == 1:
-            print # new line at exit
+            print   # new line at exit
 
     def remove(self, pkgs):
         '''
@@ -117,7 +116,8 @@ class QueuePkgs(object):
         with open(self.queue_list, "r") as queue:
             lines = queue.read()
             queue.close()
-        if pkgs == ["all"]: pkgs = self.packages()
+        if pkgs == ["all"]:
+            pkgs = self.packages()
         with open(self.queue_list, "w") as queue:
             for line in lines.splitlines():
                 if line not in pkgs:
@@ -127,7 +127,7 @@ class QueuePkgs(object):
                     exit = 1
             queue.close()
         if exit == 1:
-            print # new line at exit
+            print   # new line at exit
 
     def build(self):
         '''
@@ -143,11 +143,11 @@ class QueuePkgs(object):
                 source_dwn = SBoGrep(pkg).source().split()
                 sources = []
                 os.chdir(build_path)
-                script = sbo_dwn.split("/")[-1] # get file from script link
+                script = sbo_dwn.split("/")[-1]
                 Download(build_path, sbo_dwn).start()
                 for src in source_dwn:
                     Download(build_path, src).start()
-                    sources.append(src.split("/")[-1]) # get file from source link
+                    sources.append(src.split("/")[-1])
                 build_package(script, sources, build_path)
         else:
             print("\nPackages not found in the queue for building\n")
@@ -155,15 +155,15 @@ class QueuePkgs(object):
     def install(self):
         packages = self.packages()
         if packages:
-            print # new line at start
+            # new line at start
+            print
             for pkg in packages:
                 # check if package exist in repository
                 find = find_package(pkg, tmp)
                 try:
                     find = max(find)
                 except ValueError:
-                    print("Package '{0}' not found in /tmp\n".format(pkg)) 
-                    pass
+                    print("Package '{0}' not found in /tmp\n".format(pkg))
                 if pkg in find:
                     binary = "{0}{1}".format(tmp, find)
                     PackageManager(binary.split()).install()

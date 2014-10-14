@@ -25,9 +25,8 @@ import os
 import sys
 import subprocess
 
-from colors import *
-from blacklist import BlackList
 from messages import pkg_not_found, template
+from colors import RED, GREEN, CYAN, GREY, ENDC
 from __metadata__ import pkg_path, sp, log_path
 
 from find import find_package
@@ -37,9 +36,9 @@ class PackageManager(object):
     '''
     Package manager class for install, upgrade,
     reinstall, remove, find and display packages.
-    '''    
+    '''
     def __init__(self, binary):
-        self.binary = binary        
+        self.binary = binary
 
     def install(self):
         '''
@@ -81,8 +80,9 @@ class PackageManager(object):
         '''
         for pkg in self.binary:
             try:
-                print(subprocess.check_output("upgradepkg --reinstall {0}".format(
-                                              pkg), shell=True))
+                print(
+                    subprocess.check_output("upgradepkg --reinstall {0}".format(
+                        pkg), shell=True))
                 print("Completed!\n")
             except subprocess.CalledProcessError:
                 message = "Can't reinstall"
@@ -108,22 +108,25 @@ class PackageManager(object):
         for pkg in self.binary:
             pkgs = find_package(pkg + sp, pkg_path)
             if pkgs:
-                print(RED + "[ delete ] --> " + ENDC + "\n               ".join(pkgs))
+                print("{0}[ delete ]{1} --> {2}".format(RED, ENDC,
+                      "\n               ".join(pkgs)))
+
                 removed.append(pkg)
             else:
                 message = "Can't remove"
                 pkg_not_found("", pkg, message, "")
         if removed == []:
-            print # new line at end
+            print   # new line at end
         else:
             msg = "package"
             if len(removed) > 1:
                 msg = msg + "s"
             try:
-                remove_pkg = raw_input("\nAre you sure to remove {0} {1} [Y/n]? ".format(
-                                        str(len(removed)), msg))
+                remove_pkg = raw_input(
+                    "\nAre you sure to remove {0} {1} [Y/n]? ".format(
+                        str(len(removed)), msg))
             except KeyboardInterrupt:
-                print # new line at exit
+                print   # new line at exit
                 sys.exit()
             if remove_pkg == "y" or remove_pkg == "Y":
                 for rmv in removed:
@@ -134,40 +137,45 @@ class PackageManager(object):
                         with open(dep_path + rmv, "r") as f:
                             dependencies = f.read().split()
                             f.close()
-                        print # new line at start
+                        print   # new line at start
                         template(78)
-                        print("| Found dependencies for package {0}:".format(rmv))
+                        print("| Found dependencies for package {0}:".format(
+                            rmv))
                         template(78)
-                        # Prints dependecies before removed except master package
-                        # because referred as master package
+                        # Prints dependecies before removed except master
+                        # package because referred as master package
                         for dep in dependencies[:-1]:
                             print("| {0}{1}{2}".format(RED, dep, ENDC))
                         template(78)
                         try:
                             remove_dep = raw_input(
-                                    "\nRemove dependencies (maybe used by other packages) [Y/n]? ")
+                                "\nRemove dependencies (maybe used by other packages) [Y/n]? ")
                         except KeyboardInterrupt:
-                            print # new line at exit
+                            print  # new line at exit
+
                             sys.exit()
                         if remove_dep == "y" or remove_dep == "Y":
                             for dep in dependencies:
                                 if find_package(dep + sp, pkg_path):
-                                    print(subprocess.check_output("removepkg {0}".format(
-                                          dep), shell=True))
+                                    print(subprocess.check_output(
+                                        "removepkg {0}".format(dep),
+                                        shell=True))
                                     rmv_list.append(dep)
                             os.remove(dep_path + rmv)
                             rmv_dependencies += dependencies[:-1]
                         else:
                             if find_package(rmv + sp, pkg_path):
-                                print(subprocess.check_output("removepkg {0}".format(
-                                      rmv), shell=True))
+                                print(subprocess.check_output(
+                                    "removepkg {0}".format(rmv),
+                                    shell=True))
                                 rmv_list.append(rmv)
                             f.close()
                             os.remove(dep_path + rmv)
                     else:
                         if find_package(rmv + sp, pkg_path):
-                            print(subprocess.check_output("removepkg {0}".format(
-                                  rmv), shell=True))
+                            print(subprocess.check_output(
+                                "removepkg {0}".format(rmv),
+                                shell=True))
                             rmv_list.append(rmv)
                 # Prints all removed packages
                 if len(rmv_list) > 1:
@@ -180,7 +188,7 @@ class PackageManager(object):
                     else:
                         print("| Package {0} not found".format(pkg))
                 template(78)
-            print # new line at end
+            print   # new line at end
 
     def find(self):
         '''
@@ -188,23 +196,23 @@ class PackageManager(object):
         '''
         self.binary = "".join(self.binary)
         matching = size = int()
-        print("\nInstalled packages with name begin matching [ {0}{1}{2} ]\n".format(
+        print("\nPackages with matching name [ {0}{1}{2} ]\n".format(
               CYAN, self.binary, ENDC))
         for match in find_package(self.binary, pkg_path):
-             if self.binary in match:
-                 matching += 1
-                 print("[ {0}installed{1} ] - {2}".format(
-                       GREEN, ENDC, match))
-                 with open(pkg_path + match, "r") as f:
-                     data = f.read()
-                     f.close()
-                 for line in data.splitlines():
-                     if line.startswith("UNCOMPRESSED PACKAGE SIZE:"):
-                         if "M" in line[26:]:
+            if self.binary in match:
+                matching += 1
+                print("[ {0}installed{1} ] - {2}".format(
+                      GREEN, ENDC, match))
+                with open(pkg_path + match, "r") as f:
+                    data = f.read()
+                    f.close()
+                for line in data.splitlines():
+                    if line.startswith("UNCOMPRESSED PACKAGE SIZE:"):
+                        if "M" in line[26:]:
                             size += float(line[26:-1]) * 1024
-                         else:
+                        else:
                             size += float(line[26:-1])
-                         break
+                        break
         if matching == 0:
             message = "Can't find"
             pkg_not_found("", self.binary, message, "\n")
@@ -223,10 +231,12 @@ class PackageManager(object):
         Print the Slackware packages contents
         '''
         for pkg in self.binary:
-            if find_package(pkg + sp, pkg_path):
-                print(subprocess.check_output("cat {0}{1}".format(pkg_path,
-                      " /var/log/packages/".join(find_package(
-                      pkg + sp, pkg_path))), shell=True))
+            find = find_package(pkg + sp, pkg_path)
+            if find:
+                with open(pkg_path + "".join(find), "r") as package:
+                    for line in package:
+                        print(line).strip()
+                    print   # new line per file
             else:
                 message = "Can't dislpay"
                 if len(self.binary) > 1:
@@ -254,10 +264,11 @@ class PackageManager(object):
                     index += 1
                     print("{0}{1}:{2} {3}".format(GREY, index, ENDC, pkg))
                     if index == page:
-                        key = raw_input("\nPress [ {0}Enter{1} ] >> Next page ".format(
-                                        CYAN, ENDC))
+                        print   # new line at start
+                        raw_input("Press [ {0}Enter{1} ] >> Next page ".format(
+                            CYAN, ENDC))
                         page += 50
-            print # new line at end
+            print   # new line at end
         except KeyboardInterrupt:
-            print # new line at exit
+            print   # new line at exit
             sys.exit()

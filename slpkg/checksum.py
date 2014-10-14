@@ -23,10 +23,11 @@
 
 import hashlib
 
+
 def md5sum(source):
     '''
     Calculate the md5 checksum
     '''
     with open(source) as file_to_check:
-        data = file_to_check.read()    
+        data = file_to_check.read()
         return hashlib.md5(data).hexdigest()

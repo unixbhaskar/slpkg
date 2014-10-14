@@ -34,7 +34,7 @@ def mirrors(name, location, version):
         if version == "stable":
             http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
                    slack_ver(), location, name)
-        else: 
+        else:
             http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
                    version, location, name)
     else:

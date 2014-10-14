@@ -26,7 +26,7 @@ import sys
 import time
 import subprocess
 
-from colors import *
+from colors import GREEN, GREY, YELLOW, ENDC
 from url_read import url_read
 from messages import template
 from downloader import Download
@@ -55,7 +55,7 @@ def patches(version):
             uncomp_size,
             upgrade_all,
             package_name,
-            package_location 
+            package_location
         ] = ([] for i in range(8))
         slack_arch = str()
         patch_path = slpkg_tmp + "patches/"
@@ -63,7 +63,7 @@ def patches(version):
             os.mkdir(slpkg_tmp)
         if not os.path.exists(patch_path):
             os.mkdir(patch_path)
-        sys.stdout.write (reading_lists)
+        sys.stdout.write(reading_lists)
         sys.stdout.flush()
         blacklist = BlackList().packages()
         if version == "stable":
@@ -81,38 +81,41 @@ def patches(version):
                 toolbar_width += step
                 time.sleep(0.05)
             if line.startswith("PACKAGE NAME"):
-		        package_name.append(line[15:].strip())
+                package_name.append(line[15:].strip())
             if line.startswith("PACKAGE LOCATION"):
-		        package_location.append(line[21:].strip())
+                package_location.append(line[21:].strip())
             if line.startswith("PACKAGE SIZE (compressed):  "):
                 comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
-        if version == "stable": # stables versions upgrade
-            for loc, name, comp, uncomp in zip(package_location, package_name, \
+        if version == "stable":    # stables versions upgrade
+            for loc, name, comp, uncomp in zip(package_location, package_name,
                                                comp_size, uncomp_size):
-                if not os.path.isfile(pkg_path + name[:-4]) and split_package(
-                                                 name)[0] not in blacklist:
-                    dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
+                if (not os.path.isfile(pkg_path + name[:-4]) and split_package(
+                        name)[0] not in blacklist):
+                    dwn_patches.append("{0}{1}/{2}".format(
+                        mirrors("", "", version), loc, name))
                     comp_sum.append(comp)
                     uncomp_sum.append(uncomp)
                     upgrade_all.append(name)
-        else: # current version upgrade
+        else:   # current version upgrade
             installed = []
             # get all installed packages and store the package name.
             for pkg in os.listdir(pkg_path):
                 installed.append(split_package(pkg + ".???")[0])
-            for loc, name, comp, uncomp in zip(package_location, package_name, \
+            for loc, name, comp, uncomp in zip(package_location, package_name,
                                                comp_size, uncomp_size):
                 # If the package from the current repository is installed
-                # (check with the name) but not is in the path (check with all package
-                # like 'apr-1.5.0-x86_64-1') then add to list for upgrade.
-                # etc. 'apr' in list 'installed' ?? if yes 'apr-1.5.0-x86_64-1' exist
-                # in /var/log/packages ?? if no add to upgrade.
+                # (check with the name) but not is in the path (check with
+                # all package like 'apr-1.5.0-x86_64-1') then add to list for
+                # upgrade.
+                # etc. 'apr' in list 'installed' ?? if yes 'apr-1.5.0-x86_64-1'
+                # exist in /var/log/packages ?? if no add to upgrade.
                 if split_package(name)[0] in installed:
-                    if not os.path.isfile(pkg_path + name[:-4]) and split_package(
-                                                     name)[0] not in blacklist:
-                        dwn_patches.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
+                    if (not os.path.isfile(pkg_path + name[:-4]) and
+                            split_package(name)[0] not in blacklist):
+                        dwn_patches.append("{0}{1}/{2}".format(
+                            mirrors("", "", version), loc, name))
                         comp_sum.append(comp)
                         uncomp_sum.append(uncomp)
                         upgrade_all.append(name)
@@ -121,8 +124,12 @@ def patches(version):
             print("\nThese packages need upgrading:\n")
             template(78)
             print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
-                  "| Package", " " * 17, "Version", " " * 12, "Arch", " " * 4, \
-                  "Build", " " * 2, "Repos", " " * 10, "Size"))
+                "| Package", " " * 17,
+                "Version", " " * 12,
+                "Arch", " " * 4,
+                "Build", " " * 2,
+                "Repos", " " * 10,
+                "Size"))
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
@@ -132,12 +139,12 @@ def patches(version):
                 arch = pkg_split[2]
                 build = pkg_split[3]
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
-                      YELLOW, name, ENDC, \
-                      " " * (25-len(name)), ver, \
-                      " " * (19-len(ver)), arch, \
-                      " " * (8-len(arch)), build, \
-                      " " * (7-len(build)), "Slack", \
-                      size, " K"))
+                    YELLOW, name, ENDC,
+                    " " * (25-len(name)), ver,
+                    " " * (19-len(ver)), arch,
+                    " " * (8-len(arch)), build,
+                    " " * (7-len(build)), "Slack",
+                    size, " K"))
             comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
@@ -158,8 +165,11 @@ def patches(version):
                 msg_pkg = msg_pkg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("{0}Total {1} {2} will be upgraded.".format(GREY, len(upgrade_all), msg_pkg))
-            print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
+            print("{0}Total {1} {2} will be upgraded.".format(GREY,
+                                                              len(upgrade_all),
+                                                              msg_pkg))
+            print("Need to get {0} {1} of archives.".format(compressed,
+                                                            comp_unit))
             print("After this process, {0} {1} of additional disk space will be used.{2}".format(
                   uncompressed, uncomp_unit, ENDC))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
@@ -168,7 +178,8 @@ def patches(version):
                     Download(patch_path, dwn).start()
                     Download(patch_path, dwn + ".asc").start()
                 for pkg in upgrade_all:
-                    print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC, pkg[:-4]))
+                    print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC,
+                                                               pkg[:-4]))
                     PackageManager((patch_path + pkg).split()).upgrade()
                 for kernel in upgrade_all:
                     if "kernel" in kernel:
@@ -183,14 +194,17 @@ def patches(version):
                     if os.listdir(patch_path) == []:
                         print("Packages removed")
                     else:
-                        print("\nThere are packages in direcrory {0}\n".format(patch_path))
+                        print("\nThere are packages in direcrory {0}\n".format(
+                            patch_path))
                 else:
-                    print("\nThere are packages in directory {0}\n".format(patch_path))
+                    print("\nThere are packages in directory {0}\n".format(
+                        patch_path))
         else:
             if os.uname()[4] == "x86_64":
                 slack_arch = 64
-            print("\nSlackware{0} '{1}' v{2} distribution is up to date\n".format(
-                  slack_arch, version, slack_ver()))
+            print(
+                "\nSlackware{0} '{1}' v{2} distribution is up to date\n".format(
+                    slack_arch, version, slack_ver()))
     except KeyboardInterrupt:
-        print # new line at exit
+        print   # new line at exit
         sys.exit()

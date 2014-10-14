@@ -38,7 +38,7 @@ def split_package(package):
     if "_slack" in package:
         slack = "_slack" + slack_ver()
     pkg = package[:-(len(slack) + 4)]
-    build = pkg.split("-")[-1] 
+    build = pkg.split("-")[-1]
     pkg_ver = pkg[:-(len(arch) + len(build))]
     ver = pkg_ver.split("-")[-1]
     name = pkg_ver[:-(len(ver) + 1)]

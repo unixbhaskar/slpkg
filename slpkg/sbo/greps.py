@@ -21,12 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
-from url_read import url_read
 from __metadata__ import arch, lib_path
-
-from search import sbo_search_pkg
 
 
 class SBoGrep(object):
@@ -67,8 +62,8 @@ class SBoGrep(object):
                 if line.startswith(self.line_down):
                     if sbo_name == self.name:
                         SLACKBUILDS_TXT.close()
-                        return line[21:].strip() 
-            
+                        return line[21:].strip()
+
     def requires(self):
         '''
         Grab package requirements
@@ -117,7 +112,7 @@ class SBoGrep(object):
                     if sbo_name == self.name:
                         SLACKBUILDS_TXT.close()
                         return line[19:].strip()
-        
+
     def description(self):
         '''
         Grab package verion

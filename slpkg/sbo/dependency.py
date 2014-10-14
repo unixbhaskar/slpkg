@@ -23,7 +23,7 @@
 
 import sys
 
-from colors import *
+from colors import GREY, ENDC
 from blacklist import BlackList
 
 from greps import SBoGrep
@@ -32,13 +32,14 @@ from search import sbo_search_pkg
 
 dep_results = []
 
+
 def sbo_dependencies_pkg(name):
     '''
     Build all dependencies of a package
     '''
     try:
         dependencies = []
-        blacklist = BlackList().packages() 
+        blacklist = BlackList().packages()
         sbo_url = sbo_search_pkg(name)
         if sbo_url:
             requires = SBoGrep(name).requires()
@@ -56,5 +57,5 @@ def sbo_dependencies_pkg(name):
                     sbo_dependencies_pkg(dep)
             return dep_results
     except KeyboardInterrupt:
-        print # new line at exit
+        print   # new line at exit
         sys.exit()

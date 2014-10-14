@@ -30,7 +30,7 @@ class FileSize(object):
 
     def __init__(self, registry):
         self.registry = registry
-    
+
     def server(self):
         '''
         Returns the size of remote files
@@ -43,7 +43,7 @@ class FileSize(object):
             print("\nError: connection refused\n")
             sys.exit()
         except KeyboardInterrupt:
-            print # new line at exit
+            print   # new line at cancle
             sys.exit()
 
     def local(self):

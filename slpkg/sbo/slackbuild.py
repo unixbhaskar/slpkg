@@ -24,15 +24,16 @@
 import os
 import sys
 
-from colors import *
 from init import initialization
-from downloader import Download 
-from __metadata__ import (tmp, pkg_path, build_path, 
-                                log_path, lib_path, sp)
+from downloader import Download
+from __metadata__ import (tmp, pkg_path, build_path,
+                          log_path, lib_path, sp)
+from colors import RED, GREEN, GREY, YELLOW, CYAN, ENDC
 from messages import (pkg_found, template, build_FAILED,
-                            pkg_not_found, sbo_packages_view)
+                      pkg_not_found, sbo_packages_view)
 
-from pkg.find import find_package 
+
+from pkg.find import find_package
 from pkg.build import build_package
 from pkg.manager import PackageManager
 
@@ -44,7 +45,7 @@ from dependency import sbo_dependencies_pkg
 
 def sbo_build(name):
     '''
-    Download, build and install or upgrade packages 
+    Download, build and install or upgrade packages
     with all dependencies if version is greater than
     that established.
     '''
@@ -52,7 +53,7 @@ def sbo_build(name):
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
-    init = initialization()
+    initialization()
     [
         sbo_ver,
         pkg_arch,
@@ -67,7 +68,7 @@ def sbo_build(name):
     try:
         if dependencies_list is not None or sbo_search_pkg(name) is not None:
             pkg_sum = count_upgraded = count_installed = int()
-            # Insert master package in list to 
+            # Insert master package in list to
             # install it after dependencies
             requires.append(name)
             # Create one list for all packages
@@ -90,7 +91,7 @@ def sbo_build(name):
                     pkg_sum += 1
             sys.stdout.write(done)
             # Tag with color green if package already installed,
-            # color yellow for packages to upgrade and color red 
+            # color yellow for packages to upgrade and color red
             # if not installed. Also if package arch is UNSUPPORTED
             # tag with color red and if UNTESTED with color yellow.
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
@@ -98,7 +99,7 @@ def sbo_build(name):
                 PKG_COLOR = GREEN
             elif find_package(name + sp, pkg_path):
                 PKG_COLOR = YELLOW
-                count_upgraded += 1    
+                count_upgraded += 1
             else:
                 PKG_COLOR = RED
                 count_installed += 1
@@ -109,14 +110,17 @@ def sbo_build(name):
             print("\nThe following packages will be automatically installed or upgraded")
             print("with new version:\n")
             template(78)
-            print("{0}{1}{2}{3}{4}{5}{6}".format("| Package", " " * 30, "Version", \
-                  " " * 10, "Arch", " " * 9, "Repository"))
+            print("{0}{1}{2}{3}{4}{5}{6}".format(
+                "| Package", " " * 30, "Version",
+                " " * 10, "Arch", " " * 9, "Repository"))
             template(78)
             print("Installing:")
-            sbo_packages_view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR, pkg_arch[-1])
+            sbo_packages_view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR,
+                              pkg_arch[-1])
             print("Installing for dependencies:")
-            ARCH_COLOR = "" # reset arch color for dependencies packages
-            for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1], pkg_arch[:-1]):
+            ARCH_COLOR = ""     # reset arch color for dependencies packages
+            for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1],
+                                          pkg_arch[:-1]):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
                 if find_package(dep_pkg, pkg_path):
                     DEP_COLOR = GREEN
@@ -168,17 +172,18 @@ def sbo_build(name):
                     else:
                         sbo_url = sbo_search_pkg(pkg)
                         sbo_link = sbo_slackbuild_dwn(sbo_url)
-                        src_link = SBoGrep(pkg).source().split() 
-                        script = sbo_link.split("/")[-1] # get file from script
+                        src_link = SBoGrep(pkg).source().split()
+                        script = sbo_link.split("/")[-1]
                         Download(build_path, sbo_link).start()
                         sources = []
                         for src in src_link:
-                            sources.append(src.split("/")[-1]) # get file from source
+                            # get file from source
+                            sources.append(src.split("/")[-1])
                             Download(build_path, src).start()
                         build_package(script, sources, build_path)
-                        # Searches the package name and version in /tmp to install.
-                        # If find two or more packages e.g. to build tag 
-                        # 2 or 3 will fit most.
+                        # Searches the package name and version in /tmp to
+                        # install. If find two or more packages e.g. to build
+                        # tag 2 or 3 will fit most.
                         binary_list = []
                         for search in find_package(prgnam, tmp):
                             if "_SBo" in search:
@@ -209,19 +214,22 @@ def sbo_build(name):
                         installed = ("{0}-{1}".format(pkg, ver))
                         if find_package(installed, pkg_path):
                             if pkg in upgraded:
-                                print("| Package {0} upgraded successfully".format(installed))
+                                print("| Package {0} upgraded successfully".format(
+                                    installed))
                             else:
-                                print("| Package {0} installed successfully".format(installed))
+                                print("| Package {0} installed successfully".format(
+                                    installed))
                         else:
-                            print("| Package {0} NOT installed".format(installed))
+                            print("| Package {0} NOT installed".format(
+                                installed))
                     template(78)
-                # Write dependencies in a log file 
+                # Write dependencies in a log file
                 # into directory `/var/log/slpkg/dep/`
                 if find_package(name + sp, pkg_path):
                     dep_path = log_path + "dep/"
                     if not os.path.exists(dep_path):
                         os.mkdir(dep_path)
-                    if os.path.isfile(dep_path + name): 
+                    if os.path.isfile(dep_path + name):
                         os.remove(dep_path + name)
                     if len(dependencies) > 1:
                         with open(dep_path + name, "w") as f:
@@ -232,7 +240,8 @@ def sbo_build(name):
             ins = uns = int()
             sbo_matching = []
             index, toolbar_width = int(), 3
-            with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
+            with open(lib_path + "sbo_repo/SLACKBUILDS.TXT",
+                      "r") as SLACKBUILDS_TXT:
                 for line in SLACKBUILDS_TXT:
                     if line.startswith("SLACKBUILD NAME: "):
                         sbo_name = line[17:].strip()
@@ -252,8 +261,9 @@ def sbo_build(name):
                 print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
                       CYAN, name, ENDC))
                 template(78)
-                print("{0}{1}{2}{3}{4}{5}{6}".format("| Package", " " * 30, "Version", \
-                      " " * 10, "Arch", " " * 9, "Repository"))
+                print("{0}{1}{2}{3}{4}{5}{6}".format(
+                    "| Package", " " * 30, "Version",
+                    " " * 10, "Arch", " " * 9, "Repository"))
                 template(78)
                 print("Matching:")
                 ARCH_COLOR = str()
@@ -281,8 +291,9 @@ def sbo_build(name):
                 message = "No matching"
                 pkg_not_found("\n", name, message, "\n")
     except KeyboardInterrupt:
-        print # new line at exit
+        print   # new line at exit
         sys.exit()
+
 
 def select_arch(src):
     '''
