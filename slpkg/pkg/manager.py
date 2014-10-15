@@ -63,8 +63,8 @@ class PackageManager(object):
         '''
         for pkg in self.binary:
             try:
-                print(subprocess.check_output("upgradepkg --install-new {0}".format(
-                                              pkg), shell=True))
+                print(subprocess.check_output("upgradepkg --install-new "
+                                              "{0}".format(pkg), shell=True))
                 print("Completed!\n")
             except subprocess.CalledProcessError:
                 message = "Can't upgrade"
@@ -149,7 +149,8 @@ class PackageManager(object):
                         template(78)
                         try:
                             remove_dep = raw_input(
-                                "\nRemove dependencies (maybe used by other packages) [Y/n]? ")
+                                "\nRemove dependencies (maybe used by other "
+                                "packages) [Y/n]? ")
                         except KeyboardInterrupt:
                             print  # new line at exit
 

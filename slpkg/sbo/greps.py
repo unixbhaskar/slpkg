@@ -41,87 +41,78 @@ class SBoGrep(object):
         self.line_des = "SLACKBUILD SHORT DESCRIPTION:  "
         self.sbo_txt = lib_path + "sbo_repo/SLACKBUILDS.TXT"
 
+        # open an read SLACKBUILDS.TXT file
+        f = open(self.sbo_txt, "r")
+        self.SLACKBUILDS_TXT = f.read()
+        f.close()
+
     def source(self):
         '''
         Grab sources downloads links
         '''
         if arch == "x86_64":
-            with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
-                for line in SLACKBUILDS_TXT:
-                    if line.startswith(self.line_name):
-                        sbo_name = line[17:].strip()
-                    if line.startswith(self.line_down_64):
-                        if sbo_name == self.name:
-                            if line[28:].strip():
-                                SLACKBUILDS_TXT.close()
-                                return line[28:].strip()
-        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
-            for line in SLACKBUILDS_TXT:
+            for line in self.SLACKBUILDS_TXT.splitlines():
                 if line.startswith(self.line_name):
                     sbo_name = line[17:].strip()
-                if line.startswith(self.line_down):
+                if line.startswith(self.line_down_64):
                     if sbo_name == self.name:
-                        SLACKBUILDS_TXT.close()
-                        return line[21:].strip()
+                        if line[28:].strip():
+                            return line[28:].strip()
+        for line in self.SLACKBUILDS_TXT.splitlines():
+            if line.startswith(self.line_name):
+                sbo_name = line[17:].strip()
+            if line.startswith(self.line_down):
+                if sbo_name == self.name:
+                    return line[21:].strip()
 
     def requires(self):
         '''
         Grab package requirements
         '''
-        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
-            for line in SLACKBUILDS_TXT:
-                if line.startswith(self.line_name):
-                    sbo_name = line[17:].strip()
-                if line.startswith(self.line_req):
-                    if sbo_name == self.name:
-                        SLACKBUILDS_TXT.close()
-                        return line[21:].strip().split()
+        for line in self.SLACKBUILDS_TXT.splitlines():
+            if line.startswith(self.line_name):
+                sbo_name = line[17:].strip()
+            if line.startswith(self.line_req):
+                if sbo_name == self.name:
+                    return line[21:].strip().split()
 
     def version(self):
         '''
         Grab package version
         '''
-        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
-            for line in SLACKBUILDS_TXT:
-                if line.startswith(self.line_name):
-                    sbo_name = line[17:].strip()
-                if line.startswith(self.line_ver):
-                    if sbo_name == self.name:
-                        SLACKBUILDS_TXT.close()
-                        return line[20:].strip()
+        for line in self.SLACKBUILDS_TXT.splitlines():
+            if line.startswith(self.line_name):
+                sbo_name = line[17:].strip()
+            if line.startswith(self.line_ver):
+                if sbo_name == self.name:
+                    return line[20:].strip()
 
     def checksum(self):
         '''
         Grab checksum string
         '''
         if arch == "x86_64":
-            with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
-                for line in SLACKBUILDS_TXT:
-                    if line.startswith(self.line_name):
-                        sbo_name = line[17:].strip()
-                    if line.startswith(self.line_md5_64):
-                        if sbo_name == self.name:
-                            if line[26:].strip():
-                                SLACKBUILDS_TXT.close()
-                                return line[26:].strip()
-        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
-            for line in SLACKBUILDS_TXT:
+            for line in self.SLACKBUILDS_TXT.splitlines():
                 if line.startswith(self.line_name):
                     sbo_name = line[17:].strip()
-                if line.startswith(self.line_md5):
+                if line.startswith(self.line_md5_64):
                     if sbo_name == self.name:
-                        SLACKBUILDS_TXT.close()
-                        return line[19:].strip()
+                        if line[26:].strip():
+                            return line[26:].strip()
+        for line in self.SLACKBUILDS_TXT.splitlines():
+            if line.startswith(self.line_name):
+                sbo_name = line[17:].strip()
+            if line.startswith(self.line_md5):
+                if sbo_name == self.name:
+                    return line[19:].strip()
 
     def description(self):
         '''
         Grab package verion
         '''
-        with open(self.sbo_txt, "r") as SLACKBUILDS_TXT:
-            for line in SLACKBUILDS_TXT:
-                if line.startswith(self.line_name):
-                    sbo_name = line[17:].strip()
-                if line.startswith(self.line_des):
-                    if sbo_name == self.name:
-                        SLACKBUILDS_TXT.close()
-                        return line[31:].strip()
+        for line in self.SLACKBUILDS_TXT.splitlines():
+            if line.startswith(self.line_name):
+                sbo_name = line[17:].strip()
+            if line.startswith(self.line_des):
+                if sbo_name == self.name:
+                    return line[31:].strip()

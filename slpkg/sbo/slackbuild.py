@@ -66,7 +66,7 @@ def sbo_build(name):
     PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
     dependencies_list = sbo_dependencies_pkg(name)
     try:
-        if dependencies_list is not None or sbo_search_pkg(name) is not None:
+        if dependencies_list or sbo_search_pkg(name) is not None:
             pkg_sum = count_upgraded = count_installed = int()
             # Insert master package in list to
             # install it after dependencies
@@ -107,7 +107,8 @@ def sbo_build(name):
                 ARCH_COLOR = RED
             elif "UNTESTED" in pkg_arch[-1]:
                 ARCH_COLOR = YELLOW
-            print("\nThe following packages will be automatically installed or upgraded")
+            print("\nThe following packages will be automatically installed "
+                  "or upgraded")
             print("with new version:\n")
             template(78)
             print("{0}{1}{2}{3}{4}{5}{6}".format(
@@ -143,8 +144,9 @@ def sbo_build(name):
             print("\nInstalling summary")
             print("=" * 79)
             print("{0}Total {1} {2}.".format(GREY, len(dependencies), msg_ins))
-            print("{0} {1} will be installed, {2} allready installed and {3} {4}".format(
-                  count_installed, msg_ins, pkg_sum, count_upgraded, msg_upg))
+            print("{0} {1} will be installed, {2} allready installed and "
+                  "{3} {4}".format(count_installed, msg_ins, pkg_sum,
+                                   count_upgraded, msg_upg))
             print("will be upgraded.{0}\n".format(ENDC))
             # Check if package supported or tested by arch
             # before proceed to install
@@ -207,18 +209,19 @@ def sbo_build(name):
                 # and upgraded.
                 if len(installs) > 1:
                     template(78)
-                    print("| Total {0} {1} installed and {2} {3} upgraded".format(
-                          count_installed, msg_ins, count_upgraded, msg_upg))
+                    print("| Total {0} {1} installed and {2} {3} "
+                          "upgraded".format(count_installed, msg_ins,
+                                            count_upgraded, msg_upg))
                     template(78)
                     for pkg, ver in zip(installs, versions):
                         installed = ("{0}-{1}".format(pkg, ver))
                         if find_package(installed, pkg_path):
                             if pkg in upgraded:
-                                print("| Package {0} upgraded successfully".format(
-                                    installed))
+                                print("| Package {0} upgraded "
+                                      "successfully".format(installed))
                             else:
-                                print("| Package {0} installed successfully".format(
-                                    installed))
+                                print("| Package {0} installed "
+                                      "successfully".format(installed))
                         else:
                             print("| Package {0} NOT installed".format(
                                 installed))
@@ -301,12 +304,12 @@ def select_arch(src):
     from arch else select arch
     '''
     arch = os.uname()[4]
-    if arch.startswith("i") and arch.endswith("86"):
-            arch = "i486"
     support = [
         "UNSUPPORTED",
         "UNTESTED",
     ]
+    if arch.startswith("i") and arch.endswith("86"):
+            arch = "i486"
     for item in support:
         if item in src:
             arch = item

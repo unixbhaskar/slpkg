@@ -50,17 +50,24 @@ def main():
         "slpkg - version {0}\n".format(__version__),
         "Utility for easy management packages in Slackware\n",
         "Optional arguments:",
-        "  -h, --help                                show this help message and exit",
+        "  -h, --help                                show this help message " +
+        "and exit",
         "  -v, --version                             print version and exit",
         "  -a, script [source...]                    auto build packages",
-        "  -b, --list, [package...] --add, --remove  add, remove packages in blacklist",
-        "  -q, --list, [package...] --add, --remove  add, remove packages in queue",
-        "      --build, --install, --build-install   build or install from queue",
-        "  -l, all, sbo, slack, noarch               list of installed packages",
-        "  -c, <repository> --upgrade --current      check for updated packages",
+        "  -b, --list, [package...] --add, --remove  add, remove packages in " +
+        "blacklist",
+        "  -q, --list, [package...] --add, --remove  add, remove packages in " +
+        "queue",
+        "      --build, --install, --build-install   build or install from " +
+        "queue",
+        "  -l, all, sbo, slack, noarch               list of installed " +
+        "packages",
+        "  -c, <repository> --upgrade --current      check for updated " +
+        "packages",
         "  -s, <repository> <package> --current      download, build & install",
         "  -f, <package>                             find installed packages",
-        "  -t, <package>                             tracking dependencies from SBo",
+        "  -t, <package>                             tracking dependencies " +
+        "from SBo",
         "  -n, <package>                             view packages from SBo",
         "  -i, [package...]                          install binary packages",
         "  -u, [package...]                          upgrade binary packages",

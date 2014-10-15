@@ -46,7 +46,7 @@ def track_dep(name):
     sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
-    if dependencies_list is not None:
+    if dependencies_list:
         sys.stdout.write(done)
         requires, dependencies = [], []
         # Create one list for all packages

@@ -111,7 +111,7 @@ def install(slack_pkg, version):
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
-                pkg_split = split_package(pkg)
+                pkg_split = split_package(pkg[:-4])
                 name = pkg_split[0]
                 ver = pkg_split[1]
                 arch = pkg_split[2]
@@ -157,12 +157,13 @@ def install(slack_pkg, version):
             print("\nInstalling summary")
             print("=" * 79)
             print("{0}Total {1} {2}.".format(GREY, len(install_all), msg_pkg))
-            print("{0} {1} will be installed, {2} will be upgraded and {3} will be resettled.".format(
-                uni_sum, msg_2_pkg, upg_sum, pkg_sum))
+            print("{0} {1} will be installed, {2} will be upgraded and {3} "
+                  "will be resettled.".format(uni_sum, msg_2_pkg,
+                                              upg_sum, pkg_sum))
             print("Need to get {0} {1} of archives.".format(compressed,
                                                             comp_unit))
-            print("After this process, {0} {1} of additional disk space will be used.{2}".format(
-                  uncompressed, uncomp_unit, ENDC))
+            print("After this process, {0} {1} of additional disk space will "
+                  "be used.{2}".format(uncompressed, uncomp_unit, ENDC))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_list:
@@ -187,7 +188,7 @@ def install(slack_pkg, version):
                     for remove in install_all:
                         os.remove(tmp_path + remove)
                         os.remove(tmp_path + remove + ".asc")
-                    if os.listdir(tmp_path) == []:
+                    if not os.listdir(tmp_path):
                         print("Packages removed")
                     else:
                         print("\nThere are packages in directory {0}\n".format(

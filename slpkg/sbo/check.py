@@ -30,6 +30,7 @@ from pkg.manager import PackageManager
 
 from init import initialization
 from downloader import Download
+from splitting import split_package
 from messages import template, build_FAILED
 from colors import RED, GREEN, GREY, YELLOW, ENDC
 from __metadata__ import tmp, pkg_path, build_path, sp
@@ -49,13 +50,11 @@ def sbo_check():
     but install the package with maximum build tag if find the
     some version in /tmp directory.
     '''
-
     done = "{0}Done{1}\n".format(GREY, ENDC)
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
     initialization()
-    arches = ["-x86_64-", "-i486-", "-arm-", "-noarch-"]
     index, toolbar_width = int(), 3
     [
         dependencies,
@@ -80,22 +79,14 @@ def sbo_check():
                     sys.stdout.write("{0}.{1}".format(GREY, ENDC))
                     sys.stdout.flush()
                     toolbar_width += 4
-                for _arch in arches:
-                    if _arch in pkg:
-                        arch = _arch[1:-1]
-                    else:
-                        arch = os.uname()[4]
-                        if arch.startswith("i") and arch.endswith("86"):
-                            arch = "i486"
-                package = pkg[:-(len(arch) + len("_SBo") + 3)]
-                pkg_version = package.split("-")[-1]
-                name = package[:-(len(pkg_version) + 1)]
+                name = split_package(pkg)[0]
                 if sbo_search_pkg(name):
                     # search packages if exists in the repository
                     # and it gets to avoidable modified packages
                     # from the user with the tag _SBo
                     sbo_package = ("{0}-{1}".format(name,
                                                     SBoGrep(name).version()))
+                    package = ("{0}-{1}".format(name, split_package(pkg)[1]))
                     if sbo_package > package:
                         upg_name.append(name)
             sys.stdout.write(done)
@@ -145,13 +136,9 @@ def sbo_check():
                             if (sbo.startswith(pkg + sp) and
                                     sbo.endswith("_SBo")):
                                 # search if packages installed
-                                # if yes grab package name,
-                                # version and arch
-                                for _arch in arches:
-                                    if _arch in sbo:
-                                        arch = _arch[1:-1]
-                                name = sbo[:-(len(arch) + len("_SBo") + 3)]
-                                pkg_version = name.split("-")[-1]
+                                # if yes grab package name and version
+                                name = split_package(sbo)[0]
+                                pkg_version = split_package(sbo)[1]
                         upgrade.append(pkg)
                         pkg_for_upg.append("{0}-{1}".format(pkg, pkg_version))
                         upg_ver.append(ver)
@@ -185,9 +172,9 @@ def sbo_check():
                     msg_ins = msg_ins + "s"
                 print("\nInstalling summary")
                 print("=" * 79)
-                print("{0}Total {1} {2} will be upgraded and {3} {4} will be installed.{5}\n".format(
-                    GREY, count_upgraded, msg_upg,
-                    count_installed, msg_ins, ENDC))
+                print("{0}Total {1} {2} will be upgraded and {3} {4} will be "
+                      "installed.{5}\n".format(GREY, count_upgraded, msg_upg,
+                                               count_installed, msg_ins, ENDC))
                 read = raw_input("Would you like to upgrade [Y/n]? ")
                 if read == "Y" or read == "y":
                     if not os.path.exists(build_path):
@@ -203,7 +190,6 @@ def sbo_check():
                         sources = []
                         for src in src_dwn:
                             Download(build_path, src).start()
-                            # keep file from source link
                             sources.append(src.split("/")[-1])
                         build_package(script, sources, build_path)
                         # Searches the package name and version in /tmp to
@@ -230,8 +216,9 @@ def sbo_check():
                         PackageManager(binary).upgrade()
                     if len(pkg_for_upg) > 1:
                         template(78)
-                        print("| Total {0} {1} upgraded and {2} {3} installed".format(
-                            count_upgraded, msg_upg, count_installed, msg_ins))
+                        print("| Total {0} {1} upgraded and {2} {3} "
+                              "installed".format(count_upgraded, msg_upg,
+                                                 count_installed, msg_ins))
                         template(78)
                         for pkg, upg, ver in zip(pkg_for_upg, upgrade, upg_ver):
                             upgraded = ("{0}-{1}".format(upg, ver))
@@ -239,8 +226,9 @@ def sbo_check():
                                 if upg in installed:
                                     print("| Package {0} installed".format(pkg))
                                 else:
-                                    print("| Package {0} upgraded with new package {1}-{2}".format(
-                                          pkg, upg, ver))
+                                    print("| Package {0} upgraded with new "
+                                          "package {1}-{2}".format(pkg,
+                                                                   upg, ver))
                         template(78)
             else:
                 print("\nTotal {0} SBo packages are up to date\n".format(

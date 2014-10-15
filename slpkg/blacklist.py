@@ -39,7 +39,8 @@ class BlackList(object):
         create it by default.
         '''
         blacklist_conf = [
-            "# This is the blacklist file. Each package listed here may not be\n",
+            "# This is the blacklist file. Each package listed here may " +
+            "not be\n",
             "# installed be upgraded be find or deleted.\n",
             "# NOTE: The settings here affect all repositories.\n",
             "#\n",
@@ -51,9 +52,12 @@ class BlackList(object):
             "# example add package 'wicd-1.7.2.4-x86_64-4.txz':\n",
             "# wicd\n",
             "#\n",
-            "# Sometimes the automatic kernel update creates problems because you\n",
-            "# may need to file intervention 'lilo'. The slpkg automatically detects\n",
-            "# if the core has been upgraded and running 'lilo'. If you want to avoid\n",
+            "# Sometimes the automatic kernel update creates problems " +
+            "because you\n",
+            "# may need to file intervention 'lilo'. The slpkg automatically " +
+            "detects\n",
+            "# if the core has been upgraded and running 'lilo'. If you want " +
+            "to avoid\n",
             "# any problems uncomment the lines below.\n",
             "#\n",
             "# kernel-firmware\n",

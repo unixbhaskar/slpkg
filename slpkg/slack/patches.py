@@ -102,7 +102,7 @@ def patches(version):
             installed = []
             # get all installed packages and store the package name.
             for pkg in os.listdir(pkg_path):
-                installed.append(split_package(pkg + ".???")[0])
+                installed.append(split_package(pkg)[0])
             for loc, name, comp, uncomp in zip(package_location, package_name,
                                                comp_size, uncomp_size):
                 # If the package from the current repository is installed
@@ -133,7 +133,7 @@ def patches(version):
             template(78)
             print("Upgrading:")
             for upgrade, size in zip(upgrade_all, comp_sum):
-                pkg_split = split_package(upgrade)
+                pkg_split = split_package(upgrade[:-4])
                 name = pkg_split[0]
                 ver = pkg_split[1]
                 arch = pkg_split[2]
@@ -170,8 +170,8 @@ def patches(version):
                                                               msg_pkg))
             print("Need to get {0} {1} of archives.".format(compressed,
                                                             comp_unit))
-            print("After this process, {0} {1} of additional disk space will be used.{2}".format(
-                  uncompressed, uncomp_unit, ENDC))
+            print("After this process, {0} {1} of additional disk space will "
+                  "be used.{2}".format(uncompressed, uncomp_unit, ENDC))
             read = raw_input("\nWould you like to upgrade [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_patches:
@@ -183,7 +183,8 @@ def patches(version):
                     PackageManager((patch_path + pkg).split()).upgrade()
                 for kernel in upgrade_all:
                     if "kernel" in kernel:
-                        print("The kernel has been upgraded, reinstall `lilo` ...")
+                        print("The kernel has been upgraded, reinstall "
+                              "`lilo` ...")
                         subprocess.call("lilo", shell=True)
                         break
                 read = raw_input("Removal downloaded packages [Y/n]? ")
@@ -191,7 +192,7 @@ def patches(version):
                     for pkg in upgrade_all:
                         os.remove(patch_path + pkg)
                         os.remove(patch_path + pkg + ".asc")
-                    if os.listdir(patch_path) == []:
+                    if not os.listdir(patch_path):
                         print("Packages removed")
                     else:
                         print("\nThere are packages in direcrory {0}\n".format(

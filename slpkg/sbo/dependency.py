@@ -27,8 +27,6 @@ from colors import GREY, ENDC
 from blacklist import BlackList
 
 from greps import SBoGrep
-from search import sbo_search_pkg
-
 
 dep_results = []
 
@@ -40,9 +38,8 @@ def sbo_dependencies_pkg(name):
     try:
         dependencies = []
         blacklist = BlackList().packages()
-        sbo_url = sbo_search_pkg(name)
-        if sbo_url:
-            requires = SBoGrep(name).requires()
+        requires = SBoGrep(name).requires()
+        if requires:
             for req in requires:
                 # avoid to add %README% as dependency and
                 # if require in blacklist
@@ -55,7 +52,7 @@ def sbo_dependencies_pkg(name):
                                      GREY, ENDC))
                     sys.stdout.flush()
                     sbo_dependencies_pkg(dep)
-            return dep_results
+        return dep_results
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
