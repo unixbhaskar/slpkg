@@ -58,18 +58,20 @@ class QueuePkgs(object):
                     queue.write(line)
                 queue.close()
 
+        f = open(self.queue_list, "r")
+        self.queued = f.read()
+        f.close()
+
     def packages(self):
         '''
         Return queue list from /var/lib/queue/queue_list
         file.
         '''
         queue_list = []
-        with open(self.queue_list, "r") as queue:
-            for read in queue:
-                read = read.lstrip()
-                if not read.startswith("#"):
-                    queue_list.append(read.replace("\n", ""))
-            queue.close()
+        for read in self.queued.splitlines():
+            read = read.lstrip()
+            if not read.startswith("#"):
+                queue_list.append(read.replace("\n", ""))
         return queue_list
 
     def listed(self):
@@ -113,13 +115,10 @@ class QueuePkgs(object):
         '''
         exit = 0
         print("\nRemove packages from queue:\n")
-        with open(self.queue_list, "r") as queue:
-            lines = queue.read()
-            queue.close()
         if pkgs == ["all"]:
             pkgs = self.packages()
         with open(self.queue_list, "w") as queue:
-            for line in lines.splitlines():
+            for line in self.queued.splitlines():
                 if line not in pkgs:
                     queue.write(line + "\n")
                 else:
@@ -155,8 +154,7 @@ class QueuePkgs(object):
     def install(self):
         packages = self.packages()
         if packages:
-            # new line at start
-            print
+            print   # new line at start
             for pkg in packages:
                 # check if package exist in repository
                 find = find_package(pkg, tmp)

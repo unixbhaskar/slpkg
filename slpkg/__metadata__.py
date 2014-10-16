@@ -58,14 +58,3 @@ bls_path = "/etc/slpkg/"
 
 ''' computer architecture '''
 arch = os.uname()[4]
-
-''' Slackware architectures '''
-'''slack_archs = [
-    "-noarch-",
-    "-x86_64-",
-    "-i386-",
-    "-i486-",
-    "-i686-",
-    "-x86-",
-    "-fw-"
-]'''

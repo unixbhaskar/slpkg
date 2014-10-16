@@ -38,5 +38,7 @@ def split_package(package):
         build = split[-1][:-len(slack)]
     else:
         build = split[-1]
-    arch, ver, name = split[-2], split[-3], "-".join(split[:-3])
+    arch = split[-2]
+    ver = split[-3]
+    name = "-".join(split[:-3])
     return [name, ver, arch, build]

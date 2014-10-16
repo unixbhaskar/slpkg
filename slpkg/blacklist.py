@@ -83,18 +83,20 @@ class BlackList(object):
                     conf.write(line)
                 conf.close()
 
+        f = open(self.blackfile, "r")
+        self.black_conf = f.read()
+        f.close()
+
     def packages(self):
         '''
         Return blacklist packages from /etc/slpkg/blacklist
         configuration file.
         '''
         blacklist = []
-        with open(self.blackfile, "r") as black_conf:
-            for read in black_conf:
-                read = read.lstrip()
-                if not read.startswith("#"):
-                    blacklist.append(read.replace("\n", ""))
-            black_conf.close()
+        for read in self.black_conf.splitlines():
+            read = read.lstrip()
+            if not read.startswith("#"):
+                blacklist.append(read.replace("\n", ""))
         return blacklist
 
     def listed(self):
@@ -134,16 +136,13 @@ class BlackList(object):
         '''
         exit = 0
         print("\nRemove packages from blacklist:\n")
-        with open(self.blackfile, "r") as black_conf:
-            lines = black_conf.read()
-            black_conf.close()
-        with open(self.blackfile, "w") as black_conf:
-            for line in lines.splitlines():
+        with open(self.blackfile, "w") as remove:
+            for line in self.black_conf.splitlines():
                 if line not in pkgs:
-                    black_conf.write(line + "\n")
+                    remove.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
                     exit = 1
-            black_conf.close()
+            remove.close()
         if exit == 1:
             print   # new line at exit
