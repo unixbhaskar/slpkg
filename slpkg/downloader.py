@@ -21,11 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os
 import sys
 import subprocess
 
-from colors import *
+from colors import GREEN, ENDC
 
 
 class Download(object):
@@ -41,10 +40,11 @@ class Download(object):
         Check if file already download the skip or continue
         download if before stoped.
         '''
-        print("\n{0}[ Download ] -->{1} {2}\n".format(GREEN, ENDC, self.file_name))
+        print("\n{0}[ Download ] -->{1} {2}\n".format(GREEN, ENDC,
+                                                      self.file_name))
         try:
             subprocess.call("wget -c -N --directory-prefix={0} {1}".format(
                             self.path, self.url), shell=True)
         except KeyboardInterrupt:
-            print # new line at cancel
+            print   # new line at cancel
             sys.exit()

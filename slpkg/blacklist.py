@@ -23,11 +23,12 @@
 
 import os
 
-from colors import *
 from __metadata__ import bls_path
+from colors import RED, GREEN, ENDC
 
 
 class BlackList(object):
+
     '''
     Blacklist class to add, remove or listed packages
     in blacklist file.
@@ -38,37 +39,41 @@ class BlackList(object):
         create it by default.
         '''
         blacklist_conf = [
-                    "# This is the blacklist file. Each package listed here may not be\n",
-                    "# installed be upgraded be find or deleted.\n",
-                    "# NOTE: The settings here affect all repositories.\n",
-                    "#\n",
-                    "# An example syntax is as follows:\n",
-                    "# add a package from SBo repository:\n",
-                    "# brasero\n",
-                    "#\n",
-                    "# Add package from slackware repository:\n",
-                    "# example add package 'wicd-1.7.2.4-x86_64-4.txz':\n",
-                    "# wicd\n",
-                    "#\n",
-                    "# Sometimes the automatic kernel update creates problems because you\n",
-                    "# may need to file intervention 'lilo'. The slpkg automatically detects\n", 
-                    "# if the core has been upgraded and running 'lilo'. If you want to avoid\n",
-                    "# any problems uncomment the lines below.\n",
-                    "#\n",
-                    "# kernel-firmware\n",
-                    "# kernel-generic\n",
-                    "# kernel-generic-smp\n",
-                    "# kernel-headers\n",
-                    "# kernel-huge\n",
-                    "# kernel-huge-smp\n",
-                    "# kernel-modules\n",
-                    "# kernel-modules-smp\n",
-                    "# kernel-source\n"
-                    "#\n",
-                    "#\n",
-                    "# aaa_elflibs can't be updated.\n",
-                    "aaa_elflibs\n"
-                    ]
+            "# This is the blacklist file. Each package listed here may " +
+            "not be\n",
+            "# installed be upgraded be find or deleted.\n",
+            "# NOTE: The settings here affect all repositories.\n",
+            "#\n",
+            "# An example syntax is as follows:\n",
+            "# add a package from SBo repository:\n",
+            "# brasero\n",
+            "#\n",
+            "# Add package from slackware repository:\n",
+            "# example add package 'wicd-1.7.2.4-x86_64-4.txz':\n",
+            "# wicd\n",
+            "#\n",
+            "# Sometimes the automatic kernel update creates problems " +
+            "because you\n",
+            "# may need to file intervention 'lilo'. The slpkg automatically " +
+            "detects\n",
+            "# if the core has been upgraded and running 'lilo'. If you want " +
+            "to avoid\n",
+            "# any problems uncomment the lines below.\n",
+            "#\n",
+            "# kernel-firmware\n",
+            "# kernel-generic\n",
+            "# kernel-generic-smp\n",
+            "# kernel-headers\n",
+            "# kernel-huge\n",
+            "# kernel-huge-smp\n",
+            "# kernel-modules\n",
+            "# kernel-modules-smp\n",
+            "# kernel-source\n"
+            "#\n",
+            "#\n",
+            "# aaa_elflibs can't be updated.\n",
+            "aaa_elflibs\n"
+        ]
         self.blackfile = bls_path + "blacklist"
         if not os.path.exists(bls_path):
             os.mkdir(bls_path)
@@ -77,19 +82,21 @@ class BlackList(object):
                 for line in blacklist_conf:
                     conf.write(line)
                 conf.close()
-    
+
+        f = open(self.blackfile, "r")
+        self.black_conf = f.read()
+        f.close()
+
     def packages(self):
         '''
-        Return blacklist packages from /etc/slpkg/blacklist 
+        Return blacklist packages from /etc/slpkg/blacklist
         configuration file.
         '''
         blacklist = []
-        with open(self.blackfile, "r") as black_conf:
-            for read in black_conf:
-                read = read.lstrip()
-                if not read.startswith("#"):
-                    blacklist.append(read.replace("\n", "")) 
-            black_conf.close()
+        for read in self.black_conf.splitlines():
+            read = read.lstrip()
+            if not read.startswith("#"):
+                blacklist.append(read.replace("\n", ""))
         return blacklist
 
     def listed(self):
@@ -103,7 +110,7 @@ class BlackList(object):
                 print("{0}{1}{2}".format(GREEN, black, ENDC))
                 exit = 1
         if exit == 1:
-            print # new line at exit
+            print   # new line at exit
 
     def add(self, pkgs):
         '''
@@ -121,7 +128,7 @@ class BlackList(object):
                     exit = 1
             black_conf.close()
         if exit == 1:
-            print # new line at exit
+            print   # new line at exit
 
     def remove(self, pkgs):
         '''
@@ -129,17 +136,13 @@ class BlackList(object):
         '''
         exit = 0
         print("\nRemove packages from blacklist:\n")
-        
-        with open(self.blackfile, "r") as black_conf:
-            lines = black_conf.read()
-            black_conf.close()
-        with open(self.blackfile, "w") as black_conf:
-            for line in lines.splitlines():
+        with open(self.blackfile, "w") as remove:
+            for line in self.black_conf.splitlines():
                 if line not in pkgs:
-                    black_conf.write(line + "\n")
+                    remove.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
                     exit = 1
-            black_conf.close()
+            remove.close()
         if exit == 1:
-            print # new line at exit
+            print   # new line at exit

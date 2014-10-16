@@ -25,18 +25,18 @@ import os
 import sys
 import time
 
-from slpkg.colors import *
 from slpkg.url_read import url_read
 from slpkg.downloader import Download
 from slpkg.blacklist import BlackList
+from slpkg.splitting import split_package
 from slpkg.messages import pkg_not_found, template
-from slpkg.__metadata__ import slpkg_tmp, pkg_path, slack_archs
+from slpkg.__metadata__ import slpkg_tmp, pkg_path
+from slpkg.colors import RED, GREEN, CYAN, YELLOW, GREY, ENDC
 
 from slpkg.pkg.find import find_package
 from slpkg.pkg.manager import PackageManager
 
 from mirrors import mirrors
-from splitting import split_package
 
 
 def install(slack_pkg, version):
@@ -49,7 +49,8 @@ def install(slack_pkg, version):
         [
             comp_sum,
             uncomp_sum,
-            names, dwn_list,
+            names,
+            dwn_list,
             comp_size,
             uncomp_size,
             install_all,
@@ -65,7 +66,7 @@ def install(slack_pkg, version):
         if not os.path.exists(tmp_path):
             os.mkdir(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-              CYAN, slack_pkg, ENDC)) 
+              CYAN, slack_pkg, ENDC))
         sys.stdout.write(reading_lists)
         sys.stdout.flush()
         blacklist = BlackList().packages()
@@ -89,9 +90,11 @@ def install(slack_pkg, version):
                 comp_size.append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
                 uncomp_size.append(line[30:-2].strip())
-        for loc, name, comp, uncomp in zip(package_location, package_name, comp_size, uncomp_size):
+        for loc, name, comp, uncomp in zip(package_location, package_name,
+                                           comp_size, uncomp_size):
             if slack_pkg in name and slack_pkg not in blacklist:
-                dwn_list.append("{0}{1}/{2}".format(mirrors("","", version), loc, name))
+                dwn_list.append("{0}{1}/{2}".format(mirrors("", "", version),
+                                                    loc, name))
                 install_all.append(name)
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
@@ -99,12 +102,16 @@ def install(slack_pkg, version):
         if install_all:
             template(78)
             print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
-                  "| Package", " " * 17, "Version", " " * 12, "Arch", " " * 4, \
-                  "Build", " " * 2, "Repos", " " * 10, "Size"))
+                "| Package", " " * 17,
+                "Version", " " * 12,
+                "Arch", " " * 4,
+                "Build", " " * 2,
+                "Repos", " " * 10,
+                "Size"))
             template(78)
             print("Installing:")
             for pkg, comp in zip(install_all, comp_sum):
-                pkg_split = split_package(pkg)
+                pkg_split = split_package(pkg[:-4])
                 name = pkg_split[0]
                 ver = pkg_split[1]
                 arch = pkg_split[2]
@@ -120,12 +127,12 @@ def install(slack_pkg, version):
                     COLOR = RED
                     uni_sum += 1
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
-                      COLOR, name, ENDC, \
-                      " " * (25-len(name)), ver, \
-                      " " * (19-len(ver)), arch, \
-                      " " * (8-len(arch)), build, \
-                      " " * (7-len(build)), "Slack", \
-                      comp, " K"))
+                    COLOR, name, ENDC,
+                    " " * (25-len(name)), ver,
+                    " " * (19-len(ver)), arch,
+                    " " * (8-len(arch)), build,
+                    " " * (7-len(build)), "Slack",
+                    comp, " K"))
             comp_unit = uncomp_unit = "Mb"
             compressed = round((sum(map(float, comp_sum)) / 1024), 2)
             uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
@@ -150,11 +157,13 @@ def install(slack_pkg, version):
             print("\nInstalling summary")
             print("=" * 79)
             print("{0}Total {1} {2}.".format(GREY, len(install_all), msg_pkg))
-            print("{0} {1} will be installed, {2} will be upgraded and {3} will be resettled.".format(
-                 uni_sum, msg_2_pkg, upg_sum, pkg_sum))
-            print("Need to get {0} {1} of archives.".format(compressed, comp_unit))
-            print("After this process, {0} {1} of additional disk space will be used.{2}".format(
-                  uncompressed, uncomp_unit, ENDC))
+            print("{0} {1} will be installed, {2} will be upgraded and {3} "
+                  "will be resettled.".format(uni_sum, msg_2_pkg,
+                                              upg_sum, pkg_sum))
+            print("Need to get {0} {1} of archives.".format(compressed,
+                                                            comp_unit))
+            print("After this process, {0} {1} of additional disk space will "
+                  "be used.{2}".format(uncompressed, uncomp_unit, ENDC))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 for dwn in dwn_list:
@@ -179,15 +188,17 @@ def install(slack_pkg, version):
                     for remove in install_all:
                         os.remove(tmp_path + remove)
                         os.remove(tmp_path + remove + ".asc")
-                    if os.listdir(tmp_path) == []:
+                    if not os.listdir(tmp_path):
                         print("Packages removed")
                     else:
-                        print("\nThere are packages in directory {0}\n".format(tmp_path))
+                        print("\nThere are packages in directory {0}\n".format(
+                            tmp_path))
                 else:
-                    print("\nThere are packages in directory {0}\n".format(tmp_path))
+                    print("\nThere are packages in directory {0}\n".format(
+                        tmp_path))
         else:
             message = "No matching"
             pkg_not_found("\n", slack_pkg, message, "\n")
     except KeyboardInterrupt:
-        print # new line at exit
+        print   # new line at exit
         sys.exit()

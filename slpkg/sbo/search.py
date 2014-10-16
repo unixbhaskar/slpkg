@@ -21,8 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import re
 import sys
 
 from slpkg.__metadata__ import lib_path
@@ -37,14 +35,17 @@ def sbo_search_pkg(name):
     '''
     try:
         blacklist = BlackList().packages()
-        sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
-        with open(lib_path + "sbo_repo/SLACKBUILDS.TXT", "r") as SLACKBUILDS_TXT:
+        sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(
+            slack_ver()))
+        with open(lib_path + "sbo_repo/SLACKBUILDS.TXT",
+                  "r") as SLACKBUILDS_TXT:
             for line in SLACKBUILDS_TXT:
                 if line.startswith("SLACKBUILD LOCATION"):
-                    sbo_name = (line[23:].split("/")[-1].replace("\n", "")).strip()
+                    sbo_name = (line[23:].split("/")[-1].replace("\n",
+                                                                 "")).strip()
                     if name == sbo_name and name not in blacklist:
                         SLACKBUILDS_TXT.close()
                         return (sbo_url + line[23:].strip() + "/")
     except KeyboardInterrupt:
-        print # new line at exit
+        print   # new line at exit
         sys.exit()

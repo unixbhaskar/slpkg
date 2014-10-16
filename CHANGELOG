@@ -1,3 +1,10 @@
+Version 2.0.0
+15-10-2014
+
+[Updated] - Align PEP8 code style.
+            Fix sbo arch.
+            Update package splitting.
+
 Version 1.9.9
 11-10-2014
 

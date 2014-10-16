@@ -36,5 +36,5 @@ def url_read(link):
         print ("\nslpkg: error: connection refused\n")
         sys.exit()
     except KeyboardInterrupt:
-        print # new line at exit
+        print   # new line at exit
         sys.exit()

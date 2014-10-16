@@ -23,20 +23,20 @@
 
 import sys
 
-from slpkg.colors import *
 from slpkg.messages import template
 from slpkg.init import initialization
 from slpkg.__metadata__ import pkg_path, sp
-
-from dependency import sbo_dependencies_pkg
+from slpkg.colors import RED, GREEN, GREY, YELLOW, CYAN, ENDC
 
 from slpkg.pkg.find import find_package
+
+from dependency import sbo_dependencies_pkg
 
 
 def track_dep(name):
     '''
     View tree of dependencies and also
-    highlight packages with color green  
+    highlight packages with color green
     if allready installed and color red
     if not installed.
     '''
@@ -44,9 +44,9 @@ def track_dep(name):
     reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
-    init = initialization()
+    initialization()
     dependencies_list = sbo_dependencies_pkg(name)
-    if dependencies_list is not None:
+    if dependencies_list:
         sys.stdout.write(done)
         requires, dependencies = [], []
         # Create one list for all packages
@@ -60,7 +60,7 @@ def track_dep(name):
         if dependencies == []:
             dependencies = ["No dependencies"]
         pkg_len = len(name) + 24
-        print # new line at start
+        print    # new line at start
         template(pkg_len)
         print("| Package {0}{1}{2} dependencies :".format(CYAN, name, ENDC))
         template(pkg_len)
@@ -71,11 +71,12 @@ def track_dep(name):
             index += 1
             if find_package(pkg + sp, pkg_path):
                 print(" |")
-                print(" {0}{1}: {2}{3}{4}".format("+--", index, GREEN, pkg, ENDC))
+                print(" {0}{1}: {2}{3}{4}".format("+--", index, GREEN, pkg,
+                                                  ENDC))
             else:
                 print(" |")
                 print(" {0}{1}: {2}{3}{4}".format("+--", index, RED, pkg, ENDC))
-        print # new line at end
+        print    # new line at end
     else:
         sys.stdout.write(done)
         print("\nNo package was found to match\n")

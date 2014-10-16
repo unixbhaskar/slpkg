@@ -40,7 +40,7 @@ setup(
     version=__version__,
     description="Python tool to manage Slackware packages",
     keywords=["slackware", "slpkg", "upgrade", "install", "remove",
-        "view", "slackpkg", "tool", "build"],
+              "view", "slackpkg", "tool", "build"],
     author=__author__,
     author_email=__email__,
     url="https://github.com/dslackw/slpkg",
@@ -62,7 +62,7 @@ setup(
     long_description=open("README.rst").read()
     )
 
-# install man page and blacklist configuration 
+# install man page and blacklist configuration
 # file if not exists.
 if "install" in sys.argv:
     man_path = "/usr/man/man8/"

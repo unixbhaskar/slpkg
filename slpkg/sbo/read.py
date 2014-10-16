@@ -21,8 +21,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-
 from slpkg.url_read import url_read
 
 
@@ -31,6 +29,7 @@ def read_readme(sbo_url, sbo_readme):
     Read SlackBuild README file
     '''
     return url_read(sbo_url + sbo_readme)
+
 
 def read_info_slackbuild(sbo_url, name, sbo_file):
     '''

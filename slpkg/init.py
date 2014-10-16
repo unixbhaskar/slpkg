@@ -23,10 +23,8 @@
 
 import os
 import sys
-import getpass
 
-from file_size import *
-from messages import s_user
+from file_size import FileSize
 from url_read import url_read
 from __metadata__ import log_path, lib_path
 
@@ -35,7 +33,7 @@ from slack.slack_version import slack_ver
 
 def initialization():
     '''
-    Slpkg initialization, creating directories and SLACKBUILDS.TXT in 
+    Slpkg initialization, creating directories and SLACKBUILDS.TXT in
     /var/lib/slpkg/sbo_repo/ and ChangeLog.txt in /var/log/slpkg/ from
     slackbuilds.org.
     '''
@@ -53,14 +51,15 @@ def initialization():
     if not os.path.exists(pkg_que):
         os.mkdir(pkg_que)
     sbo_url = ("http://slackbuilds.org/slackbuilds/{0}/".format(slack_ver()))
-    # Read SLACKBUILDS.TXT from slackbuilds.org and write in /var/lib/slpkg/sbo_repo/
-    # directory if not exist
+    # Read SLACKBUILDS.TXT from slackbuilds.org and write in
+    # /var/lib/slpkg/sbo_repo directory if not exist
     if not os.path.isfile(sbo_lib + "SLACKBUILDS.TXT"):
         print("\nslpkg ...initialization")
         sys.stdout.write("SLACKBUILDS.TXT read ...")
         sys.stdout.flush()
         SLACKBUILDS_TXT = url_read((
-            "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
+            "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(
+                slack_ver())))
         sys.stdout.write("Done\n")
         with open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w") as sbo:
             sbo.write(SLACKBUILDS_TXT)
@@ -73,7 +72,8 @@ def initialization():
         sys.stdout.write("ChangeLog.txt read ...")
         sys.stdout.flush()
         ChangeLog_txt = url_read((
-            "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(slack_ver())))
+            "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(
+                slack_ver())))
         sys.stdout.write("Done\n")
         with open("{0}ChangeLog.txt".format(sbo_log), "w") as log:
             log.write(ChangeLog_txt)
@@ -91,9 +91,11 @@ def initialization():
         sys.stdout.write("Files re-created ...")
         sys.stdout.flush()
         SLACKBUILDS_TXT = url_read((
-            "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(slack_ver())))
+            "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(
+                slack_ver())))
         ChangeLog_txt = url_read((
-            "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(slack_ver())))
+            "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(
+                slack_ver())))
         with open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w") as sbo:
             sbo.write(SLACKBUILDS_TXT)
             sbo.close()

@@ -29,9 +29,9 @@ import shutil
 import tarfile
 import subprocess
 
-from slpkg.colors import *
 from slpkg.checksum import md5sum
 from slpkg.__metadata__ import log_path
+from slpkg.colors import RED, GREEN, ENDC
 from slpkg.messages import pkg_not_found, template
 
 from slpkg.sbo.greps import SBoGrep
@@ -39,11 +39,11 @@ from slpkg.sbo.greps import SBoGrep
 
 def build_package(script, sources, path):
     '''
-    Build package from source and create log 
+    Build package from source and create log
     file in path /var/log/slpkg/sbo/build_logs/.
     Also check md5sum calculates.
     '''
-    prgnam = script.replace(".tar.gz", "")
+    prgnam = script[:-7]    # remove .tar.gz
     log_file = ("build_{0}_log".format(prgnam))
     sbo_logs = log_path + "sbo/"
     build_logs = sbo_logs + "build_logs/"
@@ -86,11 +86,12 @@ def build_package(script, sources, path):
                 print("| MD5SUM check for {0} [ {1}PASSED{2} ]".format(
                       src, GREEN, ENDC))
                 template(78)
-                print # new line after pass checksum
-            shutil.copy2(src, prgnam)
+                print   # new line after pass checksum
+                shutil.copy2(src, prgnam)
         os.chdir(path + prgnam)
         subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
-        with open(build_logs + log_file, "w") as log: # write headers to log file
+        # write headers to log file
+        with open(build_logs + log_file, "w") as log:
             log.write(log_line)
             log.write("File : " + log_file + "\n")
             log.write("Path : " + build_logs + "\n")
@@ -99,8 +100,8 @@ def build_package(script, sources, path):
             log.write(log_line)
             log.close()
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
-                             prgnam, build_logs, log_file), \
-                                     shell=True, stdout=sys.stdout).communicate()
+                prgnam, build_logs, log_file),
+                shell=True, stdout=sys.stdout).communicate()
         end_log_time = time.strftime("%H:%M:%S")
         end_time = time.time()
         diff_time = round(end_time - start_time, 2)
@@ -109,14 +110,17 @@ def build_package(script, sources, path):
             sum_time = str(diff_time) + " Sec"
         elif diff_time > 59.99 and diff_time <= 3599.99:
             sum_time = round(diff_time / 60, 2)
-            sum_time_list = re.findall(r"\d+", str(sum_time))  
-            sum_time = ("{0} Min {1} Sec".format(sum_time_list[0], sum_time_list[1]))
+            sum_time_list = re.findall(r"\d+", str(sum_time))
+            sum_time = ("{0} Min {1} Sec".format(sum_time_list[0],
+                                                 sum_time_list[1]))
         elif diff_time > 3599.99:
             sum_time = round(diff_time / 3600, 2)
-            sum_time_list = re.findall(r"\d+", str(sum_time))  
-            sum_time = ("{0} Hours {1} Min".format(sum_time_list[0], sum_time_list[1]))
-        with open(build_logs + log_file, "a") as log: # append END tag to a log file
-            log.seek(2) # EOF
+            sum_time_list = re.findall(r"\d+", str(sum_time))
+            sum_time = ("{0} Hours {1} Min".format(sum_time_list[0],
+                                                   sum_time_list[1]))
+        # append END tag to a log file
+        with open(build_logs + log_file, "a") as log:
+            log.seek(2)
             log.write(log_line)
             log.write("Time : " + end_log_time + "\n")
             log.write("Total build time : {0}\n".format(sum_time))
@@ -124,10 +128,11 @@ def build_package(script, sources, path):
             log.write(log_line)
             log.close()
             os.chdir(path)
-        print("Total build time for package {0} : {1}\n".format(prgnam, sum_time))
+        print("Total build time for package {0} : {1}\n".format(prgnam,
+                                                                sum_time))
     except (OSError, IOError):
         message = "Wrong file"
         pkg_not_found("\n", prgnam, message, "\n")
     except KeyboardInterrupt:
-        print # new line at exit
+        print   # new line at exit
         sys.exit()

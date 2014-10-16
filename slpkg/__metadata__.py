@@ -26,7 +26,7 @@ import subprocess
 
 __all__ = "slpkg"
 __author__ = "dslackw"
-__version_info__ = (1, 9, 9)
+__version_info__ = (2, 0, 0)
 __version__ = "{0}.{1}.{2}".format(*__version_info__)
 __license__ = "GNU General Public License v3 (GPLv3)"
 __email__ = "d.zlatanidis@gmail.com"
@@ -58,14 +58,3 @@ bls_path = "/etc/slpkg/"
 
 ''' computer architecture '''
 arch = os.uname()[4]
-
-''' Slackware architectures '''
-slack_archs = [
-               "-noarch-", 
-               "-x86_64-", 
-               "-i386-", 
-               "-i486-",
-               "-i686-",
-               "-x86-",
-               "-fw-"
-               ]

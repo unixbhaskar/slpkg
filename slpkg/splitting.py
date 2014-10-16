@@ -21,9 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from slpkg.__metadata__ import slack_archs
-
-from slack_version import slack_ver
+from slack.slack_version import slack_ver
 
 
 def split_package(package):
@@ -31,15 +29,16 @@ def split_package(package):
     Split package in name, version
     arch and build tag.
     '''
-    arch = slack = str()
-    for archs in slack_archs:
-        if archs in package:
-            arch = archs
-    if "_slack" in package:
-        slack = "_slack" + slack_ver()
-    pkg = package[:-(len(slack) + 4)]
-    build = pkg.split("-")[-1] 
-    pkg_ver = pkg[:-(len(arch) + len(build))]
-    ver = pkg_ver.split("-")[-1]
-    name = pkg_ver[:-(len(ver) + 1)]
-    return [name, ver, arch[1:-1], build]
+    split = package.split("-")
+    sbo = "_SBo"
+    slack = "_slack{0}".format(slack_ver())
+    if sbo in package:
+        build = split[-1][:-4]   # remove .t?z extension
+    if slack in package:
+        build = split[-1][:-len(slack)]
+    else:
+        build = split[-1]
+    arch = split[-2]
+    ver = split[-3]
+    name = "-".join(split[:-3])
+    return [name, ver, arch, build]

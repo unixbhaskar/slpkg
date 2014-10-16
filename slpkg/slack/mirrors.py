@@ -32,16 +32,16 @@ def mirrors(name, location, version):
     '''
     if arch == "x86_64":
         if version == "stable":
-            http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
-                   slack_ver(), location, name)
-        else: 
-            http = "http://mirrors.slackware.com/slackware/slackware64-{0}/{1}{2}".format(
-                   version, location, name)
+            http = ("http://mirrors.slackware.com/slackware/slackware64-"
+                    "{0}/{1}{2}".format(slack_ver(), location, name))
+        else:
+            http = ("http://mirrors.slackware.com/slackware/slackware64-"
+                    "{0}/{1}{2}".format(version, location, name))
     else:
         if version == "stable":
-            http = "http://mirrors.slackware.com/slackware/slackware-{0}/{1}{2}".format(
-                   slack_ver(), location, name)
+            http = ("http://mirrors.slackware.com/slackware/slackware-"
+                    "{0}/{1}{2}".format(slack_ver(), location, name))
         else:
-            http = "http://mirrors.slackware.com/slackware/slackware-{0}/{1}{2}".format(
-                   version, location, name)
+            http = ("http://mirrors.slackware.com/slackware/slackware-"
+                    "{0}/{1}{2}".format(version, location, name))
     return http
