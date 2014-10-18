@@ -98,12 +98,11 @@ class PackageManager(object):
         Remove Slackware binary packages
         '''
         dep_path = log_path + "dep/"
-        [
-            removed,
-            dependencies,
-            rmv_list,
-            rmv_dependencies
-        ] = ([] for i in range(4))
+        [removed,
+         dependencies,
+         rmv_list,
+         rmv_dependencies
+         ] = ([] for i in range(4))
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, ", ".join(self.binary), ENDC))
         for pkg in self.binary:
@@ -116,7 +115,7 @@ class PackageManager(object):
             else:
                 message = "Can't remove"
                 pkg_not_found("", pkg, message, "")
-        if removed == []:
+        if not removed:
             print   # new line at end
         else:
             msg = "package"
@@ -154,7 +153,6 @@ class PackageManager(object):
                                 "packages) [Y/n]? ")
                         except KeyboardInterrupt:
                             print  # new line at exit
-
                             sys.exit()
                         if remove_dep == "y" or remove_dep == "Y":
                             for dep in dependencies:
@@ -185,7 +183,7 @@ class PackageManager(object):
                     print("| Total {0} packages removed".format(len(rmv_list)))
                 template(78)
                 for pkg in rmv_list:
-                    if find_package(pkg + sp, pkg_path) == []:
+                    if not find_package(pkg + sp, pkg_path):
                         print("| Package {0} removed".format(pkg))
                     else:
                         print("| Package {0} not found".format(pkg))

@@ -51,7 +51,6 @@ class SlackBuild(object):
     '''
     def __init__(self, name):
         self.name = name
-        self.src = []
         self.sbo_ver = []
         self.pkg_arch = []
         self.installs = []
@@ -87,20 +86,19 @@ class SlackBuild(object):
             # Create two lists one for package version and one
             # for package arch.
             for pkg in self.dependencies:
-                grep = SBoGrep(pkg)
-                version = grep.version()
+                version = SBoGrep(pkg).version()
+                src = SBoGrep(pkg).source()
                 self.sbo_ver.append(version)
-                self.src = grep.source()
-                self.pkg_arch.append(self._select_arch(self.src))
+                self.pkg_arch.append(self._select_arch(src))
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     self.pkg_sum += 1
             sys.stdout.write(self.done)
-            self._process()     # continue to install packages
+            self._process(src)     # continue to install packages
         else:
             self._matching()    # view matching packages
 
-    def _process(self):
+    def _process(self, src):
         '''
         Continue build and install or upgrade packages with all
         dependencies.
@@ -168,8 +166,8 @@ class SlackBuild(object):
             # Check if package supported or tested by arch
             # before proceed to install
             UNST = ["UNSUPPORTED", "UNTESTED"]
-            if self.src in UNST:
-                print("{0}The package {1}{2}\n".format(RED, self.src, ENDC))
+            if src in UNST:
+                print("{0}The package {1}{2}\n".format(RED, src, ENDC))
                 read = ""
             # exit if all packages already installed
             elif self.pkg_sum == len(self.dependencies):
@@ -199,10 +197,9 @@ class SlackBuild(object):
                     pkg_found(pkg, sbo_file_version)
                     template(78)
                 else:
-                    grep = SBoGrep(pkg)
                     sbo_url = sbo_search_pkg(pkg)
                     sbo_link = sbo_slackbuild_dwn(sbo_url)
-                    src_link = grep.source().split()
+                    src_link = SBoGrep(pkg).source().split()
                     script = sbo_link.split("/")[-1]
                     Download(build_path, sbo_link).start()
                     sources = []
@@ -236,14 +233,18 @@ class SlackBuild(object):
             # Reference list with packages installed
             # and upgraded.
             if len(self.installs) > 1:
-                self._reference(count_installed, count_upgraded,
-                                msg_ins, msg_upg)
+                self._reference(count_installed, count_upgraded, msg_ins,
+                                msg_upg)
                 self._write_log(self.dependencies)
         except KeyboardInterrupt:
             print   # new line at exit
             sys.exit()
 
     def _matching(self):
+        '''
+        If the search packages failed then first searches for
+        matching packages.
+        '''
         ins = uns = 0
         sbo_matching = []
         index, toolbar_width = 0, 3
@@ -262,7 +263,7 @@ class SlackBuild(object):
                         self.sbo_ver.append(SBoGrep(sbo_name).version())
                         src = SBoGrep(sbo_name).source()
                         self.pkg_arch.append(self._select_arch(src))
-        SLACKBUILDS_TXT.close()
+            SLACKBUILDS_TXT.close()
         sys.stdout.write(self.done)
         if sbo_matching:
             print("\nPackages with name matching [ {0}{1}{2} ]"
@@ -273,12 +274,10 @@ class SlackBuild(object):
             for match, ver, march in zip(sbo_matching, self.sbo_ver,
                                          self.pkg_arch):
                 if find_package(match + sp + ver, pkg_path):
-                    self._view_packages(GREEN, match, ver,
-                                        ARCH_COLOR, march)
+                    self._view_packages(GREEN, match, ver, ARCH_COLOR, march)
                     ins += 1
                 else:
-                    self._view_packages(RED, match, ver,
-                                        ARCH_COLOR, march)
+                    self._view_packages(RED, match, ver, ARCH_COLOR, march)
                     uns += 1
             msgs = self._msgs(sbo_matching, ins, uns)
             total_msg = msgs[0]
@@ -297,7 +296,7 @@ class SlackBuild(object):
     def _msgs(self, packages, ins, uns):
         '''
         Count packages and print `packages` or
-        `package`
+        `package`.
         '''
         total_msg = ins_msg = uns_msg = "package"
         if len(packages) > 1:
