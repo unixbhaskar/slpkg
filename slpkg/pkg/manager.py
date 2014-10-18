@@ -37,6 +37,7 @@ class PackageManager(object):
     Package manager class for install, upgrade,
     reinstall, remove, find and display packages.
     '''
+
     def __init__(self, binary):
         self.binary = binary
 
@@ -52,7 +53,7 @@ class PackageManager(object):
             except subprocess.CalledProcessError:
                 message = "Can't install"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)
@@ -69,7 +70,7 @@ class PackageManager(object):
             except subprocess.CalledProcessError:
                 message = "Can't upgrade"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)
@@ -87,7 +88,7 @@ class PackageManager(object):
             except subprocess.CalledProcessError:
                 message = "Can't reinstall"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)
@@ -108,7 +109,7 @@ class PackageManager(object):
         for pkg in self.binary:
             pkgs = find_package(pkg + sp, pkg_path)
             if pkgs:
-                print("{0}[ delete ]{1} --> {2}".format(RED, ENDC,
+                print("[ {0}delete{1} ] --> {2}".format(RED, ENDC,
                       "\n               ".join(pkgs)))
 
                 removed.append(pkg)
@@ -196,7 +197,7 @@ class PackageManager(object):
         Find installed Slackware packages
         '''
         self.binary = "".join(self.binary)
-        matching = size = int()
+        matching = size = 0
         print("\nPackages with matching name [ {0}{1}{2} ]\n".format(
               CYAN, self.binary, ENDC))
         for match in find_package(self.binary, pkg_path):
@@ -241,7 +242,7 @@ class PackageManager(object):
             else:
                 message = "Can't dislpay"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)

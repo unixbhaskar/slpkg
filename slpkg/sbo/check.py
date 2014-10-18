@@ -55,7 +55,7 @@ def sbo_check():
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
     initialization()
-    index, toolbar_width = int(), 3
+    index, toolbar_width = 0, 3
     [
         dependencies,
         dependencies_list,
@@ -152,7 +152,7 @@ def sbo_check():
                     "Arch", " " * 9, "Repository"))
                 template(78)
                 print("Upgrading:")
-                count_upgraded = count_installed = int()
+                count_upgraded = count_installed = 0
                 for upg, ver, arch in zip(pkg_for_upg, upg_ver, upg_arch):
                     if find_package(upg[:-len(ver)], pkg_path):
                         COLOR = YELLOW
@@ -205,10 +205,10 @@ def sbo_check():
                             build_FAILED(sbo_url, prgnam)
                             sys.exit()
                         if find_package(name + sp, pkg_path):
-                            print("{0}[ Upgrading ] --> {1}{2}".format(
-                                GREEN, ENDC, name))
+                            print("[ {0}Upgrading{1} ] --> {2}".format(
+                                YELLOW, ENDC, name))
                         else:
-                            print("{0}[ Installing ] --> {1}{2}".format(
+                            print("[ {0}Installing{1} ] --> {2}".format(
                                 GREEN, ENDC, name))
                             # Use this list to pick out what
                             # packages will be installed

@@ -54,17 +54,18 @@ def sbo_network(name):
     initialization()
     sbo_url = sbo_search_pkg(name)
     if sbo_url:
-        sbo_desc = SBoGrep(name).description()[len(name) + 2:-1]
-        sbo_req = SBoGrep(name).requires()
+        grep = SBoGrep(name)
+        sbo_desc = grep.description()[len(name) + 2:-1]
+        sbo_req = grep.requires()
+        source_dwn = grep.source().split()
         sbo_dwn = sbo_slackbuild_dwn(sbo_url)
-        source_dwn = SBoGrep(name).source().split()
         sys.stdout.write(done)
         view_sbo(name, sbo_url, sbo_desc, sbo_dwn.split("/")[-1],
                  ", ".join([src.split("/")[-1] for src in source_dwn]),
                  sbo_req)
         # Check if package supported by arch
         # before proceed to install
-        FAULT = str()
+        FAULT = ""
         UNST = ["UNSUPPORTED", "UNTESTED"]
         if "".join(source_dwn) in UNST:
             FAULT = "".join(source_dwn)
@@ -110,7 +111,7 @@ def sbo_network(name):
                     sys.exit()
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
-                sbo_version = SBoGrep(name).version()
+                sbo_version = grep.version()
                 prgnam = ("{0}-{1}".format(name, sbo_version))
                 if find_package(prgnam + sp, pkg_path) == []:
                     sources = []
@@ -133,8 +134,8 @@ def sbo_network(name):
                     except ValueError:
                         build_FAILED(sbo_url, prgnam)
                         sys.exit()
-                    print("{0}[ Installing ] --> {1} {2}".format(GREEN, ENDC,
-                                                                 name))
+                    print("[ {0}Installing{1} ] --> {2}".format(GREEN, ENDC,
+                                                                name))
                     PackageManager(binary).upgrade()
                     break
                 else:

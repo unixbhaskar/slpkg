@@ -28,6 +28,7 @@ import time
 from url_read import url_read
 from downloader import Download
 from blacklist import BlackList
+from splitting import split_package
 from messages import pkg_not_found, template
 from __metadata__ import slpkg_tmp, pkg_path
 from colors import RED, GREEN, CYAN, YELLOW, GREY, ENDC
@@ -36,7 +37,6 @@ from pkg.find import find_package
 from pkg.manager import PackageManager
 
 from mirrors import mirrors
-from splitting import split_package
 
 
 def install(slack_pkg, version):
@@ -57,8 +57,8 @@ def install(slack_pkg, version):
             package_name,
             package_location
         ] = ([] for i in range(9))
-        arch = COLOR = str()
-        pkg_sum = uni_sum = upg_sum = int()
+        arch = COLOR = ""
+        pkg_sum = uni_sum = upg_sum = 0
         # create directories if not exists
         tmp_path = slpkg_tmp + "packages/"
         if not os.path.exists(slpkg_tmp):
@@ -172,15 +172,15 @@ def install(slack_pkg, version):
                 for install, name in zip(install_all, names):
                     package = ((tmp_path + install).split())
                     if os.path.isfile(pkg_path + install[:-4]):
-                        print("{0}[ reinstalling ] --> {1}{2}".format(
+                        print("[ {0}reinstalling{1} ] --> {2}".format(
                               GREEN, ENDC, install))
                         PackageManager(package).reinstall()
                     elif find_package(name + "-", pkg_path):
-                        print("{0}[ upgrading ] --> {1}{2}".format(
-                              GREEN, ENDC, install))
+                        print("[ {0}upgrading{1} ] --> {2}".format(
+                              YELLOW, ENDC, install))
                         PackageManager(package).upgrade()
                     else:
-                        print("{0}[ installing ] --> {1}{2}".format(
+                        print("[ {0}installing{1} ] --> {2}".format(
                               GREEN, ENDC, install))
                         PackageManager(package).upgrade()
                 read = raw_input("Removal downloaded packages [Y/n]? ")
