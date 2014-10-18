@@ -93,3 +93,14 @@ def view_sbo(pkg, sbo_url, sbo_desc, sbo_dwn, source_dwn, sbo_req):
     print(" {0}I{1}nstall              Download/Build/Install".format(
         RED, ENDC))
     print(" {0}Q{1}uit                 Quit\n".format(RED, ENDC))
+
+
+def sbo_packages_view(PKG_COLOR, package, version, ARCH_COLOR, arch):
+    '''
+    View slackbuild packages with version and arch
+    '''
+    print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
+        PKG_COLOR, package, ENDC,
+        " " * (38-len(package)), version,
+        " " * (17-len(version)), ARCH_COLOR, arch, ENDC,
+        " " * (13-len(arch)), "SBo"))

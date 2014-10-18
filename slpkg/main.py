@@ -36,7 +36,7 @@ from pkg.manager import PackageManager
 from sbo.check import sbo_check
 from sbo.views import sbo_network
 from sbo.tracking import track_dep
-from sbo.slackbuild import SlackBuild
+from sbo.slackbuild import sbo_build
 
 from slack.patches import patches
 from slack.install import install
@@ -133,7 +133,7 @@ def main():
                 print(opt)
     elif len(args) == 3 and args[0] == "-s":
         if args[1] == repository[0]:
-            SlackBuild(args[2]).start()
+            sbo_build(args[2])
         elif args[1] == repository[1]:
             version = "stable"
             install(args[2], version)
