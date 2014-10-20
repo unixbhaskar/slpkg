@@ -1,5 +1,7 @@
 .. image:: https://badge.fury.io/py/slpkg.png
     :target: http://badge.fury.io/py/slpkg
+.. image:: https://travis-ci.org/dslackw/slpkg.svg?branch=master
+    :target: https://travis-ci.org/dslackw/slpkg
 .. image:: https://pypip.in/d/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 .. image:: https://pypip.in/license/slpkg/badge.png
