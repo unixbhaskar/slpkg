@@ -63,10 +63,10 @@ def build_package(script, sources, path):
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
-        for src in sources:
+        sbo_md5_list = SBoGrep(prgnam).checksum()
+        for src, sbo_md5 in zip(sources, sbo_md5_list):
             # fix build sources with spaces
             src = src.replace("%20", " ")
-            sbo_md5 = SBoGrep(prgnam).checksum()
             md5 = md5sum(src)
             if sbo_md5 != md5:
                 template(78)
@@ -87,7 +87,7 @@ def build_package(script, sources, path):
                       src, GREEN, ENDC))
                 template(78)
                 print   # new line after pass checksum
-                shutil.copy2(src, prgnam)
+            shutil.copy2(src, prgnam)
         os.chdir(path + prgnam)
         subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
         # write headers to log file

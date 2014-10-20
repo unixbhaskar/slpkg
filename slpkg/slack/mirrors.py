@@ -22,6 +22,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from slpkg.__metadata__ import arch
+
 from slack_version import slack_ver
 
 

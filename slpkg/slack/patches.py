@@ -26,14 +26,13 @@ import sys
 import time
 import subprocess
 
-
 from slpkg.url_read import url_read
 from slpkg.messages import template
 from slpkg.downloader import Download
 from slpkg.blacklist import BlackList
 from slpkg.splitting import split_package
+from slpkg.colors import GREY, YELLOW, ENDC
 from slpkg.__metadata__ import pkg_path, slpkg_tmp
-from slpkg.colors import GREEN, GREY, YELLOW, ENDC
 
 from slpkg.pkg.manager import PackageManager
 
@@ -58,7 +57,7 @@ def patches(version):
             package_name,
             package_location
         ] = ([] for i in range(8))
-        slack_arch = str()
+        slack_arch = ""
         patch_path = slpkg_tmp + "patches/"
         if not os.path.exists(slpkg_tmp):
             os.mkdir(slpkg_tmp)
@@ -179,7 +178,7 @@ def patches(version):
                     Download(patch_path, dwn).start()
                     Download(patch_path, dwn + ".asc").start()
                 for pkg in upgrade_all:
-                    print("{0}[ upgrading ] --> {1}{2}".format(GREEN, ENDC,
+                    print("[ {0}upgrading{1} ] --> {2}".format(YELLOW, ENDC,
                                                                pkg[:-4]))
                     PackageManager((patch_path + pkg).split()).upgrade()
                 for kernel in upgrade_all:

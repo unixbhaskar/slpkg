@@ -28,10 +28,10 @@ from slpkg.init import initialization
 from slpkg.downloader import Download
 from slpkg.__metadata__ import (tmp, pkg_path, build_path,
                                 log_path, lib_path, sp)
+
 from slpkg.colors import RED, GREEN, GREY, YELLOW, CYAN, ENDC
 from slpkg.messages import (pkg_found, template, build_FAILED,
                             pkg_not_found, sbo_packages_view)
-
 
 from slpkg.pkg.find import find_package
 from slpkg.pkg.build import build_package
@@ -43,7 +43,7 @@ from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 
 
-def sbo_build(name):
+def sbo_install(name):
     '''
     Download, build and install or upgrade packages
     with all dependencies if version is greater than
@@ -54,6 +54,10 @@ def sbo_build(name):
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
     initialization()
+    UNST = [
+        "UNSUPPORTED",
+        "UNTESTED"
+    ]
     [
         sbo_ver,
         pkg_arch,
@@ -63,11 +67,11 @@ def sbo_build(name):
         requires,
         dependencies
     ] = ([] for i in range(7))
-    PKG_COLOR = DEP_COLOR = ARCH_COLOR = str()
+    PKG_COLOR = DEP_COLOR = ARCH_COLOR = ""
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list or sbo_search_pkg(name) is not None:
-            pkg_sum = count_upgraded = count_installed = int()
+            pkg_sum = count_upgraded = count_installed = 0
             # Insert master package in list to
             # install it after dependencies
             requires.append(name)
@@ -85,7 +89,7 @@ def sbo_build(name):
                 version = SBoGrep(pkg).version()
                 sbo_ver.append(version)
                 src = SBoGrep(pkg).source()
-                pkg_arch.append(select_arch(src))
+                pkg_arch.append(select_arch(src, UNST))
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
@@ -103,17 +107,19 @@ def sbo_build(name):
             else:
                 PKG_COLOR = RED
                 count_installed += 1
-            if "UNSUPPORTED" in pkg_arch[-1]:
+            if UNST[0] in pkg_arch[-1]:
                 ARCH_COLOR = RED
-            elif "UNTESTED" in pkg_arch[-1]:
+            elif UNST[1] in pkg_arch[-1]:
                 ARCH_COLOR = YELLOW
             print("\nThe following packages will be automatically installed "
                   "or upgraded")
             print("with new version:\n")
             template(78)
             print("{0}{1}{2}{3}{4}{5}{6}".format(
-                "| Package", " " * 30, "Version",
-                " " * 10, "Arch", " " * 9, "Repository"))
+                "| Package", " " * 30,
+                "Version", " " * 10,
+                "Arch", " " * 9,
+                "Repository"))
             template(78)
             print("Installing:")
             sbo_packages_view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR,
@@ -131,9 +137,9 @@ def sbo_build(name):
                 else:
                     DEP_COLOR = RED
                     count_installed += 1
-                if "UNSUPPORTED" in dep_arch:
+                if UNST[0] in dep_arch:
                     ARCH_COLOR = RED
-                elif "UNTESTED" in dep_arch:
+                elif UNST[1] in dep_arch:
                     ARCH_COLOR = YELLOW
                 sbo_packages_view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
             msg_upg = msg_ins = "package"
@@ -150,7 +156,6 @@ def sbo_build(name):
             print("will be upgraded.{0}\n".format(ENDC))
             # Check if package supported or tested by arch
             # before proceed to install
-            UNST = ["UNSUPPORTED", "UNTESTED"]
             if src in UNST:
                 print("{0}The package {1}{2}\n".format(RED, src, ENDC))
                 read = ""
@@ -226,23 +231,11 @@ def sbo_build(name):
                             print("| Package {0} NOT installed".format(
                                 installed))
                     template(78)
-                # Write dependencies in a log file
-                # into directory `/var/log/slpkg/dep/`
-                if find_package(name + sp, pkg_path):
-                    dep_path = log_path + "dep/"
-                    if not os.path.exists(dep_path):
-                        os.mkdir(dep_path)
-                    if os.path.isfile(dep_path + name):
-                        os.remove(dep_path + name)
-                    if len(dependencies) > 1:
-                        with open(dep_path + name, "w") as f:
-                            for dep in dependencies:
-                                f.write(dep + "\n")
-                            f.close()
+                    write_deps(name, dependencies)
         else:
-            ins = uns = int()
+            ins = uns = index = 0
+            toolbar_width = 3
             sbo_matching = []
-            index, toolbar_width = int(), 3
             with open(lib_path + "sbo_repo/SLACKBUILDS.TXT",
                       "r") as SLACKBUILDS_TXT:
                 for line in SLACKBUILDS_TXT:
@@ -257,19 +250,21 @@ def sbo_build(name):
                             sbo_matching.append(sbo_name)
                             sbo_ver.append(SBoGrep(sbo_name).version())
                             src = SBoGrep(sbo_name).source()
-                            pkg_arch.append(select_arch(src))
-            SLACKBUILDS_TXT.close()
+                            pkg_arch.append(select_arch(src, UNST))
+                SLACKBUILDS_TXT.close()
             sys.stdout.write(done)
             if sbo_matching:
                 print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
                       CYAN, name, ENDC))
                 template(78)
                 print("{0}{1}{2}{3}{4}{5}{6}".format(
-                    "| Package", " " * 30, "Version",
-                    " " * 10, "Arch", " " * 9, "Repository"))
+                    "| Package", " " * 30,
+                    "Version", " " * 10,
+                    "Arch", " " * 9,
+                    "Repository"))
                 template(78)
                 print("Matching:")
-                ARCH_COLOR = str()
+                ARCH_COLOR = ""
                 for match, ver, march in zip(sbo_matching, sbo_ver, pkg_arch):
                     if find_package(match + sp + ver, pkg_path):
                         sbo_packages_view(GREEN, match, ver, ARCH_COLOR, march)
@@ -287,9 +282,9 @@ def sbo_build(name):
                 print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total found {1} matching {2}.".format(
-                      GREY, len(sbo_matching), total_msg))
+                    GREY, len(sbo_matching), total_msg))
                 print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
-                      ins, ins_msg, uns, uns_msg, ENDC))
+                    ins, ins_msg, uns, uns_msg, ENDC))
             else:
                 message = "No matching"
                 pkg_not_found("\n", name, message, "\n")
@@ -298,19 +293,33 @@ def sbo_build(name):
         sys.exit()
 
 
-def select_arch(src):
+def write_deps(name, dependencies):
+    '''
+    Write dependencies in a log file
+    into directory `/var/log/slpkg/dep/`
+    '''
+    if find_package(name + sp, pkg_path):
+        dep_path = log_path + "dep/"
+        if not os.path.exists(dep_path):
+            os.mkdir(dep_path)
+        if os.path.isfile(dep_path + name):
+            os.remove(dep_path + name)
+        if len(dependencies) > 1:
+            with open(dep_path + name, "w") as f:
+                for dep in dependencies:
+                    f.write(dep + "\n")
+                f.close()
+
+
+def select_arch(src, UNST):
     '''
     Looks if sources unsupported or untested
     from arch else select arch
     '''
     arch = os.uname()[4]
-    support = [
-        "UNSUPPORTED",
-        "UNTESTED",
-    ]
     if arch.startswith("i") and arch.endswith("86"):
             arch = "i486"
-    for item in support:
+    for item in UNST:
         if item in src:
             arch = item
     return arch

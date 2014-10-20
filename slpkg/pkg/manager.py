@@ -37,6 +37,7 @@ class PackageManager(object):
     Package manager class for install, upgrade,
     reinstall, remove, find and display packages.
     '''
+
     def __init__(self, binary):
         self.binary = binary
 
@@ -52,7 +53,7 @@ class PackageManager(object):
             except subprocess.CalledProcessError:
                 message = "Can't install"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)
@@ -69,7 +70,7 @@ class PackageManager(object):
             except subprocess.CalledProcessError:
                 message = "Can't upgrade"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)
@@ -87,7 +88,7 @@ class PackageManager(object):
             except subprocess.CalledProcessError:
                 message = "Can't reinstall"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)
@@ -97,25 +98,24 @@ class PackageManager(object):
         Remove Slackware binary packages
         '''
         dep_path = log_path + "dep/"
-        [
-            removed,
-            dependencies,
-            rmv_list,
-            rmv_dependencies
-        ] = ([] for i in range(4))
+        [removed,
+         dependencies,
+         rmv_list,
+         rmv_dependencies
+         ] = ([] for i in range(4))
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, ", ".join(self.binary), ENDC))
         for pkg in self.binary:
             pkgs = find_package(pkg + sp, pkg_path)
             if pkgs:
-                print("{0}[ delete ]{1} --> {2}".format(RED, ENDC,
+                print("[ {0}delete{1} ] --> {2}".format(RED, ENDC,
                       "\n               ".join(pkgs)))
 
                 removed.append(pkg)
             else:
                 message = "Can't remove"
                 pkg_not_found("", pkg, message, "")
-        if removed == []:
+        if not removed:
             print   # new line at end
         else:
             msg = "package"
@@ -153,7 +153,6 @@ class PackageManager(object):
                                 "packages) [Y/n]? ")
                         except KeyboardInterrupt:
                             print  # new line at exit
-
                             sys.exit()
                         if remove_dep == "y" or remove_dep == "Y":
                             for dep in dependencies:
@@ -184,7 +183,7 @@ class PackageManager(object):
                     print("| Total {0} packages removed".format(len(rmv_list)))
                 template(78)
                 for pkg in rmv_list:
-                    if find_package(pkg + sp, pkg_path) == []:
+                    if not find_package(pkg + sp, pkg_path):
                         print("| Package {0} removed".format(pkg))
                     else:
                         print("| Package {0} not found".format(pkg))
@@ -196,7 +195,7 @@ class PackageManager(object):
         Find installed Slackware packages
         '''
         self.binary = "".join(self.binary)
-        matching = size = int()
+        matching = size = 0
         print("\nPackages with matching name [ {0}{1}{2} ]\n".format(
               CYAN, self.binary, ENDC))
         for match in find_package(self.binary, pkg_path):
@@ -241,7 +240,7 @@ class PackageManager(object):
             else:
                 message = "Can't dislpay"
                 if len(self.binary) > 1:
-                    bol = eol = str()
+                    bol = eol = ""
                 else:
                     bol = eol = "\n"
                 pkg_not_found(bol, pkg, message, eol)

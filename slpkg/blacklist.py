@@ -28,11 +28,11 @@ from colors import RED, GREEN, ENDC
 
 
 class BlackList(object):
-
     '''
     Blacklist class to add, remove or listed packages
     in blacklist file.
     '''
+
     def __init__(self):
         '''
         Initialization blacklist file if not exist in /etc/slpkg
