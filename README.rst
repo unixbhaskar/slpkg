@@ -6,6 +6,8 @@
     :target: https://pypi.python.org/pypi/slpkg
 .. image:: https://pypip.in/license/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
+.. image:: https://coveralls.io/repos/dslackw/slpkg/badge.png
+    :target: https://coveralls.io/r/dslackw/slpkg
 
 Latest Release:
 
