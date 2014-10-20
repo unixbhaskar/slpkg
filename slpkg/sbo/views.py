@@ -113,15 +113,15 @@ def sbo_network(name):
                     os.mkdir(build_path)
                 sbo_version = grep.version()
                 prgnam = ("{0}-{1}".format(name, sbo_version))
-                if find_package(prgnam + sp, pkg_path) == []:
+                if not find_package(prgnam + sp, pkg_path):
                     sources = []
                     os.chdir(build_path)
                     Download(build_path, sbo_dwn).start()
                     script = sbo_dwn.split("/")[-1]
                     for src in source_dwn:
-                            Download(build_path, src).start()
-                            sources.append(src.split("/")[-1])
-                            build_package(script, sources, build_path)
+                        Download(build_path, src).start()
+                        sources.append(src.split("/")[-1])
+                    build_package(script, sources, build_path)
                     # Searches the package name and version in /tmp to install.
                     # If find two or more packages e.g. to build tag
                     # 2 or 3 will fit most.

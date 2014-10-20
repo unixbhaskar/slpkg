@@ -98,13 +98,13 @@ class SBoGrep(object):
                 if line.startswith(self.line_md5_64):
                     if sbo_name == self.name:
                         if line[26:].strip():
-                            return line[26:].strip()
+                            return line[26:].strip().split()
         for line in self.SLACKBUILDS_TXT.splitlines():
             if line.startswith(self.line_name):
                 sbo_name = line[17:].strip()
             if line.startswith(self.line_md5):
                 if sbo_name == self.name:
-                    return line[19:].strip()
+                    return line[19:].strip().split()
 
     def description(self):
         '''

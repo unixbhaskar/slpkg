@@ -1,3 +1,9 @@
+Version 2.0.1
+20-10-2014
+
+[Updated] - Bugfix md5 checksum failed.
+          - Fix download all sources before build in view options.
+
 Version 2.0.0
 15-10-2014
 

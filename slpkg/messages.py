@@ -59,8 +59,8 @@ def build_FAILED(sbo_url, prgnam):
     template(78)
     print("| Build package {0} [ {1}FAILED{2} ]".format(prgnam, RED, ENDC))
     template(78)
-    print("| See log file in {0}/var/log/slpkg/sbo/build_logs{1} directory or \
-          read README file:".format(CYAN, ENDC))
+    print("| See log file in {0}/var/log/slpkg/sbo/build_logs{1} directory or "
+          "read README file:".format(CYAN, ENDC))
     print("| {0}{1}".format(sbo_url, "README"))
     template(78)
     print   # new line at end

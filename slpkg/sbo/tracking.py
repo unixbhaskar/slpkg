@@ -46,8 +46,8 @@ def track_dep(name):
     sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
+    sys.stdout.write(done)
     if dependencies_list:
-        sys.stdout.write(done)
         requires, dependencies = [], []
         # Create one list for all packages
         for pkg in dependencies_list:
@@ -78,5 +78,4 @@ def track_dep(name):
                 print(" {0}{1}: {2}{3}{4}".format("+--", index, RED, pkg, ENDC))
         print    # new line at end
     else:
-        sys.stdout.write(done)
         print("\nNo package was found to match\n")

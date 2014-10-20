@@ -28,6 +28,6 @@ def prog_version():
     '''
     Print version, license and email
     '''
-    print ("Version : {0}".format(__version__))
-    print ("Licence : {0}".format(__license__))
-    print ("Email   : {0}".format(__email__))
+    print("Version : {0}".format(__version__))
+    print("Licence : {0}".format(__license__))
+    print("Email   : {0}".format(__email__))

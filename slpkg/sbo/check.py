@@ -55,7 +55,6 @@ def sbo_check():
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
     initialization()
-    index, toolbar_width = 0, 3
     [
         dependencies,
         dependencies_list,
@@ -68,6 +67,7 @@ def sbo_check():
         upg_ver,
         upg_arch
     ] = ([] for i in range(10))
+    index, toolbar_width = 0, 3
     try:
         for pkg in os.listdir(pkg_path):
             if pkg.endswith("_SBo"):
