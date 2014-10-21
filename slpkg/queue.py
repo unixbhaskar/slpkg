@@ -47,7 +47,7 @@ class QueuePkgs(object):
             "# packages you want to build or install.\n",
             "#\n"
         ]
-        self.quit = ""
+        self.quit = False
         self.queue = lib_path + "queue/"
         self.queue_list = self.queue + "queue_list"
         if not os.path.exists(lib_path):
@@ -84,7 +84,7 @@ class QueuePkgs(object):
         for pkg in self.packages():
             if pkg:
                 print("{0}{1}{2}".format(GREEN, pkg, ENDC))
-                self.quit = "yes"
+                self.quit = True
         if self.quit:
             print   # new line at exit
 
@@ -101,10 +101,10 @@ class QueuePkgs(object):
                 if pkg not in queue_list and find is not None:
                     print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     queue.write(pkg + "\n")
-                    self.quit = "yes"
+                    self.quit = True
                 else:
                     print("{0}{1}{2}".format(RED, pkg, ENDC))
-                    self.quit = "yes"
+                    self.quit = True
             queue.close()
         if self.quit:
             print   # new line at exit
@@ -122,7 +122,7 @@ class QueuePkgs(object):
                     queue.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
-                    self.quit = "yes"
+                    self.quit = True
             queue.close()
         if self.quit:
             print   # new line at exit

@@ -74,7 +74,7 @@ class BlackList(object):
             "# aaa_elflibs can't be updated.\n",
             "aaa_elflibs\n"
         ]
-        self.quit = ""
+        self.quit = False
         self.blackfile = bls_path + "blacklist"
         if not os.path.exists(bls_path):
             os.mkdir(bls_path)
@@ -108,7 +108,7 @@ class BlackList(object):
         for black in self.packages():
             if black:
                 print("{0}{1}{2}".format(GREEN, black, ENDC))
-                self.quit = "yes"
+                self.quit = True
         if self.quit:
             print   # new line at exit
 
@@ -124,7 +124,7 @@ class BlackList(object):
                 if pkg not in blacklist:
                     print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     black_conf.write(pkg + "\n")
-                    self.quit = "yes"
+                    self.quit = True
             black_conf.close()
         if self.quit:
             print   # new line at exit
@@ -140,7 +140,7 @@ class BlackList(object):
                     remove.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
-                    self.quit = "yes"
+                    self.quit = True
             remove.close()
         if self.quit:
             print   # new line at exit
