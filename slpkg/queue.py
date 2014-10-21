@@ -151,6 +151,9 @@ class QueuePkgs(object):
             print("\nPackages not found in the queue for building\n")
 
     def install(self):
+        '''
+        Install packages from queue
+        '''
         packages = self.packages()
         if packages:
             print   # new line at start
