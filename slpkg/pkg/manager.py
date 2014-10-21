@@ -101,8 +101,7 @@ class PackageManager(object):
         [removed,
          dependencies,
          rmv_list,
-         rmv_dependencies
-         ] = ([] for i in range(4))
+         ] = ([] for i in range(3))
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, ", ".join(self.binary), ENDC))
         for pkg in self.binary:
@@ -162,7 +161,6 @@ class PackageManager(object):
                                         shell=True))
                                     rmv_list.append(dep)
                             os.remove(dep_path + rmv)
-                            rmv_dependencies += dependencies[:-1]
                         else:
                             if find_package(rmv + sp, pkg_path):
                                 print(subprocess.check_output(

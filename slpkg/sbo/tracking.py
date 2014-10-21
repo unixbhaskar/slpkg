@@ -28,9 +28,9 @@ from init import initialization
 from __metadata__ import pkg_path, sp
 from colors import RED, GREEN, GREY, YELLOW, CYAN, ENDC
 
-from dependency import sbo_dependencies_pkg
-
 from pkg.find import find_package
+
+from dependency import sbo_dependencies_pkg
 
 
 def track_dep(name):
