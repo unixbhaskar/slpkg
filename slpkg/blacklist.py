@@ -108,8 +108,8 @@ class BlackList(object):
         for black in self.packages():
             if black:
                 print("{0}{1}{2}".format(GREEN, black, ENDC))
-                self.quit = 1
-        if self.quit == 1:
+                self.quit = "yes"
+        if self.quit:
             print   # new line at exit
 
     def add(self, pkgs):
@@ -124,9 +124,9 @@ class BlackList(object):
                 if pkg not in blacklist:
                     print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     black_conf.write(pkg + "\n")
-                    self.quit = 1
+                    self.quit = "yes"
             black_conf.close()
-        if self.quit == 1:
+        if self.quit:
             print   # new line at exit
 
     def remove(self, pkgs):
@@ -140,7 +140,7 @@ class BlackList(object):
                     remove.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
-                    self.quit = 1
+                    self.quit = "yes"
             remove.close()
-        if self.quit == 1:
+        if self.quit:
             print   # new line at exit

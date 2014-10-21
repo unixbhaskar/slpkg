@@ -84,8 +84,8 @@ class QueuePkgs(object):
         for pkg in self.packages():
             if pkg:
                 print("{0}{1}{2}".format(GREEN, pkg, ENDC))
-                self.quit = 1
-        if self.quit == 1:
+                self.quit = "yes"
+        if self.quit:
             print   # new line at exit
 
     def add(self, pkgs):
@@ -101,12 +101,12 @@ class QueuePkgs(object):
                 if pkg not in queue_list and find is not None:
                     print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     queue.write(pkg + "\n")
-                    self.quit = 1
+                    self.quit = "yes"
                 else:
                     print("{0}{1}{2}".format(RED, pkg, ENDC))
-                    self.quit = 1
+                    self.quit = "yes"
             queue.close()
-        if self.quit == 1:
+        if self.quit:
             print   # new line at exit
 
     def remove(self, pkgs):
@@ -122,9 +122,9 @@ class QueuePkgs(object):
                     queue.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
-                    self.quit = 1
+                    self.quit = "yes"
             queue.close()
-        if self.quit == 1:
+        if self.quit:
             print   # new line at exit
 
     def build(self):
