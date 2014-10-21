@@ -1,1 +1,1 @@
-# [ main ] directory
+from main import *

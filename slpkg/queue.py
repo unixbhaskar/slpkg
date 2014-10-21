@@ -47,6 +47,7 @@ class QueuePkgs(object):
             "# packages you want to build or install.\n",
             "#\n"
         ]
+        self.quit = False
         self.queue = lib_path + "queue/"
         self.queue_list = self.queue + "queue_list"
         if not os.path.exists(lib_path):
@@ -79,20 +80,18 @@ class QueuePkgs(object):
         '''
         Print packages from queue
         '''
-        quit = 0
         print("\nPackages in queue:\n")
         for pkg in self.packages():
             if pkg:
                 print("{0}{1}{2}".format(GREEN, pkg, ENDC))
-                quit = 1
-        if quit == 1:
+                self.quit = True
+        if self.quit:
             print   # new line at exit
 
     def add(self, pkgs):
         '''
         Add packages in queue if not exist
         '''
-        quit = 0
         queue_list = self.packages()
         pkgs = set(pkgs)
         print("\nAdd packages in queue:\n")
@@ -102,19 +101,18 @@ class QueuePkgs(object):
                 if pkg not in queue_list and find is not None:
                     print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     queue.write(pkg + "\n")
-                    quit = 1
+                    self.quit = True
                 else:
                     print("{0}{1}{2}".format(RED, pkg, ENDC))
-                    quit = 1
+                    self.quit = True
             queue.close()
-        if quit == 1:
+        if self.quit:
             print   # new line at exit
 
     def remove(self, pkgs):
         '''
         Remove packages from queue
         '''
-        quit = 0
         print("\nRemove packages from queue:\n")
         if pkgs == ["all"]:
             pkgs = self.packages()
@@ -124,9 +122,9 @@ class QueuePkgs(object):
                     queue.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
-                    quit = 1
+                    self.quit = True
             queue.close()
-        if quit == 1:
+        if self.quit:
             print   # new line at exit
 
     def build(self):
@@ -153,6 +151,9 @@ class QueuePkgs(object):
             print("\nPackages not found in the queue for building\n")
 
     def install(self):
+        '''
+        Install packages from queue
+        '''
         packages = self.packages()
         if packages:
             print   # new line at start
