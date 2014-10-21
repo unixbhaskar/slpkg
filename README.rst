@@ -3,7 +3,7 @@
 .. image:: https://travis-ci.org/dslackw/slpkg.svg?branch=master
     :target: https://travis-ci.org/dslackw/slpkg
 .. image:: https://landscape.io/github/dslackw/slpkg/master/landscape.png
-   :target: https://landscape.io/github/dslackw/slpkg/master
+    :target: https://landscape.io/github/dslackw/slpkg/master
 .. image:: https://pypip.in/d/slpkg/badge.png
     :target: https://pypi.python.org/pypi/slpkg
 .. image:: https://pypip.in/license/slpkg/badge.png
@@ -11,9 +11,9 @@
 
 Latest Release:
 
-- Version: 2.0.1
+- Version: 2.0.2
 - `Package <https://sourceforge.net/projects/slpkg/files/slpkg/binary/>`_
-- `Source <https://github.com/dslackw/slpkg/archive/v2.0.1.tar.gz>`_
+- `Source <https://github.com/dslackw/slpkg/archive/v2.0.2.tar.gz>`_
 - `CHANGELOG <https://github.com/dslackw/slpkg/blob/master/CHANGELOG>`_
  
 .. image:: https://raw.githubusercontent.com/dslackw/images/master/slpkg/logo.png
@@ -100,8 +100,8 @@ Untar the archive and run install.sh script:
 
 .. code-block:: bash
     
-    $ tar xvf slpkg-2.0.1.tar.gz
-    $ cd slpkg-2.0.1
+    $ tar xvf slpkg-2.0.2.tar.gz
+    $ cd slpkg-2.0.2
     $ ./install.sh
 
 Using `pip <https://pip.pypa.io/en/latest/>`_ :

@@ -66,11 +66,11 @@ def build_FAILED(sbo_url, prgnam):
     print   # new line at end
 
 
-def template(max):
+def template(max_len):
     '''
     Print template
     '''
-    print("+" + "=" * max)
+    print("+" + "=" * max_len)
 
 
 def view_sbo(pkg, sbo_url, sbo_desc, sbo_dwn, source_dwn, sbo_req):

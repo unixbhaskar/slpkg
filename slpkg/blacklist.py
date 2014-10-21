@@ -103,20 +103,20 @@ class BlackList(object):
         '''
         Print blacklist packages
         '''
-        exit = 0
+        quit = 0
         print("\nPackages in blacklist:\n")
         for black in self.packages():
             if black:
                 print("{0}{1}{2}".format(GREEN, black, ENDC))
-                exit = 1
-        if exit == 1:
+                quit = 1
+        if quit == 1:
             print   # new line at exit
 
     def add(self, pkgs):
         '''
         Add blacklist packages if not exist
         '''
-        exit = 0
+        quit = 0
         blacklist = self.packages()
         pkgs = set(pkgs)
         print("\nAdd packages in blacklist:\n")
@@ -125,16 +125,16 @@ class BlackList(object):
                 if pkg not in blacklist:
                     print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     black_conf.write(pkg + "\n")
-                    exit = 1
+                    quit = 1
             black_conf.close()
-        if exit == 1:
+        if quit == 1:
             print   # new line at exit
 
     def remove(self, pkgs):
         '''
         Remove packages from blacklist
         '''
-        exit = 0
+        quit = 0
         print("\nRemove packages from blacklist:\n")
         with open(self.blackfile, "w") as remove:
             for line in self.black_conf.splitlines():
@@ -142,7 +142,7 @@ class BlackList(object):
                     remove.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
-                    exit = 1
+                    quit = 1
             remove.close()
-        if exit == 1:
+        if quit == 1:
             print   # new line at exit
