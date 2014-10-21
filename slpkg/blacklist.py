@@ -74,6 +74,7 @@ class BlackList(object):
             "# aaa_elflibs can't be updated.\n",
             "aaa_elflibs\n"
         ]
+        self.quit = ""
         self.blackfile = bls_path + "blacklist"
         if not os.path.exists(bls_path):
             os.mkdir(bls_path)
@@ -103,20 +104,18 @@ class BlackList(object):
         '''
         Print blacklist packages
         '''
-        quit = 0
         print("\nPackages in blacklist:\n")
         for black in self.packages():
             if black:
                 print("{0}{1}{2}".format(GREEN, black, ENDC))
-                quit = 1
-        if quit == 1:
+                self.quit = 1
+        if self.quit == 1:
             print   # new line at exit
 
     def add(self, pkgs):
         '''
         Add blacklist packages if not exist
         '''
-        quit = 0
         blacklist = self.packages()
         pkgs = set(pkgs)
         print("\nAdd packages in blacklist:\n")
@@ -125,16 +124,15 @@ class BlackList(object):
                 if pkg not in blacklist:
                     print("{0}{1}{2}".format(GREEN, pkg, ENDC))
                     black_conf.write(pkg + "\n")
-                    quit = 1
+                    self.quit = 1
             black_conf.close()
-        if quit == 1:
+        if self.quit == 1:
             print   # new line at exit
 
     def remove(self, pkgs):
         '''
         Remove packages from blacklist
         '''
-        quit = 0
         print("\nRemove packages from blacklist:\n")
         with open(self.blackfile, "w") as remove:
             for line in self.black_conf.splitlines():
@@ -142,7 +140,7 @@ class BlackList(object):
                     remove.write(line + "\n")
                 else:
                     print("{0}{1}{2}".format(RED, line, ENDC))
-                    quit = 1
+                    self.quit = 1
             remove.close()
-        if quit == 1:
+        if self.quit == 1:
             print   # new line at exit
