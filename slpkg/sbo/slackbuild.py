@@ -318,7 +318,7 @@ def select_arch(src, UNST):
     '''
     arch = os.uname()[4]
     if arch.startswith("i") and arch.endswith("86"):
-            arch = "i486"
+        arch = "i486"
     for item in UNST:
         if item in src:
             arch = item
