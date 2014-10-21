@@ -26,7 +26,7 @@ import sys
 import gzip
 import shutil
 
-from slpkg.__metadate__ import __version__, __email__, __author__
+from slpkg.__metadata__ import __version__, __email__, __author__
 
 try:
     from setuptools import setup
