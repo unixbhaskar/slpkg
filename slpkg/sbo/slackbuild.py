@@ -27,11 +27,11 @@ import sys
 from init import initialization
 from downloader import Download
 from __metadata__ import (tmp, pkg_path, build_path,
-                                log_path, lib_path, sp)
+                          log_path, lib_path, sp)
 
 from colors import RED, GREEN, GREY, YELLOW, CYAN, ENDC
 from messages import (pkg_found, template, build_FAILED,
-                            pkg_not_found, sbo_packages_view)
+                      pkg_not_found, sbo_packages_view)
 
 from pkg.find import find_package
 from pkg.build import build_package
@@ -54,19 +54,10 @@ def sbo_install(name):
     sys.stdout.write(reading_lists)
     sys.stdout.flush()
     initialization()
-    UNST = [
-        "UNSUPPORTED",
-        "UNTESTED"
-    ]
-    [
-        sbo_ver,
-        pkg_arch,
-        installs,
-        upgraded,
-        versions,
-        requires,
-        dependencies
-    ] = ([] for i in range(7))
+    UNST = ["UNSUPPORTED",
+            "UNTESTED"]
+    (sbo_ver, pkg_arch, installs, upgraded, versions,
+     requires, dependencies) = ([] for i in range(7))
     PKG_COLOR = DEP_COLOR = ARCH_COLOR = ""
     dependencies_list = sbo_dependencies_pkg(name)
     try:
@@ -155,11 +146,11 @@ def sbo_install(name):
                                    count_upgraded, msg_upg))
             print("will be upgraded.{0}\n".format(ENDC))
             # Check if package supported or tested by arch
-            # before proceed to install
+            # before proceed to install.
+            # Exit if all packages already installed
             if src in UNST:
                 print("{0}The package {1}{2}\n".format(RED, src, ENDC))
                 read = ""
-            # exit if all packages already installed
             elif pkg_sum == len(dependencies):
                 read = ""
             else:
@@ -233,9 +224,9 @@ def sbo_install(name):
                     template(78)
                     write_deps(name, dependencies)
         else:
-            ins = uns = index = 0
-            toolbar_width = 3
             sbo_matching = []
+            toolbar_width = 3
+            count_installed = count_uninstalled = index = 0
             with open(lib_path + "sbo_repo/SLACKBUILDS.TXT",
                       "r") as SLACKBUILDS_TXT:
                 for line in SLACKBUILDS_TXT:
@@ -268,23 +259,23 @@ def sbo_install(name):
                 for match, ver, march in zip(sbo_matching, sbo_ver, pkg_arch):
                     if find_package(match + sp + ver, pkg_path):
                         sbo_packages_view(GREEN, match, ver, ARCH_COLOR, march)
-                        ins += 1
+                        count_installed += 1
                     else:
                         sbo_packages_view(RED, match, ver, ARCH_COLOR, march)
-                        uns += 1
+                        count_uninstalled += 1
                 total_msg = ins_msg = uns_msg = "package"
                 if len(sbo_matching) > 1:
                     total_msg = total_msg + "s"
-                if ins > 1:
+                if count_installed > 1:
                     ins_msg = ins_msg + "s"
-                if uns > 1:
+                if count_uninstalled > 1:
                     uns_msg = uns_msg + "s"
                 print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total found {1} matching {2}.".format(
                     GREY, len(sbo_matching), total_msg))
                 print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
-                    ins, ins_msg, uns, uns_msg, ENDC))
+                    count_installed, ins_msg, count_uninstalled, uns_msg, ENDC))
             else:
                 message = "No matching"
                 pkg_not_found("\n", name, message, "\n")

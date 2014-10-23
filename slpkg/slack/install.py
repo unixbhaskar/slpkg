@@ -46,17 +46,8 @@ def install(slack_pkg, version):
     try:
         done = "{0}Done{1}\n".format(GREY, ENDC)
         reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
-        [
-            comp_sum,
-            uncomp_sum,
-            names,
-            dwn_list,
-            comp_size,
-            uncomp_size,
-            install_all,
-            package_name,
-            package_location
-        ] = ([] for i in range(9))
+        (comp_sum, uncomp_sum, names, dwn_list, comp_size, uncomp_size,
+         install_all, package_name, package_location) = ([] for i in range(9))
         arch = COLOR = ""
         pkg_sum = uni_sum = upg_sum = 0
         # create directories if not exists

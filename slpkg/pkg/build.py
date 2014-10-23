@@ -47,12 +47,7 @@ def build_package(script, sources, path):
     log_file = ("build_{0}_log".format(prgnam))
     sbo_logs = log_path + "sbo/"
     build_logs = sbo_logs + "build_logs/"
-    if not os.path.exists(log_path):
-        os.mkdir(log_path)
-    if not os.path.exists(sbo_logs):
-        os.mkdir(sbo_logs)
-    if not os.path.exists(build_logs):
-        os.mkdir(build_logs)
+    init(sbo_logs, build_logs)
     log_date = time.strftime("%d/%m/%Y")
     start_log_time = time.strftime("%H:%M:%S")
     start_time = time.time()
@@ -105,19 +100,7 @@ def build_package(script, sources, path):
         end_log_time = time.strftime("%H:%M:%S")
         end_time = time.time()
         diff_time = round(end_time - start_time, 2)
-        # calculate build time per package
-        if diff_time <= 59.99:
-            sum_time = str(diff_time) + " Sec"
-        elif diff_time > 59.99 and diff_time <= 3599.99:
-            sum_time = round(diff_time / 60, 2)
-            sum_time_list = re.findall(r"\d+", str(sum_time))
-            sum_time = ("{0} Min {1} Sec".format(sum_time_list[0],
-                                                 sum_time_list[1]))
-        elif diff_time > 3599.99:
-            sum_time = round(diff_time / 3600, 2)
-            sum_time_list = re.findall(r"\d+", str(sum_time))
-            sum_time = ("{0} Hours {1} Min".format(sum_time_list[0],
-                                                   sum_time_list[1]))
+        sum_time = build_time(diff_time)
         # append END tag to a log file
         with open(build_logs + log_file, "a") as log:
             log.seek(2)
@@ -136,3 +119,34 @@ def build_package(script, sources, path):
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
+
+
+def init(sbo_logs, build_logs):
+    '''
+    Create working directories if not exists
+    '''
+    if not os.path.exists(log_path):
+        os.mkdir(log_path)
+    if not os.path.exists(sbo_logs):
+        os.mkdir(sbo_logs)
+    if not os.path.exists(build_logs):
+        os.mkdir(build_logs)
+
+
+def build_time(diff_time):
+    '''
+    Calculate build time per package
+    '''
+    if diff_time <= 59.99:
+        sum_time = str(diff_time) + " Sec"
+    elif diff_time > 59.99 and diff_time <= 3599.99:
+        sum_time = round(diff_time / 60, 2)
+        sum_time_list = re.findall(r"\d+", str(sum_time))
+        sum_time = ("{0} Min {1} Sec".format(sum_time_list[0],
+                                             sum_time_list[1]))
+    elif diff_time > 3599.99:
+        sum_time = round(diff_time / 3600, 2)
+        sum_time_list = re.findall(r"\d+", str(sum_time))
+        sum_time = ("{0} Hours {1} Min".format(sum_time_list[0],
+                                               sum_time_list[1]))
+    return sum_time
