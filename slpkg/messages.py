@@ -73,7 +73,13 @@ def template(max_len):
     print("+" + "=" * max_len)
 
 
-def view_sbo(pkg, sbo_url, sbo_desc, sbo_dwn, source_dwn, sbo_req):
+def view_sbo(*args):
+    pkg = args[0]
+    sbo_url = args[1]
+    sbo_desc = args[2]
+    sbo_dwn = args[3]
+    source_dwn = args[4]
+    sbo_req = args[5]
     print   # new line at start
     template(78)
     print("| {0}Package {1}{2}{3} --> {4}".format(GREEN, CYAN, pkg, GREEN,
