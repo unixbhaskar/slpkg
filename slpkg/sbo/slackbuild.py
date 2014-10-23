@@ -59,6 +59,7 @@ def sbo_install(name):
         "UNTESTED"
     ]
     sbo_ver, pkg_arch, = [], []
+    count_installed = count_upgraded = 0
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list or sbo_search_pkg(name) is not None:
@@ -82,6 +83,7 @@ def sbo_install(name):
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
             (PKG_COLOR, ARCH_COLOR, count_installed,
              count_upgraded) = color_tags(master_pkg, pkg, pkg_arch[-1],
+                                          count_installed, count_upgraded,
                                           UNST)
             print("\nThe following packages will be automatically installed "
                   "or upgraded")
@@ -96,16 +98,17 @@ def sbo_install(name):
                                           pkg_arch[:-1]):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
                 (DEP_COLOR, ARCH_COLOR, count_installed,
-                 count_upgraded) = color_tags(dep_pkg, dep, dep_arch, UNST)
+                 count_upgraded) = color_tags(dep_pkg, dep, dep_arch,
+                                              count_installed, count_upgraded,
+                                              UNST)
                 sbo_packages_view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
-            msg_upg = msg_ins = "package"
-            if count_installed > 1:
-                msg_ins = msg_ins + "s"
-            if count_upgraded > 1:
-                msg_upg = msg_upg + "s"
+            msg_ins, msg_upg, total_msg = msg_packages(dependencies,
+                                                       count_installed,
+                                                       count_upgraded)
             print("\nInstalling summary")
             print("=" * 79)
-            print("{0}Total {1} {2}.".format(GREY, len(dependencies), msg_ins))
+            print("{0}Total {1} {2}.".format(GREY, len(dependencies),
+                                             total_msg))
             print("{0} {1} will be installed, {2} allready installed and "
                   "{3} {4}".format(count_installed, msg_ins, pkg_sum,
                                    count_upgraded, msg_upg))
@@ -123,27 +126,9 @@ def sbo_install(name):
             if read == "Y" or read == "y":
                 installs, upgraded, versions = install(dependencies, sbo_ver,
                                                        pkg_arch)
-                # Reference list with packages installed
-                # and upgraded.
                 if len(installs) > 1:
-                    template(78)
-                    print("| Total {0} {1} installed and {2} {3} "
-                          "upgraded".format(count_installed, msg_ins,
-                                            count_upgraded, msg_upg))
-                    template(78)
-                    for pkg, ver in zip(installs, versions):
-                        installed = ("{0}-{1}".format(pkg, ver))
-                        if find_package(installed, pkg_path):
-                            if pkg in upgraded:
-                                print("| Package {0} upgraded "
-                                      "successfully".format(installed))
-                            else:
-                                print("| Package {0} installed "
-                                      "successfully".format(installed))
-                        else:
-                            print("| Package {0} NOT installed".format(
-                                installed))
-                    template(78)
+                    reference(installs, upgraded, count_installed,
+                              count_upgraded, versions, msg_ins, msg_upg)
                     write_deps(name, dependencies)
         else:
             ins = uns = index = 0
@@ -179,25 +164,56 @@ def sbo_install(name):
                     else:
                         sbo_packages_view(RED, match, ver, ARCH_COLOR, march)
                         uns += 1
-                total_msg = ins_msg = uns_msg = "package"
-                if len(sbo_matching) > 1:
-                    total_msg = total_msg + "s"
-                if ins > 1:
-                    ins_msg = ins_msg + "s"
-                if uns > 1:
-                    uns_msg = uns_msg + "s"
+                msg_ins, msg_ins, total_msg = msg_packages(sbo_matching, ins,
+                                                           uns)
                 print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total found {1} matching {2}.".format(
                     GREY, len(sbo_matching), total_msg))
                 print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
-                    ins, ins_msg, uns, uns_msg, ENDC))
+                    ins, msg_ins, uns, msg_ins, ENDC))
             else:
                 message = "No matching"
                 pkg_not_found("\n", name, message, "\n")
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
+
+
+def msg_packages(pkgs, ins, uns):
+    total_msg = msg_ins = msg_uns = "package"
+    if len(pkgs) > 1:
+        total_msg = total_msg + "s"
+    if ins > 1:
+        msg_ins = msg_ins + "s"
+    if uns > 1:
+        msg_ins = msg_ins + "s"
+    return msg_ins, msg_uns, total_msg
+
+
+def reference(installs, upgraded, count_installed, count_upgraded, versions,
+              msg_ins, msg_upg):
+    '''
+    Reference list with packages installed
+    and upgraded.
+    '''
+    template(78)
+    print("| Total {0} {1} installed and {2} {3} "
+          "upgraded".format(count_installed, msg_ins,
+                            count_upgraded, msg_upg))
+    template(78)
+    for pkg, ver in zip(installs, versions):
+        installed = ("{0}-{1}".format(pkg, ver))
+        if find_package(installed, pkg_path):
+            if pkg in upgraded:
+                print("| Package {0} upgraded "
+                      "successfully".format(installed))
+            else:
+                print("| Package {0} installed "
+                      "successfully".format(installed))
+        else:
+            print("| Package {0} NOT installed".format(installed))
+    template(78)
 
 
 def build_deps(name, dependencies_list):
@@ -284,12 +300,12 @@ def top_template():
     template(78)
 
 
-def color_tags(pkg_name_version, pkg_name, arch, UNST):
+def color_tags(pkg_name_version, pkg_name, arch, count_installed,
+               count_upgraded, UNST):
     '''
     Tag with color if packages installed or
     upgraded and if package unsupport arch
     '''
-    count_installed = count_upgraded = 0
     color_pkg, color_arch = "", ""
     if find_package(pkg_name_version, pkg_path):
         color_pkg = GREEN
