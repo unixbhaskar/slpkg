@@ -27,11 +27,11 @@ import sys
 from init import initialization
 from downloader import Download
 from __metadata__ import (tmp, pkg_path, build_path,
-                          log_path, lib_path, sp)
+                                log_path, lib_path, sp)
 
 from colors import RED, GREEN, GREY, YELLOW, CYAN, ENDC
 from messages import (pkg_found, template, build_FAILED,
-                      pkg_not_found, sbo_packages_view)
+                            pkg_not_found, sbo_packages_view)
 
 from pkg.find import find_package
 from pkg.build import build_package
@@ -58,13 +58,31 @@ def sbo_install(name):
         "UNSUPPORTED",
         "UNTESTED"
     ]
-    sbo_ver, pkg_arch, = [], []
-    count_installed = count_upgraded = 0
+    [
+        sbo_ver,
+        pkg_arch,
+        installs,
+        upgraded,
+        versions,
+        requires,
+        dependencies
+    ] = ([] for i in range(7))
+    PKG_COLOR = DEP_COLOR = ARCH_COLOR = ""
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list or sbo_search_pkg(name) is not None:
-            pkg_sum = 0
-            dependencies = build_deps(name, dependencies_list)
+            pkg_sum = count_upgraded = count_installed = 0
+            # Insert master package in list to
+            # install it after dependencies
+            requires.append(name)
+            # Create one list for all packages
+            for pkg in dependencies_list:
+                requires += pkg
+            requires.reverse()
+            # Remove double dependencies
+            for duplicate in requires:
+                if duplicate not in dependencies:
+                    dependencies.append(duplicate)
             # Create two lists one for package version and one
             # for package arch.
             for pkg in dependencies:
@@ -81,14 +99,28 @@ def sbo_install(name):
             # if not installed. Also if package arch is UNSUPPORTED
             # tag with color red and if UNTESTED with color yellow.
             master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
-            (PKG_COLOR, ARCH_COLOR, count_installed,
-             count_upgraded) = color_tags(master_pkg, pkg, pkg_arch[-1],
-                                          count_installed, count_upgraded,
-                                          UNST)
+            if find_package(master_pkg, pkg_path):
+                PKG_COLOR = GREEN
+            elif find_package(name + sp, pkg_path):
+                PKG_COLOR = YELLOW
+                count_upgraded += 1
+            else:
+                PKG_COLOR = RED
+                count_installed += 1
+            if UNST[0] in pkg_arch[-1]:
+                ARCH_COLOR = RED
+            elif UNST[1] in pkg_arch[-1]:
+                ARCH_COLOR = YELLOW
             print("\nThe following packages will be automatically installed "
                   "or upgraded")
             print("with new version:\n")
-            top_template()
+            template(78)
+            print("{0}{1}{2}{3}{4}{5}{6}".format(
+                "| Package", " " * 30,
+                "Version", " " * 10,
+                "Arch", " " * 9,
+                "Repository"))
+            template(78)
             print("Installing:")
             sbo_packages_view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR,
                               pkg_arch[-1])
@@ -97,18 +129,27 @@ def sbo_install(name):
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1],
                                           pkg_arch[:-1]):
                 dep_pkg = ("{0}-{1}".format(dep, ver))
-                (DEP_COLOR, ARCH_COLOR, count_installed,
-                 count_upgraded) = color_tags(dep_pkg, dep, dep_arch,
-                                              count_installed, count_upgraded,
-                                              UNST)
+                if find_package(dep_pkg, pkg_path):
+                    DEP_COLOR = GREEN
+                elif find_package(dep + sp, pkg_path):
+                    DEP_COLOR = YELLOW
+                    count_upgraded += 1
+                else:
+                    DEP_COLOR = RED
+                    count_installed += 1
+                if UNST[0] in dep_arch:
+                    ARCH_COLOR = RED
+                elif UNST[1] in dep_arch:
+                    ARCH_COLOR = YELLOW
                 sbo_packages_view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
-            msg_ins, msg_upg, total_msg = msg_packages(dependencies,
-                                                       count_installed,
-                                                       count_upgraded)
+            msg_upg = msg_ins = "package"
+            if count_installed > 1:
+                msg_ins = msg_ins + "s"
+            if count_upgraded > 1:
+                msg_upg = msg_upg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("{0}Total {1} {2}.".format(GREY, len(dependencies),
-                                             total_msg))
+            print("{0}Total {1} {2}.".format(GREY, len(dependencies), msg_ins))
             print("{0} {1} will be installed, {2} allready installed and "
                   "{3} {4}".format(count_installed, msg_ins, pkg_sum,
                                    count_upgraded, msg_upg))
@@ -124,11 +165,72 @@ def sbo_install(name):
             else:
                 read = raw_input("Do you want to continue [Y/n]? ")
             if read == "Y" or read == "y":
-                installs, upgraded, versions = install(dependencies, sbo_ver,
-                                                       pkg_arch)
+                if not os.path.exists(build_path):
+                    os.mkdir(build_path)
+                os.chdir(build_path)
+                for pkg, ver, ar in zip(dependencies, sbo_ver, pkg_arch):
+                    prgnam = ("{0}-{1}".format(pkg, ver))
+                    sbo_file = "".join(find_package(prgnam, pkg_path))
+                    if sbo_file:
+                        sbo_file_version = sbo_file[len(pkg) + 1:-len(ar) - 7]
+                        template(78)
+                        pkg_found(pkg, sbo_file_version)
+                        template(78)
+                    else:
+                        sbo_url = sbo_search_pkg(pkg)
+                        sbo_link = sbo_slackbuild_dwn(sbo_url)
+                        src_link = SBoGrep(pkg).source().split()
+                        script = sbo_link.split("/")[-1]
+                        Download(build_path, sbo_link).start()
+                        sources = []
+                        for src in src_link:
+                            # get file from source
+                            sources.append(src.split("/")[-1])
+                            Download(build_path, src).start()
+                        build_package(script, sources, build_path)
+                        # Searches the package name and version in /tmp to
+                        # install. If find two or more packages e.g. to build
+                        # tag 2 or 3 will fit most.
+                        binary_list = []
+                        for search in find_package(prgnam, tmp):
+                            if "_SBo" in search:
+                                binary_list.append(search)
+                        try:
+                            binary = (tmp + max(binary_list)).split()
+                        except ValueError:
+                            build_FAILED(sbo_url, prgnam)
+                            sys.exit()
+                        if find_package(pkg + sp, pkg_path):
+                            print("{0}[ Upgrading ] --> {1}{2}".format(
+                                  GREEN, ENDC, pkg))
+                            upgraded.append(pkg)
+                        else:
+                            print("{0}[ Installing ] --> {1}{2}".format(
+                                  GREEN, ENDC, pkg))
+                        PackageManager(binary).upgrade()
+                        installs.append(pkg)
+                        versions.append(ver)
+                # Reference list with packages installed
+                # and upgraded.
                 if len(installs) > 1:
-                    reference(installs, upgraded, count_installed,
-                              count_upgraded, versions, msg_ins, msg_upg)
+                    template(78)
+                    print("| Total {0} {1} installed and {2} {3} "
+                          "upgraded".format(count_installed, msg_ins,
+                                            count_upgraded, msg_upg))
+                    template(78)
+                    for pkg, ver in zip(installs, versions):
+                        installed = ("{0}-{1}".format(pkg, ver))
+                        if find_package(installed, pkg_path):
+                            if pkg in upgraded:
+                                print("| Package {0} upgraded "
+                                      "successfully".format(installed))
+                            else:
+                                print("| Package {0} installed "
+                                      "successfully".format(installed))
+                        else:
+                            print("| Package {0} NOT installed".format(
+                                installed))
+                    template(78)
                     write_deps(name, dependencies)
         else:
             ins = uns = index = 0
@@ -154,7 +256,13 @@ def sbo_install(name):
             if sbo_matching:
                 print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
                       CYAN, name, ENDC))
-                top_template()
+                template(78)
+                print("{0}{1}{2}{3}{4}{5}{6}".format(
+                    "| Package", " " * 30,
+                    "Version", " " * 10,
+                    "Arch", " " * 9,
+                    "Repository"))
+                template(78)
                 print("Matching:")
                 ARCH_COLOR = ""
                 for match, ver, march in zip(sbo_matching, sbo_ver, pkg_arch):
@@ -164,162 +272,25 @@ def sbo_install(name):
                     else:
                         sbo_packages_view(RED, match, ver, ARCH_COLOR, march)
                         uns += 1
-                msg_ins, msg_ins, total_msg = msg_packages(sbo_matching, ins,
-                                                           uns)
+                total_msg = ins_msg = uns_msg = "package"
+                if len(sbo_matching) > 1:
+                    total_msg = total_msg + "s"
+                if ins > 1:
+                    ins_msg = ins_msg + "s"
+                if uns > 1:
+                    uns_msg = uns_msg + "s"
                 print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total found {1} matching {2}.".format(
                     GREY, len(sbo_matching), total_msg))
                 print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
-                    ins, msg_ins, uns, msg_ins, ENDC))
+                    ins, ins_msg, uns, uns_msg, ENDC))
             else:
                 message = "No matching"
                 pkg_not_found("\n", name, message, "\n")
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
-
-
-def msg_packages(pkgs, ins, uns):
-    total_msg = msg_ins = msg_uns = "package"
-    if len(pkgs) > 1:
-        total_msg = total_msg + "s"
-    if ins > 1:
-        msg_ins = msg_ins + "s"
-    if uns > 1:
-        msg_ins = msg_ins + "s"
-    return msg_ins, msg_uns, total_msg
-
-
-def reference(installs, upgraded, count_installed, count_upgraded, versions,
-              msg_ins, msg_upg):
-    '''
-    Reference list with packages installed
-    and upgraded.
-    '''
-    template(78)
-    print("| Total {0} {1} installed and {2} {3} "
-          "upgraded".format(count_installed, msg_ins,
-                            count_upgraded, msg_upg))
-    template(78)
-    for pkg, ver in zip(installs, versions):
-        installed = ("{0}-{1}".format(pkg, ver))
-        if find_package(installed, pkg_path):
-            if pkg in upgraded:
-                print("| Package {0} upgraded "
-                      "successfully".format(installed))
-            else:
-                print("| Package {0} installed "
-                      "successfully".format(installed))
-        else:
-            print("| Package {0} NOT installed".format(installed))
-    template(78)
-
-
-def build_deps(name, dependencies_list):
-    '''
-    Returns the dependencies in the correct order
-    '''
-    dependencies, requires = [], []
-    # Insert master package in list to
-    # install it after dependencies
-    requires.append(name)
-    # Create one list for all packages
-    for pkg in dependencies_list:
-        requires += pkg
-    requires.reverse()
-    # Remove double dependencies
-    for duplicate in requires:
-        if duplicate not in dependencies:
-            dependencies.append(duplicate)
-    return dependencies
-
-
-def install(dependencies, sbo_ver, pkg_arch):
-    '''
-    Build and install package with all dependencies
-    '''
-    if not os.path.exists(build_path):
-        os.mkdir(build_path)
-    os.chdir(build_path)
-    installs, versions, upgraded = [], [], []
-    for pkg, ver, ar in zip(dependencies, sbo_ver, pkg_arch):
-        prgnam = ("{0}-{1}".format(pkg, ver))
-        sbo_file = "".join(find_package(prgnam, pkg_path))
-        if sbo_file:
-            sbo_file_version = sbo_file[len(pkg) + 1:-len(ar) - 7]
-            template(78)
-            pkg_found(pkg, sbo_file_version)
-            template(78)
-        else:
-            sbo_url = sbo_search_pkg(pkg)
-            sbo_link = sbo_slackbuild_dwn(sbo_url)
-            src_link = SBoGrep(pkg).source().split()
-            script = sbo_link.split("/")[-1]
-            Download(build_path, sbo_link).start()
-            sources = []
-            for src in src_link:
-                sources.append(src.split("/")[-1])
-                Download(build_path, src).start()
-            build_package(script, sources, build_path)
-            # Searches the package name and version in /tmp to
-            # install. If find two or more packages e.g. to build
-            # tag 2 or 3 will fit most.
-            binary_list = []
-            for search in find_package(prgnam, tmp):
-                if "_SBo" in search:
-                    binary_list.append(search)
-            try:
-                binary = (tmp + max(binary_list)).split()
-            except ValueError:
-                build_FAILED(sbo_url, prgnam)
-                sys.exit()
-            if find_package(pkg + sp, pkg_path):
-                print("{0}[ Upgrading ] --> {1}{2}".format(
-                      GREEN, ENDC, pkg))
-                upgraded.append(pkg)
-            else:
-                print("{0}[ Installing ] --> {1}{2}".format(
-                      GREEN, ENDC, pkg))
-            PackageManager(binary).upgrade()
-            installs.append(pkg)
-            versions.append(ver)
-    return installs, upgraded, versions
-
-
-def top_template():
-    '''
-    Print top template
-    '''
-    template(78)
-    print("{0}{1}{2}{3}{4}{5}{6}".format(
-        "| Package", " " * 30,
-        "Version", " " * 10,
-        "Arch", " " * 9,
-        "Repository"))
-    template(78)
-
-
-def color_tags(pkg_name_version, pkg_name, arch, count_installed,
-               count_upgraded, UNST):
-    '''
-    Tag with color if packages installed or
-    upgraded and if package unsupport arch
-    '''
-    color_pkg, color_arch = "", ""
-    if find_package(pkg_name_version, pkg_path):
-        color_pkg = GREEN
-    elif find_package(pkg_name + sp, pkg_path):
-        color_pkg = YELLOW
-        count_upgraded += 1
-    else:
-        color_pkg = RED
-        count_installed += 1
-    if UNST[0] in arch:
-        color_arch = RED
-    elif UNST[1] in arch:
-        color_arch = YELLOW
-    return color_pkg, color_arch, count_installed, count_upgraded
 
 
 def write_deps(name, dependencies):
