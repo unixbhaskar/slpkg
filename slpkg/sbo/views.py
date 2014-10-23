@@ -65,12 +65,7 @@ def sbo_network(name):
         view_sbo(name, sbo_url, sbo_desc, sbo_dwn.split("/")[-1],
                  ", ".join([src.split("/")[-1] for src in source_dwn]),
                  sbo_req)
-        # Check if package supported by arch
-        # before proceed to install
-        FAULT = ""
-        UNST = ["UNSUPPORTED", "UNTESTED"]
-        if "".join(source_dwn) in UNST:
-            FAULT = "".join(source_dwn)
+        FAULT = error_uns(source_dwn)
         while True:
             try:
                 choice = raw_input(" {0}Choose an option: {1}".format(GREY,
@@ -82,14 +77,11 @@ def sbo_network(name):
                 download("", sbo_dwn, source_dwn)
                 break
             elif choice in ["R", "r"]:
-                readme = "README"
-                pydoc.pager(read_readme(sbo_url, readme))
+                pydoc.pager(read_readme(sbo_url, "README"))
             elif choice in ["F", "f"]:
-                _info = ".info"
-                pydoc.pager(read_info_slackbuild(sbo_url, name, _info))
+                pydoc.pager(read_info_slackbuild(sbo_url, name, ".info"))
             elif choice in ["S", "s"]:
-                _SlackBuild = ".SlackBuild"
-                pydoc.pager(read_info_slackbuild(sbo_url, name, _SlackBuild))
+                pydoc.pager(read_info_slackbuild(sbo_url, name, ".SlackBuild"))
             elif choice in ["B", "b"]:
                 build(sbo_dwn, source_dwn, FAULT)
                 break
@@ -108,6 +100,16 @@ def sbo_network(name):
     else:
         message = "Can't view"
         pkg_not_found("\n", name, message, "\n")
+
+
+def error_uns(source_dwn):
+    '''
+    Check if package supported by arch
+    before proceed to install
+    '''
+    UNST = ["UNSUPPORTED", "UNTESTED"]
+    if "".join(source_dwn) in UNST:
+        return "".join(source_dwn)
 
 
 def download(path, sbo_dwn, source_dwn):
