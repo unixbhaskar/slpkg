@@ -43,22 +43,26 @@ def build_package(script, sources, path):
     file in path /var/log/slpkg/sbo/build_logs/.
     Also check md5sum calculates.
     '''
-    prgnam = script[:-7]    # remove .tar.gz
-    log_file = ("build_{0}_log".format(prgnam))
-    sbo_logs = log_path + "sbo/"
-    build_logs = sbo_logs + "build_logs/"
-    init(sbo_logs, build_logs)
+    var = {
+        'prgnam': script[:-7],
+        'log_file': "build_{0}_log".format(script[:-7]),
+        'sbo_logs': log_path + "sbo/",
+        'build_logs': log_path + "sbo/build_logs/"
+    }
+
+    # log_file = ("build_{0}_log".format(var['prgnam']))
+    # sbo_logs = log_path + "sbo/"
+    # build_logs = var['sbo_logs'] + "build_logs/"
+    init(var['sbo_logs'], var['build_logs'], var['log_file'])
     log_date = time.strftime("%d/%m/%Y")
     start_log_time = time.strftime("%H:%M:%S")
     start_time = time.time()
     log_line = ("#" * 79 + "\n\n")
     try:
-        if os.path.isfile(build_logs + log_file):
-            os.remove(build_logs + log_file)
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
-        sbo_md5_list = SBoGrep(prgnam).checksum()
+        sbo_md5_list = SBoGrep(var['prgnam']).checksum()
         for src, sbo_md5 in zip(sources, sbo_md5_list):
             # fix build sources with spaces
             src = src.replace("%20", " ")
@@ -82,27 +86,28 @@ def build_package(script, sources, path):
                       src, GREEN, ENDC))
                 template(78)
                 print   # new line after pass checksum
-            shutil.copy2(src, prgnam)
-        os.chdir(path + prgnam)
-        subprocess.call("chmod +x {0}.SlackBuild".format(prgnam), shell=True)
+            shutil.copy2(src, var['prgnam'])
+        os.chdir(path + var['prgnam'])
+        subprocess.call("chmod +x {0}.SlackBuild".format(var['prgnam']),
+                        shell=True)
         # write headers to log file
-        with open(build_logs + log_file, "w") as log:
+        with open(var['build_logs'] + var['log_file'], "w") as log:
             log.write(log_line)
-            log.write("File : " + log_file + "\n")
-            log.write("Path : " + build_logs + "\n")
+            log.write("File : " + var['log_file'] + "\n")
+            log.write("Path : " + var['build_logs'] + "\n")
             log.write("Date : " + log_date + "\n")
             log.write("Time : " + start_log_time + "\n\n")
             log.write(log_line)
             log.close()
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
-                prgnam, build_logs, log_file),
+                var['prgnam'], var['build_logs'], var['log_file']),
                 shell=True, stdout=sys.stdout).communicate()
         end_log_time = time.strftime("%H:%M:%S")
         end_time = time.time()
         diff_time = round(end_time - start_time, 2)
         sum_time = build_time(diff_time)
         # append END tag to a log file
-        with open(build_logs + log_file, "a") as log:
+        with open(var['build_logs'] + var['log_file'], "a") as log:
             log.seek(2)
             log.write(log_line)
             log.write("Time : " + end_log_time + "\n")
@@ -111,17 +116,17 @@ def build_package(script, sources, path):
             log.write(log_line)
             log.close()
             os.chdir(path)
-        print("Total build time for package {0} : {1}\n".format(prgnam,
+        print("Total build time for package {0} : {1}\n".format(var['prgnam'],
                                                                 sum_time))
     except (OSError, IOError):
         message = "Wrong file"
-        pkg_not_found("\n", prgnam, message, "\n")
+        pkg_not_found("\n", var['prgnam'], message, "\n")
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
 
 
-def init(sbo_logs, build_logs):
+def init(sbo_logs, build_logs, log_file):
     '''
     Create working directories if not exists
     '''
@@ -131,6 +136,8 @@ def init(sbo_logs, build_logs):
         os.mkdir(sbo_logs)
     if not os.path.exists(build_logs):
         os.mkdir(build_logs)
+    if os.path.isfile(build_logs + log_file):
+        os.remove(build_logs + log_file)
 
 
 def build_time(diff_time):

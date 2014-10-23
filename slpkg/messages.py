@@ -56,6 +56,9 @@ def s_user(user):
 
 
 def build_FAILED(sbo_url, prgnam):
+    '''
+    Print error message if build failed
+    '''
     template(78)
     print("| Build package {0} [ {1}FAILED{2} ]".format(prgnam, RED, ENDC))
     template(78)
@@ -74,21 +77,18 @@ def template(max_len):
 
 
 def view_sbo(*args):
-    pkg = args[0]
-    sbo_url = args[1]
-    sbo_desc = args[2]
-    sbo_dwn = args[3]
-    source_dwn = args[4]
-    sbo_req = args[5]
+    '''
+    View slackbuild.org
+    '''
     print   # new line at start
     template(78)
-    print("| {0}Package {1}{2}{3} --> {4}".format(GREEN, CYAN, pkg, GREEN,
-                                                  ENDC + sbo_url))
+    print("| {0}Package {1}{2}{3} --> {4}".format(GREEN, CYAN, args[0], GREEN,
+                                                  ENDC + args[1]))
     template(78)
-    print("| {0}Description : {1}{2}".format(GREEN, ENDC, sbo_desc))
-    print("| {0}SlackBuild : {1}{2}".format(GREEN, ENDC, sbo_dwn))
-    print("| {0}Sources : {1}{2}".format(GREEN, ENDC, source_dwn))
-    print("| {0}Requirements : {1}{2}".format(YELLOW, ENDC, ", ".join(sbo_req)))
+    print("| {0}Description : {1}{2}".format(GREEN, ENDC, args[2]))
+    print("| {0}SlackBuild : {1}{2}".format(GREEN, ENDC, args[3]))
+    print("| {0}Sources : {1}{2}".format(GREEN, ENDC, args[4]))
+    print("| {0}Requirements : {1}{2}".format(YELLOW, ENDC, ", ".join(args[5])))
     template(78)
     print(" {0}R{1}EADME               View the README file".format(RED, ENDC))
     print(" {0}S{1}lackBuild           View the SlackBuild file".format(
@@ -101,12 +101,12 @@ def view_sbo(*args):
     print(" {0}Q{1}uit                 Quit\n".format(RED, ENDC))
 
 
-def sbo_packages_view(PKG_COLOR, package, version, ARCH_COLOR, arch):
+def sbo_packages_view(*args):
     '''
     View slackbuild packages with version and arch
     '''
     print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
-        PKG_COLOR, package, ENDC,
-        " " * (38-len(package)), version,
-        " " * (17-len(version)), ARCH_COLOR, arch, ENDC,
-        " " * (13-len(arch)), "SBo"))
+        args[0], args[1], ENDC,
+        " " * (38-len(args[1])), args[2],
+        " " * (17-len(args[2])), args[3], args[4], ENDC,
+        " " * (13-len(args[4])), "SBo"))
