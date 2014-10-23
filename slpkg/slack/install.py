@@ -44,53 +44,62 @@ def install(slack_pkg, version):
     Install packages from official Slackware distribution
     '''
     try:
-        done = "{0}Done{1}\n".format(GREY, ENDC)
-        reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
-        (comp_sum, uncomp_sum, names, dwn_list, comp_size, uncomp_size,
-         install_all, package_name, package_location) = ([] for i in range(9))
-        arch = COLOR = ""
-        pkg_sum = uni_sum = upg_sum = 0
-        # create directories if not exists
-        tmp_path = slpkg_tmp + "packages/"
-        if not os.path.exists(slpkg_tmp):
-            os.mkdir(slpkg_tmp)
-        if not os.path.exists(tmp_path):
-            os.mkdir(tmp_path)
+        var = {
+            'done': "{0}Done{1}\n".format(GREY, ENDC),
+            'reading_lists': "{0}Reading package lists ...{1}".format(GREY,
+                                                                      ENDC),
+            'comp_sum': [],
+            'uncomp_sum': [],
+            'comp_size': [],
+            'uncomp_size': [],
+            'install_all': [],
+            'package_name': [],
+            'package_location': [],
+            'names': [],
+            'dwn_list': [],
+            'pkg_sum': 0,
+            'uni_sum': 0,
+            'upg_sum': 0,
+            'index': 0,
+            'toolbar_width': 800,
+            'tmp_path': slpkg_tmp + "packages/",
+        }
+        init(var['tmp_path'])
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, slack_pkg, ENDC))
-        sys.stdout.write(reading_lists)
+        sys.stdout.write(var['reading_lists'])
         sys.stdout.flush()
-        blacklist = BlackList().packages()
         PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
         EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
         PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", version))
         PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
-        index, toolbar_width = 0, 800
         for line in PACKAGES_TXT.splitlines():
-            index += 1
-            if index == toolbar_width:
+            var['index'] += 1
+            if var['index'] == var['toolbar_width']:
                 sys.stdout.write("{0}.{1}".format(GREY, ENDC))
                 sys.stdout.flush()
-                toolbar_width += 800
+                var['toolbar_width'] += 800
                 time.sleep(0.00888)
             if line.startswith("PACKAGE NAME"):
-                package_name.append(line[15:].strip())
+                var['package_name'].append(line[15:].strip())
             if line.startswith("PACKAGE LOCATION"):
-                package_location.append(line[21:].strip())
+                var['package_location'].append(line[21:].strip())
             if line.startswith("PACKAGE SIZE (compressed):  "):
-                comp_size.append(line[28:-2].strip())
+                var['comp_size'].append(line[28:-2].strip())
             if line.startswith("PACKAGE SIZE (uncompressed):  "):
-                uncomp_size.append(line[30:-2].strip())
-        for loc, name, comp, uncomp in zip(package_location, package_name,
-                                           comp_size, uncomp_size):
-            if slack_pkg in name and slack_pkg not in blacklist:
-                dwn_list.append("{0}{1}/{2}".format(mirrors("", "", version),
-                                                    loc, name))
-                install_all.append(name)
-                comp_sum.append(comp)
-                uncomp_sum.append(uncomp)
-        sys.stdout.write(done)
-        if install_all:
+                var['uncomp_size'].append(line[30:-2].strip())
+        for loc, name, comp, uncomp in zip(var['package_location'],
+                                           var['package_name'],
+                                           var['comp_size'],
+                                           var['uncomp_size']):
+            if slack_pkg in name and slack_pkg not in BlackList().packages():
+                var['dwn_list'].append("{0}{1}/{2}".format(
+                    mirrors("", "", version), loc, name))
+                var['install_all'].append(name)
+                var['comp_sum'].append(comp)
+                var['uncomp_sum'].append(uncomp)
+        sys.stdout.write(var['done'] + "\n")
+        if var['install_all']:
             template(78)
             print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
                 "| Package", " " * 17,
@@ -101,32 +110,27 @@ def install(slack_pkg, version):
                 "Size"))
             template(78)
             print("Installing:")
-            for pkg, comp in zip(install_all, comp_sum):
+            for pkg, comp in zip(var['install_all'], var['comp_sum']):
                 pkg_split = split_package(pkg[:-4])
-                name = pkg_split[0]
-                ver = pkg_split[1]
-                arch = pkg_split[2]
-                build = pkg_split[3]
-                names.append(name)
+                var['names'].append(pkg_split[0])
                 if os.path.isfile(pkg_path + pkg[:-4]):
-                    pkg_sum += 1
+                    var['pkg_sum'] += 1
                     COLOR = GREEN
                 elif find_package(name + "-", pkg_path):
                     COLOR = YELLOW
-                    upg_sum += 1
+                    var['upg_sum'] += 1
                 else:
                     COLOR = RED
-                    uni_sum += 1
+                    var['uni_sum'] += 1
                 print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
-                    COLOR, name, ENDC,
-                    " " * (25-len(name)), ver,
-                    " " * (19-len(ver)), arch,
-                    " " * (8-len(arch)), build,
-                    " " * (7-len(build)), "Slack",
+                    COLOR, pkg_split[0], ENDC,
+                    " " * (25-len(pkg_split[0])), pkg_split[1],
+                    " " * (19-len(pkg_split[1])), pkg_split[2],
+                    " " * (8-len(pkg_split[2])), pkg_split[3],
+                    " " * (7-len(pkg_split[3])), "Slack",
                     comp, " K"))
-            comp_unit = uncomp_unit = "Mb"
-            compressed = round((sum(map(float, comp_sum)) / 1024), 2)
-            uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
+            compressed = round((sum(map(float, var['comp_sum'])) / 1024), 2)
+            uncompressed = round((sum(map(float, var['uncomp_sum'])) / 1024), 2)
             if compressed > 1024:
                 compressed = round((compressed / 1024), 2)
                 comp_unit = "Gb"
@@ -134,34 +138,35 @@ def install(slack_pkg, version):
                 uncompressed = round((uncompressed / 1024), 2)
                 uncomp_unit = "Gb"
             if compressed < 1:
-                compressed = sum(map(int, comp_sum))
+                compressed = sum(map(int, var['comp_sum']))
                 comp_unit = "Kb"
             if uncompressed < 1:
-                uncompressed = sum(map(int, uncomp_sum))
+                uncompressed = sum(map(int, var['uncomp_sum']))
                 uncomp_unit = "Kb"
             msg_pkg = "package"
             msg_2_pkg = msg_pkg
-            if len(install_all) > 1:
+            if len(var['install_all']) > 1:
                 msg_pkg = msg_pkg + "s"
-            if uni_sum > 1:
+            if var['uni_sum'] > 1:
                 msg_2_pkg = msg_2_pkg + "s"
             print("\nInstalling summary")
             print("=" * 79)
-            print("{0}Total {1} {2}.".format(GREY, len(install_all), msg_pkg))
+            print("{0}Total {1} {2}.".format(GREY, len(var['install_all']),
+                                             msg_pkg))
             print("{0} {1} will be installed, {2} will be upgraded and {3} "
-                  "will be resettled.".format(uni_sum, msg_2_pkg,
-                                              upg_sum, pkg_sum))
+                  "will be resettled.".format(var['uni_sum'], msg_2_pkg,
+                                              var['upg_sum'], var['pkg_sum']))
             print("Need to get {0} {1} of archives.".format(compressed,
                                                             comp_unit))
             print("After this process, {0} {1} of additional disk space will "
                   "be used.{2}".format(uncompressed, uncomp_unit, ENDC))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
-                for dwn in dwn_list:
-                    Download(tmp_path, dwn).start()
-                    Download(tmp_path, dwn + ".asc").start()
-                for install, name in zip(install_all, names):
-                    package = ((tmp_path + install).split())
+                for dwn in var['dwn_list']:
+                    Download(var['tmp_path'], dwn).start()
+                    Download(var['tmp_path'], dwn + ".asc").start()
+                for install, name in zip(var['install_all'], var['names']):
+                    package = ((var['tmp_path'] + install).split())
                     if os.path.isfile(pkg_path + install[:-4]):
                         print("[ {0}reinstalling{1} ] --> {2}".format(
                               GREEN, ENDC, install))
@@ -176,20 +181,30 @@ def install(slack_pkg, version):
                         PackageManager(package).upgrade()
                 read = raw_input("Removal downloaded packages [Y/n]? ")
                 if read == "Y" or read == "y":
-                    for remove in install_all:
-                        os.remove(tmp_path + remove)
-                        os.remove(tmp_path + remove + ".asc")
-                    if not os.listdir(tmp_path):
+                    for remove in var['install_all']:
+                        os.remove(var['tmp_path'] + remove)
+                        os.remove(var['tmp_path'] + remove + ".asc")
+                    if not os.listdir(var['tmp_path']):
                         print("Packages removed")
                     else:
                         print("\nThere are packages in directory {0}\n".format(
-                            tmp_path))
+                            var['tmp_path']))
                 else:
                     print("\nThere are packages in directory {0}\n".format(
-                        tmp_path))
+                        var['tmp_path']))
         else:
             message = "No matching"
             pkg_not_found("\n", slack_pkg, message, "\n")
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
+
+
+def init(tmp_path):
+    '''
+    create directories if not exists
+    '''
+    if not os.path.exists(slpkg_tmp):
+        os.mkdir(slpkg_tmp)
+    if not os.path.exists(tmp_path):
+        os.mkdir(tmp_path)
