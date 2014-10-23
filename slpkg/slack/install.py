@@ -69,10 +69,7 @@ def install(slack_pkg, version):
               CYAN, slack_pkg, ENDC))
         sys.stdout.write(var['reading_lists'])
         sys.stdout.flush()
-        PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
-        EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
-        PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", version))
-        PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
+        PACKAGES_TXT = data(version)
         for line in PACKAGES_TXT.splitlines():
             var['index'] += 1
             if var['index'] == var['toolbar_width']:
@@ -202,9 +199,19 @@ def install(slack_pkg, version):
 
 def init(tmp_path):
     '''
-    create directories if not exists
+    Create directories if not exists
     '''
     if not os.path.exists(slpkg_tmp):
         os.mkdir(slpkg_tmp)
     if not os.path.exists(tmp_path):
         os.mkdir(tmp_path)
+
+
+def data(version):
+    '''
+    Collects and return data
+    '''
+    PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
+    EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
+    PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", version))
+    return (PACKAGES + EXTRA + PASTURE)
