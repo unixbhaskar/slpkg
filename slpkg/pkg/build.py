@@ -47,17 +47,13 @@ def build_package(script, sources, path):
         'prgnam': script[:-7],
         'log_file': "build_{0}_log".format(script[:-7]),
         'sbo_logs': log_path + "sbo/",
-        'build_logs': log_path + "sbo/build_logs/"
+        'build_logs': log_path + "sbo/build_logs/",
+        'log_date': time.strftime("%d/%m/%Y"),
+        'start_log_time': time.strftime("%H:%M:%S"),
+        'start_time': time.time(),
+        'log_line': ("#" * 79 + "\n\n")
     }
-
-    # log_file = ("build_{0}_log".format(var['prgnam']))
-    # sbo_logs = log_path + "sbo/"
-    # build_logs = var['sbo_logs'] + "build_logs/"
     init(var['sbo_logs'], var['build_logs'], var['log_file'])
-    log_date = time.strftime("%d/%m/%Y")
-    start_log_time = time.strftime("%H:%M:%S")
-    start_time = time.time()
-    log_line = ("#" * 79 + "\n\n")
     try:
         tar = tarfile.open(script)
         tar.extractall()
@@ -92,28 +88,28 @@ def build_package(script, sources, path):
                         shell=True)
         # write headers to log file
         with open(var['build_logs'] + var['log_file'], "w") as log:
-            log.write(log_line)
+            log.write(var['log_line'])
             log.write("File : " + var['log_file'] + "\n")
             log.write("Path : " + var['build_logs'] + "\n")
-            log.write("Date : " + log_date + "\n")
-            log.write("Time : " + start_log_time + "\n\n")
-            log.write(log_line)
+            log.write("Date : " + var['log_date'] + "\n")
+            log.write("Time : " + var['start_log_time'] + "\n\n")
+            log.write(var['log_line'])
             log.close()
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
                 var['prgnam'], var['build_logs'], var['log_file']),
                 shell=True, stdout=sys.stdout).communicate()
         end_log_time = time.strftime("%H:%M:%S")
         end_time = time.time()
-        diff_time = round(end_time - start_time, 2)
+        diff_time = round(end_time - var['start_time'], 2)
         sum_time = build_time(diff_time)
         # append END tag to a log file
         with open(var['build_logs'] + var['log_file'], "a") as log:
             log.seek(2)
-            log.write(log_line)
+            log.write(var['log_line'])
             log.write("Time : " + end_log_time + "\n")
             log.write("Total build time : {0}\n".format(sum_time))
             log.write(" " * 38 + "E N D\n\n")
-            log.write(log_line)
+            log.write(var['log_line'])
             log.close()
             os.chdir(path)
         print("Total build time for package {0} : {1}\n".format(var['prgnam'],
