@@ -98,15 +98,12 @@ def build_package(script, sources, path):
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
                 var['prgnam'], var['build_logs'], var['log_file']),
                 shell=True, stdout=sys.stdout).communicate()
-        end_log_time = time.strftime("%H:%M:%S")
-        end_time = time.time()
-        diff_time = round(end_time - var['start_time'], 2)
-        sum_time = build_time(diff_time)
+        sum_time = build_time(var['start_time'])
         # append END tag to a log file
         with open(var['build_logs'] + var['log_file'], "a") as log:
             log.seek(2)
             log.write(var['log_line'])
-            log.write("Time : " + end_log_time + "\n")
+            log.write("Time : " + time.strftime("%H:%M:%S") + "\n")
             log.write("Total build time : {0}\n".format(sum_time))
             log.write(" " * 38 + "E N D\n\n")
             log.write(var['log_line'])
@@ -136,10 +133,11 @@ def init(sbo_logs, build_logs, log_file):
         os.remove(build_logs + log_file)
 
 
-def build_time(diff_time):
+def build_time(start_time):
     '''
     Calculate build time per package
     '''
+    diff_time = round(time.time() - start_time, 2)
     if diff_time <= 59.99:
         sum_time = str(diff_time) + " Sec"
     elif diff_time > 59.99 and diff_time <= 3599.99:
