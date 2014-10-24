@@ -44,22 +44,15 @@ def slack_install(slack_pkg, version):
     Install packages from official Slackware distribution
     '''
     try:
-        (comp_sum, uncomp_sum, install_all, dwn_list) = ([] for i in range(4))
         tmp_path = slpkg_tmp + "packages/"
         _init(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, slack_pkg, ENDC))
         sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
         sys.stdout.flush()
-        package, size = _greps(_data(version))
-        for name, loc, comp, uncomp in zip(package[0], package[1],
-                                           size[0], size[1]):
-            if slack_pkg in name and slack_pkg not in BlackList().packages():
-                dwn_list.append("{0}{1}/{2}".format(mirrors("", "", version),
-                                                    loc, name))
-                install_all.append(name)
-                comp_sum.append(comp)
-                uncomp_sum.append(uncomp)
+        PACKAGES_TXT = _data(version)
+        dwn_list, install_all, comp_sum, uncomp_sum = _greps(PACKAGES_TXT,
+                                                             slack_pkg, version)
         sys.stdout.write("{0}Done{1}\n\n".format(GREY, ENDC))
         if install_all:
             template(78)
@@ -130,24 +123,34 @@ def _toolbar(index, width):
     return width
 
 
-def _greps(PACKAGES_TXT):
+def _greps(PACKAGES_TXT, slack_pkg, version):
     '''
     Grap data packages
     '''
-    (name, location, size, unsize) = ([] for i in range(4))
+    (pkg_name, pkg_location, size, unsize, dwn,
+     install, comp_sum, uncomp_sum) = ([] for i in range(8))
     toolbar_width, index = 800, 0
     for line in PACKAGES_TXT.splitlines():
         index += 1
         toolbar_width = _toolbar(index, toolbar_width)
         if line.startswith("PACKAGE NAME"):
-            name.append(line[15:].strip())
+            pkg_name.append(line[15:].strip())
         if line.startswith("PACKAGE LOCATION"):
-            location.append(line[21:].strip())
+            pkg_location.append(line[21:].strip())
         if line.startswith("PACKAGE SIZE (compressed):  "):
             size.append(line[28:-2].strip())
         if line.startswith("PACKAGE SIZE (uncompressed):  "):
             unsize.append(line[30:-2].strip())
-    return [name, location], [size, unsize]
+    for name, loc, comp, uncomp in zip(pkg_name, pkg_location,
+                                       size, unsize):
+        if slack_pkg in name and slack_pkg not in BlackList().packages():
+            dwn.append("{0}{1}/{2}".format(mirrors("", "", version),
+                                           loc, name))
+            install.append(name)
+            comp_sum.append(comp)
+            uncomp_sum.append(uncomp)
+    print dwn, install
+    return [dwn, install, comp_sum, uncomp_sum]
 
 
 def _views(install_all, comp_sum):
