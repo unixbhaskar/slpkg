@@ -51,7 +51,7 @@ def slack_install(slack_pkg, version):
         sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
         sys.stdout.flush()
         PACKAGES_TXT = _packages(version)
-        data = _greps(PACKAGES_TXT, slack_pkg, version)
+        data = _greps(PACKAGES_TXT)
         dwn_list, install_all, comp_sum, uncomp_sum = _store(data[0], data[1],
                                                              data[2], data[3],
                                                              slack_pkg, version)
