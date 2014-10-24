@@ -80,7 +80,7 @@ def sbo_install(name):
                 version = SBoGrep(pkg).version()
                 sbo_ver.append(version)
                 src = SBoGrep(pkg).source()
-                pkg_arch.append(select_arch(src, UNST))
+                pkg_arch.append(_select_arch(src, UNST))
                 sbo_pkg = ("{0}-{1}".format(pkg, version))
                 if find_package(sbo_pkg, pkg_path):
                     pkg_sum += 1
@@ -222,7 +222,7 @@ def sbo_install(name):
                             print("| Package {0} NOT installed".format(
                                 installed))
                     template(78)
-                    write_deps(name, dependencies)
+                    _write_deps(name, dependencies)
         else:
             sbo_matching = []
             toolbar_width = 3
@@ -241,7 +241,7 @@ def sbo_install(name):
                             sbo_matching.append(sbo_name)
                             sbo_ver.append(SBoGrep(sbo_name).version())
                             src = SBoGrep(sbo_name).source()
-                            pkg_arch.append(select_arch(src, UNST))
+                            pkg_arch.append(_select_arch(src, UNST))
                 SLACKBUILDS_TXT.close()
             sys.stdout.write(done)
             if sbo_matching:
@@ -284,7 +284,7 @@ def sbo_install(name):
         sys.exit()
 
 
-def write_deps(name, dependencies):
+def _write_deps(name, dependencies):
     '''
     Write dependencies in a log file
     into directory `/var/log/slpkg/dep/`
@@ -302,7 +302,7 @@ def write_deps(name, dependencies):
                 f.close()
 
 
-def select_arch(src, UNST):
+def _select_arch(src, UNST):
     '''
     Looks if sources unsupported or untested
     from arch else select arch

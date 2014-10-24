@@ -46,11 +46,7 @@ def slack_install(slack_pkg, version):
     try:
         done = "{0}Done{1}\n".format(GREY, ENDC)
         reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
-        (comp_sum, uncomp_sum, comp_size, uncomp_size, install_all,
-         package_name, package_location, names,
-         dwn_list) = ([] for i in range(9))
-        pkg_sum = uni_sum = upg_sum = index = 0
-        toolbar_width = 800
+        (comp_sum, uncomp_sum, install_all, dwn_list) = ([] for i in range(4))
         tmp_path = slpkg_tmp + "packages/"
         _init(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
@@ -58,25 +54,9 @@ def slack_install(slack_pkg, version):
         sys.stdout.write(reading_lists)
         sys.stdout.flush()
         PACKAGES_TXT = _data(version)
-        for line in PACKAGES_TXT.splitlines():
-            index += 1
-            if index == toolbar_width:
-                sys.stdout.write("{0}.{1}".format(GREY, ENDC))
-                sys.stdout.flush()
-                toolbar_width += 800
-                time.sleep(0.00888)
-            if line.startswith("PACKAGE NAME"):
-                package_name.append(line[15:].strip())
-            if line.startswith("PACKAGE LOCATION"):
-                package_location.append(line[21:].strip())
-            if line.startswith("PACKAGE SIZE (compressed):  "):
-                comp_size.append(line[28:-2].strip())
-            if line.startswith("PACKAGE SIZE (uncompressed):  "):
-                uncomp_size.append(line[30:-2].strip())
-        for loc, name, comp, uncomp in zip(package_location,
-                                           package_name,
-                                           comp_size,
-                                           uncomp_size):
+        package, size = _greps(PACKAGES_TXT)
+        for name, loc, comp, uncomp in zip(package[0], package[1],
+                                           size[0], size[1]):
             if slack_pkg in name and slack_pkg not in BlackList().packages():
                 dwn_list.append("{0}{1}/{2}".format(
                     mirrors("", "", version), loc, name))
@@ -95,65 +75,27 @@ def slack_install(slack_pkg, version):
                 "Size"))
             template(78)
             print("Installing:")
-            for pkg, comp in zip(install_all, comp_sum):
-                pkg_split = split_package(pkg[:-4])
-                names.append(pkg_split[0])
-                if os.path.isfile(pkg_path + pkg[:-4]):
-                    pkg_sum += 1
-                    COLOR = GREEN
-                elif find_package(pkg_split[0] + "-", pkg_path):
-                    COLOR = YELLOW
-                    upg_sum += 1
-                else:
-                    COLOR = RED
-                    uni_sum += 1
-                print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
-                    COLOR, pkg_split[0], ENDC,
-                    " " * (25-len(pkg_split[0])), pkg_split[1],
-                    " " * (19-len(pkg_split[1])), pkg_split[2],
-                    " " * (8-len(pkg_split[2])), pkg_split[3],
-                    " " * (7-len(pkg_split[3])), "Slack",
-                    comp, " K"))
-            compressed = round((sum(map(float, comp_sum)) / 1024), 2)
-            uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
-            comp_unit = uncomp_unit = "Mb"
-            if compressed > 1024:
-                compressed = round((compressed / 1024), 2)
-                comp_unit = "Gb"
-            if uncompressed > 1024:
-                uncompressed = round((uncompressed / 1024), 2)
-                uncomp_unit = "Gb"
-            if compressed < 1:
-                compressed = sum(map(int, comp_sum))
-                comp_unit = "Kb"
-            if uncompressed < 1:
-                uncompressed = sum(map(int, uncomp_sum))
-                uncomp_unit = "Kb"
-            msg_pkg = "package"
-            msg_2_pkg = msg_pkg
-            if len(install_all) > 1:
-                msg_pkg = msg_pkg + "s"
-            if uni_sum > 1:
-                msg_2_pkg = msg_2_pkg + "s"
+            names, sums = _views(install_all, comp_sum)
+            unit, size = _units(comp_sum, uncomp_sum)
+            msgs = _msgs(install_all, sums[2])
             print("\nInstalling summary")
             print("=" * 79)
             print("{0}Total {1} {2}.".format(GREY, len(install_all),
-                                             msg_pkg))
+                                             msgs[0]))
             print("{0} {1} will be installed, {2} will be upgraded and {3} "
-                  "will be resettled.".format(uni_sum, msg_2_pkg,
-                                              upg_sum, pkg_sum))
-            print("Need to get {0} {1} of archives.".format(compressed,
-                                                            comp_unit))
+                  "will be resettled.".format(sums[2], msgs[1],
+                                              sums[1], sums[0]))
+            print("Need to get {0} {1} of archives.".format(size[0],
+                                                            unit[0]))
             print("After this process, {0} {1} of additional disk space will "
-                  "be used.{2}".format(uncompressed, uncomp_unit, ENDC))
+                  "be used.{2}".format(size[1], unit[1], ENDC))
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 _download(tmp_path, dwn_list)
                 _install(tmp_path, install_all, names)
                 _remove(tmp_path, install_all)
         else:
-            message = "No matching"
-            pkg_not_found("\n", slack_pkg, message, "\n")
+            pkg_not_found("", slack_pkg, "No matching", "\n")
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
@@ -179,13 +121,111 @@ def _data(version):
     return (PACKAGES + EXTRA + PASTURE)
 
 
+def _toolbar(index, width):
+    '''
+    Print toolbar status
+    '''
+    if index == width:
+        sys.stdout.write("{0}.{1}".format(GREY, ENDC))
+        sys.stdout.flush()
+        width += 800
+        time.sleep(0.00888)
+    return width
+
+
+def _greps(PACKAGES_TXT):
+    '''
+    Grap data packages
+    '''
+    (name, location, size, unsize) = ([] for i in range(4))
+    toolbar_width, index = 800, 0
+    for line in PACKAGES_TXT.splitlines():
+        index += 1
+        toolbar_width = _toolbar(index, toolbar_width)
+        if line.startswith("PACKAGE NAME"):
+            name.append(line[15:].strip())
+        if line.startswith("PACKAGE LOCATION"):
+            location.append(line[21:].strip())
+        if line.startswith("PACKAGE SIZE (compressed):  "):
+            size.append(line[28:-2].strip())
+        if line.startswith("PACKAGE SIZE (uncompressed):  "):
+            unsize.append(line[30:-2].strip())
+    return [name, location], [size, unsize]
+
+
+def _views(install_all, comp_sum):
+    '''
+    Views packages
+    '''
+    names = []
+    pkg_sum = uni_sum = upg_sum = 0
+    for pkg, comp in zip(install_all, comp_sum):
+        pkg_split = split_package(pkg[:-4])
+        names.append(pkg_split[0])
+        if os.path.isfile(pkg_path + pkg[:-4]):
+            pkg_sum += 1
+            COLOR = GREEN
+        elif find_package(pkg_split[0] + "-", pkg_path):
+            COLOR = YELLOW
+            upg_sum += 1
+        else:
+            COLOR = RED
+            uni_sum += 1
+        print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(
+            COLOR, pkg_split[0], ENDC,
+            " " * (25-len(pkg_split[0])), pkg_split[1],
+            " " * (19-len(pkg_split[1])), pkg_split[2],
+            " " * (8-len(pkg_split[2])), pkg_split[3],
+            " " * (7-len(pkg_split[3])), "Slack",
+            comp, " K"))
+    return names, [pkg_sum, upg_sum, uni_sum]
+
+
+def _units(comp_sum, uncomp_sum):
+    '''
+    Calculate package size
+    '''
+    compressed = round((sum(map(float, comp_sum)) / 1024), 2)
+    uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
+    comp_unit = uncomp_unit = "Mb"
+    if compressed > 1024:
+        compressed = round((compressed / 1024), 2)
+        comp_unit = "Gb"
+    if uncompressed > 1024:
+        uncompressed = round((uncompressed / 1024), 2)
+        uncomp_unit = "Gb"
+    if compressed < 1:
+        compressed = sum(map(int, comp_sum))
+        comp_unit = "Kb"
+    if uncompressed < 1:
+        uncompressed = sum(map(int, uncomp_sum))
+        uncomp_unit = "Kb"
+    return [comp_unit, uncomp_unit], [compressed, uncompressed]
+
+
+def _msgs(install_all, uni_sum):
+    msg_pkg = "package"
+    msg_2_pkg = msg_pkg
+    if len(install_all) > 1:
+        msg_pkg = msg_pkg + "s"
+    if uni_sum > 1:
+        msg_2_pkg = msg_2_pkg + "s"
+    return [msg_pkg, msg_2_pkg]
+
+
 def _download(tmp_path, dwn_list):
+    '''
+    Download packages
+    '''
     for dwn in dwn_list:
         Download(tmp_path, dwn).start()
         Download(tmp_path, dwn + ".asc").start()
 
 
 def _install(tmp_path, install_all, names):
+    '''
+    Install or upgrade packages
+    '''
     for install, name in zip(install_all, names):
         package = ((tmp_path + install).split())
         if os.path.isfile(pkg_path + install[:-4]):
@@ -203,6 +243,9 @@ def _install(tmp_path, install_all, names):
 
 
 def _remove(tmp_path, install_all):
+    '''
+    Remove downloaded packages
+    '''
     read = raw_input("Removal downloaded packages [Y/n]? ")
     if read == "Y" or read == "y":
         for remove in install_all:
