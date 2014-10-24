@@ -50,8 +50,9 @@ def slack_install(slack_pkg, version):
               CYAN, slack_pkg, ENDC))
         sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
         sys.stdout.flush()
-        PACKAGES_TXT = _data(version)
-        dwn_list, install_all, comp_sum, uncomp_sum = _greps(PACKAGES_TXT,
+        data = _greps(_packages(version), slack_pkg, version)
+        dwn_list, install_all, comp_sum, uncomp_sum = _store(data[0], data[1],
+                                                             data[2], data[3],
                                                              slack_pkg, version)
         sys.stdout.write("{0}Done{1}\n\n".format(GREY, ENDC))
         if install_all:
@@ -101,9 +102,9 @@ def _init(tmp_path):
         os.mkdir(tmp_path)
 
 
-def _data(version):
+def _packages(version):
     '''
-    Collects and return data
+    Collects and return packages
     '''
     PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
     EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
@@ -127,29 +128,33 @@ def _greps(PACKAGES_TXT, slack_pkg, version):
     '''
     Grap data packages
     '''
-    (pkg_name, pkg_location, size, unsize, dwn,
-     install, comp_sum, uncomp_sum) = ([] for i in range(8))
+    (name, location, size, unsize) = ([] for i in range(4))
     toolbar_width, index = 800, 0
     for line in PACKAGES_TXT.splitlines():
         index += 1
         toolbar_width = _toolbar(index, toolbar_width)
         if line.startswith("PACKAGE NAME"):
-            pkg_name.append(line[15:].strip())
+            name.append(line[15:].strip())
         if line.startswith("PACKAGE LOCATION"):
-            pkg_location.append(line[21:].strip())
+            location.append(line[21:].strip())
         if line.startswith("PACKAGE SIZE (compressed):  "):
             size.append(line[28:-2].strip())
         if line.startswith("PACKAGE SIZE (uncompressed):  "):
             unsize.append(line[30:-2].strip())
-    for name, loc, comp, uncomp in zip(pkg_name, pkg_location,
-                                       size, unsize):
-        if slack_pkg in name and slack_pkg not in BlackList().packages():
-            dwn.append("{0}{1}/{2}".format(mirrors("", "", version),
-                                           loc, name))
+    return [name, location, size, unsize]
+
+
+def _store(*args):
+    '''
+    Store data
+    '''
+    dwn, install, comp_sum, uncomp_sum = ([] for i in range(4))
+    for name, loc, comp, uncomp in zip(args[0], args[1], args[2], args[3]):
+        if args[4] in name and args[4] not in BlackList().packages():
+            dwn.append("{0}{1}/{2}".format(mirrors("", "", args[5]), loc, name))
             install.append(name)
             comp_sum.append(comp)
             uncomp_sum.append(uncomp)
-    print dwn, install
     return [dwn, install, comp_sum, uncomp_sum]
 
 
@@ -202,6 +207,9 @@ def _units(comp_sum, uncomp_sum):
 
 
 def _msgs(install_all, uni_sum):
+    '''
+    Print singular plural
+    '''
     msg_pkg = "package"
     msg_2_pkg = msg_pkg
     if len(install_all) > 1:
