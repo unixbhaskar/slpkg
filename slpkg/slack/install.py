@@ -124,7 +124,7 @@ def _toolbar(index, width):
     return width
 
 
-def _greps(PACKAGES_TXT, slack_pkg, version):
+def _greps(PACKAGES_TXT):
     '''
     Grap data packages
     '''
