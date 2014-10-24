@@ -43,22 +43,18 @@ def build_package(script, sources, path):
     file in path /var/log/slpkg/sbo/build_logs/.
     Also check md5sum calculates.
     '''
-    var = {
-        'prgnam': script[:-7],
-        'log_file': "build_{0}_log".format(script[:-7]),
-        'sbo_logs': log_path + "sbo/",
-        'build_logs': log_path + "sbo/build_logs/",
-        'log_date': time.strftime("%d/%m/%Y"),
-        'start_log_time': time.strftime("%H:%M:%S"),
-        'start_time': time.time(),
-        'log_line': ("#" * 79 + "\n\n")
-    }
-    init(var['sbo_logs'], var['build_logs'], var['log_file'])
+    prgnam = script[:-7]
+    log_file = "build_{0}_log".format(prgnam)
+    sbo_logs = log_path + "sbo/"
+    build_logs = sbo_logs + "build_logs/"
+    start_log_time = time.strftime("%H:%M:%S")
+    start_time = time.time()
+    _init(sbo_logs, build_logs, log_file)
     try:
         tar = tarfile.open(script)
         tar.extractall()
         tar.close()
-        sbo_md5_list = SBoGrep(var['prgnam']).checksum()
+        sbo_md5_list = SBoGrep(prgnam).checksum()
         for src, sbo_md5 in zip(sources, sbo_md5_list):
             # fix build sources with spaces
             src = src.replace("%20", " ")
@@ -82,44 +78,43 @@ def build_package(script, sources, path):
                       src, GREEN, ENDC))
                 template(78)
                 print   # new line after pass checksum
-            shutil.copy2(src, var['prgnam'])
-        os.chdir(path + var['prgnam'])
-        subprocess.call("chmod +x {0}.SlackBuild".format(var['prgnam']),
+            shutil.copy2(src, prgnam)
+        os.chdir(path + prgnam)
+        subprocess.call("chmod +x {0}.SlackBuild".format(prgnam),
                         shell=True)
         # write headers to log file
-        with open(var['build_logs'] + var['log_file'], "w") as log:
-            log.write(var['log_line'])
-            log.write("File : " + var['log_file'] + "\n")
-            log.write("Path : " + var['build_logs'] + "\n")
-            log.write("Date : " + var['log_date'] + "\n")
-            log.write("Time : " + var['start_log_time'] + "\n\n")
-            log.write(var['log_line'])
+        with open(build_logs + log_file, "w") as log:
+            log.write("#" * 79 + "\n\n")
+            log.write("File : " + log_file + "\n")
+            log.write("Path : " + build_logs + "\n")
+            log.write("Date : " + time.strftime("%d/%m/%Y") + "\n")
+            log.write("Time : " + start_log_time + "\n\n")
+            log.write("#" * 79 + "\n\n")
             log.close()
             subprocess.Popen("./{0}.SlackBuild 2>&1 | tee -a {1}{2}".format(
-                var['prgnam'], var['build_logs'], var['log_file']),
+                prgnam, build_logs, log_file),
                 shell=True, stdout=sys.stdout).communicate()
-        sum_time = build_time(var['start_time'])
+        sum_time = _build_time(start_time)
         # append END tag to a log file
-        with open(var['build_logs'] + var['log_file'], "a") as log:
+        with open(build_logs + log_file, "a") as log:
             log.seek(2)
-            log.write(var['log_line'])
+            log.write("#" * 79 + "\n\n")
             log.write("Time : " + time.strftime("%H:%M:%S") + "\n")
             log.write("Total build time : {0}\n".format(sum_time))
             log.write(" " * 38 + "E N D\n\n")
-            log.write(var['log_line'])
+            log.write("#" * 79 + "\n\n")
             log.close()
             os.chdir(path)
-        print("Total build time for package {0} : {1}\n".format(var['prgnam'],
+        print("Total build time for package {0} : {1}\n".format(prgnam,
                                                                 sum_time))
     except (OSError, IOError):
-        message = "Wrong file"
-        pkg_not_found("\n", var['prgnam'], message, "\n")
+        pkg_not_found("\n", prgnam, "Wrong file", "\n")
     except KeyboardInterrupt:
         print   # new line at exit
         sys.exit()
 
 
-def init(sbo_logs, build_logs, log_file):
+def _init(sbo_logs, build_logs, log_file):
     '''
     Create working directories if not exists
     '''
@@ -133,7 +128,7 @@ def init(sbo_logs, build_logs, log_file):
         os.remove(build_logs + log_file)
 
 
-def build_time(start_time):
+def _build_time(start_time):
     '''
     Calculate build time per package
     '''

@@ -39,7 +39,7 @@ from sbo.tracking import track_dep
 from sbo.slackbuild import sbo_install
 
 from slack.patches import patches
-from slack.install import install
+from slack.install import slack_install
 
 
 def main():
@@ -136,11 +136,14 @@ def main():
             sbo_install(args[2])
         elif args[1] == repository[1]:
             version = "stable"
-            install(args[2], version)
+            slack_install(args[2], version)
+        else:
+            for opt in usage:
+                print(opt)
     elif len(args) == 4 and args[0] == "-s":
         if args[1] == repository[1] and args[3] == "--current":
             version = "current"
-            install(args[2], version)
+            slack_install(args[2], version)
         else:
             for opt in usage:
                 print(opt)
