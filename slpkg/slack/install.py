@@ -44,26 +44,23 @@ def slack_install(slack_pkg, version):
     Install packages from official Slackware distribution
     '''
     try:
-        done = "{0}Done{1}\n".format(GREY, ENDC)
-        reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
         (comp_sum, uncomp_sum, install_all, dwn_list) = ([] for i in range(4))
         tmp_path = slpkg_tmp + "packages/"
         _init(tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, slack_pkg, ENDC))
-        sys.stdout.write(reading_lists)
+        sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
         sys.stdout.flush()
-        PACKAGES_TXT = _data(version)
-        package, size = _greps(PACKAGES_TXT)
+        package, size = _greps(_data(version))
         for name, loc, comp, uncomp in zip(package[0], package[1],
                                            size[0], size[1]):
             if slack_pkg in name and slack_pkg not in BlackList().packages():
-                dwn_list.append("{0}{1}/{2}".format(
-                    mirrors("", "", version), loc, name))
+                dwn_list.append("{0}{1}/{2}".format(mirrors("", "", version),
+                                                    loc, name))
                 install_all.append(name)
                 comp_sum.append(comp)
                 uncomp_sum.append(uncomp)
-        sys.stdout.write(done + "\n")
+        sys.stdout.write("{0}Done{1}\n\n".format(GREY, ENDC))
         if install_all:
             template(78)
             print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
@@ -75,7 +72,7 @@ def slack_install(slack_pkg, version):
                 "Size"))
             template(78)
             print("Installing:")
-            names, sums = _views(install_all, comp_sum)
+            sums = _views(install_all, comp_sum)
             unit, size = _units(comp_sum, uncomp_sum)
             msgs = _msgs(install_all, sums[2])
             print("\nInstalling summary")
@@ -92,7 +89,7 @@ def slack_install(slack_pkg, version):
             read = raw_input("\nWould you like to install [Y/n]? ")
             if read == "Y" or read == "y":
                 _download(tmp_path, dwn_list)
-                _install(tmp_path, install_all, names)
+                _install(tmp_path, install_all)
                 _remove(tmp_path, install_all)
         else:
             pkg_not_found("", slack_pkg, "No matching", "\n")
@@ -157,11 +154,9 @@ def _views(install_all, comp_sum):
     '''
     Views packages
     '''
-    names = []
     pkg_sum = uni_sum = upg_sum = 0
     for pkg, comp in zip(install_all, comp_sum):
         pkg_split = split_package(pkg[:-4])
-        names.append(pkg_split[0])
         if os.path.isfile(pkg_path + pkg[:-4]):
             pkg_sum += 1
             COLOR = GREEN
@@ -178,7 +173,7 @@ def _views(install_all, comp_sum):
             " " * (8-len(pkg_split[2])), pkg_split[3],
             " " * (7-len(pkg_split[3])), "Slack",
             comp, " K"))
-    return names, [pkg_sum, upg_sum, uni_sum]
+    return [pkg_sum, upg_sum, uni_sum]
 
 
 def _units(comp_sum, uncomp_sum):
@@ -222,17 +217,17 @@ def _download(tmp_path, dwn_list):
         Download(tmp_path, dwn + ".asc").start()
 
 
-def _install(tmp_path, install_all, names):
+def _install(tmp_path, install_all):
     '''
     Install or upgrade packages
     '''
-    for install, name in zip(install_all, names):
+    for install in zip(install_all):
         package = ((tmp_path + install).split())
         if os.path.isfile(pkg_path + install[:-4]):
             print("[ {0}reinstalling{1} ] --> {2}".format(
                   GREEN, ENDC, install))
             PackageManager(package).reinstall()
-        elif find_package(name + "-", pkg_path):
+        elif find_package(split_package(install)[0] + "-", pkg_path):
             print("[ {0}upgrading{1} ] --> {2}".format(
                   YELLOW, ENDC, install))
             PackageManager(package).upgrade()
