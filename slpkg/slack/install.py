@@ -39,81 +39,73 @@ from pkg.manager import PackageManager
 from mirrors import mirrors
 
 
-def slack_install(slack_pkg, version):
-    '''
-    Install packages from official Slackware distribution
-    '''
-    try:
-        tmp_path = slpkg_tmp + "packages/"
-        _init(tmp_path)
+class Slack(object):
+
+    def __init__(self, slack_pkg, version):
+        self.slack_pkg = slack_pkg
+        self.version = version
+        self.tmp_path = slpkg_tmp + "packages/"
+        if not os.path.exists(slpkg_tmp):
+            os.mkdir(slpkg_tmp)
+        if not os.path.exists(self.tmp_path):
+            os.mkdir(self.tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-              CYAN, slack_pkg, ENDC))
+              CYAN, self.slack_pkg, ENDC))
         sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
         sys.stdout.flush()
-        PACKAGES_TXT = _packages(version)
-        data = _greps(PACKAGES_TXT)
-        dwn_list, install_all, comp_sum, uncomp_sum = _store(data[0], data[1],
-                                                             data[2], data[3],
-                                                             slack_pkg, version)
-        sys.stdout.write("{0}Done{1}\n\n".format(GREY, ENDC))
-        if install_all:
-            template(78)
-            print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
-                "| Package", " " * 17,
-                "Version", " " * 12,
-                "Arch", " " * 4,
-                "Build", " " * 2,
-                "Repos", " " * 10,
-                "Size"))
-            template(78)
-            print("Installing:")
-            sums = _views(install_all, comp_sum)
-            unit, size = _units(comp_sum, uncomp_sum)
-            msgs = _msgs(install_all, sums[2])
-            print("\nInstalling summary")
-            print("=" * 79)
-            print("{0}Total {1} {2}.".format(GREY, len(install_all),
-                                             msgs[0]))
-            print("{0} {1} will be installed, {2} will be upgraded and {3} "
-                  "will be resettled.".format(sums[2], msgs[1],
-                                              sums[1], sums[0]))
-            print("Need to get {0} {1} of archives.".format(size[0],
-                                                            unit[0]))
-            print("After this process, {0} {1} of additional disk space will "
-                  "be used.{2}".format(size[1], unit[1], ENDC))
-            read = raw_input("\nWould you like to install [Y/n]? ")
-            if read == "Y" or read == "y":
-                _download(tmp_path, dwn_list)
-                _install(tmp_path, install_all)
-                _remove(tmp_path, install_all)
-        else:
-            pkg_not_found("", slack_pkg, "No matching", "\n")
-    except KeyboardInterrupt:
-        print   # new line at exit
-        sys.exit()
+        PACKAGES = url_read(mirrors("PACKAGES.TXT", "", self.version))
+        EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", self.version))
+        PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", self.version))
+        self.PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
+
+    def start(self):
+        '''
+        Install packages from official Slackware distribution
+        '''
+        try:
+            data = greps(self.PACKAGES_TXT)
+            (dwn_links, install_all,
+             comp_sum, uncomp_sum) = store(data[0], data[1], data[2], data[3],
+                                           self.slack_pkg, self.version)
+            sys.stdout.write("{0}Done{1}\n\n".format(GREY, ENDC))
+            if install_all:
+                template(78)
+                print("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
+                    "| Package", " " * 17,
+                    "Version", " " * 12,
+                    "Arch", " " * 4,
+                    "Build", " " * 2,
+                    "Repos", " " * 10,
+                    "Size"))
+                template(78)
+                print("Installing:")
+                sums = views(install_all, comp_sum)
+                unit, size = units(comp_sum, uncomp_sum)
+                msg = msgs(install_all, sums[2])
+                print("\nInstalling summary")
+                print("=" * 79)
+                print("{0}Total {1} {2}.".format(GREY, len(install_all),
+                                                 msg[0]))
+                print("{0} {1} will be installed, {2} will be upgraded and "
+                      "{3} will be resettled.".format(sums[2], msg[1],
+                                                      sums[1], sums[0]))
+                print("Need to get {0} {1} of archives.".format(size[0],
+                                                                unit[0]))
+                print("After this process, {0} {1} of additional disk space "
+                      "will be used.{2}".format(size[1], unit[1], ENDC))
+                read = raw_input("\nWould you like to install [Y/n]? ")
+                if read == "Y" or read == "y":
+                    download(self.tmp_path, dwn_links)
+                    install(self.tmp_path, install_all)
+                    remove(self.tmp_path, install_all)
+            else:
+                pkg_not_found("", self.slack_pkg, "No matching", "\n")
+        except KeyboardInterrupt:
+            print   # new line at exit
+            sys.exit()
 
 
-def _init(tmp_path):
-    '''
-    Create directories if not exists
-    '''
-    if not os.path.exists(slpkg_tmp):
-        os.mkdir(slpkg_tmp)
-    if not os.path.exists(tmp_path):
-        os.mkdir(tmp_path)
-
-
-def _packages(version):
-    '''
-    Collects and return packages
-    '''
-    PACKAGES = url_read(mirrors("PACKAGES.TXT", "", version))
-    EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", version))
-    PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", version))
-    return (PACKAGES + EXTRA + PASTURE)
-
-
-def _toolbar(index, width):
+def toolbar(index, width):
     '''
     Print toolbar status
     '''
@@ -125,7 +117,7 @@ def _toolbar(index, width):
     return width
 
 
-def _greps(PACKAGES_TXT):
+def greps(PACKAGES_TXT):
     '''
     Grap data packages
     '''
@@ -133,7 +125,7 @@ def _greps(PACKAGES_TXT):
     toolbar_width, index = 800, 0
     for line in PACKAGES_TXT.splitlines():
         index += 1
-        toolbar_width = _toolbar(index, toolbar_width)
+        toolbar_width = toolbar(index, toolbar_width)
         if line.startswith("PACKAGE NAME"):
             name.append(line[15:].strip())
         if line.startswith("PACKAGE LOCATION"):
@@ -145,7 +137,7 @@ def _greps(PACKAGES_TXT):
     return [name, location, size, unsize]
 
 
-def _store(*args):
+def store(*args):
     '''
     Store data
     '''
@@ -159,7 +151,7 @@ def _store(*args):
     return [dwn, install, comp_sum, uncomp_sum]
 
 
-def _views(install_all, comp_sum):
+def views(install_all, comp_sum):
     '''
     Views packages
     '''
@@ -185,7 +177,7 @@ def _views(install_all, comp_sum):
     return [pkg_sum, upg_sum, uni_sum]
 
 
-def _units(comp_sum, uncomp_sum):
+def units(comp_sum, uncomp_sum):
     '''
     Calculate package size
     '''
@@ -207,7 +199,7 @@ def _units(comp_sum, uncomp_sum):
     return [comp_unit, uncomp_unit], [compressed, uncompressed]
 
 
-def _msgs(install_all, uni_sum):
+def msgs(install_all, uni_sum):
     '''
     Print singular plural
     '''
@@ -220,16 +212,16 @@ def _msgs(install_all, uni_sum):
     return [msg_pkg, msg_2_pkg]
 
 
-def _download(tmp_path, dwn_list):
+def download(tmp_path, dwn_links):
     '''
     Download packages
     '''
-    for dwn in dwn_list:
+    for dwn in dwn_links:
         Download(tmp_path, dwn).start()
         Download(tmp_path, dwn + ".asc").start()
 
 
-def _install(tmp_path, install_all):
+def install(tmp_path, install_all):
     '''
     Install or upgrade packages
     '''
@@ -249,7 +241,7 @@ def _install(tmp_path, install_all):
             PackageManager(package).upgrade()
 
 
-def _remove(tmp_path, install_all):
+def remove(tmp_path, install_all):
     '''
     Remove downloaded packages
     '''
