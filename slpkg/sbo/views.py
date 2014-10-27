@@ -25,15 +25,15 @@ import os
 import sys
 import pydoc
 
-from colors import RED, GREEN, GREY, ENDC
 from init import initialization
 from downloader import Download
+from colors import RED, GREEN, GREY, ENDC
 from __metadata__ import tmp, build_path, pkg_path, sp
 from messages import (pkg_found, view_sbo, pkg_not_found,
                       template, build_FAILED)
 
-from pkg.build import build_package
 from pkg.find import find_package
+from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
 from greps import SBoGrep
@@ -137,7 +137,7 @@ def build(sbo_dwn, source_dwn, FAULT):
     for src in source_dwn:
         Download(build_path, src).start()
         sources.append(src.split("/")[-1])
-    build_package(script, sources, build_path)
+    BuildPackage(script, sources, build_path).build()
 
 
 def install(name, prgnam, sbo_url):

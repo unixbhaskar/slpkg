@@ -29,7 +29,7 @@ from __metadata__ import lib_path, build_path, tmp
 
 from sbo.greps import SBoGrep
 from pkg.find import find_package
-from pkg.build import build_package
+from pkg.build import BuildPackage
 from sbo.search import sbo_search_pkg
 from pkg.manager import PackageManager
 from sbo.download import sbo_slackbuild_dwn
@@ -146,7 +146,7 @@ class QueuePkgs(object):
                 for src in source_dwn:
                     Download(build_path, src).start()
                     sources.append(src.split("/")[-1])
-                build_package(script, sources, build_path)
+                BuildPackage(script, sources, build_path).build()
         else:
             print("\nPackages not found in the queue for building\n")
 

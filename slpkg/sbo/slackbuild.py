@@ -34,7 +34,7 @@ from messages import (pkg_found, template, build_FAILED,
                       pkg_not_found, sbo_packages_view)
 
 from pkg.find import find_package
-from pkg.build import build_package
+from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
 from greps import SBoGrep
@@ -178,7 +178,7 @@ def sbo_install(name):
                             # get file from source
                             sources.append(src.split("/")[-1])
                             Download(build_path, src).start()
-                        build_package(script, sources, build_path)
+                        BuildPackage(script, sources, build_path).build()
                         # Searches the package name and version in /tmp to
                         # install. If find two or more packages e.g. to build
                         # tag 2 or 3 will fit most.
@@ -203,26 +203,25 @@ def sbo_install(name):
                         versions.append(ver)
                 # Reference list with packages installed
                 # and upgraded.
-                if len(installs) > 1:
-                    template(78)
-                    print("| Total {0} {1} installed and {2} {3} "
-                          "upgraded".format(count_installed, msg_ins,
-                                            count_upgraded, msg_upg))
-                    template(78)
-                    for pkg, ver in zip(installs, versions):
-                        installed = ("{0}-{1}".format(pkg, ver))
-                        if find_package(installed, pkg_path):
-                            if pkg in upgraded:
-                                print("| Package {0} upgraded "
-                                      "successfully".format(installed))
-                            else:
-                                print("| Package {0} installed "
-                                      "successfully".format(installed))
+                template(78)
+                print("| Total {0} {1} installed and {2} {3} "
+                      "upgraded".format(count_installed, msg_ins,
+                                        count_upgraded, msg_upg))
+                template(78)
+                for pkg, ver in zip(installs, versions):
+                    installed = ("{0}-{1}".format(pkg, ver))
+                    if find_package(installed, pkg_path):
+                        if pkg in upgraded:
+                            print("| Package {0} upgraded "
+                                  "successfully".format(installed))
                         else:
-                            print("| Package {0} NOT installed".format(
-                                installed))
-                    template(78)
-                    _write_deps(name, dependencies)
+                            print("| Package {0} installed "
+                                  "successfully".format(installed))
+                    else:
+                        print("| Package {0} NOT installed".format(
+                            installed))
+                template(78)
+                _write_deps(name, dependencies)
         else:
             sbo_matching = []
             toolbar_width = 3
@@ -291,13 +290,15 @@ def _write_deps(name, dependencies):
     '''
     if find_package(name + sp, pkg_path):
         dep_path = log_path + "dep/"
+        if not os.path.exists(log_path):
+            os.mkdir(log_path)
         if not os.path.exists(dep_path):
             os.mkdir(dep_path)
         if os.path.isfile(dep_path + name):
             os.remove(dep_path + name)
-        if len(dependencies) > 1:
+        if len(dependencies[:-1]) > 0:
             with open(dep_path + name, "w") as f:
-                for dep in dependencies:
+                for dep in dependencies[:-1]:
                     f.write(dep + "\n")
                 f.close()
 

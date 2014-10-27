@@ -143,7 +143,7 @@ class PackageManager(object):
                         template(78)
                         # Prints dependecies before removed except master
                         # package because referred as master package
-                        for dep in dependencies[:-1]:
+                        for dep in dependencies:
                             print("| {0}{1}{2}".format(RED, dep, ENDC))
                         template(78)
                         try:
@@ -154,6 +154,7 @@ class PackageManager(object):
                             print  # new line at exit
                             sys.exit()
                         if remove_dep == "y" or remove_dep == "Y":
+                            dependencies += self.binary
                             for dep in dependencies:
                                 if find_package(dep + sp, pkg_path):
                                     print(subprocess.check_output(

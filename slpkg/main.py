@@ -30,7 +30,7 @@ from blacklist import BlackList
 from version import prog_version
 from __metadata__ import path, __version__
 
-from pkg.build import build_package
+from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
 from sbo.check import sbo_check
@@ -107,7 +107,7 @@ def main():
             args[0] == "--version" and args[1:] == []):
         prog_version()
     elif len(args) == 3 and args[0] == "-a":
-        build_package(args[1], args[2:], path)
+        BuildPackage(args[1], args[2:], path).build()
     elif len(args) == 2 and args[0] == "-l":
         sbo_list = ["all", "sbo", "slack", "noarch"]
         if args[1] in sbo_list:

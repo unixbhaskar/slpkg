@@ -25,7 +25,7 @@ import os
 import sys
 
 from pkg.find import find_package
-from pkg.build import build_package
+from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
 from toolbar import status
@@ -189,7 +189,7 @@ def sbo_check():
                         for src in src_dwn:
                             Download(build_path, src).start()
                             sources.append(src.split("/")[-1])
-                        build_package(script, sources, build_path)
+                        BuildPackage(script, sources, build_path).build()
                         # Searches the package name and version in /tmp to
                         # install.If find two or more packages e.g. to build tag
                         # 2 or 3 will fit most.
