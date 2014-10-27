@@ -23,10 +23,8 @@
 
 import os
 import sys
-import time
 
 from url_read import url_read
-from downloader import Download
 from blacklist import BlackList
 from splitting import split_package
 from messages import pkg_not_found, template
@@ -36,7 +34,11 @@ from colors import RED, GREEN, CYAN, YELLOW, GREY, ENDC
 from pkg.find import find_package
 from pkg.manager import PackageManager
 
+from sizes import units
+from remove import delete
 from mirrors import mirrors
+from greps import slack_data
+from download import slack_dwn
 
 
 class Slack(object):
@@ -45,14 +47,14 @@ class Slack(object):
         self.slack_pkg = slack_pkg
         self.version = version
         self.tmp_path = slpkg_tmp + "packages/"
-        if not os.path.exists(slpkg_tmp):
-            os.mkdir(slpkg_tmp)
-        if not os.path.exists(self.tmp_path):
-            os.mkdir(self.tmp_path)
         print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
               CYAN, self.slack_pkg, ENDC))
         sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
         sys.stdout.flush()
+        if not os.path.exists(slpkg_tmp):
+            os.mkdir(slpkg_tmp)
+        if not os.path.exists(self.tmp_path):
+            os.mkdir(self.tmp_path)
         PACKAGES = url_read(mirrors("PACKAGES.TXT", "", self.version))
         EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", self.version))
         PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", self.version))
@@ -63,7 +65,7 @@ class Slack(object):
         Install packages from official Slackware distribution
         '''
         try:
-            data = greps(self.PACKAGES_TXT)
+            data = slack_data(self.PACKAGES_TXT, 700)
             (dwn_links, install_all,
              comp_sum, uncomp_sum) = store(data[0], data[1], data[2], data[3],
                                            self.slack_pkg, self.version)
@@ -95,9 +97,9 @@ class Slack(object):
                       "will be used.{2}".format(size[1], unit[1], ENDC))
                 read = raw_input("\nWould you like to install [Y/n]? ")
                 if read == "Y" or read == "y":
-                    download(self.tmp_path, dwn_links)
+                    slack_dwn(self.tmp_path, dwn_links)
                     install(self.tmp_path, install_all)
-                    remove(self.tmp_path, install_all)
+                    delete(self.tmp_path, install_all)
             else:
                 pkg_not_found("", self.slack_pkg, "No matching", "\n")
         except KeyboardInterrupt:
@@ -105,41 +107,9 @@ class Slack(object):
             sys.exit()
 
 
-def toolbar(index, width):
-    '''
-    Print toolbar status
-    '''
-    if index == width:
-        sys.stdout.write("{0}.{1}".format(GREY, ENDC))
-        sys.stdout.flush()
-        width += 800
-        time.sleep(0.00888)
-    return width
-
-
-def greps(PACKAGES_TXT):
-    '''
-    Grap data packages
-    '''
-    (name, location, size, unsize) = ([] for i in range(4))
-    toolbar_width, index = 800, 0
-    for line in PACKAGES_TXT.splitlines():
-        index += 1
-        toolbar_width = toolbar(index, toolbar_width)
-        if line.startswith("PACKAGE NAME"):
-            name.append(line[15:].strip())
-        if line.startswith("PACKAGE LOCATION"):
-            location.append(line[21:].strip())
-        if line.startswith("PACKAGE SIZE (compressed):  "):
-            size.append(line[28:-2].strip())
-        if line.startswith("PACKAGE SIZE (uncompressed):  "):
-            unsize.append(line[30:-2].strip())
-    return [name, location, size, unsize]
-
-
 def store(*args):
     '''
-    Store data
+    Store and return packages for install
     '''
     dwn, install, comp_sum, uncomp_sum = ([] for i in range(4))
     for name, loc, comp, uncomp in zip(args[0], args[1], args[2], args[3]):
@@ -177,28 +147,6 @@ def views(install_all, comp_sum):
     return [pkg_sum, upg_sum, uni_sum]
 
 
-def units(comp_sum, uncomp_sum):
-    '''
-    Calculate package size
-    '''
-    compressed = round((sum(map(float, comp_sum)) / 1024), 2)
-    uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
-    comp_unit = uncomp_unit = "Mb"
-    if compressed > 1024:
-        compressed = round((compressed / 1024), 2)
-        comp_unit = "Gb"
-    if uncompressed > 1024:
-        uncompressed = round((uncompressed / 1024), 2)
-        uncomp_unit = "Gb"
-    if compressed < 1:
-        compressed = sum(map(int, comp_sum))
-        comp_unit = "Kb"
-    if uncompressed < 1:
-        uncompressed = sum(map(int, uncomp_sum))
-        uncomp_unit = "Kb"
-    return [comp_unit, uncomp_unit], [compressed, uncompressed]
-
-
 def msgs(install_all, uni_sum):
     '''
     Print singular plural
@@ -212,21 +160,12 @@ def msgs(install_all, uni_sum):
     return [msg_pkg, msg_2_pkg]
 
 
-def download(tmp_path, dwn_links):
-    '''
-    Download packages
-    '''
-    for dwn in dwn_links:
-        Download(tmp_path, dwn).start()
-        Download(tmp_path, dwn + ".asc").start()
-
-
 def install(tmp_path, install_all):
     '''
     Install or upgrade packages
     '''
-    for install in zip(install_all):
-        package = ((tmp_path + install).split())
+    for install in install_all:
+        package = (tmp_path + install).split()
         if os.path.isfile(pkg_path + install[:-4]):
             print("[ {0}reinstalling{1} ] --> {2}".format(
                   GREEN, ENDC, install))
@@ -239,22 +178,3 @@ def install(tmp_path, install_all):
             print("[ {0}installing{1} ] --> {2}".format(
                   GREEN, ENDC, install))
             PackageManager(package).upgrade()
-
-
-def remove(tmp_path, install_all):
-    '''
-    Remove downloaded packages
-    '''
-    read = raw_input("Removal downloaded packages [Y/n]? ")
-    if read == "Y" or read == "y":
-        for remove in install_all:
-            os.remove(tmp_path + remove)
-            os.remove(tmp_path + remove + ".asc")
-        if not os.listdir(tmp_path):
-            print("Packages removed")
-        else:
-            print("\nThere are packages in directory {0}\n".format(
-                tmp_path))
-    else:
-        print("\nThere are packages in directory {0}\n".format(
-              tmp_path))

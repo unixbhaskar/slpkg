@@ -28,6 +28,7 @@ from pkg.find import find_package
 from pkg.build import build_package
 from pkg.manager import PackageManager
 
+from toolbar import status
 from init import initialization
 from downloader import Download
 from splitting import split_package
@@ -75,10 +76,7 @@ def sbo_check():
         if sbo_list:
             for pkg in sbo_list:
                 index += 1
-                if index == toolbar_width:
-                    sys.stdout.write("{0}.{1}".format(GREY, ENDC))
-                    sys.stdout.flush()
-                    toolbar_width += 4
+                toolbar_width = status(index, toolbar_width, 4)
                 name = split_package(pkg)[0]
                 if sbo_search_pkg(name):
                     # search packages if exists in the repository

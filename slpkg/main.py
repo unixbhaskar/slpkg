@@ -39,7 +39,7 @@ from sbo.tracking import track_dep
 from sbo.slackbuild import sbo_install
 
 from slack.install import Slack
-from slack.patches import patches
+from slack.patches import Patches
 
 
 def main():
@@ -120,14 +120,14 @@ def main():
             sbo_check()
         elif args[1] == repository[1] and args[2] == "--upgrade":
             version = "stable"
-            patches(version)
+            Patches(version).start()
         else:
             for opt in usage:
                 print(opt)
     elif len(args) == 4 and args[0] == "-c":
         if args[1] == repository[1] and args[3] == "--current":
             version = "current"
-            patches(version)
+            Patches(version).start()
         else:
             for opt in usage:
                 print(opt)
@@ -135,15 +135,13 @@ def main():
         if args[1] == repository[0]:
             sbo_install(args[2])
         elif args[1] == repository[1]:
-            version = "stable"
-            Slack(args[2], version).start()
+            Slack(args[2], "stable").start()
         else:
             for opt in usage:
                 print(opt)
     elif len(args) == 4 and args[0] == "-s":
         if args[1] == repository[1] and args[3] == "--current":
-            version = "current"
-            Slack(args[2], version).start()
+            Slack(args[2], "current").start()
         else:
             for opt in usage:
                 print(opt)
