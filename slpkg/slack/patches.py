@@ -148,6 +148,9 @@ def store(*args):
 
 
 def views(upgrade_all, comp_sum):
+    '''
+    Views packages
+    '''
     for upgrade, size in zip(upgrade_all, comp_sum):
         pkg_split = split_package(upgrade[:-4])
         print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11:>12}{12}".format(

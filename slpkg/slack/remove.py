@@ -33,12 +33,12 @@ def delete(path, packages):
         for pkg in packages:
             os.remove(path + pkg)
             os.remove(path + pkg + ".asc")
-        empty(path)
+        is_empty(path)
     else:
-        empty(path)
+        is_empty(path)
 
 
-def empty(path):
+def is_empty(path):
     if not os.listdir(path):
         print("Packages removed")
     else:
