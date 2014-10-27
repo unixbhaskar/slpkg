@@ -37,7 +37,6 @@ class PackageManager(object):
     Package manager class for install, upgrade,
     reinstall, remove, find and display packages.
     '''
-
     def __init__(self, binary):
         self.binary = binary
 
@@ -51,12 +50,7 @@ class PackageManager(object):
                                               pkg), shell=True))
                 print("Completed!\n")
             except subprocess.CalledProcessError:
-                message = "Can't install"
-                if len(self.binary) > 1:
-                    bol = eol = ""
-                else:
-                    bol = eol = "\n"
-                pkg_not_found(bol, pkg, message, eol)
+                self.not_found("Can't install", self.binary, pkg)
 
     def upgrade(self):
         '''
@@ -68,12 +62,7 @@ class PackageManager(object):
                                               "{0}".format(pkg), shell=True))
                 print("Completed!\n")
             except subprocess.CalledProcessError:
-                message = "Can't upgrade"
-                if len(self.binary) > 1:
-                    bol = eol = ""
-                else:
-                    bol = eol = "\n"
-                pkg_not_found(bol, pkg, message, eol)
+                self.not_found("Can't upgrade", self.binary, pkg)
 
     def reinstall(self):
         '''
@@ -86,12 +75,15 @@ class PackageManager(object):
                         pkg), shell=True))
                 print("Completed!\n")
             except subprocess.CalledProcessError:
-                message = "Can't reinstall"
-                if len(self.binary) > 1:
-                    bol = eol = ""
-                else:
-                    bol = eol = "\n"
-                pkg_not_found(bol, pkg, message, eol)
+                self.not_found("Can't reinstall", self.binary, pkg)
+
+    @staticmethod
+    def not_found(message, binary, pkg):
+        if len(binary) > 1:
+            bol = eol = ""
+        else:
+            bol = eol = "\n"
+        pkg_not_found(bol, pkg, message, eol)
 
     def remove(self):
         '''
@@ -153,8 +145,7 @@ class PackageManager(object):
                       "\n               ".join(pkgs)))
                 removed.append(pkg)
             else:
-                message = "Can't remove"
-                pkg_not_found("", pkg, message, "")
+                pkg_not_found("", pkg, "Can't remove", "")
         return removed
 
     @staticmethod
