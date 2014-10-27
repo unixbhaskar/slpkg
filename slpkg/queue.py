@@ -40,7 +40,6 @@ class QueuePkgs(object):
     Class to list, add or remove packages in queue,
     also build or install.
     '''
-
     def __init__(self):
         queue_file = [
             "# In this file you can create a list of\n",

@@ -98,22 +98,8 @@ class PackageManager(object):
         Remove Slackware binary packages
         '''
         dep_path = log_path + "dep/"
-        [removed,
-         dependencies,
-         rmv_list,
-         ] = ([] for i in range(3))
-        print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-              CYAN, ", ".join(self.binary), ENDC))
-        for pkg in self.binary:
-            pkgs = find_package(pkg + sp, pkg_path)
-            if pkgs:
-                print("[ {0}delete{1} ] --> {2}".format(RED, ENDC,
-                      "\n               ".join(pkgs)))
-
-                removed.append(pkg)
-            else:
-                message = "Can't remove"
-                pkg_not_found("", pkg, message, "")
+        dependencies = []
+        removed = self.view_removed(self.binary)
         if not removed:
             print   # new line at end
         else:
@@ -133,19 +119,7 @@ class PackageManager(object):
                     # then look log file for dependencies in /var/log/slpkg/dep,
                     # read and remove all else remove only the package.
                     if os.path.isfile(dep_path + rmv):
-                        with open(dep_path + rmv, "r") as f:
-                            dependencies = f.read().split()
-                            f.close()
-                        print   # new line at start
-                        template(78)
-                        print("| Found dependencies for package {0}:".format(
-                            rmv))
-                        template(78)
-                        # Prints dependecies before removed except master
-                        # package because referred as master package
-                        for dep in dependencies:
-                            print("| {0}{1}{2}".format(RED, dep, ENDC))
-                        template(78)
+                        dependencies = self.view_deps(dep_path, rmv)
                         try:
                             remove_dep = raw_input(
                                 "\nRemove dependencies (maybe used by other "
@@ -154,40 +128,93 @@ class PackageManager(object):
                             print  # new line at exit
                             sys.exit()
                         if remove_dep == "y" or remove_dep == "Y":
-                            dependencies += self.binary
-                            for dep in dependencies:
-                                if find_package(dep + sp, pkg_path):
-                                    print(subprocess.check_output(
-                                        "removepkg {0}".format(dep),
-                                        shell=True))
-                                    rmv_list.append(dep)
-                            os.remove(dep_path + rmv)
+                            rmv_list = self.rmv_deps(self.binary, dependencies,
+                                                     dep_path, rmv)
                         else:
-                            if find_package(rmv + sp, pkg_path):
-                                print(subprocess.check_output(
-                                    "removepkg {0}".format(rmv),
-                                    shell=True))
-                                rmv_list.append(rmv)
-                            f.close()
+                            rmv_list = self.rmv_pkg(rmv, dep_path)
                             os.remove(dep_path + rmv)
                     else:
-                        if find_package(rmv + sp, pkg_path):
-                            print(subprocess.check_output(
-                                "removepkg {0}".format(rmv),
-                                shell=True))
-                            rmv_list.append(rmv)
+                        rmv_list = self.rmv_pkg(rmv, dep_path)
                 # Prints all removed packages
-                if len(rmv_list) > 1:
-                    template(78)
-                    print("| Total {0} packages removed".format(len(rmv_list)))
-                template(78)
-                for pkg in rmv_list:
-                    if not find_package(pkg + sp, pkg_path):
-                        print("| Package {0} removed".format(pkg))
-                    else:
-                        print("| Package {0} not found".format(pkg))
-                template(78)
-            print   # new line at end
+                self.reference_rmvs(rmv_list)
+
+    @staticmethod
+    def view_removed(binary):
+        '''
+        View packages before removed
+        '''
+        removed = []
+        print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
+            CYAN, ", ".join(binary), ENDC))
+        for pkg in binary:
+            pkgs = find_package(pkg + sp, pkg_path)
+            if pkgs:
+                print("[ {0}delete{1} ] --> {2}".format(RED, ENDC,
+                      "\n               ".join(pkgs)))
+                removed.append(pkg)
+            else:
+                message = "Can't remove"
+                pkg_not_found("", pkg, message, "")
+        return removed
+
+    @staticmethod
+    def view_deps(path, package):
+        '''
+        View dependencies for before remove
+        '''
+        with open(path + package, "r") as f:
+            dependencies = f.read().split()
+            f.close()
+        print   # new line at start
+        template(78)
+        print("| Found dependencies for package {0}:".format(package))
+        template(78)
+        for dep in dependencies:
+            print("| {0}{1}{2}".format(RED, dep, ENDC))
+        template(78)
+        return dependencies
+
+    @staticmethod
+    def rmv_deps(binary, dependencies, path, package):
+        '''
+        Remove dependencies
+        '''
+        removes = []
+        dependencies += binary
+        for dep in dependencies:
+            if find_package(dep + sp, pkg_path):
+                print(subprocess.check_output("removepkg {0}".format(dep),
+                                              shell=True))
+                removes.append(dep)
+        os.remove(path + package)
+        return removes
+
+    @staticmethod
+    def rmv_pkg(package, path):
+        '''
+        Remove one signle package
+        '''
+        if find_package(package + sp, pkg_path):
+            print(subprocess.check_output("removepkg {0}".format(package),
+                                          shell=True))
+            return package.split()
+
+    @staticmethod
+    def reference_rmvs(removes):
+        '''
+        Prints all removed packages
+        '''
+        if len(removes) > 1:
+            template(78)
+            print("| Total {0} packages removed".format(len(removes)))
+        template(78)
+        for pkg in removes:
+            if not find_package(pkg + sp, pkg_path):
+                print("| Package {0} removed".format(pkg))
+            else:
+                print("| Package {0} not found".format(pkg))
+        template(78)
+        print   # new line at end
 
     def find(self):
         '''
