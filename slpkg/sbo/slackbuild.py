@@ -61,17 +61,17 @@ def sbo_install(name):
             count_upgraded = count_installed = 0
             requires = one_for_all(name, dependencies_list)
             dependencies = remove_dbs(requires)
-            (sbo_ver,
-             pkg_arch,
-             pkg_sum,
-             src
-             ) = store(dependencies, UNST)
+            # sbo_versions = st[0]
+            # package_arch = st[1]
+            # package_sum = st[2]
+            # sources = st[3]
+            st = store(dependencies, UNST)
             sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
             (PKG_COLOR,
              count_upgraded,
              count_installed
-             ) = pkg_colors_tag(name, sbo_ver, count_upgraded, count_installed)
-            ARCH_COLOR = arch_colors_tag(UNST, pkg_arch)
+             ) = pkg_colors_tag(name, st[0], count_upgraded, count_installed)
+            ARCH_COLOR = arch_colors_tag(UNST, st[1])
             print("\nThe following packages will be automatically installed "
                   "or upgraded")
             print("with new version:\n")
@@ -83,10 +83,10 @@ def sbo_install(name):
                 "Repository"))
             template(78)
             print("Installing:")
-            view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR, pkg_arch[-1])
+            view(PKG_COLOR, name, st[0][-1], ARCH_COLOR, st[1][-1])
             print("Installing for dependencies:")
-            for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1],
-                                          pkg_arch[:-1]):
+            for dep, ver, dep_arch in zip(dependencies[:-1], st[0][:-1],
+                                          st[1][:-1]):
                 (DEP_COLOR,
                  count_upgraded,
                  count_installed
@@ -102,15 +102,15 @@ def sbo_install(name):
             print("{0}Total {1} {2}.".format(GREY, len(dependencies),
                                              total_msg))
             print("{0} {1} will be installed, {2} allready installed and "
-                  "{3} {4}".format(count_installed, ins_msg, pkg_sum,
+                  "{3} {4}".format(count_installed, ins_msg, st[2],
                                    count_upgraded, upg_msg))
             print("will be upgraded.{0}\n".format(ENDC))
-            read = arch_support(src, UNST, pkg_sum, dependencies)
+            read = arch_support(st[3], UNST, st[2], dependencies)
             if read == "Y" or read == "y":
                 (installs,
                  upgraded,
                  versions
-                 ) = build_install(dependencies, sbo_ver, pkg_arch)
+                 ) = build_install(dependencies, st[0], st[1])
                 reference(count_installed, ins_msg, count_upgraded, upg_msg,
                           installs, versions, upgraded)
                 write_deps(name, dependencies)
@@ -195,7 +195,7 @@ def store(dependencies, support):
         sbo_package = ("{0}-{1}".format(pkg, version))
         if find_package(sbo_package, pkg_path):
             package_sum += 1
-    return sbo_versions, package_arch, package_sum, sources
+    return [sbo_versions, package_arch, package_sum, sources]
 
 
 def pkg_colors_tag(name, sbo_versions, count_upg, count_ins):
