@@ -31,7 +31,7 @@ from __metadata__ import (tmp, pkg_path, build_path,
 
 from colors import RED, GREEN, GREY, YELLOW, CYAN, ENDC
 from messages import (pkg_found, template, build_FAILED,
-                      pkg_not_found, sbo_packages_view)
+                      pkg_not_found)
 
 from pkg.find import find_package
 from pkg.build import BuildPackage
@@ -56,52 +56,20 @@ def sbo_install(name):
     initialization()
     UNST = ["UNSUPPORTED",
             "UNTESTED"]
-    (sbo_ver, pkg_arch, installs, upgraded, versions,
-     requires, dependencies) = ([] for i in range(7))
-    PKG_COLOR = DEP_COLOR = ARCH_COLOR = ""
+    (installs, upgraded, versions) = ([] for i in range(3))
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list or sbo_search_pkg(name) is not None:
-            pkg_sum = count_upgraded = count_installed = 0
-            # Insert master package in list to
-            # install it after dependencies
-            requires.append(name)
-            # Create one list for all packages
-            for pkg in dependencies_list:
-                requires += pkg
-            requires.reverse()
-            # Remove double dependencies
-            for duplicate in requires:
-                if duplicate not in dependencies:
-                    dependencies.append(duplicate)
-            # Create two lists one for package version and one
-            # for package arch.
-            for pkg in dependencies:
-                version = SBoGrep(pkg).version()
-                sbo_ver.append(version)
-                src = SBoGrep(pkg).source()
-                pkg_arch.append(_select_arch(src, UNST))
-                sbo_pkg = ("{0}-{1}".format(pkg, version))
-                if find_package(sbo_pkg, pkg_path):
-                    pkg_sum += 1
+            count_upgraded = count_installed = 0
+            requires = one_for_all(name, dependencies_list)
+            dependencies = remove_dbs(requires)
+            (sbo_ver, pkg_arch, pkg_sum, src) = store(dependencies, UNST)
             sys.stdout.write(done)
-            # Tag with color green if package already installed,
-            # color yellow for packages to upgrade and color red
-            # if not installed. Also if package arch is UNSUPPORTED
-            # tag with color red and if UNTESTED with color yellow.
-            master_pkg = ("{0}-{1}".format(name, sbo_ver[-1]))
-            if find_package(master_pkg, pkg_path):
-                PKG_COLOR = GREEN
-            elif find_package(name + sp, pkg_path):
-                PKG_COLOR = YELLOW
-                count_upgraded += 1
-            else:
-                PKG_COLOR = RED
-                count_installed += 1
-            if UNST[0] in pkg_arch[-1]:
-                ARCH_COLOR = RED
-            elif UNST[1] in pkg_arch[-1]:
-                ARCH_COLOR = YELLOW
+            (PKG_COLOR,
+             count_upgraded,
+             count_installed
+             ) = pkg_colors_tag(name, sbo_ver, count_upgraded, count_installed)
+            ARCH_COLOR = arch_colors_tag(UNST, pkg_arch)
             print("\nThe following packages will be automatically installed "
                   "or upgraded")
             print("with new version:\n")
@@ -113,26 +81,16 @@ def sbo_install(name):
                 "Repository"))
             template(78)
             print("Installing:")
-            sbo_packages_view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR,
-                              pkg_arch[-1])
+            view(PKG_COLOR, name, sbo_ver[-1], ARCH_COLOR, pkg_arch[-1])
             print("Installing for dependencies:")
-            ARCH_COLOR = ""     # reset arch color for dependencies packages
             for dep, ver, dep_arch in zip(dependencies[:-1], sbo_ver[:-1],
                                           pkg_arch[:-1]):
-                dep_pkg = ("{0}-{1}".format(dep, ver))
-                if find_package(dep_pkg, pkg_path):
-                    DEP_COLOR = GREEN
-                elif find_package(dep + sp, pkg_path):
-                    DEP_COLOR = YELLOW
-                    count_upgraded += 1
-                else:
-                    DEP_COLOR = RED
-                    count_installed += 1
-                if UNST[0] in dep_arch:
-                    ARCH_COLOR = RED
-                elif UNST[1] in dep_arch:
-                    ARCH_COLOR = YELLOW
-                sbo_packages_view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
+                (DEP_COLOR,
+                 count_upgraded,
+                 count_installed
+                 ) = pkg_colors_tag(dep, ver, count_upgraded, count_installed)
+                ARCH_COLOR = arch_colors_tag(UNST, dep)
+                view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
             msg_upg = msg_ins = "package"
             if count_installed > 1:
                 msg_ins = msg_ins + "s"
@@ -221,7 +179,7 @@ def sbo_install(name):
                         print("| Package {0} NOT installed".format(
                             installed))
                 template(78)
-                _write_deps(name, dependencies)
+                write_deps(name, dependencies)
         else:
             sbo_matching = []
             toolbar_width = 3
@@ -240,7 +198,7 @@ def sbo_install(name):
                             sbo_matching.append(sbo_name)
                             sbo_ver.append(SBoGrep(sbo_name).version())
                             src = SBoGrep(sbo_name).source()
-                            pkg_arch.append(_select_arch(src, UNST))
+                            pkg_arch.append(select_arch(src, UNST))
                 SLACKBUILDS_TXT.close()
             sys.stdout.write(done)
             if sbo_matching:
@@ -257,10 +215,10 @@ def sbo_install(name):
                 ARCH_COLOR = ""
                 for match, ver, march in zip(sbo_matching, sbo_ver, pkg_arch):
                     if find_package(match + sp + ver, pkg_path):
-                        sbo_packages_view(GREEN, match, ver, ARCH_COLOR, march)
+                        view(GREEN, match, ver, ARCH_COLOR, march)
                         count_installed += 1
                     else:
-                        sbo_packages_view(RED, match, ver, ARCH_COLOR, march)
+                        view(RED, match, ver, ARCH_COLOR, march)
                         count_uninstalled += 1
                 total_msg = ins_msg = uns_msg = "package"
                 if len(sbo_matching) > 1:
@@ -283,7 +241,87 @@ def sbo_install(name):
         sys.exit()
 
 
-def _write_deps(name, dependencies):
+def one_for_all(name, dependencies):
+    '''
+    Create one list for all packages
+    '''
+    requires = []
+    requires.append(name)
+    for pkg in dependencies:
+        requires += pkg
+    requires.reverse()
+    return requires
+
+
+def remove_dbs(requires):
+    '''
+    Remove double dependencies
+    '''
+    dependencies = []
+    for duplicate in requires:
+        if duplicate not in dependencies:
+            dependencies.append(duplicate)
+    return dependencies
+
+
+def store(dependencies, support):
+    '''
+    Create two lists one for package version and one
+    for package arch
+    '''
+    package_sum = 0
+    sbo_version, package_arch = [], []
+    for pkg in dependencies:
+        version = SBoGrep(pkg).version()
+        sbo_version.append(version)
+        sources = SBoGrep(pkg).source()
+        package_arch.append(select_arch(sources, support))
+        sbo_package = ("{0}-{1}".format(pkg, version))
+        if find_package(sbo_package, pkg_path):
+            package_sum += 1
+    return sbo_version, package_arch, package_sum, sources
+
+
+def pkg_colors_tag(name, sbo_version, count_upg, count_ins):
+    '''
+    Tag with color green if package already installed,
+    color yellow for packages to upgrade and color red
+    if not installed. Also if package arch is UNSUPPORTED
+    tag with color red and if UNTESTED with color yellow.
+    '''
+    master_pkg = ("{0}-{1}".format(name, sbo_version[-1]))
+    if find_package(master_pkg, pkg_path):
+        color = GREEN
+    elif find_package(name + sp, pkg_path):
+        color = YELLOW
+        count_upg += 1
+    else:
+        color = RED
+        count_ins += 1
+    return color, count_upg, count_ins
+
+
+def arch_colors_tag(support, package_arch):
+    color = ""
+    if support[0] in package_arch[-1]:
+        color = RED
+    elif support[1] in package_arch[-1]:
+        color = YELLOW
+    return color
+
+
+def view(*args):
+    '''
+    View slackbuild packages with version and arch
+    '''
+    print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
+        args[0], args[1], ENDC,
+        " " * (38-len(args[1])), args[2],
+        " " * (17-len(args[2])), args[3], args[4], ENDC,
+        " " * (13-len(args[4])), "SBo"))
+
+
+def write_deps(name, dependencies):
     '''
     Write dependencies in a log file
     into directory `/var/log/slpkg/dep/`
@@ -303,7 +341,7 @@ def _write_deps(name, dependencies):
                 f.close()
 
 
-def _select_arch(src, UNST):
+def select_arch(src, support):
     '''
     Looks if sources unsupported or untested
     from arch else select arch
@@ -311,7 +349,7 @@ def _select_arch(src, UNST):
     arch = os.uname()[4]
     if arch.startswith("i") and arch.endswith("86"):
         arch = "i486"
-    for item in UNST:
+    for item in support:
         if item in src:
             arch = item
     return arch

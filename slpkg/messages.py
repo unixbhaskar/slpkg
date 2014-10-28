@@ -99,14 +99,3 @@ def view_sbo(*args):
     print(" {0}I{1}nstall              Download/Build/Install".format(
         RED, ENDC))
     print(" {0}Q{1}uit                 Quit\n".format(RED, ENDC))
-
-
-def sbo_packages_view(*args):
-    '''
-    View slackbuild packages with version and arch
-    '''
-    print(" {0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}".format(
-        args[0], args[1], ENDC,
-        " " * (38-len(args[1])), args[2],
-        " " * (17-len(args[2])), args[3], args[4], ENDC,
-        " " * (13-len(args[4])), "SBo"))

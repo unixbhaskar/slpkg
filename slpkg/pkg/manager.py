@@ -181,7 +181,7 @@ class PackageManager(object):
         return removes
 
     @staticmethod
-    def rmv_pkg(package, path):
+    def rmv_pkg(package):
         '''
         Remove one signle package
         '''
