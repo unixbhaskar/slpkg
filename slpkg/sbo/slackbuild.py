@@ -64,15 +64,15 @@ class SBoInstall(object):
             if self.dependencies_list or sbo_search_pkg(self.name) is not None:
                 dependencies = remove_dbs(one_for_all(self.name,
                                                       self.dependencies_list))
-                # sbo_versions = st[0]
-                # package_arch = st[1]
-                # package_sum = st[2]
-                # sources = st[3]
-                st = store(dependencies, self.UNST)
+                # sbo_versions = data[0]
+                # package_arch = data[1]
+                # package_sum = data[2]
+                # sources = data[3]
+                data = store(dependencies, self.UNST)
                 sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
                 # count_upgraded = cnt[0]
                 # count_installed = cnt[1]
-                (PKG_COLOR, cnt) = pkg_colors_tag(self.name, st[0], 0, 0)
+                (PKG_COLOR, cnt) = pkg_colors_tag(self.name, data[0], 0, 0)
                 print("\nThe following packages will be automatically "
                       "installed or upgraded")
                 print("with new version:\n")
@@ -84,35 +84,33 @@ class SBoInstall(object):
                     "Repository"))
                 template(78)
                 print("Installing:")
-                view(PKG_COLOR, self.name, st[0][-1],
-                     arch_colors_tag(self.UNST, st[1]), st[1][-1])
+                view(PKG_COLOR, self.name, data[0][-1],
+                     arch_colors_tag(self.UNST, data[1]), data[1][-1])
                 print("Installing for dependencies:")
-                for dep, ver, dep_arch in zip(dependencies[:-1], st[0][:-1],
-                                              st[1][:-1]):
+                for dep, ver, dep_arch in zip(dependencies[:-1], data[0][:-1],
+                                              data[1][:-1]):
                     (DEP_COLOR, cnt) = pkg_colors_tag(dep, ver, cnt[0], cnt[1])
                     view(DEP_COLOR, dep, ver, arch_colors_tag(self.UNST, dep),
                          dep_arch)
                 # ins_msg = msg[0]
                 # upg_msg = msg[1]
                 # total_msg = msg[2]
+                msg = msgs(dependencies, cnt[1], cnt[0])
                 print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total {1} {2}.".format(GREY, len(dependencies),
-                                                 msgs(dependencies, cnt[1],
-                                                      cnt[0])[2]))
+                                                 msg[2]))
                 print("{0} {1} will be installed, {2} allready installed and "
-                      "{3} {4}".format(cnt[1], msgs(dependencies, cnt[1],
-                                                    cnt[0])[0], st[2], cnt[0],
-                                       msgs(dependencies, cnt[1], cnt[0])[1]))
+                      "{3} {4}".format(cnt[1], msg[0], data[2], cnt[0],
+                                       msg[1]))
                 print("will be upgraded.{0}\n".format(ENDC))
-                read = arch_support(st[3], self.UNST, st[2], dependencies)
+                read = arch_support(data[3], self.UNST, data[2], dependencies)
                 if read == "Y" or read == "y":
                     # installs = bi[0]
                     # upgraded = bi[1]
                     # versions = bi[2]
-                    bi = build_install(dependencies, st[0], st[1])
-                    reference(cnt[1], msgs(dependencies, cnt[1], cnt[0])[0],
-                              cnt[0], msgs(dependencies, cnt[1], cnt[0])[1],
+                    bi = build_install(dependencies, data[0], data[1])
+                    reference(cnt[1], msg[0], cnt[0], msg[1],
                               bi[0], bi[2], bi[1])
                     write_deps(self.name, dependencies)
             else:
@@ -120,8 +118,9 @@ class SBoInstall(object):
                 # sbo_matching = mt[0]
                 # sbo_ver = mt[1]
                 # pkg_arch = mt[2]
+                mt = matching(self.name, self.UNST)
                 sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
-                if matching(self.name, self.UNST)[0]:
+                if mt[0]:
                     print("\nPackages with name matching [ {0}{1}{2} ]"
                           "\n".format(CYAN, self.name, ENDC))
                     template(78)
@@ -132,12 +131,7 @@ class SBoInstall(object):
                         "Repository"))
                     template(78)
                     print("Matching:")
-                    for match, ver, march in zip(matching(self.name,
-                                                          self.UNST)[0],
-                                                 matching(self.name,
-                                                          self.UNST)[1],
-                                                 matching(self.name,
-                                                          self.UNST)[2]):
+                    for match, ver, march in zip(mt[0], mt[1], mt[2]):
                         if find_package(match + sp + ver, pkg_path):
                             view(GREEN, match, ver, "", march)
                             count_installed += 1
@@ -147,22 +141,14 @@ class SBoInstall(object):
                     # ins_msg = msg[0]
                     # uns_msg = msg[1]
                     # total_msg = msg[2]
+                    msg = msgs(mt[0], count_installed, count_uninstalled)
                     print("\nInstalling summary")
                     print("=" * 79)
                     print("{0}Total found {1} matching {2}.".format(
-                        GREY, len(matching(self.name, self.UNST)[0],
-                                  msgs(matching(self.name, self.UNST)[0],
-                                       count_installed,
-                                       count_uninstalled)[2])))
+                        GREY, len(mt[0]), msg[2]))
                     print("{0} installed {1} and {2} uninstalled {3}.{4}"
-                          "\n".format(count_installed,
-                                      msgs(matching(self.name, self.UNST)[0],
-                                           count_installed,
-                                           count_uninstalled)[0],
-                                      count_uninstalled,
-                                      msgs(matching(self.name, self.UNST)[0],
-                                           count_installed,
-                                           count_uninstalled)[1], ENDC))
+                          "\n".format(count_installed, msg[0],
+                                      count_uninstalled, msg[1], ENDC))
                 else:
                     pkg_not_found("\n", self.name, "No matching", "\n")
         except KeyboardInterrupt:
