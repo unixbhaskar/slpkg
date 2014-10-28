@@ -120,9 +120,8 @@ class SBoInstall(object):
                 # sbo_matching = mt[0]
                 # sbo_ver = mt[1]
                 # pkg_arch = mt[2]
-                mt = matching(self.name, self.UNST)
                 sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
-                if mt[0]:
+                if matching(self.name, self.UNST)[0]:
                     print("\nPackages with name matching [ {0}{1}{2} ]"
                           "\n".format(CYAN, self.name, ENDC))
                     template(78)
@@ -133,7 +132,12 @@ class SBoInstall(object):
                         "Repository"))
                     template(78)
                     print("Matching:")
-                    for match, ver, march in zip(mt[0], mt[1], mt[2]):
+                    for match, ver, march in zip(matching(self.name,
+                                                          self.UNST)[0],
+                                                 matching(self.name,
+                                                          self.UNST)[1],
+                                                 matching(self.name,
+                                                          self.UNST)[2]):
                         if find_package(match + sp + ver, pkg_path):
                             view(GREEN, match, ver, "", march)
                             count_installed += 1
@@ -146,14 +150,18 @@ class SBoInstall(object):
                     print("\nInstalling summary")
                     print("=" * 79)
                     print("{0}Total found {1} matching {2}.".format(
-                        GREY, len(mt[0]), msgs(mt[0], count_installed,
-                                               count_uninstalled)[2]))
+                        GREY, len(matching(self.name, self.UNST)[0],
+                                  msgs(matching(self.name, self.UNST)[0],
+                                       count_installed,
+                                       count_uninstalled)[2])))
                     print("{0} installed {1} and {2} uninstalled {3}.{4}"
                           "\n".format(count_installed,
-                                      msgs(mt[0], count_installed,
+                                      msgs(matching(self.name, self.UNST)[0],
+                                           count_installed,
                                            count_uninstalled)[0],
                                       count_uninstalled,
-                                      msgs(mt[0], count_installed,
+                                      msgs(matching(self.name, self.UNST)[0],
+                                           count_installed,
                                            count_uninstalled)[1], ENDC))
                 else:
                     pkg_not_found("\n", self.name, "No matching", "\n")
