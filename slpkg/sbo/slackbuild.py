@@ -62,8 +62,8 @@ class SBoInstall(object):
         '''
         try:
             if self.dependencies_list or sbo_search_pkg(self.name) is not None:
-                requires = one_for_all(self.name, self.dependencies_list)
-                dependencies = remove_dbs(requires)
+                dependencies = remove_dbs(one_for_all(self.name,
+                                                      self.dependencies_list))
                 # sbo_versions = st[0]
                 # package_arch = st[1]
                 # package_sum = st[2]
