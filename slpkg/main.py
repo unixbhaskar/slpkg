@@ -34,7 +34,7 @@ from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
 from sbo.check import sbo_check
-from sbo.views import sbo_network
+from sbo.views import SBoNetwork
 from sbo.tracking import track_dep
 from sbo.slackbuild import sbo_install
 
@@ -148,7 +148,7 @@ def main():
     elif len(args) == 2 and args[0] == "-t":
         track_dep(args[1])
     elif len(args) == 2 and args[0] == "-n":
-        sbo_network(args[1])
+        SBoNetwork(args[1]).view()
     elif len(args) == 2 and args[0] == "-b" and args[1] == "--list":
         blacklist.listed()
     elif len(args) > 2 and args[0] == "-b" and args[-1] == "--add":

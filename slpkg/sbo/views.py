@@ -42,64 +42,76 @@ from download import sbo_slackbuild_dwn
 from read import read_readme, read_info_slackbuild
 
 
-def sbo_network(name):
-    '''
-    View SlackBuild package, read or install them
-    from slackbuilds.org
-    '''
-    done = "{0}Done{1}\n".format(GREY, ENDC)
-    reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
-    sys.stdout.write(reading_lists)
-    sys.stdout.flush()
-    initialization()
-    sbo_url = sbo_search_pkg(name)
-    sys.stdout.write(done)
-    if sbo_url:
-        grep = SBoGrep(name)
-        sbo_desc = grep.description()[len(name) + 2:-1]
-        sbo_req = grep.requires()
-        source_dwn = grep.source().split()
-        sbo_dwn = sbo_slackbuild_dwn(sbo_url)
-        sbo_version = grep.version()
-        prgnam = ("{0}-{1}".format(name, sbo_version))
-        view_sbo(name, sbo_url, sbo_desc, sbo_dwn.split("/")[-1],
-                 ", ".join([src.split("/")[-1] for src in source_dwn]),
-                 sbo_req)
-        FAULT = error_uns(source_dwn)
-        while True:
-            try:
-                choice = raw_input(" {0}Choose an option: {1}".format(GREY,
-                                                                      ENDC))
-            except KeyboardInterrupt:
-                print   # new line at exit
-                break
-            if choice in ["D", "d"]:
-                download("", sbo_dwn, source_dwn)
-                break
-            elif choice in ["R", "r"]:
-                pydoc.pager(read_readme(sbo_url, "README"))
-            elif choice in ["F", "f"]:
-                pydoc.pager(read_info_slackbuild(sbo_url, name, ".info"))
-            elif choice in ["S", "s"]:
-                pydoc.pager(read_info_slackbuild(sbo_url, name, ".SlackBuild"))
-            elif choice in ["B", "b"]:
-                build(sbo_dwn, source_dwn, FAULT)
-                break
-            elif choice in ["I", "i"]:
-                if not find_package(prgnam + sp, pkg_path):
-                    build(sbo_dwn, source_dwn, FAULT)
-                    install(name, prgnam, sbo_url)
+class SBoNetwork(object):
+
+    def __init__(self, name):
+        self.name = name
+        sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
+        sys.stdout.flush()
+        initialization()
+        grep = SBoGrep(self.name)
+        self.sbo_url = sbo_search_pkg(self.name)
+        self.sbo_desc = grep.description()[len(self.name) + 2:-1]
+        self.sbo_req = grep.requires()
+        self.source_dwn = grep.source().split()
+        self.sbo_dwn = sbo_slackbuild_dwn(self.sbo_url)
+        self.sbo_version = grep.version()
+        sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
+
+    def view(self):
+        '''
+        View SlackBuild package, read or install them
+        from slackbuilds.org
+        '''
+        if self.sbo_url:
+            prgnam = ("{0}-{1}".format(self.name, self.sbo_version))
+            view_sbo(self.name, self.sbo_url, self.sbo_desc,
+                     self.sbo_dwn.split("/")[-1],
+                     ", ".join([src.split("/")[-1] for src in self.source_dwn]),
+                     self.sbo_req)
+            FAULT = error_uns(self.source_dwn)
+            while True:
+                choice = read_choice()
+                if choice in ["D", "d"]:
+                    download("", self.sbo_dwn, self.source_dwn)
                     break
+                elif choice in ["R", "r"]:
+                    pydoc.pager(read_readme(self.sbo_url, "README"))
+                elif choice in ["F", "f"]:
+                    pydoc.pager(read_info_slackbuild(self.sbo_url, self.name,
+                                                     ".info"))
+                elif choice in ["S", "s"]:
+                    pydoc.pager(read_info_slackbuild(self.sbo_url, self.name,
+                                                     ".SlackBuild"))
+                elif choice in ["B", "b"]:
+                    build(self.sbo_dwn, self.source_dwn, FAULT)
+                    break
+                elif choice in ["I", "i"]:
+                    if not find_package(prgnam + sp, pkg_path):
+                        build(self.sbo_dwn, self.source_dwn, FAULT)
+                        install(self.name, prgnam, self.sbo_url)
+                        break
+                    else:
+                        template(78)
+                        pkg_found(self.name, self.sbo_version)
+                        template(78)
+                        break
                 else:
-                    template(78)
-                    pkg_found(name, sbo_version)
-                    template(78)
                     break
-            else:
-                break
-    else:
-        message = "Can't view"
-        pkg_not_found("\n", name, message, "\n")
+        else:
+            pkg_not_found("\n", self.name, "Can't view", "\n")
+
+
+def read_choice():
+    '''
+    Return choice
+    '''
+    try:
+        choice = raw_input(" {0}Choose an option: {1}".format(GREY, ENDC))
+    except KeyboardInterrupt:
+        print   # new line at exit
+        sys.exit()
+    return choice
 
 
 def error_uns(source_dwn):
@@ -154,6 +166,5 @@ def install(name, prgnam, sbo_url):
         except ValueError:
             build_FAILED(sbo_url, prgnam)
             sys.exit()
-        print("[ {0}Installing{1} ] --> {2}".format(GREEN, ENDC,
-                                                    name))
+        print("[ {0}Installing{1} ] --> {2}".format(GREEN, ENDC, name))
         PackageManager(binary).upgrade()
