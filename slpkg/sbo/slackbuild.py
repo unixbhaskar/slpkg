@@ -58,7 +58,6 @@ def sbo_install(name):
     dependencies_list = sbo_dependencies_pkg(name)
     try:
         if dependencies_list or sbo_search_pkg(name) is not None:
-            count_upgraded = count_installed = 0
             requires = one_for_all(name, dependencies_list)
             dependencies = remove_dbs(requires)
             # sbo_versions = st[0]
@@ -70,7 +69,7 @@ def sbo_install(name):
             (PKG_COLOR,
              count_upgraded,
              count_installed
-             ) = pkg_colors_tag(name, st[0], count_upgraded, count_installed)
+             ) = pkg_colors_tag(name, st[0], 0, 0)
             ARCH_COLOR = arch_colors_tag(UNST, st[1])
             print("\nThe following packages will be automatically installed "
                   "or upgraded")
@@ -93,17 +92,16 @@ def sbo_install(name):
                  ) = pkg_colors_tag(dep, ver, count_upgraded, count_installed)
                 ARCH_COLOR = arch_colors_tag(UNST, dep)
                 view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
-            (ins_msg,
-             upg_msg,
-             total_msg
-             ) = msgs(dependencies, count_installed, count_upgraded)
+            # ins_msg = msg[0]
+            # upg_msg = msg[1]
+            # total_msg = msg[2]
+            msg = msgs(dependencies, count_installed, count_upgraded)
             print("\nInstalling summary")
             print("=" * 79)
-            print("{0}Total {1} {2}.".format(GREY, len(dependencies),
-                                             total_msg))
+            print("{0}Total {1} {2}.".format(GREY, len(dependencies), msg[2]))
             print("{0} {1} will be installed, {2} allready installed and "
-                  "{3} {4}".format(count_installed, ins_msg, st[2],
-                                   count_upgraded, upg_msg))
+                  "{3} {4}".format(count_installed, msg[0], st[2],
+                                   count_upgraded, msg[1]))
             print("will be upgraded.{0}\n".format(ENDC))
             read = arch_support(st[3], UNST, st[2], dependencies)
             if read == "Y" or read == "y":
@@ -111,7 +109,7 @@ def sbo_install(name):
                  upgraded,
                  versions
                  ) = build_install(dependencies, st[0], st[1])
-                reference(count_installed, ins_msg, count_upgraded, upg_msg,
+                reference(count_installed, msg[0], count_upgraded, msg[1],
                           installs, versions, upgraded)
                 write_deps(name, dependencies)
         else:
@@ -140,16 +138,16 @@ def sbo_install(name):
                     else:
                         view(RED, match, ver, ARCH_COLOR, march)
                         count_uninstalled += 1
-                (ins_msg,
-                 uns_msg,
-                 total_msg
-                 ) = msgs(sbo_matching, count_installed, count_uninstalled)
+                # ins_msg = msg[0]
+                # uns_msg = msg[1]
+                # total_msg = msg[2]
+                msg = msgs(sbo_matching, count_installed, count_uninstalled)
                 print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total found {1} matching {2}.".format(
-                    GREY, len(sbo_matching), total_msg))
+                    GREY, len(sbo_matching), msg[2]))
                 print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
-                    count_installed, ins_msg, count_uninstalled, uns_msg, ENDC))
+                    count_installed, msg[0], count_uninstalled, msg[1], ENDC))
             else:
                 pkg_not_found("\n", name, "No matching", "\n")
     except KeyboardInterrupt:
