@@ -123,10 +123,10 @@ class PackageManager(object):
                             rmv_list = self.rmv_deps(self.binary, dependencies,
                                                      dep_path, rmv)
                         else:
-                            rmv_list = self.rmv_pkg(rmv, dep_path)
+                            rmv_list = self.rmv_pkg(rmv)
                             os.remove(dep_path + rmv)
                     else:
-                        rmv_list = self.rmv_pkg(rmv, dep_path)
+                        rmv_list = self.rmv_pkg(rmv)
                 # Prints all removed packages
                 self.reference_rmvs(rmv_list)
 
