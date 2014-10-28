@@ -95,14 +95,15 @@ class SBoInstall(object):
                 # ins_msg = msg[0]
                 # upg_msg = msg[1]
                 # total_msg = msg[2]
-                msg = msgs(dependencies, cnt[1], cnt[0])
                 print("\nInstalling summary")
                 print("=" * 79)
                 print("{0}Total {1} {2}.".format(GREY, len(dependencies),
-                                                 msg[2]))
+                                                 msgs(dependencies, cnt[1],
+                                                      cnt[0])[2]))
                 print("{0} {1} will be installed, {2} allready installed and "
-                      "{3} {4}".format(cnt[1], msg[0], st[2],
-                                       cnt[0], msg[1]))
+                      "{3} {4}".format(cnt[1], msgs(dependencies, cnt[1],
+                                                    cnt[0])[0], st[2], cnt[0],
+                                       msgs(dependencies, cnt[1], cnt[0])[1]))
                 print("will be upgraded.{0}\n".format(ENDC))
                 read = arch_support(st[3], self.UNST, st[2], dependencies)
                 if read == "Y" or read == "y":
@@ -110,8 +111,9 @@ class SBoInstall(object):
                     # upgraded = bi[1]
                     # versions = bi[2]
                     bi = build_install(dependencies, st[0], st[1])
-                    reference(cnt[1], msg[0], cnt[0], msg[1], bi[0], bi[2],
-                              bi[1])
+                    reference(cnt[1], msgs(dependencies, cnt[1], cnt[0])[0],
+                              cnt[0], msgs(dependencies, cnt[1], cnt[0])[1],
+                              bi[0], bi[2], bi[1])
                     write_deps(self.name, dependencies)
             else:
                 count_installed = count_uninstalled = 0
@@ -141,14 +143,18 @@ class SBoInstall(object):
                     # ins_msg = msg[0]
                     # uns_msg = msg[1]
                     # total_msg = msg[2]
-                    msg = msgs(mt[0], count_installed, count_uninstalled)
                     print("\nInstalling summary")
                     print("=" * 79)
                     print("{0}Total found {1} matching {2}.".format(
-                        GREY, len(mt[0]), msg[2]))
+                        GREY, len(mt[0]), msgs(mt[0], count_installed,
+                                               count_uninstalled)[2]))
                     print("{0} installed {1} and {2} uninstalled {3}.{4}"
-                          "\n".format(count_installed, msg[0],
-                                      count_uninstalled, msg[1], ENDC))
+                          "\n".format(count_installed,
+                                      msgs(mt[0], count_installed,
+                                           count_uninstalled)[0],
+                                      count_uninstalled,
+                                      msgs(mt[0], count_installed,
+                                           count_uninstalled)[1], ENDC))
                 else:
                     pkg_not_found("\n", self.name, "No matching", "\n")
         except KeyboardInterrupt:
