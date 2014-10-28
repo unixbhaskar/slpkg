@@ -44,84 +44,39 @@ from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 
 
-def sbo_install(name):
-    '''
-    Download, build and install or upgrade packages
-    with all dependencies if version is greater than
-    that established.
-    '''
-    sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
-    sys.stdout.flush()
-    initialization()
-    UNST = ["UNSUPPORTED",
-            "UNTESTED"]
-    dependencies_list = sbo_dependencies_pkg(name)
-    try:
-        if dependencies_list or sbo_search_pkg(name) is not None:
-            requires = one_for_all(name, dependencies_list)
-            dependencies = remove_dbs(requires)
-            # sbo_versions = st[0]
-            # package_arch = st[1]
-            # package_sum = st[2]
-            # sources = st[3]
-            st = store(dependencies, UNST)
-            sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
-            (PKG_COLOR,
-             count_upgraded,
-             count_installed
-             ) = pkg_colors_tag(name, st[0], 0, 0)
-            ARCH_COLOR = arch_colors_tag(UNST, st[1])
-            print("\nThe following packages will be automatically installed "
-                  "or upgraded")
-            print("with new version:\n")
-            template(78)
-            print("{0}{1}{2}{3}{4}{5}{6}".format(
-                "| Package", " " * 30,
-                "Version", " " * 10,
-                "Arch", " " * 9,
-                "Repository"))
-            template(78)
-            print("Installing:")
-            view(PKG_COLOR, name, st[0][-1], ARCH_COLOR, st[1][-1])
-            print("Installing for dependencies:")
-            for dep, ver, dep_arch in zip(dependencies[:-1], st[0][:-1],
-                                          st[1][:-1]):
-                (DEP_COLOR,
-                 count_upgraded,
-                 count_installed
-                 ) = pkg_colors_tag(dep, ver, count_upgraded, count_installed)
-                ARCH_COLOR = arch_colors_tag(UNST, dep)
-                view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
-            # ins_msg = msg[0]
-            # upg_msg = msg[1]
-            # total_msg = msg[2]
-            msg = msgs(dependencies, count_installed, count_upgraded)
-            print("\nInstalling summary")
-            print("=" * 79)
-            print("{0}Total {1} {2}.".format(GREY, len(dependencies), msg[2]))
-            print("{0} {1} will be installed, {2} allready installed and "
-                  "{3} {4}".format(count_installed, msg[0], st[2],
-                                   count_upgraded, msg[1]))
-            print("will be upgraded.{0}\n".format(ENDC))
-            read = arch_support(st[3], UNST, st[2], dependencies)
-            if read == "Y" or read == "y":
-                (installs,
-                 upgraded,
-                 versions
-                 ) = build_install(dependencies, st[0], st[1])
-                reference(count_installed, msg[0], count_upgraded, msg[1],
-                          installs, versions, upgraded)
-                write_deps(name, dependencies)
-        else:
-            count_installed = count_uninstalled = 0
-            (sbo_matching,
-             sbo_ver,
-             pkg_arch
-             ) = matching(name, UNST)
-            sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
-            if sbo_matching:
-                print("\nPackages with name matching [ {0}{1}{2} ]\n".format(
-                      CYAN, name, ENDC))
+class SBoInstall(object):
+
+    def __init__(self, name):
+        self.name = name
+        sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
+        sys.stdout.flush()
+        initialization()
+        self.UNST = ["UNSUPPORTED", "UNTESTED"]
+        self.dependencies_list = sbo_dependencies_pkg(name)
+
+    def start(self):
+        '''
+        Download, build and install or upgrade packages
+        with all dependencies if version is greater than
+        that established.
+        '''
+        try:
+            if self.dependencies_list or sbo_search_pkg(self.name) is not None:
+                requires = one_for_all(self.name, self.dependencies_list)
+                dependencies = remove_dbs(requires)
+                # sbo_versions = st[0]
+                # package_arch = st[1]
+                # package_sum = st[2]
+                # sources = st[3]
+                st = store(dependencies, self.UNST)
+                sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
+                # count_upgraded = cnt[0]
+                # count_installed = cnt[1]
+                (PKG_COLOR, cnt) = pkg_colors_tag(self.name, st[0], 0, 0)
+                ARCH_COLOR = arch_colors_tag(self.UNST, st[1])
+                print("\nThe following packages will be automatically "
+                      "installed or upgraded")
+                print("with new version:\n")
                 template(78)
                 print("{0}{1}{2}{3}{4}{5}{6}".format(
                     "| Package", " " * 30,
@@ -129,30 +84,77 @@ def sbo_install(name):
                     "Arch", " " * 9,
                     "Repository"))
                 template(78)
-                print("Matching:")
-                ARCH_COLOR = ""
-                for match, ver, march in zip(sbo_matching, sbo_ver, pkg_arch):
-                    if find_package(match + sp + ver, pkg_path):
-                        view(GREEN, match, ver, ARCH_COLOR, march)
-                        count_installed += 1
-                    else:
-                        view(RED, match, ver, ARCH_COLOR, march)
-                        count_uninstalled += 1
+                print("Installing:")
+                view(PKG_COLOR, self.name, st[0][-1], ARCH_COLOR, st[1][-1])
+                print("Installing for dependencies:")
+                for dep, ver, dep_arch in zip(dependencies[:-1], st[0][:-1],
+                                              st[1][:-1]):
+                    (DEP_COLOR, cnt) = pkg_colors_tag(dep, ver, cnt[0], cnt[1])
+                    ARCH_COLOR = arch_colors_tag(self.UNST, dep)
+                    view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
                 # ins_msg = msg[0]
-                # uns_msg = msg[1]
+                # upg_msg = msg[1]
                 # total_msg = msg[2]
-                msg = msgs(sbo_matching, count_installed, count_uninstalled)
+                msg = msgs(dependencies, cnt[1], cnt[0])
                 print("\nInstalling summary")
                 print("=" * 79)
-                print("{0}Total found {1} matching {2}.".format(
-                    GREY, len(sbo_matching), msg[2]))
-                print("{0} installed {1} and {2} uninstalled {3}.{4}\n".format(
-                    count_installed, msg[0], count_uninstalled, msg[1], ENDC))
+                print("{0}Total {1} {2}.".format(GREY, len(dependencies),
+                                                 msg[2]))
+                print("{0} {1} will be installed, {2} allready installed and "
+                      "{3} {4}".format(cnt[1], msg[0], st[2],
+                                       cnt[0], msg[1]))
+                print("will be upgraded.{0}\n".format(ENDC))
+                read = arch_support(st[3], self.UNST, st[2], dependencies)
+                if read == "Y" or read == "y":
+                    # installs = bi[0]
+                    # upgraded = bi[1]
+                    # versions = bi[2]
+                    bi = build_install(dependencies, st[0], st[1])
+                    reference(cnt[1], msg[0], cnt[0], msg[1], bi[0], bi[2],
+                              bi[1])
+                    write_deps(self.name, dependencies)
             else:
-                pkg_not_found("\n", name, "No matching", "\n")
-    except KeyboardInterrupt:
-        print   # new line at exit
-        sys.exit()
+                count_installed = count_uninstalled = 0
+                # sbo_matching = mt[0]
+                # sbo_ver = mt[1]
+                # pkg_arch = mt[2]
+                mt = matching(self.name, self.UNST)
+                sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
+                if mt[0]:
+                    print("\nPackages with name matching [ {0}{1}{2} ]"
+                          "\n".format(CYAN, self.name, ENDC))
+                    template(78)
+                    print("{0}{1}{2}{3}{4}{5}{6}".format(
+                        "| Package", " " * 30,
+                        "Version", " " * 10,
+                        "Arch", " " * 9,
+                        "Repository"))
+                    template(78)
+                    print("Matching:")
+                    ARCH_COLOR = ""
+                    for match, ver, march in zip(mt[0], mt[1], mt[2]):
+                        if find_package(match + sp + ver, pkg_path):
+                            view(GREEN, match, ver, ARCH_COLOR, march)
+                            count_installed += 1
+                        else:
+                            view(RED, match, ver, ARCH_COLOR, march)
+                            count_uninstalled += 1
+                    # ins_msg = msg[0]
+                    # uns_msg = msg[1]
+                    # total_msg = msg[2]
+                    msg = msgs(mt[0], count_installed, count_uninstalled)
+                    print("\nInstalling summary")
+                    print("=" * 79)
+                    print("{0}Total found {1} matching {2}.".format(
+                        GREY, len(mt[0]), msg[2]))
+                    print("{0} installed {1} and {2} uninstalled {3}.{4}"
+                          "\n".format(count_installed, msg[0],
+                                      count_uninstalled, msg[1], ENDC))
+                else:
+                    pkg_not_found("\n", self.name, "No matching", "\n")
+        except KeyboardInterrupt:
+            print   # new line at exit
+            sys.exit()
 
 
 def one_for_all(name, dependencies):
@@ -217,7 +219,7 @@ def pkg_colors_tag(name, sbo_versions, count_upg, count_ins):
     else:
         color = RED
         count_ins += 1
-    return color, count_upg, count_ins
+    return color, [count_upg, count_ins]
 
 
 def arch_colors_tag(support, package_arch):
@@ -254,7 +256,7 @@ def msgs(packages, count_ins, count_uni):
         ins_msg = ins_msg + "s"
     if count_uni > 1:
         uns_msg = uns_msg + "s"
-    return ins_msg, uns_msg, total_msg
+    return [ins_msg, uns_msg, total_msg]
 
 
 def arch_support(source, support, package_sum, dependencies):
@@ -320,7 +322,7 @@ def build_install(dependencies, sbo_versions, packages_arch):
             PackageManager(binary).upgrade()
             installs.append(pkg)
             versions.append(ver)
-    return installs, upgraded, versions
+    return [installs, upgraded, versions]
 
 
 def reference(*args):
@@ -383,7 +385,7 @@ def matching(name, support):
                     sources = SBoGrep(sbo_name).source()
                     packages_arch.append(select_arch(sources, support))
         SLACKBUILDS_TXT.close()
-    return sbo_matching, sbo_versions, packages_arch
+    return [sbo_matching, sbo_versions, packages_arch]
 
 
 def select_arch(src, support):
