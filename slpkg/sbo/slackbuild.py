@@ -62,8 +62,8 @@ class SBoInstall(object):
         '''
         try:
             if self.dependencies_list or sbo_search_pkg(self.name) is not None:
-                dependencies = remove_dbs(one_for_all(self.name,
-                                                      self.dependencies_list))
+                requires = one_for_all(self.name, self.dependencies_list)
+                dependencies = remove_dbs(requires)
                 # sbo versions = idata[0]
                 # package arch = idata[1]
                 # package sum = idata[2]
@@ -76,23 +76,18 @@ class SBoInstall(object):
                 print("\nThe following packages will be automatically "
                       "installed or upgraded")
                 print("with new version:\n")
-                template(78)
-                print("{0}{1}{2}{3}{4}{5}{6}".format(
-                    "| Package", " " * 30,
-                    "Version", " " * 10,
-                    "Arch", " " * 9,
-                    "Repository"))
-                template(78)
+                top_view()
                 print("Installing:")
-                view(PKG_COLOR, self.name, idata[0][-1],
-                     arch_colors_tag(self.UNST, idata[1]), idata[1][-1])
+                ARCH_COLOR = arch_colors_tag(self.UNST, idata[1])
+                view_packages(PKG_COLOR, self.name, idata[0][-1], ARCH_COLOR,
+                              idata[1][-1])
                 print("Installing for dependencies:")
                 for dep, ver, dep_arch in zip(dependencies[:-1], idata[0][:-1],
                                               idata[1][:-1]):
                     (DEP_COLOR, count) = pkg_colors_tag(dep, ver, count[0],
                                                         count[1])
-                    view(DEP_COLOR, dep, ver, arch_colors_tag(self.UNST, dep),
-                         dep_arch)
+                    ARCH_COLOR = arch_colors_tag(self.UNST, dep)
+                    view_packages(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
                 # insstall message = msg[0]
                 # upgraded message = msg[1]
                 # total message = msg[2]
@@ -124,20 +119,14 @@ class SBoInstall(object):
                 if mdata[0]:
                     print("\nPackages with name matching [ {0}{1}{2} ]"
                           "\n".format(CYAN, self.name, ENDC))
-                    template(78)
-                    print("{0}{1}{2}{3}{4}{5}{6}".format(
-                        "| Package", " " * 30,
-                        "Version", " " * 10,
-                        "Arch", " " * 9,
-                        "Repository"))
-                    template(78)
+                    top_view()
                     print("Matching:")
                     for match, ver, march in zip(mdata[0], mdata[1], mdata[2]):
                         if find_package(match + sp + ver, pkg_path):
-                            view(GREEN, match, ver, "", march)
+                            view_packages(GREEN, match, ver, "", march)
                             count_installed += 1
                         else:
-                            view(RED, match, ver, "", march)
+                            view_packages(RED, match, ver, "", march)
                             count_uninstalled += 1
                     # insstall message = msg[0]
                     # uninstall message = msg[1]
@@ -234,7 +223,20 @@ def arch_colors_tag(support, package_arch):
     return color
 
 
-def view(*args):
+def top_view():
+    '''
+    View top template
+    '''
+    template(78)
+    print("{0}{1}{2}{3}{4}{5}{6}".format(
+        "| Package", " " * 30,
+        "Version", " " * 10,
+        "Arch", " " * 9,
+        "Repository"))
+    template(78)
+
+
+def view_packages(*args):
     '''
     View slackbuild packages with version and arch
     '''
