@@ -73,7 +73,6 @@ class SBoInstall(object):
                 # count_upgraded = cnt[0]
                 # count_installed = cnt[1]
                 (PKG_COLOR, cnt) = pkg_colors_tag(self.name, st[0], 0, 0)
-                ARCH_COLOR = arch_colors_tag(self.UNST, st[1])
                 print("\nThe following packages will be automatically "
                       "installed or upgraded")
                 print("with new version:\n")
@@ -85,13 +84,14 @@ class SBoInstall(object):
                     "Repository"))
                 template(78)
                 print("Installing:")
-                view(PKG_COLOR, self.name, st[0][-1], ARCH_COLOR, st[1][-1])
+                view(PKG_COLOR, self.name, st[0][-1],
+                     arch_colors_tag(self.UNST, st[1]), st[1][-1])
                 print("Installing for dependencies:")
                 for dep, ver, dep_arch in zip(dependencies[:-1], st[0][:-1],
                                               st[1][:-1]):
                     (DEP_COLOR, cnt) = pkg_colors_tag(dep, ver, cnt[0], cnt[1])
-                    ARCH_COLOR = arch_colors_tag(self.UNST, dep)
-                    view(DEP_COLOR, dep, ver, ARCH_COLOR, dep_arch)
+                    view(DEP_COLOR, dep, ver, arch_colors_tag(self.UNST, dep),
+                         dep_arch)
                 # ins_msg = msg[0]
                 # upg_msg = msg[1]
                 # total_msg = msg[2]
@@ -131,13 +131,12 @@ class SBoInstall(object):
                         "Repository"))
                     template(78)
                     print("Matching:")
-                    ARCH_COLOR = ""
                     for match, ver, march in zip(mt[0], mt[1], mt[2]):
                         if find_package(match + sp + ver, pkg_path):
-                            view(GREEN, match, ver, ARCH_COLOR, march)
+                            view(GREEN, match, ver, "", march)
                             count_installed += 1
                         else:
-                            view(RED, match, ver, ARCH_COLOR, march)
+                            view(RED, match, ver, "", march)
                             count_uninstalled += 1
                     # ins_msg = msg[0]
                     # uns_msg = msg[1]
