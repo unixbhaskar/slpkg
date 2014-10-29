@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# url_read.py file is part of slpkg.
+# download.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -21,25 +21,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-import urllib2
 
+class SBoLink(object):
 
-class URL(object):
+    def __init__(self, sbo_url):
+        self.sbo_url = sbo_url
 
-    def __init__(self, link):
-        self.link = link
-
-    def reading(self):
+    def tar_gz(self):
         '''
-        Open url and read
+        Return link slackbuild tar.gz archive
         '''
-        try:
-            f = urllib2.urlopen(self.link)
-            return f.read()
-        except urllib2.URLError:
-            print ("\nslpkg: error: connection refused\n")
-            sys.exit()
-        except KeyboardInterrupt:
-            print   # new line at exit
-            sys.exit()
+        return (self.sbo_url[:-1] + ".tar.gz")

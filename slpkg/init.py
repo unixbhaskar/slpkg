@@ -24,8 +24,8 @@
 import os
 import sys
 
+from url_read import URL
 from file_size import FileSize
-from url_read import url_read
 from __metadata__ import log_path, lib_path
 
 from slack.slack_version import slack_ver
@@ -57,9 +57,9 @@ def initialization():
         print("\nslpkg ...initialization")
         sys.stdout.write("SLACKBUILDS.TXT read ...")
         sys.stdout.flush()
-        SLACKBUILDS_TXT = url_read((
+        SLACKBUILDS_TXT = URL((
             "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(
-                slack_ver())))
+                slack_ver()))).reading()
         sys.stdout.write("Done\n")
         with open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w") as sbo:
             sbo.write(SLACKBUILDS_TXT)
@@ -71,9 +71,9 @@ def initialization():
         print("\nslpkg initialization")
         sys.stdout.write("ChangeLog.txt read ...")
         sys.stdout.flush()
-        ChangeLog_txt = url_read((
+        ChangeLog_txt = URL((
             "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(
-                slack_ver())))
+                slack_ver()))).reading()
         sys.stdout.write("Done\n")
         with open("{0}ChangeLog.txt".format(sbo_log), "w") as log:
             log.write(ChangeLog_txt)
@@ -90,12 +90,12 @@ def initialization():
         print("slpkg ...initialization")
         sys.stdout.write("Files re-created ...")
         sys.stdout.flush()
-        SLACKBUILDS_TXT = url_read((
+        SLACKBUILDS_TXT = URL((
             "http://slackbuilds.org/slackbuilds/{0}/SLACKBUILDS.TXT".format(
-                slack_ver())))
-        ChangeLog_txt = url_read((
+                slack_ver()))).reading()
+        ChangeLog_txt = URL((
             "http://slackbuilds.org/slackbuilds/{0}/ChangeLog.txt".format(
-                slack_ver())))
+                slack_ver()))).reading()
         with open("{0}SLACKBUILDS.TXT".format(sbo_lib), "w") as sbo:
             sbo.write(SLACKBUILDS_TXT)
             sbo.close()

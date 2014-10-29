@@ -36,10 +36,10 @@ from pkg.find import find_package
 from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
+from read import Read
 from greps import SBoGrep
+from compressed import SBoLink
 from search import sbo_search_pkg
-from download import sbo_slackbuild_dwn
-from read import read_readme, read_info_slackbuild
 
 
 class SBoNetwork(object):
@@ -54,7 +54,7 @@ class SBoNetwork(object):
         self.sbo_desc = grep.description()[len(self.name) + 2:-1]
         self.sbo_req = grep.requires()
         self.source_dwn = grep.source().split()
-        self.sbo_dwn = sbo_slackbuild_dwn(self.sbo_url)
+        self.sbo_dwn = SBoLink(self.sbo_url).tar_gz()
         self.sbo_version = grep.version()
         sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
 
@@ -76,13 +76,12 @@ class SBoNetwork(object):
                     download("", self.sbo_dwn, self.source_dwn)
                     break
                 elif choice in ["R", "r"]:
-                    pydoc.pager(read_readme(self.sbo_url, "README"))
+                    pydoc.pager(Read(self.sbo_url).readme("README"))
                 elif choice in ["F", "f"]:
-                    pydoc.pager(read_info_slackbuild(self.sbo_url, self.name,
-                                                     ".info"))
+                    pydoc.pager(Read(self.sbo_url).info(self.name, ".info"))
                 elif choice in ["S", "s"]:
-                    pydoc.pager(read_info_slackbuild(self.sbo_url, self.name,
-                                                     ".SlackBuild"))
+                    pydoc.pager(Read(self.sbo_url).slackbuild(self.name,
+                                                              ".SlackBuild"))
                 elif choice in ["B", "b"]:
                     build(self.sbo_dwn, self.source_dwn, FAULT)
                     break

@@ -40,13 +40,11 @@ def track_dep(name):
     if allready installed and color red
     if not installed.
     '''
-    done = "{0}Done{1}\n".format(GREY, ENDC)
-    reading_lists = "{0}Reading package lists ...{1}".format(GREY, ENDC)
-    sys.stdout.write(reading_lists)
+    sys.stdout.write("{0}Reading package lists ...{1}".format(GREY, ENDC))
     sys.stdout.flush()
     initialization()
     dependencies_list = sbo_dependencies_pkg(name)
-    sys.stdout.write(done)
+    sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
     if dependencies_list:
         requires, dependencies = [], []
         # Create one list for all packages
@@ -66,7 +64,7 @@ def track_dep(name):
         template(pkg_len)
         print("\\")
         print(" +---{0}[ Tree of dependencies ]{1}".format(YELLOW, ENDC))
-        index = int()
+        index = 0
         for pkg in dependencies:
             index += 1
             if find_package(pkg + sp, pkg_path):

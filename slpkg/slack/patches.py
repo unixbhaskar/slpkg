@@ -25,7 +25,7 @@ import os
 import sys
 import subprocess
 
-from url_read import url_read
+from url_read import URL
 from messages import template
 from blacklist import BlackList
 from splitting import split_package
@@ -54,11 +54,11 @@ class Patches(object):
         if not os.path.exists(self.patch_path):
             os.mkdir(self.patch_path)
         if version == "stable":
-            self.PACKAGES_TXT = url_read(mirrors("PACKAGES.TXT", "patches/",
+            self.PACKAGES_TXT = URL.read(mirrors("PACKAGES.TXT", "patches/",
                                                  version))
             self.step = 100
         else:
-            self.PACKAGES_TXT = url_read(mirrors("PACKAGES.TXT", "", version))
+            self.PACKAGES_TXT = URL.read(mirrors("PACKAGES.TXT", "", version))
             self.step = 700
 
     def start(self):

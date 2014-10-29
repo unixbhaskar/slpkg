@@ -24,7 +24,7 @@
 import os
 import sys
 
-from url_read import url_read
+from url_read import URL
 from blacklist import BlackList
 from splitting import split_package
 from messages import pkg_not_found, template
@@ -55,9 +55,9 @@ class Slack(object):
             os.mkdir(slpkg_tmp)
         if not os.path.exists(self.tmp_path):
             os.mkdir(self.tmp_path)
-        PACKAGES = url_read(mirrors("PACKAGES.TXT", "", self.version))
-        EXTRA = url_read(mirrors("PACKAGES.TXT", "extra/", self.version))
-        PASTURE = url_read(mirrors("PACKAGES.TXT", "pasture/", self.version))
+        PACKAGES = URL.read(mirrors("PACKAGES.TXT", "", self.version))
+        EXTRA = URL.read(mirrors("PACKAGES.TXT", "extra/", self.version))
+        PASTURE = URL.read(mirrors("PACKAGES.TXT", "pasture/", self.version))
         self.PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
 
     def start(self):

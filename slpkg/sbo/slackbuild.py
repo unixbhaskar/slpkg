@@ -39,8 +39,8 @@ from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
 from greps import SBoGrep
+from compressed import SBoLink
 from search import sbo_search_pkg
-from download import sbo_slackbuild_dwn
 from dependency import sbo_dependencies_pkg
 
 
@@ -297,7 +297,7 @@ def build_install(dependencies, sbo_versions, packages_arch):
             template(78)
         else:
             sbo_url = sbo_search_pkg(pkg)
-            sbo_link = sbo_slackbuild_dwn(sbo_url)
+            sbo_link = SBoLink(sbo_url).tar_gz()
             src_link = SBoGrep(pkg).source().split()
             script = sbo_link.split("/")[-1]
             Download(build_path, sbo_link).start()

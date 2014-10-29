@@ -33,7 +33,7 @@ from __metadata__ import path, __version__
 from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
-from sbo.check import sbo_check
+from sbo.check import SBoCheck
 from sbo.views import SBoNetwork
 from sbo.tracking import track_dep
 from sbo.slackbuild import SBoInstall
@@ -117,7 +117,7 @@ def main():
                 print(opt)
     elif len(args) == 3 and args[0] == "-c":
         if args[1] == repository[0] and args[2] == "--upgrade":
-            sbo_check()
+            SBoCheck().start()
         elif args[1] == repository[1] and args[2] == "--upgrade":
             version = "stable"
             Patches(version).start()

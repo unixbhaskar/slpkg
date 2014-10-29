@@ -23,8 +23,8 @@
 
 import sys
 
-from __metadata__ import lib_path
 from blacklist import BlackList
+from __metadata__ import lib_path
 
 from slack.slack_version import slack_ver
 

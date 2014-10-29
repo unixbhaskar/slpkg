@@ -30,9 +30,9 @@ from __metadata__ import lib_path, build_path, tmp
 from sbo.greps import SBoGrep
 from pkg.find import find_package
 from pkg.build import BuildPackage
+from sbo.compressed import SBoLink
 from sbo.search import sbo_search_pkg
 from pkg.manager import PackageManager
-from sbo.download import sbo_slackbuild_dwn
 
 
 class QueuePkgs(object):
@@ -136,7 +136,7 @@ class QueuePkgs(object):
                 if not os.path.exists(build_path):
                     os.mkdir(build_path)
                 sbo_url = sbo_search_pkg(pkg)
-                sbo_dwn = sbo_slackbuild_dwn(sbo_url)
+                sbo_dwn = SBoLink(sbo_url).tar_gz()
                 source_dwn = SBoGrep(pkg).source().split()
                 sources = []
                 os.chdir(build_path)
