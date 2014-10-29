@@ -56,6 +56,7 @@ class SBoNetwork(object):
         self.source_dwn = grep.source().split()
         self.sbo_dwn = SBoLink(self.sbo_url).tar_gz()
         self.sbo_version = grep.version()
+        self.space = ("\n" * 50)
         sys.stdout.write("{0}Done{1}\n".format(GREY, ENDC))
 
     def view(self):
@@ -76,12 +77,18 @@ class SBoNetwork(object):
                     download("", self.sbo_dwn, self.source_dwn)
                     break
                 elif choice in ["R", "r"]:
-                    pydoc.pager(Read(self.sbo_url).readme("README"))
+                    README = Read(self.sbo_url).readme("README")
+                    fill = fill_pager(README)
+                    pydoc.pager(README + fill)
                 elif choice in ["F", "f"]:
-                    pydoc.pager(Read(self.sbo_url).info(self.name, ".info"))
+                    info = Read(self.sbo_url).info(self.name, ".info")
+                    fill = fill_pager(info)
+                    pydoc.pager(info + fill)
                 elif choice in ["S", "s"]:
-                    pydoc.pager(Read(self.sbo_url).slackbuild(self.name,
-                                                              ".SlackBuild"))
+                    SlackBuild = Read(self.sbo_url).slackbuild(self.name,
+                                                               ".SlackBuild")
+                    fill = fill_pager(SlackBuild)
+                    pydoc.pager(SlackBuild + fill)
                 elif choice in ["B", "b"]:
                     build(self.sbo_dwn, self.source_dwn, FAULT)
                     break
@@ -99,6 +106,22 @@ class SBoNetwork(object):
                     break
         else:
             pkg_not_found("\n", self.name, "Can't view", "\n")
+
+
+def fill_pager(page):
+    '''
+    Fix pager spaces
+    '''
+    rows, columns = os.popen('stty size', 'r').read().split()
+    lines = 1
+    for line in page.splitlines():
+        lines += 1
+    diff = int(rows) - lines
+    fill = "\n" * diff
+    if diff > 0:
+        return fill
+    else:
+        return ""
 
 
 def read_choice():

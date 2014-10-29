@@ -52,6 +52,7 @@ def main():
     repository = ["sbo", "slack"]
     blacklist = BlackList()
     queue = QueuePkgs()
+
     if len(args) == 0:
         usage()
     elif (len(args) == 1 and args[0] == "-h" or
