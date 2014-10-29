@@ -42,10 +42,7 @@ from slack.install import Slack
 from slack.patches import Patches
 
 
-def main():
-
-    # root privileges required
-    s_user(getpass.getuser())
+def help():
     arguments = [
         "slpkg - version {0}\n".format(__version__),
         "Utility for easy management packages in Slackware\n",
@@ -78,6 +75,11 @@ def main():
         "      SlackBuilds = sbo",
         "      Slackware = slack '--current'\n",
     ]
+    for opt in arguments:
+            print(opt)
+
+
+def usage():
     usage = [
         "slpkg - version {0}\n".format(__version__),
         "Usage: slpkg [-h] [-v] [-a script [sources...]]",
@@ -91,18 +93,24 @@ def main():
         "             [-o  [...]] [-r [...]] [-d [...]]\n",
         "For more information try 'slpkg --help'\n"
     ]
+    for opt in usage:
+            print(opt)
+
+
+def main():
+
+    # root privileges required
+    s_user(getpass.getuser())
     args = sys.argv
     args.pop(0)
     repository = ["sbo", "slack"]
     blacklist = BlackList()
     queue = QueuePkgs()
     if len(args) == 0:
-        for opt in usage:
-            print(opt)
+        usage()
     elif (len(args) == 1 and args[0] == "-h" or
             args[0] == "--help" and args[1:] == []):
-        for opt in arguments:
-            print(opt)
+        help()
     elif (len(args) == 1 and args[0] == "-v" or
             args[0] == "--version" and args[1:] == []):
         prog_version()
@@ -113,8 +121,7 @@ def main():
         if args[1] in sbo_list:
             PackageManager(None).list(args[1])
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 3 and args[0] == "-c":
         if args[1] == repository[0] and args[2] == "--upgrade":
             SBoCheck().start()
@@ -122,29 +129,25 @@ def main():
             version = "stable"
             Patches(version).start()
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 4 and args[0] == "-c":
         if args[1] == repository[1] and args[3] == "--current":
             version = "current"
             Patches(version).start()
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 3 and args[0] == "-s":
         if args[1] == repository[0]:
             SBoInstall(args[2]).start()
         elif args[1] == repository[1]:
             Slack(args[2], "stable").start()
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 4 and args[0] == "-s":
         if args[1] == repository[1] and args[3] == "--current":
             Slack(args[2], "current").start()
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 2 and args[0] == "-t":
         track_dep(args[1])
     elif len(args) == 2 and args[0] == "-n":
@@ -181,8 +184,7 @@ def main():
     elif len(args) > 1 and args[0] == "-d":
         PackageManager(args[1:]).display()
     else:
-        for opt in usage:
-            print(opt)
+        usage()
 
 if __name__ == "__main__":
     main()

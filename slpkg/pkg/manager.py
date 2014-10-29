@@ -266,6 +266,7 @@ class PackageManager(object):
         '''
         List with the installed packages
         '''
+        space = (" " * 9)
         try:
             if "sbo" in pattern:
                 search = "_SBo"
@@ -281,9 +282,8 @@ class PackageManager(object):
                     index += 1
                     print("{0}{1}:{2} {3}".format(GREY, index, ENDC, pkg))
                     if index == page:
-                        print   # new line at start
-                        raw_input("Press [ {0}Enter{1} ] >> Next page ".format(
-                            CYAN, ENDC))
+                        raw_input("{0}-- {1}More{2} --".format(space, CYAN,
+                                                               ENDC))
                         page += 50
             print   # new line at end
         except KeyboardInterrupt:
