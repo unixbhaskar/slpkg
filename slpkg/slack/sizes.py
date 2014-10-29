@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# url_read.py file is part of slpkg.
+# sizes.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -21,25 +21,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-import urllib2
 
-
-class URL(object):
-
-    def __init__(self, link):
-        self.link = link
-
-    def reading(self):
-        '''
-        Open url and read
-        '''
-        try:
-            f = urllib2.urlopen(self.link)
-            return f.read()
-        except urllib2.URLError:
-            print ("\nslpkg: error: connection refused\n")
-            sys.exit()
-        except KeyboardInterrupt:
-            print   # new line at exit
-            sys.exit()
+def units(comp_sum, uncomp_sum):
+    '''
+    Calculate package size
+    '''
+    compressed = round((sum(map(float, comp_sum)) / 1024), 2)
+    uncompressed = round((sum(map(float, uncomp_sum)) / 1024), 2)
+    comp_unit = uncomp_unit = "Mb"
+    if compressed > 1024:
+        compressed = round((compressed / 1024), 2)
+        comp_unit = "Gb"
+    if uncompressed > 1024:
+        uncompressed = round((uncompressed / 1024), 2)
+        uncomp_unit = "Gb"
+    if compressed < 1:
+        compressed = sum(map(int, comp_sum))
+        comp_unit = "Kb"
+    if uncompressed < 1:
+        uncompressed = sum(map(int, uncomp_sum))
+        uncomp_unit = "Kb"
+    return [comp_unit, uncomp_unit], [compressed, uncompressed]

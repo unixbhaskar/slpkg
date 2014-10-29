@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# url_read.py file is part of slpkg.
+# greps.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -21,25 +21,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-import urllib2
+from slpkg.toolbar import status
 
 
-class URL(object):
-
-    def __init__(self, link):
-        self.link = link
-
-    def reading(self):
-        '''
-        Open url and read
-        '''
-        try:
-            f = urllib2.urlopen(self.link)
-            return f.read()
-        except urllib2.URLError:
-            print ("\nslpkg: error: connection refused\n")
-            sys.exit()
-        except KeyboardInterrupt:
-            print   # new line at exit
-            sys.exit()
+def slack_data(PACKAGES_TXT, step):
+    '''
+    Grap data packages
+    '''
+    (name, location, size, unsize) = ([] for i in range(4))
+    index, toolbar_width = 0, 700
+    for line in PACKAGES_TXT.splitlines():
+        index += 1
+        toolbar_width = status(index, toolbar_width, step)
+        if line.startswith("PACKAGE NAME"):
+            name.append(line[15:].strip())
+        if line.startswith("PACKAGE LOCATION"):
+            location.append(line[21:].strip())
+        if line.startswith("PACKAGE SIZE (compressed):  "):
+            size.append(line[28:-2].strip())
+        if line.startswith("PACKAGE SIZE (uncompressed):  "):
+            unsize.append(line[30:-2].strip())
+    return [name, location, size, unsize]

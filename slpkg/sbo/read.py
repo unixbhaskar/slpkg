@@ -21,18 +21,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-from slpkg.url_read import url_read
+from slpkg.url_read import URL
 
 
-def read_readme(sbo_url, sbo_readme):
-    '''
-    Read SlackBuild README file
-    '''
-    return url_read(sbo_url + sbo_readme)
+class Read(object):
 
+    def __init__(self, sbo_url):
+        self.sbo_url = sbo_url
 
-def read_info_slackbuild(sbo_url, name, sbo_file):
-    '''
-    Read info and SlackBuild file
-    '''
-    return url_read(sbo_url + name + sbo_file)
+    def readme(self, sbo_readme):
+        '''
+        Read SlackBuild README file
+        '''
+        return URL(self.sbo_url + sbo_readme).reading()
+
+    def info(self, name, sbo_file):
+        '''
+        Read info file
+        '''
+        return URL(self.sbo_url + name + sbo_file).reading()
+
+    def slackbuild(self, name, sbo_file):
+        '''
+        Read SlackBuild file
+        '''
+        return URL(self.sbo_url + name + sbo_file).reading()

@@ -26,128 +26,79 @@ import getpass
 
 from queue import QueuePkgs
 from messages import s_user
+from __metadata__ import path
 from blacklist import BlackList
 from version import prog_version
-from __metadata__ import path, __version__
+from arguments import options, usage
 
-from pkg.build import build_package
+from pkg.build import BuildPackage
 from pkg.manager import PackageManager
 
-from sbo.check import sbo_check
-from sbo.views import sbo_network
+from sbo.check import SBoCheck
+from sbo.views import SBoNetwork
 from sbo.tracking import track_dep
-from sbo.slackbuild import sbo_install
+from sbo.slackbuild import SBoInstall
 
-from slack.patches import patches
-from slack.install import install
+from slack.install import Slack
+from slack.patches import Patches
 
 
 def main():
 
     # root privileges required
     s_user(getpass.getuser())
-    arguments = [
-        "slpkg - version {0}\n".format(__version__),
-        "Utility for easy management packages in Slackware\n",
-        "Optional arguments:",
-        "  -h, --help                                show this help message " +
-        "and exit",
-        "  -v, --version                             print version and exit",
-        "  -a, script [source...]                    auto build packages",
-        "  -b, --list, [package...] --add, --remove  add, remove packages in " +
-        "blacklist",
-        "  -q, --list, [package...] --add, --remove  add, remove packages in " +
-        "queue",
-        "      --build, --install, --build-install   build or install from " +
-        "queue",
-        "  -l, all, sbo, slack, noarch               list of installed " +
-        "packages",
-        "  -c, <repository> --upgrade --current      check for updated " +
-        "packages",
-        "  -s, <repository> <package> --current      download, build & install",
-        "  -f, <package>                             find installed packages",
-        "  -t, <package>                             tracking dependencies " +
-        "from SBo",
-        "  -n, <package>                             view packages from SBo",
-        "  -i, [package...]                          install binary packages",
-        "  -u, [package...]                          upgrade binary packages",
-        "  -o, [package...]                          reinstall binary packages",
-        "  -r, [package...]                          remove binary packages",
-        "  -d, [package...]                          display the contents\n",
-        "Repositories:",
-        "      SlackBuilds = sbo",
-        "      Slackware = slack '--current'\n",
-    ]
-    usage = [
-        "slpkg - version {0}\n".format(__version__),
-        "Usage: slpkg [-h] [-v] [-a script [sources...]]",
-        "             [-b --list, [...] --add, --remove]",
-        "             [-q --list, [...] --add, --remove]",
-        "             [-q --build, --install, --build-install]",
-        "             [-l all, sbo, slack, noarch]",
-        "             [-c <repository> --upgrade --current]",
-        "             [-s <repository> <package> --current]",
-        "             [-f] [-t] [-n] [-i [...]] [-u  [...]]",
-        "             [-o  [...]] [-r [...]] [-d [...]]\n",
-        "For more information try 'slpkg --help'\n"
-    ]
     args = sys.argv
     args.pop(0)
     repository = ["sbo", "slack"]
     blacklist = BlackList()
     queue = QueuePkgs()
+
     if len(args) == 0:
-        for opt in usage:
-            print(opt)
+        usage()
     elif (len(args) == 1 and args[0] == "-h" or
             args[0] == "--help" and args[1:] == []):
-        for opt in arguments:
-            print(opt)
+        options()
     elif (len(args) == 1 and args[0] == "-v" or
             args[0] == "--version" and args[1:] == []):
         prog_version()
     elif len(args) == 3 and args[0] == "-a":
-        build_package(args[1], args[2:], path)
+        BuildPackage(args[1], args[2:], path).build()
     elif len(args) == 2 and args[0] == "-l":
         sbo_list = ["all", "sbo", "slack", "noarch"]
         if args[1] in sbo_list:
             PackageManager(None).list(args[1])
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 3 and args[0] == "-c":
         if args[1] == repository[0] and args[2] == "--upgrade":
-            sbo_check()
+            SBoCheck().start()
         elif args[1] == repository[1] and args[2] == "--upgrade":
             version = "stable"
-            patches(version)
+            Patches(version).start()
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 4 and args[0] == "-c":
         if args[1] == repository[1] and args[3] == "--current":
             version = "current"
-            patches(version)
+            Patches(version).start()
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 3 and args[0] == "-s":
         if args[1] == repository[0]:
-            sbo_install(args[2])
+            SBoInstall(args[2]).start()
         elif args[1] == repository[1]:
-            version = "stable"
-            install(args[2], version)
+            Slack(args[2], "stable").start()
+        else:
+            usage()
     elif len(args) == 4 and args[0] == "-s":
         if args[1] == repository[1] and args[3] == "--current":
-            version = "current"
-            install(args[2], version)
+            Slack(args[2], "current").start()
         else:
-            for opt in usage:
-                print(opt)
+            usage()
     elif len(args) == 2 and args[0] == "-t":
         track_dep(args[1])
     elif len(args) == 2 and args[0] == "-n":
-        sbo_network(args[1])
+        SBoNetwork(args[1]).view()
     elif len(args) == 2 and args[0] == "-b" and args[1] == "--list":
         blacklist.listed()
     elif len(args) > 2 and args[0] == "-b" and args[-1] == "--add":
@@ -180,8 +131,7 @@ def main():
     elif len(args) > 1 and args[0] == "-d":
         PackageManager(args[1:]).display()
     else:
-        for opt in usage:
-            print(opt)
+        usage()
 
 if __name__ == "__main__":
     main()

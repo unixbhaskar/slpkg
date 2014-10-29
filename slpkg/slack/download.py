@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# download.py file is part of slpkg.
+# downloads.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -21,9 +21,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from slpkg.downloader import Download
 
-def sbo_slackbuild_dwn(sbo_url):
+
+def slack_dwn(path, links):
     '''
-    Create download slackbuild tar.gz archive
+    Download patches
     '''
-    return (sbo_url[:-1] + ".tar.gz")
+    for dwn in links:
+        Download(path, dwn).start()
+        Download(path, dwn + ".asc").start()

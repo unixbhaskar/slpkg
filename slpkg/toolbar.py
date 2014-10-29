@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# url_read.py file is part of slpkg.
+# toolbar.py file is part of slpkg.
 
 # Copyright 2014 Dimitris Zlatanidis <d.zlatanidis@gmail.com>
 # All rights reserved.
@@ -22,24 +22,18 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-import urllib2
+import time
+
+from colors import GREY, ENDC
 
 
-class URL(object):
-
-    def __init__(self, link):
-        self.link = link
-
-    def reading(self):
-        '''
-        Open url and read
-        '''
-        try:
-            f = urllib2.urlopen(self.link)
-            return f.read()
-        except urllib2.URLError:
-            print ("\nslpkg: error: connection refused\n")
-            sys.exit()
-        except KeyboardInterrupt:
-            print   # new line at exit
-            sys.exit()
+def status(index, width, step):
+    '''
+    Print toolbar status
+    '''
+    if index == width:
+        sys.stdout.write("{0}.{1}".format(GREY, ENDC))
+        sys.stdout.flush()
+        width += step
+        time.sleep(0.05)
+    return width
