@@ -266,7 +266,8 @@ class PackageManager(object):
         '''
         List with the installed packages
         '''
-        space = (" " * 9)
+        tty_size = os.popen('stty size', 'r').read().split()
+        row = int(tty_size[0]) - 2
         try:
             if "sbo" in pattern:
                 search = "_SBo"
@@ -276,15 +277,16 @@ class PackageManager(object):
                 search = "-noarch-"
             elif "all" in pattern:
                 search = ""
-            index, page = 0, 50
+            index, page = 0, row
             for pkg in find_package("", pkg_path):
                 if search in pkg:
                     index += 1
                     print("{0}{1}:{2} {3}".format(GREY, index, ENDC, pkg))
                     if index == page:
-                        raw_input("{0}-- {1}More{2} --".format(space, CYAN,
-                                                               ENDC))
-                        page += 50
+                        raw_input("\nPress {0}Enter{1} to continue...".format(
+                            CYAN, ENDC))
+                        print   # new line after page
+                        page += row
             print   # new line at end
         except KeyboardInterrupt:
             print   # new line at exit

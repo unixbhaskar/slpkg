@@ -26,9 +26,9 @@ import getpass
 
 from queue import QueuePkgs
 from messages import s_user
+from __metadata__ import path
 from blacklist import BlackList
 from version import prog_version
-from __metadata__ import path
 from arguments import options, usage
 
 from pkg.build import BuildPackage

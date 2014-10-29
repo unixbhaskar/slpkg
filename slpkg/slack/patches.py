@@ -54,11 +54,12 @@ class Patches(object):
         if not os.path.exists(self.patch_path):
             os.mkdir(self.patch_path)
         if version == "stable":
-            self.PACKAGES_TXT = URL.read(mirrors("PACKAGES.TXT", "patches/",
-                                                 version))
+            self.PACKAGES_TXT = URL(mirrors("PACKAGES.TXT", "patches/",
+                                            version)).reading()
             self.step = 100
         else:
-            self.PACKAGES_TXT = URL.read(mirrors("PACKAGES.TXT", "", version))
+            self.PACKAGES_TXT = URL(mirrors("PACKAGES.TXT", "",
+                                            version)).reading()
             self.step = 700
 
     def start(self):

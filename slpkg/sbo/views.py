@@ -27,10 +27,10 @@ import pydoc
 
 from init import initialization
 from downloader import Download
-from colors import RED, GREEN, GREY, ENDC
 from __metadata__ import tmp, build_path, pkg_path, sp
-from messages import (pkg_found, view_sbo, pkg_not_found,
-                      template, build_FAILED)
+from colors import RED, GREEN, GREY, CYAN, YELLOW, ENDC
+from messages import (pkg_found, pkg_not_found, template,
+                      build_FAILED)
 
 from pkg.find import find_package
 from pkg.build import BuildPackage
@@ -106,6 +106,31 @@ class SBoNetwork(object):
                     break
         else:
             pkg_not_found("\n", self.name, "Can't view", "\n")
+
+
+def view_sbo(*args):
+    '''
+    View slackbuild.org
+    '''
+    print   # new line at start
+    template(78)
+    print("| {0}Package {1}{2}{3} --> {4}".format(GREEN, CYAN, args[0], GREEN,
+                                                  ENDC + args[1]))
+    template(78)
+    print("| {0}Description : {1}{2}".format(GREEN, ENDC, args[2]))
+    print("| {0}SlackBuild : {1}{2}".format(GREEN, ENDC, args[3]))
+    print("| {0}Sources : {1}{2}".format(GREEN, ENDC, args[4]))
+    print("| {0}Requirements : {1}{2}".format(YELLOW, ENDC, ", ".join(args[5])))
+    template(78)
+    print(" {0}R{1}EADME               View the README file".format(RED, ENDC))
+    print(" {0}S{1}lackBuild           View the SlackBuild file".format(
+        RED, ENDC))
+    print(" In{0}f{1}o                 View the Info file".format(RED, ENDC))
+    print(" {0}D{1}ownload             Download this package".format(RED, ENDC))
+    print(" {0}B{1}uild                Download and build".format(RED, ENDC))
+    print(" {0}I{1}nstall              Download/Build/Install".format(
+        RED, ENDC))
+    print(" {0}Q{1}uit                 Quit\n".format(RED, ENDC))
 
 
 def fill_pager(page):

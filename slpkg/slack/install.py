@@ -55,9 +55,10 @@ class Slack(object):
             os.mkdir(slpkg_tmp)
         if not os.path.exists(self.tmp_path):
             os.mkdir(self.tmp_path)
-        PACKAGES = URL.read(mirrors("PACKAGES.TXT", "", self.version))
-        EXTRA = URL.read(mirrors("PACKAGES.TXT", "extra/", self.version))
-        PASTURE = URL.read(mirrors("PACKAGES.TXT", "pasture/", self.version))
+        PACKAGES = URL(mirrors("PACKAGES.TXT", "", self.version)).reading()
+        EXTRA = URL(mirrors("PACKAGES.TXT", "extra/", self.version)).reading()
+        PASTURE = URL(mirrors("PACKAGES.TXT", "pasture/",
+                              self.version)).reading()
         self.PACKAGES_TXT = PACKAGES + EXTRA + PASTURE
 
     def start(self):
