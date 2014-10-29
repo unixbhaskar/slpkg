@@ -277,6 +277,37 @@ def arch_support(source, support, package_sum, dependencies):
     return read
 
 
+def create_build_path():
+    '''
+    Create build directory if not exists
+    '''
+    if not os.path.exists(build_path):
+        os.mkdir(build_path)
+
+
+def dwn_sources(sources):
+    '''
+    Download sources and return filenames
+    '''
+    filename = []
+    for src in sources:
+        # get file from source
+        filename.append(src.split("/")[-1])
+        Download(build_path, src).start()
+    return filename
+
+
+def search_in_tmp(prgnam):
+    '''
+    Search for binarys packages in /tmp directory
+    '''
+    binary = []
+    for search in find_package(prgnam, tmp):
+        if "_SBo" in search:
+            binary.append(search)
+    return binary
+
+
 def build_install(dependencies, sbo_versions, packages_arch):
     '''
     Searches the package name and version in /tmp to
@@ -284,8 +315,7 @@ def build_install(dependencies, sbo_versions, packages_arch):
     tag 2 or 3 will fit most
     '''
     installs, upgraded, versions = [], [], []
-    if not os.path.exists(build_path):
-        os.mkdir(build_path)
+    create_build_path()
     os.chdir(build_path)
     for pkg, ver, ar in zip(dependencies, sbo_versions, packages_arch):
         prgnam = ("{0}-{1}".format(pkg, ver))
@@ -301,16 +331,9 @@ def build_install(dependencies, sbo_versions, packages_arch):
             src_link = SBoGrep(pkg).source().split()
             script = sbo_link.split("/")[-1]
             Download(build_path, sbo_link).start()
-            sources = []
-            for src in src_link:
-                # get file from source
-                sources.append(src.split("/")[-1])
-                Download(build_path, src).start()
+            sources = dwn_sources(src_link)
             BuildPackage(script, sources, build_path).build()
-            binary_list = []
-            for search in find_package(prgnam, tmp):
-                if "_SBo" in search:
-                    binary_list.append(search)
+            binary_list = search_in_tmp(prgnam)
             try:
                 binary = (tmp + max(binary_list)).split()
             except ValueError:
