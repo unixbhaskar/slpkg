@@ -112,11 +112,10 @@ def fill_pager(page):
     '''
     Fix pager spaces
     '''
-    rows, columns = os.popen('stty size', 'r').read().split()
-    lines = 1
-    for line in page.splitlines():
-        lines += 1
-    diff = int(rows) - lines
+    tty_size = os.popen('stty size', 'r').read().split()
+    rows = int(tty_size[0]) - 1
+    lines = sum(1 for line in page.splitlines())
+    diff = rows - lines
     fill = "\n" * diff
     if diff > 0:
         return fill
